@@ -12,8 +12,8 @@
 #   docker run --rm -v "$PWD":/work -w /work --entrypoint /usr/local/bin/evolve kronspice -config examples/rc_lowpass_values/config.json
 #
 # Results are bit-identical for the same input on every machine only with
-# the same Go toolchain, so the builder version is pinned.
-FROM golang:1.24-bookworm AS build
+# the same Go toolchain, so the builder version is pinned to the one in go.mod.
+FROM golang:1.24.7-bookworm AS build
 WORKDIR /src
 COPY go.mod go.sum* ./
 RUN go mod download

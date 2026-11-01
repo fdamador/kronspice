@@ -4,15 +4,54 @@
 thousands of circuits in parallel, in memory and safely, with results
 checked against ngspice.
 
-Tools that design circuits automatically (genetic algorithms, optimizers,
-AI-assisted design, cloud design services) need a simulator inside their
-loop. Established simulators are separate programs built for one engineer
-and one netlist at a time. Driving them means writing files, starting
-processes and parsing output for every candidate, and generated candidates
-are often broken in ways that stall them. kronspice is a library built for
-that loop.
+## Welcome, universal engineer!
+
+kronspice is named after Gabriel Kron (1901–1968), the General Electric engineer
+who treated a circuit as a geometric object. In two 1956 articles he gave a name to
+where he thought this led: **universal engineering**.
+
+Kron looked at an electric machine, a bridge or an airplane and saw the same thing:
+
+> a collection of numerous multi-dimensional spaces connected together into one
+> unit
+
+So he looked for one method that carries across them. Describe the parts on their
+own, connect them by a change of reference frame, and tear large systems into
+pieces that can be solved separately and rejoined exactly. He took those ideas from
+motors to power grids, electromagnetic fields, elastic structures, reactors and the
+Schrödinger equation.
+
+If you think a problem in one field might be a network problem in disguise, this
+project is for you, whatever your field and whether or not you have ever drawn a
+circuit. Electrical engineers, mechanical engineers, physicists, chemists, students
+and curious tinkerers are all welcome here as universal engineers.
+
+**Try it across domains in kronspice:**
+
+| Domain | As a network | Example |
+|---|---|---|
+| Circuits | Torn, solved piece by piece and rejoined inside a running evolution | [examples/torn_ga](examples/torn_ga) |
+| Rotating machines | Kron's own reference frames, with an induction motor starting up | [examples/kron_machine](examples/kron_machine) |
+| Mechanics and acoustics | Generator → piezo → flask, with force and pressure as network variables | [examples/acoustic_drive](examples/acoustic_drive) |
+| Water vibrations | Atoms as capacitors and bonds as inductors, with the molecule's vibrations as AC resonances | [examples/water_vibration](examples/water_vibration) |
+| DNA vibrations | The four bases and two Watson–Crick pairs as circuits, with hydrogen bonds as their own group and infrared light as a current source | [examples/dna_vibration](examples/dna_vibration) |
+| Quantum mechanics | Kron's circuit model of the Schrödinger equation | [examples/kron_schrodinger](examples/kron_schrodinger) |
+
+Kron's program was never finished, and neither is this one: his late work on
+multi-dimensional networks is not implemented here. To go deeper, read
+[the history of universal engineering](HISTORICAL.md), and use
+[the nomenclature guide](NOMENCLATURE.md) to translate Kron's terms into modern
+ones.
 
 ## Why kronspice
+
+At its core, kronspice is a circuit simulator. Tools that design
+circuits automatically (genetic algorithms, optimizers, AI-assisted design, cloud
+design services) need a simulator inside their loop. Established simulators are
+separate programs built for one engineer and one netlist at a time. Driving them
+means writing files, starting processes and parsing output for every candidate, and
+generated candidates are often broken in ways that stall them. kronspice is a
+library built for that loop.
 
 | | |
 |---|---|
@@ -22,6 +61,7 @@ that loop.
 | **Pure Go** | No cgo, no external program, no third-party dependencies (`go.mod` has none). Cross-compiles everywhere. |
 | **Built-in evolution** | Value and topology genomes, weighted-sum and NSGA-II multi-objective fitness, checkpoints that resume exactly. Best circuits are written as plain SPICE netlists (checked in ngspice; LTspice and QSpice not yet tested). |
 | **Kron diakoptics** | Tears a circuit into pieces, solves them separately and joins them. This agrees with the full solve to 1e-9, and power is the same torn and untorn. A mutation re-solves only its piece. |
+| **More than circuits** | Mechanical and acoustic networks join the circuit through transducers, and machines run as moving inductors with a mechanical port, all on the same energy ledger. |
 | **Every joule accounted for** | A per-element, per-channel energy ledger reports energy appearing from nowhere as an error, so evolution cannot exploit a simulator flaw. |
 | **KiCad export** | Any netlist becomes a wired KiCad 8 schematic plus a results sheet. |
 
@@ -132,6 +172,8 @@ On Windows, `internal/golden/docker/run.ps1` and the VS Code tasks in
 
 ## Learn more
 
+- [HISTORICAL.md](HISTORICAL.md): Gabriel Kron, his method and universal engineering.
+- [NOMENCLATURE.md](NOMENCLATURE.md): Kron's terms in modern electrical engineering language.
 - [doc/STATUS.md](doc/STATUS.md): every package, milestone and command in detail.
 - [CLAUDE.md](CLAUDE.md): design, numerical rules, references and milestones.
 - [examples/](examples/): runnable examples, each with an `export/` folder
