@@ -21,6 +21,6 @@ GPL-3.0 only.
 ## Contact
 
 Copyright holder: Franklin Amador
-Email: franklinamador1@gmail.com
+Email: fdamador@comcast.net
 
 Please include your organization, intended use and distribution model.
