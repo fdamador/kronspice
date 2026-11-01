@@ -199,9 +199,9 @@ For the argument, see [HISTORICAL.md](HISTORICAL.md#polyhedra-and-n-networks-195
 | Planar polyhedron | 2-complex | Same | |
 | Dual polyhedron | Dual cell complex | Same | 1962 p. 167 |
 | Incidence matrix `M` | Boundary operator | Same | Kron's relation to exterior forms and Stokes' theorem matches discrete exterior calculus, which came later |
-| Polyhedral wave, magnetohydrodynamic wave | None | None | Kron's own usage. Do not read it as modern magnetohydrodynamics without checking |
-| Crystal computer | None | None | A proposal; our sources document no working device |
-| Self-organizing automata | None | None | Not the modern sense of self-organizing networks, as far as we can tell from 1962; the original papers have not been read |
+| Polyhedral wave, magnetohydrodynamic wave | None | None | Kron's own usage: a polyhedron immersed in a magnetohydrodynamic plasma "crystallizes" into transmission networks coupled by k-dimensional magnetohydrodynamic generators, his "generalized" rotating machines (JMAA 1962, p. 46). Do not read it as modern magnetohydrodynamics without checking |
+| Crystal computer | None | None | A proposal (JMAA 1962 pp. 67–68): a crystal's atoms as polyhedron vertices, its X-ray-excited dipole and diffracted waves as the physical realization of the polyhedral waves. Our sources document no working device |
+| Self-organizing automata | None | None | Kron's name for a polyhedron in its "self-adaptive oscillatory state", which curve-fits any number of functions and their divided differences "without needing any adjustment or interference by the analyst" (JMAA 1962, pp. 46, 69). Not the modern sense of self-organizing networks or maps |
 
 ## Related later terms
 

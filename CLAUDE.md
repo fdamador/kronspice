@@ -101,6 +101,9 @@ modeled, what would count as evidence, and its current status. Rules:
 | H17 | Rotor Mössbauer anomaly: the energy shift between centre and rim of a fast rotor is ΔE/E = k·u²/c² with k ≈ 0.68, not the relativistic 1/2 | `spacetime.RotorShift` with k as a parameter; standard k = 1/2 beside it (§3l) | deviation reported, not independently reproduced — k = 0.68 ± 0.03 (Kholmetskii et al., Phys. Scr. 79, 2009), 0.69 ± 0.02 (Yarman et al., Can. J. Phys., doi:10.1139/cjp-2015-0063), 0.596 ± 0.006 from a reanalysis of Kündig 1963 (Phys. Scr. 77, 2008) against Kündig's own agreement with 1/2 within 1.1 %; interpretation disputed: clock desynchronization giving k = 2/3 (Corda, arXiv:2203.02282) against slit-broadening artifacts (Friedman & Nowik, Phys. Scr. 85, 065702, 2012). Needs an independent group with full line-shape measurement |
 | H18 | Inertial mass reduction of a craft by a "polarized vacuum" from a charged, vibrating, microwave-driven resonant-cavity hull (Pais, US 10,144,532 B2, 2018) | `examples/pais_cavity`: the annular cavity as a ring line solved by Happ two-level diakoptics (twin MNA), ledger, and the patent's σ, flux, rotation and vibration figures against physical limits | untested — standard prediction: no net force on a closed cavity, mass unchanged, thrust ≤ P/c (3.3 mN per MW); the patent's σ = 1 C/m² needs 1.1×10¹¹ V/m (wall pressure 5.6×10¹⁰ Pa, field emission drains it in ~10⁻¹⁶ s); its 10³³ W/m² needs wall speed R_v·ν ≈ 3×10¹³ c; 10⁹–10¹⁸ Hz wall vibration lies above copper's Debye frequency (7.1×10¹² Hz); 30,000 rpm at 2 m exceeds carbon-fibre burst speed 3.3×; the cited gyroscope weight loss (Hayasaka & Takeuchi 1989) was not reproduced (Faller et al. 1990; Quinn & Picard 1990; Nitschke & Wilmarth 1990) |
 | H19 | Bopp–Podolsky generalized electrodynamics: higher derivatives in the field equations themselves, (1 + a²□)□A = μ0J (fourth order), one new length a (F. Bopp 1940; B. Podolsky, Phys. Rev. 62, 68, 1942) | `em/podolsky.go` (point-charge potential and field, finite self-energy q²/(8πε0a), Maxwell and massive modes, Coulomb-test bound a < r/ln(1/ε)); `examples/rate_of_change` | untested — standard prediction a = 0 (Maxwell) beside every result; potential falls below Coulomb by e^(−r/a), so only very short-range experiments see it; electron self-energy equals m_e c² at a = 1.409×10⁻¹⁵ m; a lower bound on the Podolsky mass from measured Bhabha scattering is given by Bufalo, Pimentel & Soto, Phys. Rev. D 90, 085012 (2014) — value to be entered from the paper |
+| H20 | Kron's polyhedral waves describe a physical field region: a region of space, with or without plasma, "crystallizes" into Kron's sequence of magnetic (even-dimensional) and dielectric (odd-dimensional) p-networks plus their dual, carrying complete e, h, b, d waves across dimensions, and can take a self-adaptive oscillatory state; crystals realize it (Kron, *J. Math. Anal. Appl.* 5, 46–69, 1962, pp. 46, 50, 53–54, 66–68; stated as physics in his 1958 and 1960 texts, where the waves are "accompanied by … magnetic poles" and the plasma field is "the stage for all cognitive activities", as quoted by Balasubramanian 1968 pp. 8, 15–17) | `kron/polyhedron.go` and `examples/kron_polyhedron` (planned, see below); standard twins `em/fdtd.go`, `em/tlm.go`; `reference/PII_ 0022-247X(62)90005-7.pdf` | untested — Kron himself called the physical interpretation "only tentative" (p. 66); standard prediction: in three dimensions the polyhedron is a discretization of Maxwell's equations (Kron 1944; Tonti's cell method) and agrees with FDTD and TLM to discretization error, a passive linear structure has fixed modes, and X-ray-excited crystal waves follow Ewald–Laue dynamical diffraction |
+| H21 | Kron's machine equations model the ring electron: a closed ring of circulating charge is a one-winding machine (self-inductance L, circulating mass as rotor inertia, speed voltages G), with voltage and current the pressure and flow of energy at that scale; Kron's eq. 11 (1951 Epilogue p. 259) is the formal link, the machine equation with e = R = 0 being the motion of a charged particle in an electromagnetic field (user hypothesis, 2026-10-31) | `examples/kron_electron` on the electron test bench of `doc/kelvin-references.md`, beside `examples/kelvin_ring` (Lorentz-force form) and `examples/space_vortex` (H13); `device/machine.go`, `em/inductance.go` | bounded — step 1 passes: Kelvin's ring as a three-winding machine with the inertia in the metric gives ∓eΦ/2π, Larmor's rate and the bench's kinetic energy to 1e-5, ledger residual 1e-13, and frame I's torque ½iᵀ(∂L/∂θ)i is −μB sin θ (period to 2e-5); step 2 computed: a ring whose mass circulates with its charge has g = 1/(1 + Le²/4π²ma²) ≤ 1 and precesses at Larmor's eB/2m, half the electron's; a massless ring carries the measured moment at S = ħ/2 only at a = 8.9 fm with v = 43.6 c (v/c = π/(2α(ln(8a/r) − 7/4)) for every massless thin ring, set by the fine-structure constant), magnetic energy 475 m_e c²; standard prediction: the Dirac electron with QED (g = 2.002 319 304 36, μ = 1.001 16 μ_B); scattering bounds the electron below 10⁻¹⁸ m, and Kelvin's full ring already gives the Zeeman lines with the wrong polarisation (`examples/kelvin_ring`) |
+| H22 | "Quantumtricity": the quark model and the principles of circuit electricity (V, I, R, P) are one structure, the latter being electricity at the quantum level (user hypothesis, 2026-11-01) | `kron/gauge.go` and `examples/quantumtricity` (planned, see below): the U(1) gauge constraint on Kron's 1944 field network (KCL as Gauss's law), then SU(3) link variables on the same graph | untested — standard prediction: circuit theory is the classical, abelian (U(1)) limit of a lattice gauge theory and the quark model is the non-abelian (SU(3)) one on the same kind of graph; every Kirchhoff sum commutes, so no circuit quantity composes as SU(3) currents do; the quantum level of V, I and R is set by electrons and photons through e and h (Josephson 2e/h, von Klitzing h/e² = 25 812.807 Ω, single-electron pumps I = e·f), with no quark content; conduction current is electrons only, quarks fix only the lattice charge Z; the e/3 charges seen in the fractional quantum Hall effect are collective electron excitations |
 
 **H6 — the Sun and high-voltage pulse fields (theoretical).** The working
 idea is that the Sun's energy, and its formation, involve high-voltage
@@ -121,6 +124,156 @@ A reproduced deviation at bench scale is the prerequisite; if one is
 found, a stellar-scale model is added at that point (as a new package),
 with the three observational constraints above as its validation cases. Until then H6 is
 recorded as *untested*, with its standard counterpart stated beside it.
+
+**H20 — Kron's polyhedral waves as a physical field region.** In his 1962
+curve-fitting paper Kron built a k-dimensional polyhedron whose q-networks are
+copies of his 1944 Maxwell network, even-dimensional ones magnetic and
+odd-dimensional ones dielectric, joined to a dual polyhedron with the roles
+exchanged, so that one complete electromagnetic wave spans two neighbouring
+dimensions and a k-dimensional polyhedron carries k/2 full waves (pp. 53–54).
+He wrote that a field region filled with plasma "crystallizes" into such a
+structure energized by k-dimensional generators (p. 46), that the structure
+can oscillate self-adaptively, adjusting its modes and frequencies to its
+environment (pp. 50, 67), and that a crystal's X-ray-excited dipole waves are
+"surprisingly complete analogues" of these polyhedral waves (pp. 67–68). The
+paper itself uses the polyhedron only as an estimator, in the space of a data
+matrix's k variables, and calls the physics "still puzzling" and the
+interpretation "only tentative" (p. 66); the hypothesis is the physical reading
+the user has placed in the register. It is tested in three steps, each with
+its standard counterpart beside it:
+
+1. **Build the polyhedron** (`kron/polyhedron.go`): p-networks and the
+   incidence matrices between them, the even/odd material rule, the dual
+   polyhedron and its conductive and inductive ties, and the tearing of the
+   polyhedron into its q-networks (pp. 54–55), on the `kron/` primitive and
+   connection tensors. Validation: for k = 2 and 3 the structure is a
+   discretization of Maxwell's equations and must reproduce the §3g
+   validation fields (straight wire, coaxial TEM pulse, rectangular cavity
+   modes) to the same tolerance as `em/fdtd.go` and `em/tlm.go`; the 1962
+   curve-fitting examples (six functions at four points, p. 46 and the
+   tables) are reproduced as the paper's own check. This is the standard
+   prediction: nothing beyond Maxwell at k = 3.
+2. **Self-adaptive oscillation.** The claim that the modes and frequencies
+   adjust themselves to the excitation. Standard prediction: a passive linear
+   network has fixed modes, and Kron's own "self-adaptation" in the paper is
+   the re-choice of reference frame (tearing and reinterconnection) made by
+   the analyst or by a nonlinear program (p. 67), not a field effect. The
+   test is whether a built polyhedron, driven as in the paper, shifts its
+   resonances with the drive beyond what its nonlinear elements explain; the
+   ledger must show where any such adjustment's energy comes from.
+3. **Crystals.** Standard counterpart: Ewald–Laue dynamical theory of X-ray
+   diffraction, which already describes a crystal's dipole and diffracted
+   waves as one self-consistent system with fixed modes set by the lattice.
+   A deviation would be a measured mode or frequency adaptation of the
+   diffracted field beyond that theory. Bench data, when available, are
+   imported and compared as in §3g.
+
+Higher dimensions (k > 3) have no standard physical counterpart; polyhedra
+with k > 3 remain legitimate as estimators for the GA (the paper's own use)
+and are reported as such, never as fields. Status stays *untested* until step
+1 is built; a null result at steps 2 and 3 records a bound, as for every entry.
+
+**H21 — Kron's machine equations as a model of the ring electron.** The
+hypothesis reads a closed ring of circulating charge as one of Kron's
+machines: one winding with the ring's self-inductance L, the circulating mass
+as the rotor inertia J, an external field entering as the speed-voltage tensor
+G (Epilogue eq. 9, G·i = B), and the ring's voltage and current as the
+across and through variables of energy at that scale (the pressure–flow pair
+of §3a.1 item 3). The established part is Kron's own: eq. 11 (p. 259) writes
+the machine equation with the field tensor F_αβ and notes that with e and R
+zero it is the equation of motion of a charged particle in an electromagnetic
+field (doc/M9c1.md, "Charge and force"). The hypothesis is the step beyond:
+that the electron *is* such a ring, so that its stored energy, angular
+momentum, magnetic moment and Zeeman behaviour follow from L, I and J. Three
+steps, each with its standard counterpart:
+
+1. **Twin test (standard).** Kelvin's 1899 charged ring, already solved in
+   `examples/kelvin_ring` charge by charge with the Lorentz force, is written
+   as an N machine element: L from the core-averaged `em.MutualCircles` (as
+   in `examples/vortex_ring`), J = w·a², the coil's field as G. Kron's frame
+   must reproduce the bench: moments of momentum ∓eΦ/2π on switch-on, the
+   fluid at Larmor's rate eB/2w, both ledgers closed, and the Zeeman spectra
+   of the full ring. This is eq. 11 made concrete, and must agree to the
+   bench's own tolerance before anything else is read from the model.
+2. **The electron as the ring (hypothesis).** Fix the ring by two measured
+   values (charge e and spin angular momentum ħ/2, or e and the magnetic
+   moment) and compute the rest from Kron's equations: stored energy ½LI²
+   against m_e c², magnetic moment against μ_B and the measured 1.001 16 μ_B,
+   g-factor against 2.002 319 304 36, the Zeeman splitting and its
+   polarisation, and the ring radius and speed implied. Standard
+   prediction beside each: Dirac + QED values; for the classical ring, g = 1
+   when mass circulates with charge, a Compton-scale radius for μ_B at
+   v ≤ c, Larmor radiation and no stable state.
+3. **Bounds.** The ring size against scattering limits (< 10⁻¹⁸ m) and the
+   radiated power against the electron's stability record a bound, as for
+   H13, which sits on the same bench (`examples/space_vortex`: g = 15/8
+   against 2.0023).
+
+Status: *bounded* (2026-11-01). Step 1 passes and step 2 is computed in
+`examples/kron_electron`: no ring with the electron's charge-to-mass ratio
+reaches g = 2 (g ≤ 1, Larmor precession eB/2m), and the massless ring that
+carries the measured moment at S = ħ/2 needs v = 43.6 c at a = 8.9 fm. The
+bench measurement that discriminates it is magnetic resonance
+(`examples/kron_nmr`): a ring electron (γ = e/2m) would resonate at
+14.0 GHz/T against the measured ESR 28.0 GHz/T, and a ring proton at
+7.6 MHz/T against the measured NMR 42.6 MHz/T. Any later result is
+reported next to the Dirac value and the classical-ring value, never
+alone. Step 3's Zeeman polarisation stays with the 3-D bench of
+`examples/kelvin_ring`; the 1-DOF N element cannot precess.
+
+**H22 — Quantumtricity: the quark model as circuit electricity at the quantum
+level.** The user's hypothesis, from setting the Ohm's-law wheel (P, V, I, R)
+beside the Standard Model wheel: that the two describe one structure, the
+quark model being the principles of electricity at the quantum level. As
+stated it has no prediction, so it is held in the testable form below, with
+the established links and the standard prediction beside it.
+
+Established links, each cited:
+
+- **Circuit theory is a gauge theory on a graph.** Kirchhoff's current law
+  is charge conservation, the Noether consequence of U(1) gauge invariance;
+  Kron's 1944 field network and Tonti's cell method are Maxwell's U(1)
+  theory on a lattice (§3a.1). Lattice QCD is the same construction with
+  SU(3) link variables (Wilson 1974; Kogut & Susskind 1975), where the
+  "currents" are matrices that do not add linearly. Superconducting
+  circuits have been designed to simulate such dynamical gauge fields
+  (Marcos et al. 2013): a circuit can emulate the structure, which is not
+  the claim that it contains it.
+- **The quantum level of V, I and R is electrons and photons.** Since the
+  2019 SI the volt follows from the Josephson constant 2e/h (Josephson
+  1962), the ohm from the von Klitzing constant h/e² = 25 812.807 Ω (von
+  Klitzing, Dorda & Pepper 1980), and the ampere can be realized by
+  single-electron pumps, I = e·f (Pekola et al. 2013). One lepton and one
+  gauge boson of the Standard Model wheel; no quark.
+- **Quarks do not flow in a circuit.** Conduction current in a metal is
+  electrons only; confined quarks fix the lattice charge Z and nothing
+  else a circuit measures. The strong force and the gluon play no part in
+  circuit theory; the weak bosons enter kronspice only as the neutrino
+  coupling of `exchange/neutrino.go` (H7).
+- **Fractional charge in circuits has a standard explanation.** Charges
+  e/3 and e/5 are measured by shot noise in the fractional quantum Hall
+  effect (de-Picciotto et al. 1997; Saminadayar et al. 1997); they are
+  collective excitations of electrons in a two-dimensional gas, not quarks.
+
+Test, in two steps on `kron/gauge.go` and `examples/quantumtricity`
+(planned):
+
+1. **Abelian step (standard).** Write the U(1) gauge constraint on Kron's
+   1944 network and show it is KCL; show the Wilson loop (holonomy) of a
+   mesh is its flux linkage, and that the lattice Hamiltonian's electric
+   and magnetic terms are the `½Cv²` and `½Li²` of the ledger. This must
+   agree with `em/fdtd.go` and `em/tlm.go` to discretization error before
+   anything else is read from the model.
+2. **Non-abelian step (the hypothesis).** Put SU(3) link variables on the
+   same graph (Kogut–Susskind) and look for a circuit quantity that
+   composes as those currents do. Prediction of the hypothesis: one
+   exists. Standard prediction: none does, because every Kirchhoff sum
+   commutes, so the resemblance ends at "both are gauge theories on a
+   network", circuit electricity being the abelian classical limit.
+
+A null result at step 2 records that bound; the entry stays, as for every
+hypothesis. The name "quantumtricity" is the user's and is used for the
+example directory only, never in output as an established term.
 
 ### Non-goals (for now)
 
@@ -281,6 +434,8 @@ kronspice/
     ├── kelvin_ring/            # Kelvin 1899 charged-ring molecule: induction (eΦ/2π, Larmor) and his Zeeman test, gyrostat vs full Lorentz force
     ├── vortex_ring/            # Kelvin 1867 vortex atoms via his ring-electromagnet analogy: ring speed from inductance, leapfrogging rings
     ├── space_vortex/           # Tewari's space-vortex electron (H13) on the electron test bench: charge, moment, g = 15/8, hydrogen orbit
+    ├── kron_electron/          # H21: a ring of circulating charge as a Kron machine (inertia in the metric); Kelvin's ring twin test, frame-I torque, electron rings vs Dirac (g ≤ 1, massless ring at 43.6 c); viz/: field-line picture and an animated GIF of the switch-on, the tilt and its field (stdlib image/gif)
+    ├── kron_nmr/               # magnetic resonance (NMR, ESR) as Kron's frame II(b): Bloch's equations as a 3-winding machine with skew G = Lγ[B]ₓ, rotating frame = Park's frame, T1/T2 as resistors, pickup winding; precession, Rabi, π/2 pulse + FID, CW line vs Bloch; ring (g = 1) vs measured frequencies; GIF
     ├── space_power_generator/  # Tewari's SPG test (UPSM pp. 159–160) through the energy ledger: the loaded-EMF assumption
     ├── bearing_motor/          # Huber ball-bearing motor: measurement registry, κ/ω0 fits, can bearing torque explain the SPG? (H13, H14)
     ├── homopolar_bearing/      # Tesla two-disk homopolar with load current through its ball bearings: bore vs magnetic area, measured bearing drop and damage limit, least drive torque per load watt (circuit only)
@@ -2505,6 +2660,10 @@ because it could not be offered under the commercial license.
   connection tensors, transformation laws.
 - G. Kron, *Diakoptics: The Piecewise Solution of Large-Scale Systems*,
   Macdonald, 1963 — tearing and interconnection.
+- G. Kron, "Tearing and interconnecting as a form of transformation,"
+  *Quarterly of Applied Mathematics* 13, 147–159, 1955 — tearing stated as a
+  transformation of reference frame, the mathematical core of diakoptics
+  (§3a). Copy in `reference/` (`S0033-569X-1955-73431-7.pdf`).
 - H. H. Happ, *Diakoptics and Networks*, Academic Press, 1971 — a clearer,
   matrix-oriented presentation of Kron's methods: orthogonal networks with
   open and closed paths (Ch. III–IV), ignoring or eliminating open or
@@ -2535,10 +2694,23 @@ because it could not be offered under the commercial license.
   Macdonald, 1964 — parametric amplifiers and periodically varying
   circuits (K&V [39], [58]).
 - J. P. Roth, "An application of algebraic topology to numerical analysis: on
-  the existence of a solution to the network problem," *PNAS*, 1955 — the
-  algebraic-topology reading of Kron.
+  the existence of a solution to the network problem," *PNAS* 41(7),
+  518–521, 1955 — the algebraic-topology reading of Kron. Copy in
+  `reference/` (`roth-1955-an-application-of-algebraic-topology-to-numerical-
+  analysis-on-the-existence-of-a-solution-to-the-network.pdf`).
 - F. H. Branin Jr., "The algebraic-topological basis for network analogies and
   the vector calculus," 1966.
+- E. Tonti, "Finite formulation of the electromagnetic field," *Progress In
+  Electromagnetics Research* (PIER) 32, 1–44, 2001 — Maxwell's equations
+  written directly on a cell complex and its dual (global variables on
+  points, lines, surfaces, volumes; inner and outer orientation; a time cell
+  complex), "the natural extension of network theory to the electromagnetic
+  field": the modern form of Kron's 1944 field network and of the Roth/Branin
+  chains and cochains (§3a.1). Copy in `reference/`
+  (`tonti_2001_pier32_finite_formulation.pdf`, from the Wayback Machine copy
+  of the jpier.org PDF). `reference/Electrom ICS.pdf` is the 7-page short
+  version dated 16 October 2000 (International Compumag Society Newsletter
+  8(1), 2001), not the PIER article.
 - G. Kron, "Equivalent circuit of the field equations of Maxwell — I,"
   *Proc. IRE* 32, 289–299, 1944 — field regions as networks (§3a.1).
 - G. Kron, "Numerical solution of ordinary and partial differential
@@ -2549,6 +2721,12 @@ because it could not be offered under the commercial license.
 - G. Kron, "Electric circuit models of the Schrödinger equation," *Phys.
   Rev.* 67, 39–43, 1945 — eigenvalue networks and boundary terminations.
   Copy in `reference/`.
+- G. Kron, "Multidimensional curve-fitting with self-organizing automata,"
+  *J. Math. Anal. Appl.* 5, 46–69, 1962 — the excited polyhedron and its
+  dual as a least-squares estimator of functions of k variables and their
+  divided differences; Kron's own placement of the polyhedral program in the
+  exterior-form calculus of Cartan, de Rham, Hodge and Whitney (§3a.1,
+  HISTORICAL.md). Copy in `reference/` (`PII_ 0022-247X(62)90005-7.pdf`).
 - P. Russer, "The Transmission Line Matrix Method," TU München (chapter,
   21 pp.) — 2-D and 3-D TLM, boundaries, discrete Green's functions, skin
   effect, nonlinear lumped elements in the mesh; cites Kron 1944 as the
@@ -2568,6 +2746,24 @@ because it could not be offered under the commercial license.
 - P. W. Aitchison, "Diakoptics or tearing — a mathematical approach,"
   *Quarterly of Applied Mathematics* 41, 265–272, 1983 — explicit tearing
   algorithm and non-singularity proof (§3a). Copy in `reference/`.
+- H. Nicholson, "System Concepts in Kron's Polyhedron Model and the
+  Scattering Problem," ACSE Research Report 26, University of Sheffield,
+  1974 (journal version *Int. J. Control* 20(4), 529–555) — Kron's
+  polyhedron model, p-networks and the scattering problem; the one
+  continuation of Kron's multidimensional networks we hold. Copy in
+  `reference/` (`acse research report 26.pdf`, scanned, no text layer).
+  Its companion, ACSE Report 14 (1973; *Proc. IEE* 120, 1545–1557), is open
+  at White Rose eprints 86081.
+- N. V. Balasubramanian, *Differential structures in electromagnetic field
+  and circuit theory*, PhD thesis, University of Liverpool, 1968 (supervisor
+  J. W. Lynn) — Kron's orthogonal networks and his 1944 network model of
+  Maxwell's equations in exterior differential forms (Ch. 2–5), applied to
+  waveguides (Ch. 6) and to Park's and Kron's machine frames, hunting and the
+  affine connection (Ch. 7–9). Its introduction (pp. 6–22) quotes at length
+  from six of Kron's 1958–65 polyhedron papers that are otherwise
+  unobtainable, so it is the project's text for them (HISTORICAL.md). Bridge
+  between `kron/` and `em/` (§3a.1 item 8) and background for
+  `kron/machine.go`. Copy in `reference/` (`642931.pdf`).
 - D. V. Steward, "Partitioning and tearing systems of equations," *SIAM J.
   Numer. Anal. Ser. B* 2, 345–365, 1965 — partitioning algorithms (§3a).
 - A. Brameller, M. N. John, M. R. Scott, *Practical Diakoptics for Electrical
@@ -2581,12 +2777,28 @@ because it could not be offered under the commercial license.
   2013 — chords and affine source terms.
 - *Tensorial Analysis of Networks (TAN) Modelling for PCB Signal Integrity and
   EMC Analysis*, IET, 2020 — TAN applied to boards and EMC.
-- G. Kron, *Equivalent Circuits of Electric Machinery*, Wiley, 1951 (copy
-  in `reference/`, scanned) — the primitive machine, reference frames of
-  rotating machines, and the Epilogue (pp. 253–259): the dynamical
-  equations in holonomic and non-holonomic, Riemannian and non-Riemannian
-  frames, the Christoffel-symbol form (eqs. 3–4) and the speed-voltage
-  tensor G (eq. 9). Basis of `device/machine.go` and `kron/machine.go`.
+- G. Kron, *Equivalent Circuits of Electric Machinery*, Wiley, 1951 — the
+  primitive machine, reference frames of rotating machines, and the
+  Epilogue (pp. 253–259): the dynamical equations in holonomic and
+  non-holonomic, Riemannian and non-Riemannian frames, the
+  Christoffel-symbol form (eqs. 3–4) and the speed-voltage tensor G
+  (eq. 9). Basis of `device/machine.go` and `kron/machine.go`. Noted for
+  later work (doc/M9c1.md, "Not done here"): eq. 11 (p. 259) rewrites the
+  machine equation with the field tensor F_αβ and, with e and R zero, is
+  the equation of motion of a charged particle in an electromagnetic field,
+  the link between the machine's G·i·ω and the Lorentz force of
+  `em/lorentz.go`; frames III and IV (eqs. 12–13, pp. 259–260) cover
+  interconnected machines on a freely rotating frame; part 2 (pp.
+  261–265) reduces the dynamical equations to equivalent circuits through
+  the absolute time derivative and the absolute-frequency tensor n,
+  `Z = n⁻¹R + jX` (eqs. 14–34), the route to an AC model of the N element
+  at speed. Two copies
+  in `reference/`: `Equivalent Circuits of Electric Machinery Kron.pdf`, the
+  complete HathiTrust scan (mdp.39015000477441, Google-digitized, public
+  domain; 305 pages with a text layer; printed page n is PDF page n + 23,
+  so the Epilogue starts at PDF page 276), to be preferred; and
+  `374375674-Gabriel-Kron-Equivalent-Circuits-of-Electric-Machinery-pdf.pdf`,
+  a 146-page image-only scan without a text layer.
 - G. Kron, "Non-Riemannian Dynamics of Rotating Electrical Machinery,"
   *Journal of Mathematics and Physics* 13, 103–194, 1934 — the
   non-holonomic form of Lagrange's equations for machines (cited by the
@@ -2807,6 +3019,26 @@ because it could not be offered under the commercial license.
   developmental encodings.
 - K. Deb et al., "A fast and elitist multiobjective genetic algorithm:
   NSGA-II," *IEEE Trans. Evol. Comput.*, 2002.
+
+**Gauge theory and quantum electrical metrology (H22)**
+- K. G. Wilson, "Confinement of quarks," *Phys. Rev. D* 10, 2445, 1974;
+  J. Kogut, L. Susskind, "Hamiltonian formulation of Wilson's lattice gauge
+  theories," *Phys. Rev. D* 11, 395, 1975 — gauge fields on a lattice, the
+  non-abelian counterpart of Kron's 1944 network.
+- D. Marcos, P. Rabl, E. Rico, P. Zoller, "Superconducting circuits for
+  quantum simulation of dynamical gauge fields," *Phys. Rev. Lett.* 111,
+  110504, 2013 — circuits emulating gauge fields.
+- B. D. Josephson, *Phys. Lett.* 1, 251, 1962; K. v. Klitzing, G. Dorda,
+  M. Pepper, *Phys. Rev. Lett.* 45, 494, 1980; J. P. Pekola et al.,
+  "Single-electron current sources: toward a refined definition of the
+  ampere," *Rev. Mod. Phys.* 85, 1421, 2013; BIPM, *The International
+  System of Units (SI)*, 9th ed., 2019 — the volt, ohm and ampere from e
+  and h.
+- R. de-Picciotto et al., "Direct observation of a fractional charge,"
+  *Nature* 389, 162, 1997; L. Saminadayar, D. C. Glattli, Y. Jin,
+  B. Etienne, "Observation of the e/3 fractionally charged Laughlin
+  quasiparticle," *Phys. Rev. Lett.* 79, 2526, 1997 — fractional charge
+  as a collective electron excitation.
 
 **Gravity and rotation (§3l)**
 - C. W. Misner, K. S. Thorne, J. A. Wheeler, *Gravitation*, Freeman, 1973 —
