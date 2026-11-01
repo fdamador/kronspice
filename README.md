@@ -36,6 +36,8 @@ and curious tinkerers are all welcome here as universal engineers.
 | Water vibrations | Atoms as capacitors and bonds as inductors, with the molecule's vibrations as AC resonances | [examples/water_vibration](examples/water_vibration) |
 | DNA vibrations | The four bases and two Watson–Crick pairs as circuits, with hydrogen bonds as their own group and infrared light as a current source | [examples/dna_vibration](examples/dna_vibration) |
 | Quantum mechanics | Kron's circuit model of the Schrödinger equation | [examples/kron_schrodinger](examples/kron_schrodinger) |
+| Particle models | A ring of charge as one of Kron's machines, its inertia in the metric, measured against the electron | [examples/kron_electron](examples/kron_electron) |
+| Magnetic resonance | Bloch's equations as a machine with a skew speed matrix, the NMR rotating frame as Kron's rotating frame | [examples/kron_nmr](examples/kron_nmr) |
 
 Kron's program was never finished, and neither is this one: his late work on
 multi-dimensional networks is not implemented here. To go deeper, read

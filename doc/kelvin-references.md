@@ -272,8 +272,13 @@ above.
   only adds mode mixing.
 
 Any toroidal-electron hypothesis that is added later goes in the §1
-register beside H1. It must state its standard counterpart, and it must
-meet the measured electron data:
+register beside H1. The first is H21, the ring as one of Kron's machines
+(`examples/kron_electron`, 2026-11-01): it reproduces Part 1 above in
+Kron's frame (the inertia as an inductance in the metric), and on this
+bench gives g ≤ 1 for any ring whose mass circulates with its charge, and
+v = 43.6 c for the massless ring that carries the measured moment. It must
+state its standard counterpart, and it must meet the measured electron
+data:
 
 - the Zeeman and anomalous-magnetic-moment values (g − 2);
 - spin ½ with magnetic moment ≈ 1 Bohr magneton;

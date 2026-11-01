@@ -156,6 +156,93 @@ Stokes' theorem at the boundaries. He proposed these excited polyhedra for
 multi-dimensional curve fitting, partial differential equations, Fourier
 transforms and information-theoretical problems.
 
+**The oscillatory polyhedron as a "self-organizing automaton".** The
+companion paper, "Multidimensional Curve-Fitting with Self-Organizing Automata"
+(*J. Math. Anal. Appl.*, 1962), says what the excited polyhedron was for. A
+polyhedron and its dual carry a sequence of multidimensional waves; immersed in
+a stationary or moving magnetohydrodynamic plasma, "the amorphous field
+crystallizes into a sequence of 2k sets of transmission networks", coupled and
+energized by k-dimensional magnetohydrodynamic generators, which he equates
+with "generalized" rotating electrical machines (abstract, p. 46). Even without
+motion the structure "may assume a self-adaptive 'oscillatory' state" in which
+one polyhedron represents any number of functions of k variables together with
+their divided differences, "without needing any adjustment or interference by
+the analyst" — that is what he meant by a self-organizing automaton. The
+worked examples are least-squares regression of several functions of two
+variables at four non-uniformly spaced points; the oscillatory model fits six
+arbitrary functions at once, while non-oscillatory polyhedra fit only one or a
+small class (p. 46). It even fits a set of random numbers, of which he wrote
+"the significance of this is not yet understood" (p. 69). In the introduction he
+placed the whole program himself within the integration theory of exterior
+differential forms of Cartan, de Rham, Hodge, Whitney and Steenrod, "tensors in
+the large" on the polyhedral networks of algebraic topology (p. 47).
+
+**The electromagnetic structure of the model** (pp. 53–54, 66–68). Each
+q-network is built from his 1944 Maxwell network (Fig. 1, "satisfying eight
+Maxwell's equations simultaneously": four field and four constitutive
+equations). Because even- and odd-dimensional spaces behave differently, one
+complete wave with e, h, b and d needs two networks of neighbouring dimension,
+so a k-dimensional polyhedron carries only k/2 full waves; all even-dimensional
+q-networks are magnetic (inductors and resistances), all odd-dimensional ones
+dielectric (capacitors and conductances), and a dual polyhedron with the roles
+exchanged is interconnected with the first both conductively and inductively,
+supplying the ideal transformers. The total power input to the network is the
+error-square of the regression, so the best fit is the state of least stored
+electromagnetic energy, and a perfect fit stores none, which is why both
+polyhedra must be made oscillatory before excitation (p. 67). Kron called the
+physical interpretation "only tentative" and wrote that "some aspects of the
+physics are still puzzling, but the numerical results speak for themselves"
+(p. 66). The "k-dimensional space" of the paper is the space of the k
+independent variables of a data matrix (p. 47), not physical space: the
+polyhedron is an estimating device, "one engineering tool" (p. 50). The one
+bridge to nature is the closing section "Crystals as Self-Organizing Automata"
+(pp. 67–68): a crystal's atoms as the vertices of a polyhedron, its X-ray-excited
+dipole waves and diffracted field as a self-sustaining system of which the
+polyhedral waves are "surprisingly complete analogues", hence the crystal
+computer, and a remark that a crystal "may also act as a model for some classes
+of neural phenomena".
+
+**Kron's own words, 1958–65, at second hand.** Balasubramanian's 1968
+Liverpool thesis (pp. 7–18) quotes at length from six of the late papers we
+have not obtained, and is our only text for them. From "Multidimensional space
+filters" (1958): the "sequence of alternating magnetic and dielectric networks
+may be called a 'Wave-Model'"; the configuration of 1- to k-dimensional volume
+elements carrying the waves is a "polyhedron"; two or more wave models,
+interconnected or inductively coupled, are a "Multi Dimensional Space Filter";
+the waves "are always accompanied by free and bound electric charges as well as
+by magnetic poles"; and the dielectric lines and magnetic planes of his 1944
+Maxwell circuit form the first complete sequence (thesis pp. 8–9). From "Basic
+concepts" (1959): odd-dimensional spaces conduct the dielectric quantities
+(solenoidal d, e and lamellar D, E), even-dimensional spaces the magnetic ones
+(pp. 10–11). From the General Electric report "Building-blocks of
+self-organizing automata – I" (60GL164, 1960): "The stage for all cognitive
+activities is an underlying n-dimensional field of magnetohydrodynamic plasma.
+Two spatially orthogonal polyhedra are immersed in the fluid in order to
+crystallise the amorphous non linear field into a host of interconnected
+n-dimensional magnetohydrodynamic generators", which "form the elementary
+'neurons' of the projected 'artificial brain'" (pp. 15–17). From "The
+misapplication of graph theory" (1962): "electricity demands its own highly
+specialised underlying topological structure"; both the polyhedron and its
+dual "must be present to propagate an electromagnetic wave", so the complete
+1-network is "a 1-network with an environment", and in the two-phase model
+the eight electromagnetic parameters appear as the four tensors F_αβ, H_αβ,
+s_α, s^α (pp. 11–12). From "The frustrating search" (1963): the discovery of
+differential topology's "tensors in-the-large" (Cartan, de Rham, Hodge,
+Whitney, Eilenberg, Steenrod, Chern and others); incidence matrices satisfy
+Stokes' theorem while connection matrices satisfy Kirchhoff's laws; and the
+crystal as "artificial brain" (pp. 12–15). From "Invisible dual
+(n-1)-networks" (1965): a region of n-space is represented not by n
+one-dimensional axes but by two orthogonal reference axes that are a
+p-hyperplane and an (n−p)-hyperplane, so a continuous region has "a 'primal'
+p-network plus a 'dual' (n-p) network as its abstract reference frame", a
+generalisation of the two-phase frame of rotating machines (pp. 17–18). These
+passages, not the 1962 curve-fitting paper, are where Kron states the physical
+reading (register entry H20 in CLAUDE.md). The thesis's own verdict: it
+"searched, in vain, for some supporting work along the lines of Kron's wave
+structure", found that "many details have not been disclosed by Kron himself,
+even where he has published numerical results", and "does not reach as far as
+Kron's automaton" (pp. 19–20).
+
 Later titles continue the argument, such as "Invisible Dual (n-1)-Networks
 Induced by Electric 1-Networks" (1965). The record of that abstract says the
 visible and invisible p-networks around the branches together form a
@@ -260,12 +347,17 @@ Applied Geometry in Tokyo.
   (Leman et al. 2009; Maurice et al. 2014).
 
 **What did not.** Universal engineering never became an organized discipline
-under that name, and the polyhedral program was not carried on. In 1973 Edwin
-Tolan knew of no one who had taken up the work where Kron left off. He suspected
-that Kron was working toward a general theory of the universe as a whole system,
-but he offered that as his own belief, and it should be read that way. Later
-work on Kron's polyhedra and dual networks exists (Popkov 2007; Petrov 2008), but
-we have seen it only in excerpts.
+under that name, and the polyhedral program was carried on only by a few. In
+1973 Edwin Tolan knew of no one who had taken up the work where Kron left off,
+but in Britain some had: N. V. Balasubramanian's Liverpool thesis (1968, under
+J. W. Lynn) treated Kron's multidimensional wave automaton with differential
+forms; H. Nicholson at Sheffield wrote two reports on the polyhedron model and
+the scattering problem (1973, 1974); and Lynn and Russell published "Kron's Wave
+Automaton" in 1974. Tolan suspected that Kron was working toward a general
+theory of the universe as a whole system, but he offered that as his own
+belief, and it should be read that way. Later work on Kron's polyhedra and dual
+networks exists (Popkov 2007; Petrov 2008), but we have seen it only in
+excerpts.
 
 ## In kronspice
 
@@ -278,7 +370,10 @@ we have seen it only in excerpts.
 | Non-electrical domains as networks | [doc/domains.md](doc/domains.md) |
 | Schrödinger equation as a network | [examples/kron_schrodinger/main.go](examples/kron_schrodinger/main.go) |
 
-kronspice does not implement Kron's polyhedra, p-networks or crystal computer.
+kronspice does not yet implement Kron's polyhedra, p-networks or crystal
+computer. The physical reading of the 1962 polyhedral waves is register entry
+H20 in [CLAUDE.md](CLAUDE.md#hypotheses-under-test), with a build plan for
+`kron/polyhedron.go`.
 
 ## Where the sources disagree
 
@@ -325,6 +420,18 @@ Only the parts named were read, unless noted otherwise.
   Mathematics* 20(2), 161–174, 1962: read in full, as extracted text (equations
   and figures are garbled). Its bibliography misprints *Tensor Analysis of
   Networks* as 1931. In `reference/`.
+- N. V. Balasubramanian, *Differential structures in electromagnetic field and
+  circuit theory*, PhD thesis, University of Liverpool, July 1968, supervised
+  by J. W. Lynn: Chapter 1 (introduction, pp. 6–22, with its long quotations
+  from Kron's 1958–65 papers), the opening of Chapter 2 and the reference
+  list, as extracted text. The rest (exterior forms, Kron's Maxwell network in
+  forms, waveguides, machine frames) is unread.
+  [Open copy](https://livrepository.liverpool.ac.uk/3173930/1/642931.pdf); in
+  `reference/` (`642931.pdf`, 361 pages, with a text layer).
+- G. Kron, "Multidimensional curve-fitting with self-organizing automata,"
+  *Journal of Mathematical Analysis and Applications* 5, 46–69, 1962 (submitted
+  by Richard Bellman): abstract, introduction and closing summary, as extracted
+  text. In `reference/` (`PII_ 0022-247X(62)90005-7.pdf`).
 - H. H. Happ, *Diakoptics and Networks*, Academic Press, 1971: preface and
   acknowledgments. In `reference/`.
 - J. P. Roth, "An application of algebraic topology: Kron's method of tearing,"
@@ -368,6 +475,12 @@ first group is where to start.
   666–683, 1930.
 - "Non-Riemannian dynamics of rotating electrical machinery," *J. Math. Phys.*
   13, 103–194, 1934.
+- "Quasi-holonomic dynamical systems," *Physics* 7, 143–152, 1936; and
+  "Invariant form of the Maxwell–Lorentz field equations for accelerated
+  systems," *J. Appl. Phys.* 9, 196–208, 1938 (Balasubramanian refs. 40–41;
+  the second bears on §3l of CLAUDE.md).
+- "Equivalent circuits of compressible and incompressible fluid flow fields,"
+  *J. Aeronautical Sciences* 12, 221–231, 1945 (Balasubramanian ref. 55).
 - "Equivalent circuit of the field equations of Maxwell — I," *Proc. IRE* 32,
   289–299, 1944.
 - "A set of principles to interconnect the solutions of physical systems,"
@@ -380,11 +493,25 @@ first group is where to start.
 - "Solving highly complex elastic structures in easy stages," *ASME Journal of
   Applied Mechanics* 77, 235–244, 1955.
 - "Tearing and interconnecting as a form of transformation," *Quarterly of
-  Applied Mathematics* 13, 147–159, 1955.
+  Applied Mathematics* 13, 147–159, 1955. In `reference/`
+  (`S0033-569X-1955-73431-7.pdf`); not yet read for this file. Its reference
+  list cites N. Coburn, "A new approach to Kron's work," *J. Math. Phys.* 17,
+  112–122, 1938, and a paper by Hermann Weyl on current distribution in a
+  conducting network (*Revista Matemática Hispano-Americana*).
 - "Solution of complex nonlinear plastic structures by the method of tearing,"
   *J. Aeronautical Sciences* 23, 1956.
 - "Multiple substitution of basic vectors in linear programming," *Matrix and
   Tensor Quarterly* 7, 1956.
+- "A generalization of the calculus of finite differences to nonuniformly
+  spaced variables," *AIEE Transactions* Part I, 77, 539–544, 1958; and
+  "Multidimensional space filters," *Matrix and Tensor Quarterly* 9(2), 1958.
+  Both cited in the 1962 *J. Math. Anal. Appl.* paper as the groundwork of the
+  curve-fitting polyhedron; Balasubramanian gives the first as vol. IX,
+  pp. 40–46, December 1958, and quotes both (pp. 8–11).
+- "Building-blocks of self-organizing automata – I," General Electric Report
+  60GL164, August 1960, 24 pp. Quoted by Balasubramanian (pp. 15–17); the
+  "dynamo-type automata" paper in *Matrix and Tensor Quarterly* 11, 1960, is
+  presumably its published form.
 - "Basic concepts of multi-dimensional space filters," *AIEE Transactions* 78,
   554–561, 1959.
 - "Graphs as illegitimate models of electrical networks," *Matrix and Tensor
@@ -405,8 +532,23 @@ their citations.
 - B. Hoffmann, "Kron's method of subspaces," *Quarterly of Applied Mathematics*
   2, 218–231, 1944; "Kron's non-Riemannian electrodynamics," *Reviews of Modern
   Physics* 21(3), 1949.
-- J. P. Roth, "An application of algebraic topology to numerical analysis," *PNAS*
-  41(7), 518–521, 1955.
+- J. P. Roth, "An application of algebraic topology to numerical analysis: on
+  the existence of a solution to the network problem," *PNAS* 41(7), 518–521,
+  1955. In `reference/` (`roth-1955-an-application-of-algebraic-topology-to-
+  numerical-analysis-on-the-existence-of-a-solution-to-the-network.pdf`); not
+  yet read for this file.
+- H. Nicholson, "The Structure of Kron's Polyhedron Model and the Scattering
+  Problem," ACSE Research Report 14, University of Sheffield, 1973
+  ([open copy](https://eprints.whiterose.ac.uk/id/eprint/86081/)); journal
+  version *Proc. IEE* 120(12), 1545–1557, 1973.
+- H. Nicholson, "System Concepts in Kron's Polyhedron Model and the Scattering
+  Problem," ACSE Research Report 26, University of Sheffield, 1974
+  ([open copy](https://eprints.whiterose.ac.uk/id/eprint/86082/)); journal
+  version *Int. J. Control* 20(4), 529–555, 1974. In `reference/`
+  (`acse research report 26.pdf`, a scan without a text layer); not yet read.
+- J. W. Lynn and R. A. Russell, "Kron's Wave Automaton," in J. J. van Dixhoorn
+  and F. J. Evans (eds.), *Physical Structure in Systems Theory*, Academic
+  Press, 1974, p. 131.
 - W. Givens, review of *Tensor Analysis of Networks*, *Bulletin of the AMS* 47(7),
   536–538, 1941.
 - L. K. Kirchmayer, *Economic Operation of Power Systems*, Wiley, 1958; *Economic
