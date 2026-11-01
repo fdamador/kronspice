@@ -1,0 +1,36 @@
+
+== Earth — Earth surface, latitude 45.0° ==
+  hub clock rate         0.999999999304050  (gravity + site motion)
+  rim clock rate         0.999999999299128
+  rim loses vs hub       4.25e-07 s/day   (rim speed 941 m/s)
+  GM/rc²                 6.95e-10        v²/c² at rim 9.84e-12
+  burst margin           2.00        tidal stress 0.00277 Pa (margin 2.3e+12)
+  spin-axis precession   (here) Thomas 116, geodetic 350, frame dragging 172 mas/yr
+  Sagnac (1 m² loop)     8.372e-14 s per pass; local-frame correction -1.05e-30 s
+
+== Earth — 642 km polar orbit (GP-B), inertially pointed ==
+  hub clock rate         0.999999999052363  (gravity + site motion)
+  rim clock rate         0.999999999047441
+  rim loses vs hub       4.25e-07 s/day   (rim speed 941 m/s)
+  GM/rc²                 6.32e-10        v²/c² at rim 9.84e-12
+  burst margin           2.00        tidal stress 0.00207 Pa (margin 3.07e+12)
+  spin-axis precession   (here) Thomas 0, geodetic 6.62e+03, frame dragging 81.7 mas/yr
+  Sagnac (1 m² loop)     8.372e-14 s per pass; local-frame correction 4.53e-29 s
+  averaged over the orbit geodetic 6621.0, frame dragging 40.85 mas/yr (frame dragging is 39.1 seen against GP-B's guide star; measured 6601.8 ± 18.3 and 37.2 ± 7.2)
+
+== neutron star (illustrative) — hovering 1000 km above its centre (rocket holds it up) ==
+  hub clock rate         0.997930583704828  (gravity + site motion)
+  rim clock rate         0.997930583699917
+  rim loses vs hub       4.25e-07 s/day   (rim speed 941 m/s)
+  GM/rc²                 0.00207        v²/c² at rim 9.84e-12
+  burst margin           2.00        tidal stress 3.34e+05 Pa (margin 1.9e+04)
+  spin-axis precession   (here) Thomas 0, geodetic 0, frame dragging 4.87e+11 mas/yr
+  Sagnac (1 m² loop)     8.372e-14 s per pass; local-frame correction 0 s
+  warning: strong field (GM/rc² = 0.00207): clock rates use the exact Schwarzschild form; precession and Sagnac terms are first-order and only indicative
+
+== The machine's own spacetime (28.3 kg, J = 6.65e+03 kg·m²/s), 1 m away on its axis ==
+  clock shift GM/dc²     2.1e-26   (Earth's at its surface 6.95e-10: ratio 3e-17)
+  tidal curvature        2.1e-26 /m² (Earth's 1.71e-23: ratio 0.0012)
+  frame dragging         9.87e-24 rad/s = 6.43e-08 mas/yr (Earth's at 45° 172 mas/yr: ratio 3.7e-10)
+  Its mass curves spacetime measurably at close range (torsion balances weigh that tidal pull);
+  its spin drags frames about 10^-10 of Earth's own frame dragging, far below any instrument.

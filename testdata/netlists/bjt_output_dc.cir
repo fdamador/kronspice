@@ -1,0 +1,7 @@
+NPN output characteristic at 20 uA base current: saturation, Early effect, collector resistance
+IB 0 b DC 20u
+VCE c 0 0
+Q1 c b 0 qo
+.model qo NPN(IS=1e-15 BF=120 VAF=60 IKF=30m RC=10 RB=50 BR=2 ISE=1e-14 NE=1.5)
+.dc VCE 0 6 0.1
+.end

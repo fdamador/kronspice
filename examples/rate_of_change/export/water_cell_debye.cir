@@ -1,0 +1,7 @@
+plate cell filled with liquid water, 25 °C (single Debye) (A = 0.0001 m², d = 0.001 m)
+V1 top 0 DC 0 AC 1 0
+CINF top 0 4.78126141891221e-12
+RD0 top d0 0.128061410644749
+CD0 d0 0 6.48126547896988e-11
+.ac dec 10 1meg 100g
+.end

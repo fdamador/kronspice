@@ -1,0 +1,9 @@
+parametric
+.model pump MACHINE(L_1_1=0.001 LC_2_1_1=5e-05 N=1)
+.domain mechanical w
+N1 a b w 0 pump
+C1 a 0 2.533029591058444e-05 IC=1
+VW w 0 DC 6283.185307179587
+R1 b 0 0.07853981633974484
+.tran 10u 60m uic
+.end

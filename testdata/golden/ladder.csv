@@ -1,0 +1,8 @@
+# reference: exact rational nodal analysis (independent of the Go solver); regenerate from ngspice with internal/golden/cmd/regen
+name,value
+v(in),8.0
+v(n1),2.6666666666666665
+v(n2),1.3333333333333333
+v(n3),0.6666666666666666
+v(n4),0.3333333333333333
+i(v1),-0.0026666666666666666

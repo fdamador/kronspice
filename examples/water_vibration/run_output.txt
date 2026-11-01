@@ -1,0 +1,29 @@
+Water bonds as a circuit: atoms are mass capacitors, bonds are spring inductors, Wilson's B as E/F transformers
+geometry r_e 0.958 Å, angle 104.4776° (Hoy & Bunker 1979)
+
+force field fitted to H2O fundamentals: f_r 7.6712, f_rr -0.0942, f_a 0.7030 mdyn/Å
+force field fitted to H2O harmonic:     f_r 8.4388, f_rr -0.1191, f_a 0.7514 mdyn/Å
+
+molecule   mode        circuit AC peak   GF eigen     measured   error
+H2O        bend           1595.00 cm⁻¹     1595.00     1595.0   -0.00 %
+H2O        stretch        3657.00 cm⁻¹     3657.00     3657.0   -0.00 %
+H2O        stretch        3756.00 cm⁻¹     3756.00     3756.0   -0.00 %
+           netlist: examples/water_vibration/netlists/h2o.cir   (measured: NIST CCCBDB (Shimanouchi; Huber & Herzberg))
+D2O        bend           1162.51 cm⁻¹     1162.51     1178.0   -1.32 %
+D2O        stretch        2647.26 cm⁻¹     2647.26     2671.0   -0.89 %
+D2O        stretch        2752.05 cm⁻¹     2752.05     2788.0   -1.29 %
+           netlist: examples/water_vibration/netlists/d2o.cir   (measured: NIST CCCBDB (Shimanouchi))
+HDO        bend           1395.34 cm⁻¹     1395.34     1402.0   -0.48 %
+HDO        stretch        2697.36 cm⁻¹     2697.36     2727.0   -1.09 %
+HDO        stretch        3708.98 cm⁻¹     3708.98     3707.0   +0.05 %
+           netlist: examples/water_vibration/netlists/hdo.cir   (measured: NIST CCCBDB (Shimanouchi; Huber & Herzberg))
+H2-18O     bend           1589.15 cm⁻¹     1589.15        —        —
+H2-18O     stretch        3647.51 cm⁻¹     3647.51        —        —
+H2-18O     stretch        3740.70 cm⁻¹     3740.70        —        —
+           netlist: examples/water_vibration/netlists/h218o.cir   (measured: no verified measurement yet: prediction only)
+
+H2O is fitted (0 % by construction); D2O, HDO and H2-18O are predictions with the same bonds.
+The remaining error is anharmonicity. A measured fundamental sits below the harmonic frequency by
+a shift that shrinks with heavier atoms (ω·x ∝ 1/μ against ω ∝ 1/√μ). A harmonic force field fitted
+to H2O's fundamentals absorbs H's larger shift, so it comes out soft and under-predicts deuterium
+modes by about 1 %; the O–H stretch of HDO, closest to H2O, is within 0.1 %.

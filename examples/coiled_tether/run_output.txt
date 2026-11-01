@@ -1,0 +1,54 @@
+Five-mile copper tether, 2.0 mm wire, 8049 m long, 43.0 Ω
+Coiled: 1281 turns, 2 m across, 3.84 m long, 1.0 mm bare gap between turns (vacuum)
+
+1. Earth's magnetic field: motional EMF ∫(v×B)·dl along the wire (orbit 7.7 km/s, 30 µT)
+   craft-frame electric field E' = v×B = 0.231 V/m (the same coupling seen as an electric field)
+   straight 5-mile tether        1858.792 V
+   coiled (ordinary)                0.888 V   = E' × the coil's 3.84 m length: the turns cancel
+   coiled (Tesla bifilar)           0.889 V   same: both strands run the same way through the field
+   straight bifilar (out/back)   1.14e-13 V   out and back cancel
+   field gradient across the orbit adds at most N·A·v·3B/r ≈ 0.00041 V (a dipole field)
+   All of it is quasi-DC: the field seen by the craft changes over an orbit (~90 min), far below any LC resonance.
+   coil spinning at 1 rev/s in the field: AC EMF 0.759 V peak at 1 Hz (energy from the spin, which slows)
+
+2. The Sun: solar array 2 m² × 30 % × 1360.8 W/m² = 816 W into a drive at resonance (high-Q LC)
+   bifilar inter-winding capacitance 5.81e-08 F; ordinary coil's own 1.42e-13 F, so it gets a tank capacitor of the same value
+
+   == ordinary coil + tank capacitor ==
+   L 1.362 H, C 5.81e-08 F, f 565.7 Hz, wire R 43.0 Ω, Q 112.5; wire = 0.015 λ (lumped model valid below 0.1)
+   drive 265.1 V → coil 29784 V peak: voltage multiplied ×112; current 6.15 A
+   between adjacent turns: 23.3 V, 2.33e+04 V/m across the gap
+   electric energy between the turns 6.283e-05 J of 25.783 J stored in all
+   multipactor between turns (vacuum, copper), worst over the ring-up: growth per impact 0.063 (no avalanche at this frequency)
+   steady state: Sun in 815.2 W = heat 814.2 W
+   whole run: in 309.92 J = heat 284.13 J + stored 25.781 J (+ integration error 0.0064 J)
+
+   == Tesla bifilar coil ==
+   L 1.362 H, C 5.81e-08 F, f 565.7 Hz, wire R 43.0 Ω, Q 112.5; wire = 0.015 λ (lumped model valid below 0.1)
+   drive 265.1 V → coil 29784 V peak: voltage multiplied ×112; current 6.15 A
+   between adjacent turns: 14892.2 V, 1.49e+07 V/m across the gap  — above the 10 MV/m declared gap limit: needs insulation or wider spacing
+   electric energy between the turns 25.78 J of 25.783 J stored in all
+   multipactor between turns (vacuum, copper), worst over the ring-up: growth per impact 0.070 (no avalanche at this frequency)
+   steady state: Sun in 815.2 W = heat 814.2 W
+   whole run: in 309.92 J = heat 284.13 J + stored 25.781 J (+ integration error 0.0064 J)
+
+   == Tesla bifilar coil, matched load ==
+   L 1.362 H, C 5.81e-08 F, f 565.7 Hz, wire R 43.0 Ω, Q 56.2; wire = 0.015 λ (lumped model valid below 0.1)
+   drive 374.9 V → coil 21064 V peak: voltage multiplied ×56; current 4.35 A
+   between adjacent turns: 10532.1 V, 1.05e+07 V/m across the gap  — above the 10 MV/m declared gap limit: needs insulation or wider spacing
+   electric energy between the turns 12.89 J of 12.895 J stored in all
+   multipactor between turns (vacuum, copper), worst over the ring-up: growth per impact 0.070 (no avalanche at this frequency)
+   steady state: Sun in 815.2 W = heat 406.9 W + load 406.9 W
+   whole run: in 155.13 J = heat 142.23 J + stored 12.894 J (+ integration error 0.0032 J)
+
+3. Driving the resonance from Earth's field instead would need the coil to spin at 566 rev/s:
+   rim speed 3554 m/s against 1881 m/s, the burst speed of T1000G carbon fibre (the strongest rotor material in spacetime/) — it would fly apart.
+
+4. Where electrons would multiply in the same 1 mm vacuum gap (worst amplitude up to 2 kV):
+        566 Hz: worst growth 0.071 at 480 V
+      1e+06 Hz: worst growth 0.067 at 2000 V
+      1e+08 Hz: worst growth 0.079 at 2000 V
+      1e+09 Hz: worst growth 1.657 at 120 V  — avalanche; its electrons take their energy from the drive (and at this frequency the 8 km wire is many wavelengths: not a coil resonance)
+      3e+09 Hz: worst growth 2.029 at 480 V  — avalanche; its electrons take their energy from the drive (and at this frequency the 8 km wire is many wavelengths: not a coil resonance)
+
+Multiplication is real for voltage (Q) and for electrons (multipactor); the ledger traces every joule to the Sun's array.

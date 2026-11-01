@@ -1,0 +1,10 @@
+PNP emitter follower swept from saturation through the active region to cutoff
+VCC vcc 0 10
+VN vn 0 -5
+VIN in 0 0
+RE vcc e 2k
+RL c vn 1k
+Q1 c in e qp
+.model qp PNP(IS=5e-15 BF=80 VAF=40 IKF=20m BR=3 RB=100 RE=1 RC=5 ISE=2e-14 NE=1.7)
+.dc VIN -8 10 0.25
+.end

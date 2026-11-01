@@ -1,0 +1,11 @@
+# reference: damped Newton on the level-1 equations, finite-difference Jacobian (internal/golden/ref/bjt_ref.py)
+name,value
+v(vdd),5.0
+v(g),3.2
+v(s),1.7468845086985159
+v(vb),-1.0
+v(gp),3.0
+v(dp),3.435363157016579
+i(vdd),-0.000861761091040052
+i(m1),0.0001746884596367515
+i(m2),-0.0006870726314033182

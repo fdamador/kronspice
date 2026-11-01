@@ -1,0 +1,25 @@
+homopolar with ball-bearing current path
+.model da MACHINE(G_1_2=0.008839999999999999 L_1_1=1e-09 L_2_2=0.001 N=2)
+.model db MACHINE(G_1_2=-0.008839999999999999 L_1_1=1e-09 L_2_2=0.001 N=2)
+.domain mechanical w1 w2
+IFA 0 fa DC 1
+RIFA fa 0 1000
+IFB 0 fb DC 1
+RIFB fb 0 1000
+VW1 w1 0 DC 600
+VW2 w2 0 DC 600
+RF1 w1 0 25000
+RF2 w2 0 25000
+P10 t1 ax1 w1 0 0.001 KAPPA=0 VF=0.73 W0=600
+P11 t1 ax1 w1 0 0.001 KAPPA=0 VF=0.73 W0=600
+RD1 ax1 c1 1.0774907659155098e-06
+NA rim1 c1 fa 0 w1 0 da
+RBELT rim1 rim2 0.0001
+NB rim2 c2 fb 0 w2 0 db
+RD2 c2 ax2 1.0774907659155098e-06
+P20 ax2 t2 w2 0 0.001 KAPPA=0 VF=0.73 W0=600
+P21 ax2 t2 w2 0 0.001 KAPPA=0 VF=0.73 W0=600
+RL t1 t2 2
+RREF t2 0 1e+06
+.op
+.end

@@ -1,0 +1,4 @@
+stack,pairs,atoms,vibrations,springs,couplings_inside_bases,pairing_couplings,stacking_couplings,rise_start_A,rise_min_A,twist_start_deg,twist_min_deg,lowest_cm-1,modes_below_200,stacking_modes_below_200
+polyA2,2,72,210,194,11664,12280,23938,"4.24","4.82","45.85","12.67",11.6,30,5
+polyA3,3,108,318,291,17496,18438,70888,"4.17 4.17","4.77 4.87","43.51 42.06","15.76 11.11",11.1,48,10
+polyA4,4,144,426,388,23328,24564,141034,"3.96 4.24 3.96","4.69 4.86 4.79","38.30 43.73 36.62","19.22 13.23 10.50",8.3,66,14

@@ -1,0 +1,12 @@
+{
+  "name": "rc_lowpass_values",
+  "netlist": "circuit.cir",
+  "genes": [
+    {"element": "R1", "min": 100, "max": 1e6, "series": "E24"},
+    {"element": "C1", "min": 1e-10, "max": 1e-5, "series": "E12"}
+  ],
+  "objectives": [
+    {"kind": "cutoff", "node": "out", "target_hz": 1000}
+  ],
+  "ga": {"population": 40, "generations": 40, "seed": 1, "timeout_ms": 2000, "target_fitness": 0.006}
+}

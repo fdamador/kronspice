@@ -1,0 +1,27 @@
+Common-emitter 2N3904 amplifier, bias and frequency-shaping values to be evolved
+* Source with 600 ohm output resistance, coupled into the base.
+VCC vcc 0 12
+VIN in 0 DC 0 AC 1
+RS in s 600
+CIN s b 1u
+* Bias divider.
+R1 vcc b 47k
+R2 b 0 10k
+* Collector load, partly bypassed emitter: the unbypassed RE1 sets the gain.
+RC vcc c 4.7k
+RE1 e e2 100
+RE2 e2 0 1k
+CE e2 0 100u
+* Collector-base (Miller) capacitor: sets the upper band edge.
+CF c b 10p
+* Output coupled into the load.
+COUT c o 10u
+RL o 0 10k
+Q1 c b e Q2N3904
+* 2N3904 Gummel-Poon model, Fairchild datasheet "2N3904 NPN General Purpose
+* Amplifier" (1997), SPICE model section. ISE is 6.734f as in the vendor model
+* library; the datasheet print reads "Ise=6.734", a known misprint. XTI, EG
+* and XTB are temperature coefficients, unused at 27 C.
+.model Q2N3904 NPN(IS=6.734f XTI=3 EG=1.11 VAF=74.03 BF=416.4 NE=1.259 ISE=6.734f IKF=66.78m XTB=1.5 BR=0.7371 NC=2 ISC=0 IKR=0 RC=1 CJC=3.638p MJC=0.3085 VJC=0.75 FC=0.5 CJE=4.493p MJE=0.2593 VJE=0.75 TR=239.5n TF=301.2p ITF=0.4 VTF=4 XTF=2 RB=10)
+.ac dec 20 10 100meg
+.end

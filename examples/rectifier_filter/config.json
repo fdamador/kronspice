@@ -1,0 +1,14 @@
+{
+  "name": "rectifier_filter",
+  "netlist": "circuit.cir",
+  "genes": [
+    {"element": "C1", "min": 1e-7, "max": 1e-3, "series": "E12"},
+    {"element": "R1", "min": 100, "max": 1e5, "series": "E24"},
+    {"model": "dr", "param": "rs", "min": 0.05, "max": 50}
+  ],
+  "objectives": [
+    {"kind": "tran_mean", "node": "out", "from": 4e-3, "to": 8e-3, "target": 9.0},
+    {"kind": "tran_ripple", "node": "out", "from": 4e-3, "to": 8e-3, "max": 0.2}
+  ],
+  "ga": {"population": 30, "generations": 25, "seed": 11, "timeout_ms": 5000, "target_fitness": 0.002}
+}

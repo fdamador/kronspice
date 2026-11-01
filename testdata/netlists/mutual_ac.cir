@@ -1,0 +1,10 @@
+Coupled inductors (K = 0.9): a loosely coupled 1:2 transformer, tuned secondary
+V1 in 0 DC 0 AC 1
+R1 in p 50
+L1 p 0 10u
+L2 s 0 40u
+K1 L1 L2 0.9
+C2 s 0 1n
+R2 s 0 2k
+.ac dec 20 10k 100meg
+.end

@@ -1,0 +1,12 @@
+# Keep the build context small: sources only.
+.git
+.github
+.sync
+.vscode
+runs/
+reference/
+doc/
+internal/golden/docker/logs/
+**/*.test
+**/*.out
+*.pdf

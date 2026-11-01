@@ -1,0 +1,8 @@
+Level-2 NMOS transfer characteristic from weak to strong inversion (NFS)
+VDS d 0 0.1
+VGS g 0 0
+VBS b 0 -1
+M1 d g 0 b n2 L=2u W=10u
+.model n2 NMOS(LEVEL=2 TOX=25n NSUB=2e16 UO=600 LD=0.15u XJ=0.3u DELTA=1 UCRIT=5e4 UEXP=0.15 NFS=1e11 NEFF=1.5)
+.dc VGS 0 2 0.025
+.end

@@ -1,0 +1,46 @@
+Ring: 96 sections, Z0 31.6 Ω, 4 wavelengths around, f = 1.314 MHz, loss 0.20 Np per lap (R 0.132 Ω/section)
+Towers: A at 0°, B at 180°; each two radiators 6 sections (λ/4) apart, 10 mA each
+
+traveling A1   +0°  A2  -90°  B1   -0°  B2  -90°  
+          peak 3.294 V, envelope min/max 0.925, mean eastward power flow 0.155 W
+          towers deliver 0.06255 W (A 0.0313 W, B 0.0313 W) = ring loss 0.06254 W; stored 0.475 µJ; ledger mismatch 1.1e-09 of 6.69e-06 J in
+
+standing  A1   +0°  A2  -90°  B1   -0°  B2  +90°  
+          peak 3.328 V, envelope min/max 0.018, mean eastward power flow 0.000163 W
+          towers deliver 0.03136 W (A 0.0155 W, B 0.0159 W) = ring loss 0.03135 W; stored 0.238 µJ; ledger mismatch 4.3e-10 of 3.43e-06 J in
+
+cancel    A1   +0°  A2  -90°  B1 +180°  B2  +90°  
+          peak 0.167 V, envelope min/max 0.904, mean eastward power flow 0.0003 W
+          towers deliver 0.000161 W (A 8.05e-05 W, B 8.05e-05 W) = ring loss 0.0001609 W; stored 0.00122 µJ; ledger mismatch -4.5e-12 of 2.06e-07 J in
+
+Four towers: A 0°, C 90°, B 180°, D 270° (each pair: east launcher + west launcher)
+
+state                      |V| 0°      90°     180°     270°      peak   towers W     loss W  stored µJ
+A–B standing                3.012    3.324    3.328    3.008     3.328    0.03136    0.03135      0.238
+                         A1   +0°  A2 +270°  B1   +0°  B2  +90°  
+                         V at the quarter points in step: true, spread 10 % (+3.008 +3.323 +3.327 +3.004 V)
+C–D standing                3.008    3.012    3.324    3.328     3.328    0.03136    0.03135      0.238
+                         C1   +0°  C2 +270°  D1   +0°  D2  +90°  
+                         V at the quarter points in step: true, spread 10 % (+3.004 +3.008 +3.323 +3.327 V)
+both, synchronized          6.023    6.339    6.656    6.340     6.656     0.1252     0.1252      0.951
+                         A1   +0°  A2 +270°  B1   +0°  B2  +90°  C1   +0°  C2 +270°  D1   +0°  D2  +90°  
+                         V at the quarter points in step: true, spread 10 % (+6.006 +6.324 +6.643 +6.324 V)
+both, C–D antiphase         0.004    0.315    0.004    0.323     0.323  0.0002405  0.0002415    0.00183
+                         A1   +0°  A2 +270°  B1   +0°  B2  +90°  C1 +180°  C2  +90°  D1 +180°  D2 +270°  
+                         V at the quarter points in step: false, spread 99 % (-0.004 -0.298 -0.004 +0.306 V)
+both, C–D shifted 45°       5.127    5.433    5.669    5.338     6.088     0.1069     0.1069      0.812
+                         A1   +0°  A2 +270°  B1   +0°  B2  +90°  C1 +315°  C2 +225°  D1  +45°  D2 +135°  
+                         V at the quarter points in step: true, spread 10 % (+5.094 +5.412 +5.638 +5.318 V)
+
+Eight towers: A 0°, E 45°, C 90°, G 135°, B 180°, F 225°, D 270°, H 315°
+  E–F standing                         |V| at 0°…315°:  2.99  2.99  3.30  3.30  3.30  3.31  2.99  2.98  towers 0.03136 W = loss 0.03135 W, stored 0.238 µJ
+  eight towers, synchronized           |V| at 0°…315°: 11.95 12.26 12.58 12.90 13.22 12.90 12.58 12.26  towers 0.5006 W = loss 0.5005 W, stored 3.8 µJ
+  eight towers, 45° set in antiphase   |V| at 0°…315°:  0.00  0.32  0.00  0.32  0.00  0.32  0.00  0.32  towers 0.0002414 W = loss 0.0002414 W, stored 0.00232 µJ
+
+DC bias per pair (synchronized RF): A–B supply 100 V, C–D supply 50 V, 1 MΩ feeds
+  continuous ring
+    DC at 0°/90°/180°/270°: 75.0 / 75.0 / 75.0 / 75.0 V; RF on top: 5.97 / 6.29 / 6.60 / 6.29 V; peak 81.7 V
+    DC current between the pairs' supplies 50 µA, dissipated in the feeds 2.5 mW
+  sectored ring (10 µF blocking caps at 45°, 135°, 225°, 315°)
+    DC at 0°/90°/180°/270°: 100.0 / 50.0 / 100.0 / 50.0 V; RF on top: 5.97 / 6.29 / 6.60 / 6.29 V; peak 106.7 V
+    DC current between the pairs' supplies 2.8e-08 µA, dissipated in the feeds 1.4e-09 mW

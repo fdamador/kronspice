@@ -1,0 +1,15 @@
+Linear controlled sources E, F, G and H
+V1 a 0 2
+R1 a 0 1k
+R2 a m 1k
+VS m 0 0
+E1 e 0 a 0 3
+RE e 0 1k
+G1 0 g a 0 2m
+RG g 0 500
+H1 h 0 VS 500
+RH h 0 1k
+F1 0 f VS 3
+RF f 0 100
+.op
+.end

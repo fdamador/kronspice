@@ -1,0 +1,9 @@
+Low-pass filter grown from an empty embryo (test fixture after Koza et al. 1999, ch. 25)
+* 1 V source with 1 kohm source resistance feeding node "in"; 1 kohm load on
+* node "out". Nothing connects "in" to "out": evolution supplies every part.
+* A matched passband therefore sits at -6.02 dB.
+VIN vs 0 DC 0 AC 1
+RS vs in 1k
+RL out 0 1k
+.ac dec 20 10 100k
+.end

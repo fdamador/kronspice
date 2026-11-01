@@ -1,0 +1,8 @@
+# reference: ngspice-39 operating point of testdata/netlists/ladder.cir (internal/golden/ref/ngspice_all.sh)
+name,value
+v(in),8.000000000000000e+00
+v(n1),2.666666666666667e+00
+v(n2),1.333333333333333e+00
+v(n3),6.666666666666666e-01
+v(n4),3.333333333333333e-01
+i(v1),-2.66666666666667e-03

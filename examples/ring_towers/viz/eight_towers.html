@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eight-tower ring</title>
+<!-- SPDX-License-Identifier: GPL-3.0-only OR LicenseRef-kronspice-Commercial -->
+<!-- Copyright (C) 2026 Franklin Amador. Data: go run ./examples/ring_towers -phasors (kronspice transient simulation of each launcher alone). -->
+<style>
+:root{--bg:#faf9f5;--card:#f1efe8;--text:#1f1e1d;--muted:#5f5e5a;--border:rgba(0,0,0,.15);--accent:#185FA5;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1f1e1d;--card:#2c2c2a;--text:#f1efe8;--muted:#b4b2a9;--border:rgba(255,255,255,.2);--accent:#85B7EB;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1f1e1d;--card:#2c2c2a;--text:#f1efe8;--muted:#b4b2a9;--border:rgba(255,255,255,.2);--accent:#85B7EB;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:760px;margin:0 auto;padding:20px 16px 32px}h1{font-size:20px;font-weight:500;margin:0 0 4px}p.sub{color:var(--muted);margin:0 0 16px;font-size:14px}
+button{font:inherit;font-size:13px;color:var(--text);background:transparent;border:1px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer}
+button.on{border-color:var(--accent);color:var(--accent)}input[type=range]{width:100%}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 10px;font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:150px minmax(0,1fr) 64px;gap:8px 12px;align-items:center;font-size:13px;color:var(--muted);margin:0 0 10px}
+.grid output{color:var(--text);font-weight:500}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:12px}
+.card{background:var(--card);border-radius:8px;padding:10px 14px}.card div:first-child{font-size:13px;color:var(--muted)}.card div:last-child{font-size:17px;font-weight:500}
+.sw{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:4px}canvas{width:100%;height:auto;display:block}
+.note{font-size:12px;color:var(--muted);margin-top:8px}
+</style></head><body><main>
+<h1>Eight towers on the ring</h1>
+<p class="sub">A 0°, E 45°, C 90°, G 135°, B 180°, F 225°, D 270°, H 315°. Each pair has an east launcher and a west launcher (two radiators a quarter wavelength apart; arrows show the launch direction). Timing and position phase per pair; data from the kronspice simulation (TestEightTowers).</p>
+<div class="row"><button id="p1">All synchronized</button><button id="p2">45° set antiphase</button><button id="p3">Only 0°/90° set</button><button id="p4">Only 45° set</button></div>
+<div id="ctl" style="display:grid;grid-template-columns:110px minmax(0,1fr) 44px minmax(0,1fr) 44px 30px;gap:6px 10px;align-items:center;font-size:12px;color:var(--muted);margin:0 0 10px">
+<span></span><span>timing phase</span><span></span><span>position phase</span><span></span><span>on</span></div>
+<div class="row"><button id="play">Pause</button><label for="spd">Speed</label><input type="range" id="spd" min="0.1" max="2" step="0.1" value="0.6" style="width:100px">
+<label><input type="checkbox" id="comp"> show each pair</label>
+<span><span class="sw" style="background:#1D9E75"></span>total</span><span><span class="sw" style="border-top:1.5px dashed #888780;height:0"></span>envelope</span>
+<span><span class="sw" style="background:#7F77DD"></span>0°/90° set</span><span><span class="sw" style="background:#D85A30"></span>45° set</span></div>
+<canvas id="cv" width="680" height="420"></canvas>
+<div class="cards"><div class="card" style="grid-column:1/-1"><div>|V| at the towers: A 0° · E 45° · C 90° · G 135° · B 180° · F 225° · D 270° · H 315°</div><div id="o-q" style="font-family:monospace">–</div></div>
+<div class="card"><div>Peak anywhere</div><div id="o-pk">–</div></div><div class="card"><div>Towers' power (= ring loss)</div><div id="o-p">–</div></div><div class="card"><div>Power by pair AB / CD / EF / GH</div><div id="o-pp">–</div></div></div>
+<script>
+const AE=[[-0.1743,1.4283],[-0.6141,1.3303],[-1.0106,1.1422],[-1.3369,0.8772],[-1.571,0.5538],[-1.6972,0.1943],[-1.7074,-0.1766],[-1.5999,-0.6162],[-1.3838,-1.012],[-1.0745,-1.3372],[-0.6932,-1.57],[-0.2663,-1.6949],[0.1769,-1.7037],[0.6062,-1.5965],[0.9924,-1.381],[1.3093,-1.0723],[1.5357,-0.6918],[1.6565,-0.2657],[1.6639,0.1766],[1.558,0.6051],[1.3464,0.9906],[1.0439,1.307],[0.6716,1.5331],[0.2552,1.6538],[-0.1769,1.6613],[-0.5951,1.5556],[-0.9709,1.3444],[-1.2791,1.0425],[-1.4988,0.6708],[-1.6154,0.255],[-1.6215,-0.1765],[-1.5172,-0.5942],[-1.3099,-0.9697],[-1.0142,-1.2775],[-0.6508,-1.4971],[-0.2445,-1.6137],[0.1767,-1.6199],[0.5841,-1.5158],[0.9499,-1.3088],[1.2495,-1.0135],[1.4627,-0.6504],[1.5754,-0.2445],[1.5802,0.1763],[1.4774,0.5835],[1.2744,0.9491],[0.9854,1.2487],[0.6305,1.4619],[0.2342,1.5746],[-0.1764,1.5796],[-0.5732,1.477],[-0.9293,1.2742],[-1.2206,0.9854],[-1.4275,0.6307],[-1.5363,0.2345],[-1.5399,-0.176],[-1.4386,-0.5729],[-1.2398,-0.9291],[-0.9573,-1.2205],[-0.6109,-1.4275],[-0.2243,-1.5365],[0.176,-1.5403],[0.5625,-1.4392],[0.9091,-1.2405],[1.1923,-0.9581],[1.3931,-0.6116],[1.4981,-0.2248],[1.5006,0.1756],[1.4009,0.5625],[1.2061,0.9094],[0.9301,1.1929],[0.5918,1.394],[0.2147,1.4993],[-0.1755,1.502],[-0.552,1.4024],[-0.8894,1.2077],[-1.1647,0.9315],[-1.3595,0.593],[-1.4608,0.2155],[-1.4622,-0.1751],[-1.364,-0.5522],[-1.1733,-0.8901],[-0.9035,-1.166],[-0.5733,-1.3613],[-0.2054,-1.463],[0.1749,-1.4647],[0.5417,-1.3665],[0.87,-1.1757],[1.1376,-0.9056],[1.3266,-0.5749],[1.4245,-0.2064],[1.4248,0.1746],[1.3281,0.5422],[1.1414,0.8713],[0.8777,1.1397],[0.5553,1.3293],[0.1964,1.4276]];
+const BW=[[-0.176,1.5398],[0.2345,1.5362],[0.6307,1.4274],[0.9855,1.2205],[1.2743,0.9293],[1.4771,0.5732],[1.5797,0.1764],[1.5747,-0.2342],[1.4619,-0.6305],[1.2487,-0.9854],[0.9492,-1.2743],[0.5835,-1.4773],[0.1763,-1.5801],[-0.2445,-1.5753],[-0.6505,-1.4626],[-1.0136,-1.2495],[-1.3089,-0.9499],[-1.5159,-0.584],[-1.62,-0.1767],[-1.6138,0.2445],[-1.4971,0.6507],[-1.2776,1.0142],[-0.9697,1.3098],[-0.5942,1.5171],[-0.1765,1.6215],[0.255,1.6153],[0.6708,1.4987],[1.0426,1.279],[1.3445,0.9709],[1.5557,0.595],[1.6614,0.1769],[1.6539,-0.2552],[1.5332,-0.6716],[1.3071,-1.0439],[0.9907,-1.3463],[0.6052,-1.5579],[0.1766,-1.6638],[-0.2658,-1.6564],[-0.6918,-1.5356],[-1.0723,-1.3092],[-1.3811,-0.9923],[-1.5966,-0.6062],[-1.7038,-0.1769],[-1.695,0.2663],[-1.5701,0.6931],[-1.3373,1.0744],[-1.0121,1.3837],[-0.6162,1.5998],[-0.1766,1.7073],[0.1943,1.6971],[0.5539,1.5709],[0.8773,1.3368],[1.1423,1.0106],[1.3304,0.6141],[1.4284,0.1743],[1.4277,-0.1964],[1.3294,-0.5552],[1.1397,-0.8776],[0.8713,-1.1413],[0.5422,-1.3281],[0.1746,-1.4248],[-0.2064,-1.4244],[-0.575,-1.3266],[-0.9057,-1.1376],[-1.1758,-0.8699],[-1.3666,-0.5416],[-1.4648,-0.1749],[-1.4631,0.2054],[-1.3613,0.5732],[-1.166,0.9035],[-0.8902,1.1733],[-0.5523,1.364],[-0.1752,1.4622],[0.2155,1.4608],[0.593,1.3594],[0.9315,1.1646],[1.2077,0.8893],[1.4025,0.552],[1.5021,0.1755],[1.4994,-0.2146],[1.3941,-0.5918],[1.193,-0.93],[0.9094,-1.2061],[0.5625,-1.4008],[0.1756,-1.5005],[-0.2248,-1.498],[-0.6116,-1.393],[-0.9581,-1.1923],[-1.2406,-0.9091],[-1.4393,-0.5625],[-1.5404,-0.176],[-1.5366,0.2242],[-1.4276,0.6108],[-1.2205,0.9573],[-0.9291,1.2397],[-0.5729,1.4386]];
+const N=96,D2R=Math.PI/180,AMP=0.01,$=id=>document.getElementById(id);
+const TW={A:{x:0,east:1,base:0},C:{x:24,east:1,base:0},E:{x:12,east:1,base:180},G:{x:36,east:1,base:180},B:{x:48,east:0,base:0},D:{x:72,east:0,base:0},F:{x:60,east:0,base:180},H:{x:84,east:0,base:180}};
+const PAIRS=[["AB","A","B","#7F77DD"],["CD","C","D","#7F77DD"],["EF","E","F","#D85A30"],["GH","G","H","#D85A30"]];
+const src=t=>TW[t].east?AE:BW,ref=t=>TW[t].east?0:48;
+function V(t){const s=src(t),r=ref(t),sg=TW[t].base?-1:1;return Array.from({length:N},(_,k)=>{const v=s[(k-(TW[t].x-r)+2*N)%N];return [sg*v[0],sg*v[1]];});}
+const LV={};Object.keys(TW).forEach(t=>LV[t]=V(t));
+const RADS=t=>{const x=TW[t].x,b=TW[t].base;return TW[t].east?[[x,b],[x+6,(b+270)%360]]:[[x,b],[x+6,(b+90)%360]];};
+function rot(v,d){const c=Math.cos(d),s=Math.sin(d);return [v[0]*c+v[1]*s,v[1]*c-v[0]*s];}
+const ctl=$('ctl');PAIRS.forEach(([n,e,w,col])=>{ctl.insertAdjacentHTML('beforeend',`<span style="color:${col};font-weight:500">${n} (${TW[e].x*3.75}°/${TW[w].x*3.75}°)</span><input type="range" id="t${n}" min="-180" max="180" step="5" value="0"><output id="t${n}o">0°</output><input type="range" id="x${n}" min="-180" max="180" step="5" value="0"><output id="x${n}o">0°</output><input type="checkbox" id="o${n}" checked>`);});
+let C=null,ph=0,run=true,last=null;
+function offs(){const o={},on={};PAIRS.forEach(([n,e,w])=>{const t=+$('t'+n).value,x=+$('x'+n).value;o[e]=t-x;o[w]=t+x;on[n]=$('o'+n).checked;$('t'+n+'o').textContent=t+'°';$('x'+n+'o').textContent=x+'°';});return {o,on};}
+function sum(list,o){const out=Array.from({length:N},()=>[0,0]);list.forEach(t=>LV[t].forEach((v,k)=>{const r=rot(v,o[t]*D2R);out[k][0]+=r[0];out[k][1]+=r[1];}));return out;}
+function pw(list,o,tot){let P=0;list.forEach(t=>RADS(t).forEach(([nd,p])=>{const f=(p+o[t])*D2R;P+=0.5*(tot[nd][0]*AMP*Math.sin(f)+tot[nd][1]*AMP*Math.cos(f));}));return P;}
+function recompute(){const {o,on}=offs();const act=[];PAIRS.forEach(([n,e,w])=>{if(on[n])act.push(e,w);});const tot=sum(act,o);
+const per=PAIRS.map(([n,e,w])=>({n,on:on[n],v:sum([e,w],o),p:on[n]?pw([e,w],o,tot):0}));C={tot,per,act};
+const env=k=>Math.hypot(tot[k][0],tot[k][1]);$('o-q').textContent=[0,12,24,36,48,60,72,84].map(k=>env(k).toFixed(1)).join(' · ')+' V';
+let pk=0;for(let k=0;k<N;k++)pk=Math.max(pk,env(k));$('o-pk').textContent=pk.toFixed(2)+' V';
+const P=per.reduce((a,b)=>a+b.p,0);$('o-p').textContent=(P*1e3).toFixed(1)+' mW';$('o-pp').textContent=per.map(x=>(x.p*1e3).toFixed(0)).join(' / ')+' mW';}
+ctl.addEventListener('input',recompute);
+const set=f=>{PAIRS.forEach(([n],i)=>{const [t,x,on]=f(i);$('t'+n).value=t;$('x'+n).value=x;$('o'+n).checked=on;});recompute();};
+$('p1').onclick=()=>set(i=>[0,0,true]);$('p2').onclick=()=>set(i=>[i>1?180:0,0,true]);$('p3').onclick=()=>set(i=>[0,0,i<2]);$('p4').onclick=()=>set(i=>[0,0,i>1]);
+$('play').onclick=()=>{run=!run;$('play').textContent=run?'Pause':'Play';};
+const cv=$('cv'),cx=cv.getContext('2d');const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const val=(a,k,t)=>a[k][0]*Math.cos(t)+a[k][1]*Math.sin(t);
+function draw(){if(!C)return;const tp=css('--text'),ts=css('--muted'),bd=css('--border');cx.clearRect(0,0,680,420);
+let VS=4;for(let k=0;k<N;k++)VS=Math.max(VS,Math.hypot(C.tot[k][0],C.tot[k][1]));VS=Math.ceil(VS/2)*2;
+const ox=200,oy=210,R=92,S=55;cx.strokeStyle=bd;cx.lineWidth=1;cx.setLineDash([3,4]);cx.beginPath();cx.arc(ox,oy,R,0,2*Math.PI);cx.stroke();cx.setLineDash([]);
+const ring=(a,col,w)=>{cx.strokeStyle=col;cx.lineWidth=w;cx.beginPath();for(let k=0;k<=N;k++){const kk=k%N,an=kk*2*Math.PI/N,r=R+S*val(a,kk,ph)/VS;const x=ox+r*Math.cos(an),y=oy-r*Math.sin(an);k?cx.lineTo(x,y):cx.moveTo(x,y);}cx.stroke();};
+if($('comp').checked)C.per.forEach((p,i)=>{if(p.on)ring(p.v,PAIRS[i][3],1);});ring(C.tot,'#1D9E75',2.5);
+cx.font='12px sans-serif';cx.textAlign='center';cx.textBaseline='middle';
+PAIRS.forEach(([n,e,w,col])=>{[e,w].forEach(t=>{const tw=TW[t],on=$('o'+n).checked;[tw.x,tw.x+6].forEach((nd,j)=>{const a=nd*2*Math.PI/N;cx.fillStyle=on?col:bd;cx.beginPath();cx.arc(ox+R*Math.cos(a),oy-R*Math.sin(a),j?3:4.5,0,2*Math.PI);cx.fill();});
+const a0=(tw.x+3)*2*Math.PI/N,rr=R-16,dir=tw.east?1:-1,a1=a0+dir*0.12;cx.strokeStyle=on?col:bd;cx.lineWidth=1.5;cx.beginPath();cx.arc(ox,oy,rr,Math.min(-a0,-a1),Math.max(-a0,-a1));cx.stroke();
+const hx=ox+rr*Math.cos(a1),hy=oy-rr*Math.sin(a1),tx=-Math.sin(a1)*dir,ty=-Math.cos(a1)*dir;cx.fillStyle=on?col:bd;cx.beginPath();cx.moveTo(hx+tx*6,hy+ty*6);cx.lineTo(hx-ty*3.5,hy+tx*3.5);cx.lineTo(hx+ty*3.5,hy-tx*3.5);cx.fill();
+const la=tw.x*2*Math.PI/N;cx.fillStyle=tp;cx.fillText(t+' '+(tw.x*3.75)+'°',ox+(R+S+16)*Math.cos(la),oy-(R+S+16)*Math.sin(la));});});
+const x0=392,W=278,y0=210,H=150;cx.strokeStyle=bd;cx.lineWidth=0.5;cx.beginPath();cx.moveTo(x0,y0);cx.lineTo(x0+W,y0);cx.stroke();
+for(let d=0;d<=360;d+=45){const x=x0+W*d/360;cx.beginPath();cx.moveTo(x,y0-H);cx.lineTo(x,y0+H);cx.stroke();if(d%90===0){cx.fillStyle=ts;cx.font='11px sans-serif';cx.fillText(d+'°',x,y0+H+12);}}
+cx.fillStyle=ts;cx.textAlign='left';cx.fillText('+'+VS+' V',x0+2,y0-H+8);cx.fillText('−'+VS+' V',x0+2,y0+H-8);cx.textAlign='center';
+const lin=(f,col,w,dash)=>{cx.strokeStyle=col;cx.lineWidth=w;cx.setLineDash(dash||[]);cx.beginPath();for(let k=0;k<=N;k++){const kk=k%N,x=x0+W*k/N,y=y0-H*f(kk)/VS;k?cx.lineTo(x,y):cx.moveTo(x,y);}cx.stroke();cx.setLineDash([]);};
+const e=k=>Math.hypot(C.tot[k][0],C.tot[k][1]);lin(e,'#888780',1,[4,3]);lin(k=>-e(k),'#888780',1,[4,3]);
+if($('comp').checked)C.per.forEach((p,i)=>{if(p.on)lin(k=>val(p.v,k,ph),PAIRS[i][3],1);});lin(k=>val(C.tot,k,ph),'#1D9E75',2.5);}
+recompute();function loop(t){if(last!==null&&run)ph+=(t-last)/1000*Math.PI*parseFloat($('spd').value);last=t;draw();requestAnimationFrame(loop);}requestAnimationFrame(loop);
+</script></main></body></html>

@@ -1,0 +1,7 @@
+series LC band-pass into 100 ohm, f0 = 159 kHz
+V1 in 0 AC 1
+L1 in a 1m
+C1 a out 1n
+R1 out 0 100
+.ac dec 20 10k 1meg
+.end

@@ -1,0 +1,7 @@
+current source into a resistor network
+I1 0 a 2m
+R1 a 0 1k
+R2 a b 2.2k
+R3 b 0 4.7k
+.op
+.end

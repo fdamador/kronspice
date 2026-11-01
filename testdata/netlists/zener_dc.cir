@@ -1,0 +1,8 @@
+Zener regulator, DC sweep through forward conduction and reverse breakdown
+V1 in 0 DC 0
+R1 in out 470
+D1 0 out dz
+RL out 0 10k
+.model dz D(IS=1e-14 N=1 RS=2 BV=5.1 IBV=1e-3)
+.dc V1 -3 12 0.5
+.end

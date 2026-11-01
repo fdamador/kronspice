@@ -1,0 +1,17 @@
+varind_tran: ngspice twin of testdata/netlists/varind_tran.cir
+* columns: v(a) i(lv)
+* Flux-defined inductor through the gyrator dual, as in nlind_tran.
+V1 in 0 SIN(0 1 2k)
+R1 in a 10
+Vs a m 0
+H2 m 0 Vw 1
+H1 w 0 Vs 1
+Vw w w2 0
+CL w2 0 Q='1e-3*(1+0.4*sin(2*pi*3e3*time))*V(w2)'
+.options reltol=1e-6 abstol=1e-15 vntol=1e-9
+.control
+tran 2u 2m 0 10n
+linearize
+wrdata out.txt v(a) i(vs)
+.endc
+.end

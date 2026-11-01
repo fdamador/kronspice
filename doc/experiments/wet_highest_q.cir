@@ -1,0 +1,30 @@
+Bi-Al wet element with bifilar coil, highest-Q design (kronspice examples/bial_bifilar)
+* 
+* Coil (bifilar): 23 turns, diameter 141.3 mm, wire 1.993 mm, pitch 2.703 mm, insulation eps 2.04, copper
+*   Lcoil  = 82.66 uH   Wheeler (Proc. IRE 1928)
+*   Cself  = 169.1 pF   turn-to-turn capacitance, V/2 per gap (bifilar, Tesla US 512,340)
+*   Rcoil  = 54.96 mOhm   copper, skin effect at f0
+* Bi-Al element: plates 5 mm square, gap 50 um
+*   Vbial  = 1.97 V   Al|electrolyte|Bi cell EMF (1 x standard 1.970 V); energy from CHEMISTRY (chemical port)
+*   Relec  = 420 mOhm   electrolyte, rho 0.21 Ohm*m
+*   Rct    = 80 Ohm   charge transfer, two electrodes (assumed 10 Ohm*cm2 each)
+*   Cdl    = 2.5 uF   double layers, two in series (20 uF/cm2 each)
+*   Cgeo   = 354.2 pF   geometric plate capacitance, water eps 80
+* Iprobe: 1 A AC current into node a (DC 0), so vm(a) = |Z| of the tank in the .ac run.
+* Vbial switches on at t = 0 (PWL; an idealized step - a real thermal or chemical source is slower).
+* Simulated: f0 = 11.16 kHz, Q = 6.427, stored energy at steady state 4.819 uJ (4.658 mJ/m^3 per volume).
+* Note: SPICE itself books Vbial as an ordinary source; kronspice's ledger attributes its energy to the chemical port.
+* ngspice: run, then  plot vm(a)  (ac)  or  plot v(a) i(Vbial)  (tran)
+* 
+Rcoil a c 0.05495926524041231
+Lcoil c 0 8.265834606566805e-05
+Cself a 0 1.6912941040953583e-10
+Relec a n1 0.42000666665999997
+Vbial n1 n2 PWL(0 0 1e-12 1.97)
+Rct n2 0 80
+Cdl n2 0 2.5e-06
+Cgeo a 0 3.541618909003058e-10
+Iprobe 0 a DC 0 AC 1 0
+.ac dec 200 111.577 1.11577e+06
+.tran 2.2406e-06 0.00179248 0 2.2406e-06
+.end

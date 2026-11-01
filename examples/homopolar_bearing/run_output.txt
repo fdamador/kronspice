@@ -1,0 +1,57 @@
+Tesla two-disk homopolar, load current through the shaft ball bearings (circuit simulation)
+copper rim-speed limit 111 m/s (yield 69 MPa / 1.5)
+
+Reference unit
+  bore 40 mm × 2/shaft, load/bearing 400 N, disk r_o 0.150 m r_i 0.020 m t 5.0 mm, ω 600 rad/s (rim 90 m/s), R_L 2 Ω
+  EMF 10.608 V; load -4.571 A, 41.80 W; shaft 77.29 W; efficiency 0.541; drive torque 0.0644 + 0.0644 N·m = 0.00308 N·m/W
+  bearings: contact heat 6.70 W, friction 0.0240 N·m/shaft, Huber 0.0000 N·m/shaft; current 7.62× the 0.3 A/mm² limit (22.86× the 0.1 A/mm² one)
+  ledger residual 0.0e+00
+
+Trade-off: bearing bore (axle radius) against disk magnetic area, at the reference speed and load
+    bore   area %     EMF V   I_max A   P_load W      N·m/W    J/limit
+    10 mm     99.9    10.788     0.238       2.22     0.0073       1.00
+    20 mm     99.6    10.752     0.378       3.51     0.0088       1.00
+    40 mm     98.2    10.608     0.600       5.49     0.0107       1.00
+    60 mm     96.0    10.368     0.786       7.00     0.0122       1.00
+    80 mm     92.9    10.032     0.952       8.16     0.0137       1.00
+   100 mm     88.9     9.600     1.105       8.99     0.0153       1.00
+   120 mm     84.0     9.072     1.248       9.50     0.0171       1.00
+
+Huber torque (κψ unmeasured → swept), reference unit:
+   κψ N·m/A²     mode    Huber N·m    drive N·m     P_load W      N·m/W
+       0e+00       EM       0.0000       0.1288       41.797     0.0031
+       0e+00  thermal       0.0000       0.1288       41.797     0.0031
+       1e-03       EM       0.0062       0.0978       24.738     0.0040
+       1e-03  thermal       0.0005       0.1278       41.797     0.0031
+       1e-02       EM       0.0065       0.0551        2.614     0.0211
+       1e-02  thermal       0.0006       0.1277       41.797     0.0031
+       1e-01       EM       0.0011       0.0484        0.044     1.1124
+       1e-01  thermal       0.0006       0.1277       41.797     0.0031
+
+Measured bearing-voltage range (0.5–1.5 V) and the insulated-bearing alternative:
+  through bearings, 0.50 V each: P_load 46.11 W, efficiency 0.578, 0.0029 N·m/W
+  through bearings, 0.73 V each: P_load 41.80 W, efficiency 0.541, 0.0031 N·m/W
+  through bearings, 1.50 V each: P_load 28.91 W, efficiency 0.418, 0.0040 N·m/W
+  insulated bearings, collector 1e-05 Ω: P_load 56.26 W, efficiency 0.661, 0.0025 N·m/W
+  insulated bearings, collector 1e-04 Ω: P_load 56.25 W, efficiency 0.661, 0.0025 N·m/W
+  insulated bearings, collector 1e-03 Ω: P_load 56.15 W, efficiency 0.661, 0.0025 N·m/W
+
+Capacitor load: 1 F through R_L, field stepped (1 ms) or ramped, then 5·R_L·C to settle
+    ramp s   stored J    shaft J   friction J   conversion %   mismatch J
+       0.0      41.28     384.36       288.00           42.8     -1.6e-03
+      20.0      41.80     927.73       864.00           65.6      7.3e-05
+     100.0      41.96    3225.22      3168.00           73.3      7.0e-05
+  the bearing drops cost 2·V_b·Q whatever the ramp: at best ½CV²/(½CV² + 2V_bCV) = 75.8 % (V = 9.15 V)
+
+Evolving for the least drive torque per watt at ≥ 20 W, within the bearing current limit and rim speed
+Evolved, current through the bearings (702 evaluations)
+  bore 108 mm × 6/shaft, load/bearing 185 N, disk r_o 0.150 m r_i 0.054 m t 4.4 mm, ω 739 rad/s (rim 111 m/s), R_L 4.84 Ω
+  EMF 11.575 V; load -2.089 A, 21.13 W; shaft 157.62 W; efficiency 0.134; drive torque 0.1066 + 0.1066 N·m = 0.0101 N·m/W
+  bearings: contact heat 3.05 W, friction 0.0902 N·m/shaft, Huber 0.0000 N·m/shaft; current 1.00× the 0.3 A/mm² limit (3.00× the 0.1 A/mm² one)
+  ledger residual 0.0e+00
+Evolved, bearings insulated, shaft collector 5e-05 Ω declared (702 evaluations)
+  bore 10 mm × 1/shaft, load/bearing 50 N, disk r_o 0.150 m r_i 0.005 m t 6.4 mm, ω 739 rad/s (rim 111 m/s), R_L 0.256 Ω
+  EMF 13.292 V; load -51.897 A, 689.28 W; shaft 690.38 W; efficiency 0.998; drive torque 0.4669 + 0.4669 N·m = 0.00135 N·m/W
+  ledger residual 0.0e+00
+
+Drive torque per load watt: 0.0101 N·m/W through the bearings, 0.0014 N·m/W insulated (7.4× less)

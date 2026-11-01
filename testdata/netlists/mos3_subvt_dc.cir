@@ -1,0 +1,8 @@
+Level-3 NMOS transfer characteristic from weak to strong inversion (NFS, ETA)
+VDS d 0 3
+VGS g 0 0
+VBS b 0 -1
+M1 d g 0 b n3 L=1.2u W=10u
+.model n3 NMOS(LEVEL=3 TOX=20n NSUB=3e16 UO=550 LD=0.1u XJ=0.25u WD=0.05u DELTA=0.5 THETA=0.06 ETA=0.3 KAPPA=0.4 VMAX=1.5e5 NFS=4e11)
+.dc VGS 0 2 0.025
+.end

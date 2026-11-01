@@ -1,0 +1,7 @@
+# reference: ngspice-39 operating point of testdata/netlists/diode_fwd.cir (internal/golden/ref/ngspice_all.sh)
+name,value
+i(d1),4.230648012677732e-03
+i(r1),4.230648012677742e-03
+i(v1),-4.23064801267774e-03
+v(a),7.693519873222584e-01
+v(in),5.000000000000000e+00

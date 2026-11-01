@@ -1,0 +1,9 @@
+# reference: ngspice-39 operating point of testdata/netlists/mos1_op.cir (internal/golden/ref/ngspice_all.sh)
+name,value
+v(vdd),5.000000000000000e+00
+v(g),3.200000000000000e+00
+v(s),1.746884638519120e+00
+v(vb),-1.00000000000000e+00
+v(gp),3.000000000000000e+00
+v(dp),3.435363408453021e+00
+i(vdd),-8.61761154309410e-04

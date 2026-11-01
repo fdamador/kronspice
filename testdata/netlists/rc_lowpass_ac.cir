@@ -1,0 +1,6 @@
+RC low-pass, fc = 1 kHz
+V1 in 0 AC 1
+R1 in out 1k
+C1 out 0 159.15494n
+.ac dec 10 10 100k
+.end

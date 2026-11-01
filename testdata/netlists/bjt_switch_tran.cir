@@ -1,0 +1,16 @@
+Saturating inverter switched by a pulse: stored-charge turn-off delay
+VCC vcc 0 5
+VIN in 0 PULSE(0 5 10n 2n 2n 200n 400n)
+RB in b 4.7k
+RC vcc c 1k
+CL c 0 2p
+Q1 c b 0 qsw
+.model qsw NPN(IS=1e-15 BF=100 BR=1 TF=0.4n TR=20n CJE=4p CJC=3p VJC=0.65 MJC=0.4 RB=30 RC=2)
+* TMAX 0.2n: the internal base node has a 0.2 ns time constant (RB 30 ohm x
+* 7 pF). With TMAX 0.5n the SPICE-default truncation control (TRTOL 7) keeps
+* 0.5 ns steps on that edge and v(b) is 3 mV (0.4 %) off the fine-step
+* reference; the error falls as h^2 (0.78 mV at 0.25n, 0.13 mV at 0.1n), see
+* doc/M7.md. The test checks the device, so the step is set where the
+* integration error is well inside the tolerance.
+.tran 1n 600n 0 0.2n
+.end

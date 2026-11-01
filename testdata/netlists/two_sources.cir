@@ -1,0 +1,8 @@
+two voltage sources sharing a load
+V1 a 0 9
+V2 b 0 5
+R1 a c 100
+R2 b c 220
+R3 c 0 470
+.op
+.end

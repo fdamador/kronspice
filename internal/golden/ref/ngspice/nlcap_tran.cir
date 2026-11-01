@@ -1,0 +1,14 @@
+nlcap_tran: ngspice twin of testdata/netlists/nlcap_tran.cir
+* columns: v(a) i(cn)
+* The charge-defined capacitor is ngspice's behavioral C with Q='expr'.
+V1 in 0 SIN(0 1.5 2k)
+R1 in a 500
+Vc a ac 0
+CN ac 0 Q='(1+0.3*sin(2*pi*5e3*time))*pwl(V(ac), -4,-2.5e-6, -1,-1e-6, 0,0, 1,1e-6, 4,2.5e-6)'
+.options reltol=1e-6 abstol=1e-15 vntol=1e-9
+.control
+tran 5u 2m 0 20n
+linearize
+wrdata out.txt v(a) i(vc)
+.endc
+.end

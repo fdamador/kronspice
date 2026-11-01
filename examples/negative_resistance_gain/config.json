@@ -1,0 +1,11 @@
+{
+  "name": "negative_resistance_gain",
+  "netlist": "circuit.cir",
+  "genes": [
+    {"element": "R2", "min": 10, "max": 1e5, "sign": "either"}
+  ],
+  "objectives": [
+    {"kind": "gain_at", "node": "out", "freq_hz": 1000, "target_db": 6.0206}
+  ],
+  "ga": {"population": 30, "generations": 30, "seed": 5, "sigma": 0.3, "target_fitness": 1e-4}
+}

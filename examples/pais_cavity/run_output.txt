@@ -1,0 +1,39 @@
+US 10,144,532 B2 annular cavity — Kron (Happ two-level) analysis
+geometry (declared): R 2.00 m, gap 50 mm, height 0.50 m, 640 sections, 16 Kron sectors; copper walls
+mode n = 16 at 381.315 MHz (λ = 0.786 m); Z0 = 37.7 Ω
+
+A. 4 emitters at 0/90/180/270°, in phase (the ring-tower synchronization)
+  f 381.3153 MHz  Q 1.477e+04  in 1e+06 W  stored 6.167 J  Vmax 148.9 kV  Emax 2.978 MV/m  RF σ 26.4 µC/m²
+  energy by quadrant 0.250 0.250 0.250 0.250   ledger residual (in − wall loss)/in 2.5e-10
+  Kron interconnection order 16 (MNA unknowns 1280)
+
+B. top emitter only (0°), same current, on resonance
+  f 381.3153 MHz  Q 1.477e+04  in 6.25e+04 W  stored 0.3854 J  Vmax 37.22 kV  Emax 0.7445 MV/m  RF σ 6.59 µC/m²
+  energy by quadrant 0.250 0.250 0.250 0.250   ledger residual (in − wall loss)/in 2.7e-10
+  Kron interconnection order 16 (MNA unknowns 1280)
+
+C. top emitter only, same current, between modes n and n+1 (steering attempt)
+  f 393.2046 MHz  Q 1.5e+04  in 0.1845 W  stored 1.12e-06 J  Vmax 0.06346 kV  Emax 0.001269 MV/m  RF σ 0.0112 µC/m²
+  energy by quadrant 0.250 0.249 0.250 0.251   ledger residual (in − wall loss)/in 1.6e-14
+  Kron interconnection order 16 (MNA unknowns 1280)
+
+D. top emitter only, walls 2000× copper's surface resistance (a lossy, localized ring)
+  f 381.3153 MHz  Q 7.422  in 107 W  stored 3.315e-07 J  Vmax 0.06388 kV  Emax 0.001278 MV/m  RF σ 0.0113 µC/m²
+  energy by quadrant 0.817 0.089 0.006 0.088   ledger residual (in − wall loss)/in 1.0e-14
+  Kron interconnection order 16 (MNA unknowns 1280)
+
+E. niobium walls, Rs = 20 nΩ (declared; SRF cavities at 2 K): Q 3.76e+09; the same 6.17 J stored needs 3.93 W
+
+twin at 393.2046 MHz: Kron vs MNA 3.3e-10 relative; backward error Kron 3.9e-16, MNA 1.3e-13
+twin at 381.3153 MHz: Kron vs MNA 5.8e-08 relative; backward error Kron 8.4e-14, MNA 2.4e-14
+
+the patent's figures against physical ceilings (copper case, 1 MW scaling):
+  σ = 1 C/m²: E = 1.13e+11 V/m (Kilpatrick 1.91e+07, Schwinger 1.32e+18); wall pressure 5.65e+10 Pa (copper UTS 2.1e+08);
+      Fowler–Nordheim emission 2.45e+15 A/m² drains it in 4.1e-16 s; drive power to reach it in this cavity 1.44e+15 W
+  σ = 50000 C/m²: E = 5.65e+15 V/m (Kilpatrick 1.91e+07, Schwinger 1.32e+18); wall pressure 1.41e+20 Pa (copper UTS 2.1e+08);
+      Fowler–Nordheim emission 1.09e+25 A/m² drains it in 4.6e-21 s; drive power to reach it in this cavity 3.6e+24 W
+  rotation example: S = σ²/ε0·Rω = 1.77e+24 W/m² (patent ≈ 10²⁴) — magnitude of E×H at a moving charged surface, divergence-free: no energy leaves
+  vibration example: 10³³ W/m² at σ = 1 C/m² needs R_v·ν = 8.85e+21 m/s = 3e+13 c
+  30,000 rpm at 2 m: rim 6283 m/s, (v/c)² 4.4e-10, burst margin 3.34 against a T1000G fibre hoop (>1: flies apart)
+  wall vibration 10⁹–10¹⁸ Hz: lattice vibrations end at the Debye frequency, Cu 7.1e+12 Hz, Al 8.9e+12 Hz
+  thrust: a closed cavity exerts zero net time-averaged force on itself; emitting all 1000000 W as a beam gives at most P/c = 0.00334 N

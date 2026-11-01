@@ -1,0 +1,29 @@
+Kron's Schrödinger network (Phys. Rev. 67, 39, 1945): the electron of a chemical bond as a circuit
+
+H atom (check):
+  h = 0.200 a₀  (  9800 junctions): E = -0.51087970 Ha
+  h = 0.100 a₀  ( 39200 junctions): E = -0.50382944 Ha
+  h = 0.050 a₀  (156800 junctions): E = -0.50123643 Ha
+  h → 0 (order 1.44): E = -0.499728 Ha = -13.5983 eV   (exact −0.5 Ha = −13.6057 eV)
+
+H₂⁺ bond (two protons, one electron), electronic energy at R = 2 a₀:
+  h = 0.200 a₀  (  7800 junctions): E = -1.11745397 Ha
+  h = 0.100 a₀  ( 31200 junctions): E = -1.10780517 Ha
+  h = 0.050 a₀  (124800 junctions): E = -1.10429632 Ha
+  h → 0 (order 1.46): E = -1.102291 Ha   (exact −1.1026342 Ha)
+
+Bond curve E(R) + 1/R (the protons' repulsion), each R extrapolated h → 0 from h = 0.2, 0.1:
+  R = 1.6 a₀ (0.847 Å): total -0.590490 Ha
+  R = 1.8 a₀ (0.953 Å): total -0.599866 Ha
+  R = 2.0 a₀ (1.058 Å): total -0.602291 Ha
+  R = 2.2 a₀ (1.164 Å): total -0.600531 Ha
+  R = 2.4 a₀ (1.270 Å): total -0.596271 Ha
+  R = 2.8 a₀ (1.482 Å): total -0.584110 Ha
+  bond length R_e = 1.998 a₀ = 1.057 Å   (exact 1.997 a₀ = 1.057 Å)
+  bond energy D_e = 0.1024 Ha = 2.786 eV   (exact 0.1026 Ha = 2.79 eV)
+
+The same network as an LC circuit in kronspice (coarse grid, h = 0.4 a₀), ground state by AC analysis:
+  1950 junctions: circuit resonance E = -1.13848455 Ha, driven-network eigenvalue -1.13848455 Ha (same network, coarse grid)
+  netlist: examples/kron_schrodinger/netlists/h2plus_coarse.cir
+
+Water has ten interacting electrons: the next step is a self-consistent field (Hartree–Fock) on a 3-D network.

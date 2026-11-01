@@ -1,0 +1,8 @@
+# reference: ngspice-39 operating point of testdata/netlists/controlled_op.cir (internal/golden/ref/ngspice_all.sh)
+name,value
+v(a),2.000000000000000e+00
+v(e),6.000000000000000e+00
+v(g),2.000000000000000e+00
+v(h),1.000000000000000e+00
+v(f),6.000000000000000e-01
+i(vs),2.000000000000000e-03

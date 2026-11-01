@@ -1,0 +1,36 @@
+1. Water: the rate of change lives in the material (standard physics)
+   liquid water, 25 °C (single Debye) — ε(0) 78.6, ε∞ 5.4: Elton, arXiv:1704.01667 §II.B; τ 8.3 ps: Barthel et al. 1990 / Buchner et al. 1999 via Elton Table I
+      frequency         ε′         ε″   loss tan
+          1e+06      78.60       0.00      0.000
+          1e+08      78.60       0.38      0.005
+          1e+09      78.40       3.81      0.049
+          1e+10      62.95      30.01      0.477
+       1.92e+10      41.95      36.60      0.872
+          5e+10      14.79      24.47      1.655
+          1e+11       8.00      13.54      1.693
+   (single Debye: valid below about 100 GHz)
+
+   'Slapping' the water with an electric field ramped up at different speeds:
+   rise    1e-06 s: water shows ε =  78.6 at the end of the ramp,  78.6 after it settles
+   rise    1e-09 s: water shows ε =  78.0 at the end of the ramp,  78.6 after it settles
+   rise    1e-10 s: water shows ε =  72.5 at the end of the ramp,  78.6 after it settles
+   rise    1e-11 s: water shows ε =  36.1 at the end of the ramp,  78.6 after it settles
+   rise    1e-12 s: water shows ε =   9.6 at the end of the ramp,  78.6 after it settles
+   Slow: the molecules follow (ε ≈ 78.6). Fast: they cannot turn in time and the water answers like a stiff solid (ε → 5.4).
+
+   Circuit twin: water cell (1 cm², 1 mm) as C∞ ∥ (R–C) solved by kronspice AC vs ε(ω): worst difference 7.9e-13
+
+2. Bopp–Podolsky electrodynamics (HYPOTHETICAL, H19): higher derivatives in the field equations
+   (1 + a²□)□A = μ0J; a = 0 is Maxwell. Point charge: φ = q/(4πε0 r)(1 − e^(−r/a)).
+        r / a     Maxwell φ [V]    Podolsky φ [V]  fraction below Coulomb
+          0.0          infinite       1.43996e+06  1
+          0.1       1.43996e+07       1.37031e+06  0.905
+          1.0       1.43996e+06            910231  0.368
+          3.0            479988            456091  0.0498
+         10.0            143996            143990  4.54e-05
+         30.0           47998.8           47998.8  9.36e-14
+   (a = 1 fm for illustration; the effect is gone a few a away, so only very short-range experiments can see it)
+   electron field energy: Maxwell infinite; Podolsky q²/(8πε0 a) = m_e c² when a = 1.409e-15 m
+   free waves: the Maxwell wave (ω = ck, here 0 at k = 0) and a massive mode starting at ω = c/a = 3e+23 rad/s (4.77e+22 Hz for a = 1 fm)
+   a Coulomb-law test good to 1 part in 10⁶ at 1 cm only bounds a < 0.000724 m; electron–positron scattering (Bufalo et al., PRD 90, 085012, 2014) bounds it far more tightly
+   Status: untested hypothesis with the standard prediction (a = 0) beside every result.

@@ -1,0 +1,25 @@
+molecule,band,model_cm-1,energy_share
+A,A NH₂ antisymmetric stretch,3367.1,0.99
+A,A NH₂ symmetric stretch,3246.8,0.99
+AT,A NH₂ antisymmetric stretch,3365.3,0.99
+AT,A NH₂ symmetric stretch,3249.1,0.99
+T,T N3–H stretch,3314.1,0.99
+T,T C4=O stretch,1745.7,0.18
+T,T C2=O stretch,1745.7,0.13
+AT,T N3–H stretch,3341.7,0.97
+AT,T C4=O stretch,1746.4,0.17
+AT,T C2=O stretch,1746.4,0.14
+G,G NH₂ antisymmetric stretch,3363.2,0.98
+G,G NH₂ symmetric stretch,3244.1,0.98
+G,G N1–H stretch,3308.7,0.97
+G,G C6=O stretch,1544.0,0.21
+GC,G NH₂ antisymmetric stretch,3370.4,0.94
+GC,G NH₂ symmetric stretch,3252.8,0.94
+GC,G N1–H stretch,3330.2,0.95
+GC,G C6=O stretch,1547.4,0.22
+C,C NH₂ antisymmetric stretch,3365.9,0.99
+C,C NH₂ symmetric stretch,3244.4,0.99
+C,C C2=O stretch,1685.0,0.17
+GC,C NH₂ antisymmetric stretch,3368.1,0.95
+GC,C NH₂ symmetric stretch,3251.4,0.95
+GC,C C2=O stretch,1685.4,0.18

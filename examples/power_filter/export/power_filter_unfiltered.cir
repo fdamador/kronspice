@@ -1,0 +1,22 @@
+six-pulse rectifier with tuned filters
+.model dr D(IS=1e-12 N=1 RS=0.001)
+Va sa 0 SIN(0 169.7056274847714 60 0 0 -0)
+RSa sa ma 0.05
+LSa ma pa 0.0005
+DUa pa pos dr
+DDa neg pa dr
+Vb sb 0 SIN(0 169.7056274847714 60 0 0 -120)
+RSb sb mb 0.05
+LSb mb pb 0.0005
+DUb pb pos dr
+DDb neg pb dr
+Vc sc 0 SIN(0 169.7056274847714 60 0 0 -240)
+RSc sc mc 0.05
+LSc mc pc 0.0005
+DUc pc pos dr
+DDc neg pc dr
+CDC pos neg 0.0022
+RDC pos neg 10
+RREF neg 0 100000
+.tran 2.7777777777777779e-05 0.23333333333333334 0 2.7777777777777779e-05
+.end

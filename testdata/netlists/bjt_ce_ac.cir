@@ -1,0 +1,13 @@
+Common-emitter amplifier small-signal response with junction, transit-time and substrate charges
+VCC vcc 0 12
+VIN in 0 DC 0 AC 1
+CIN in b 10u
+R1 vcc b 47k
+R2 b 0 10k
+RC vcc c 3.3k
+RE e 0 1k
+CE e 0 100u
+Q1 c b e 0 qac
+.model qac NPN(IS=2e-15 BF=150 VAF=80 IKF=50m RB=120 RBM=40 RE=0.8 RC=6 CJE=12p VJE=0.75 MJE=0.35 TF=300p XTF=3 VTF=4 ITF=40m CJC=5p VJC=0.6 MJC=0.4 XCJC=0.6 TR=10n CJS=3p VJS=0.7 MJS=0.3)
+.ac dec 10 10 10g
+.end

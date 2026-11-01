@@ -1,0 +1,8 @@
+# reference: damped Newton on the Gummel-Poon equations, finite-difference Jacobian (internal/golden/ref/bjt_ref.py)
+name,value
+v(vcc),12.0
+v(b),2.0232696095378224
+v(c),7.706781088498595
+v(e),1.310919318446477
+i(vcc),-0.0015132462870992344
+i(q1),0.0013009754277277057

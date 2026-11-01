@@ -1,0 +1,10 @@
+Level-2 NMOS output characteristic through drain/source interchange
+* Grove-Frohman with junction-depth and narrow-channel corrections, critical-field
+* mobility, Baum-Beneking velocity saturation and computed channel-length modulation.
+VDS d 0 0
+VGS g 0 2.5
+VBS b 0 -0.5
+M1 d g 0 b n2 L=2u W=10u NRD=1 NRS=1
+.model n2 NMOS(LEVEL=2 TOX=25n NSUB=2e16 UO=600 LD=0.15u XJ=0.3u DELTA=1 UCRIT=5e4 UEXP=0.15 NFS=1e11 NEFF=1.5 VMAX=5e4 RSH=20 CGSO=2.5e-10 CGDO=2.5e-10 CGBO=1e-10 CJ=3.5e-4 MJ=0.45 CJSW=3e-10 PB=0.8 JS=1e-4)
+.dc VDS -2 5 0.1
+.end

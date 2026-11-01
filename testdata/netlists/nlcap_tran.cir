@@ -1,0 +1,6 @@
+Nonlinear time-varying capacitor: saturating charge curve, capacitance pumped at 5 kHz
+V1 in 0 SIN(0 1.5 2k)
+R1 in a 500
+CN a 0 Q=pwl(-4 -2.5u -1 -1u 0 0 1 1u 4 2.5u) SCALE=SIN(1 0.3 5k)
+.tran 5u 2m
+.end

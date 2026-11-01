@@ -1,0 +1,17 @@
+homopolar dynamo
+.model da MACHINE(G_1_2=0.008960000000000001 L_1_1=1e-09 L_2_2=0.001 N=2)
+.model db MACHINE(G_1_2=-0.008960000000000001 L_1_1=1e-09 L_2_2=0.001 N=2)
+.domain mechanical w1 w2
+IFA 0 fa DC 1
+RFA fa 0 1000
+VW1 w1 0 DC 314.1592653589793
+RS1 t1 ax1 5e-05
+RD1 ax1 c1 1.4481585741719645e-06
+NA rim1 c1 fa 0 w1 0 da
+RRIM rim1 t2 0.0005
+VW2 w2 0 DC 0
+RW2 w2 0 1
+RL t1 t2 0.01
+RREF t2 0 1e+06
+.op
+.end

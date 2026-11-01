@@ -1,0 +1,7 @@
+Saturating inductor whose flux scale varies in time, driven through a resistor
+V1 in 0 SIN(0 5 1k)
+R1 in a 20
+LN a 0 FLUX=pwl(-10 -1.2m -0.1 -0.6m -0.05 -0.4m 0 0 0.05 0.4m 0.1 0.6m 10 1.2m) SCALE=PWL(0 1 1m 1.5 2m 1.2 10 1.2)
+* Max step 0.5u: entering saturation the time constant falls to 3 us.
+.tran 5u 3m 0 0.5u
+.end

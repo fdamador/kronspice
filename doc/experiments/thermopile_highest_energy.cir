@@ -1,0 +1,26 @@
+Bi-Al thermopile element with bifilar coil, highest energy-per-volume design (kronspice examples/bial_bifilar)
+* 
+* Coil (bifilar): 19 turns, diameter 5.13 mm, wire 122.4 um, pitch 134.6 um, insulation eps 3.76, copper
+*   Lcoil  = 1.921 uH   Wheeler (Proc. IRE 1928)
+*   Cself  = 17.12 pF   turn-to-turn capacitance, V/2 per gap (bifilar, Tesla US 512,340)
+*   Rcoil  = 1.08 Ohm   copper, skin effect at f0
+* Bi-Al element: plates 148.7 mm square, gap 10 um
+*   Vbial  = 37.75 V   Seebeck EMF 5000 x (S_Al - S_Bi)*dT = 5000 x 75.5 uV/K * 100 K; energy from HEAT (thermal port)
+*   Rint   = 16.86 kOhm   10000 Bi and Al legs (53.94 um dia. x 5.851 mm) plus plates; legs conduct 47.83 W of heat at dT
+*   Cplate = 1.959 uF   plates with dielectric eps 100, in series with the EMF (DC is blocked)
+* Iprobe: 1 A AC current into node a (DC 0), so vm(a) = |Z| of the tank in the .ac run.
+* Vbial switches on at t = 0 (PWL; an idealized step - a real thermal or chemical source is slower).
+* Simulated: f0 = 27.75 MHz, Q = 43.3, stored energy at steady state 1.396 mJ (31.25 J/m^3 per volume).
+* Note: SPICE itself books Vbial as an ordinary source; kronspice's ledger attributes its energy to the thermal port.
+* ngspice: run, then  plot vm(a)  (ac)  or  plot v(a) i(Vbial)  (tran)
+* 
+Rcoil a c 1.0802214436356907
+Lcoil c 0 1.921343870524988e-06
+Cself a 0 1.7123871039689686e-11
+Rint a n1 16856.13083831141
+Vbial n1 n2 PWL(0 0 1e-12 37.75)
+Cplate n2 0 1.9589608126020134e-06
+Iprobe 0 a DC 0 AC 1 0
+.ac dec 200 277469 2.77469e+09
+.tran 9.01002e-10 4.68107e-06 0 9.01002e-10
+.end

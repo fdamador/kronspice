@@ -1,0 +1,40 @@
+Double hull: radius 5.0 m, height 10.0 m, gap 0.10 m, copper walls, mode 4, 96 sections
+
+traveling, bias 0 V: f = 37.685 MHz, Q = 9410, Z0 = 3.77 Ω
+  radiators 1000.0 W = wall loss 999.9 W + bias feed 0.141 W; RF energy in gap 39.7 mJ; bias energy 0.000 mJ (stored once)
+  RF gap amplitude 1681–1683 V (formula, traveling: 1680 V); bias 0 V; peak gap voltage 1683 V
+
+traveling, bias 2500 V: f = 37.685 MHz, Q = 9410, Z0 = 3.77 Ω
+  radiators 1000.0 W = wall loss 999.9 W + bias feed 0.141 W; RF energy in gap 39.7 mJ; bias energy 87.794 mJ (stored once)
+  RF gap amplitude 1681–1683 V (formula, traveling: 1680 V); bias 2500 V; peak gap voltage 4183 V
+
+standing, bias 0 V: f = 37.685 MHz, Q = 9410, Z0 = 3.77 Ω
+  radiators 1000.0 W = wall loss 999.7 W + bias feed 0.283 W; RF energy in gap 39.7 mJ; bias energy 0.000 mJ (stored once)
+  RF gap amplitude 0–2379 V (formula, traveling: 1680 V); bias 0 V; peak gap voltage 2379 V
+
+standing, bias 2500 V: f = 37.685 MHz, Q = 9410, Z0 = 3.77 Ω
+  radiators 1000.0 W = wall loss 999.7 W + bias feed 0.283 W; RF energy in gap 39.7 mJ; bias energy 87.794 mJ (stored once)
+  RF gap amplitude 0–2379 V (formula, traveling: 1680 V); bias 2500 V; peak gap voltage 4879 V
+
+Multipactor in the vacuum gap (d = 0.10 m, f = 37.68 MHz; f·d = 3.77 MHz·m)
+  mean secondary yield per impact on the worst phase (> 1 = discharge grows)
+      V_rf          bias 0 V        bias 500 V       bias 2500 V       bias 5000 V
+     100 V    0.37 @   14 eV     0.07 @   25 eV     0.06 @  126 eV     0.06 @  248 eV 
+     300 V    1.10 @   53 eV*    0.07 @   22 eV     0.06 @  115 eV     0.06 @  238 eV 
+    1000 V    1.78 @  630 eV*    0.11 @  177 eV     0.07 @   88 eV     0.06 @  206 eV 
+    1700 V    0.29 @  732 eV     0.16 @  398 eV     0.07 @   60 eV     0.06 @  171 eV 
+    3400 V    0.08 @  341 eV     0.08 @  334 eV     0.08 @   14 eV     0.06 @  113 eV 
+   10000 V    0.06 @  831 eV     0.06 @  835 eV     0.07 @  376 eV     0.07 @  673 eV 
+  (* = susceptible, as-received copper; Baglin et al. 2002)
+
+Ring-up to 1680 V (traveling) and 2375 V (standing antinode): every amplitude below is passed through
+  copper, as received  to  1680 V, no bias: worst growth 2.02 at 760 V; least bias that clears it: 500 V
+  copper, as received  to  2375 V, no bias: worst growth 2.02 at 759 V; least bias that clears it: 500 V
+  copper, conditioned  to  1680 V, no bias: worst growth 1.13 at 760 V; least bias that clears it: 500 V
+  copper, conditioned  to  2375 V, no bias: worst growth 1.13 at 759 V; least bias that clears it: 500 V
+  Kilpatrick RF limit at 37.7 MHz: 8.1 MV/m (the 2.5 kV-biased standing wave peaks at 0.049 MV/m)
+
+Evolving gap, mode, RF power and bias for a 20000 V peak (≥ 5000 V of it RF) with the least RF power, multipactor-free ring-up, under Kilpatrick
+  best of 332 evaluations: gap 0.470 m, mode 1 (9.09 MHz, Q 21729), RF 451 W, bias 12496 V
+  RF 7467 V + bias 12496 V = peak 19963 V; ring-up worst growth 0.06 (at 7247 V); field 0.042 MV/m vs Kilpatrick 5.3
+  ledger: radiators 451.0 W = wall loss 448.3 W + bias feed 2.720 W; the bias supply delivers C·V² = 0.97 J once: 0.48 J stored, 0.48 J lost in the feed resistor; no steady DC current (no gap leakage modeled)

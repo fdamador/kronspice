@@ -1,0 +1,10 @@
+Common-emitter bias: Gummel-Poon with Early effect, high injection, leakage and resistances
+VCC vcc 0 12
+R1 vcc b 47k
+R2 b 0 10k
+RC vcc c 3.3k
+RE e 0 1k
+Q1 c b e qgp
+.model qgp NPN(IS=2e-15 BF=150 NF=1.01 VAF=80 IKF=50m ISE=5e-14 NE=1.6 BR=4 NR=1.005 VAR=25 IKR=20m ISC=1e-13 NC=1.9 RB=120 RBM=40 IRB=0.5m RE=0.8 RC=6)
+.op
+.end

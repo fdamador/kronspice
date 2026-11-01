@@ -1,0 +1,52 @@
+D2O bonds as a circuit
+* D2O vibration as a circuit (examples/water_vibration). Units: C in u, L in Angstrom/mdyn;
+* circuit frequency f_c [Hz] x 8185.679725 = wavenumber [1/cm]. Force field (mdyn/A): fr 7.671151 frr -0.094200 fa 0.703027
+CM_ox ox 0 15.9949146196
+RD_ox ox 0 1000000
+CM_oy oy 0 15.9949146196
+RD_oy oy 0 1000000
+CM_h1x h1x 0 2.01410177812
+RD_h1x h1x 0 1000000
+CM_h1y h1y 0 2.01410177812
+RD_h1y h1y 0 1000000
+CM_h2x h2x 0 2.01410177812
+RD_h2x h2x 0 1000000
+CM_h2y h2y 0 2.01410177812
+RD_h2y h2y 0 1000000
+E_r1_ox r1_s0 0 ox 0 -0.790569884316532
+E_r1_oy r1_s1 r1_s0 oy 0 -0.612371829864621
+E_r1_h1x r1_s2 r1_s1 h1x 0 0.790569884316532
+E_r1_h1y r1_s3 r1_s2 h1y 0 0.612371829864621
+VS_r1 r1_s3 r1_l 0
+L_r1 r1_l 0 0.130378191754178
+F_r1_ox ox 0 VS_r1 -0.790569884316532
+F_r1_oy oy 0 VS_r1 -0.612371829864621
+F_r1_h1x h1x 0 VS_r1 0.790569884316532
+F_r1_h1y h1y 0 VS_r1 0.612371829864621
+E_r2_ox r2_s0 0 ox 0 0.790569884316532
+E_r2_oy r2_s1 r2_s0 oy 0 -0.612371829864621
+E_r2_h2x r2_s2 r2_s1 h2x 0 -0.790569884316532
+E_r2_h2y r2_s3 r2_s2 h2y 0 0.612371829864621
+VS_r2 r2_s3 r2_l 0
+L_r2 r2_l 0 0.130378191754178
+F_r2_ox ox 0 VS_r2 0.790569884316532
+F_r2_oy oy 0 VS_r2 -0.612371829864621
+F_r2_h2x h2x 0 VS_r2 -0.790569884316532
+F_r2_h2y h2y 0 VS_r2 0.612371829864621
+E_bend_oy bend_s0 0 oy 0 1.58113976863306
+E_bend_h1x bend_s1 bend_s0 h1x 0 0.612371829864621
+E_bend_h1y bend_s2 bend_s1 h1y 0 -0.790569884316532
+E_bend_h2x bend_s3 bend_s2 h2x 0 -0.612371829864621
+E_bend_h2y bend_s4 bend_s3 h2y 0 -0.790569884316532
+VS_bend bend_s4 bend_l 0
+L_bend bend_l 0 1.42241984073615
+F_bend_oy oy 0 VS_bend 1.58113976863306
+F_bend_h1x h1x 0 VS_bend 0.612371829864621
+F_bend_h1y h1y 0 VS_bend -0.790569884316532
+F_bend_h2x h2x 0 VS_bend -0.612371829864621
+F_bend_h2y h2y 0 VS_bend -0.790569884316532
+K_rr L_r1 L_r2 0.0122798366009168
+I_fx 0 h1x AC 1
+I_fy 0 h1y AC 1
+.ac lin 4001 0.0610822823 0.549740541
+.end

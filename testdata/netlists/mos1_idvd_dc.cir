@@ -1,0 +1,8 @@
+Level-1 NMOS output characteristic through drain/source interchange
+VDS d 0 0
+VGS g 0 2.5
+VBS b 0 -0.5
+M1 d g 0 b nm L=2u W=10u
+.model nm NMOS(LEVEL=1 VTO=0.7 KP=60u GAMMA=0.5 PHI=0.7 LAMBDA=0.04 RD=20 RS=20 IS=1e-14)
+.dc VDS -2 5 0.1
+.end

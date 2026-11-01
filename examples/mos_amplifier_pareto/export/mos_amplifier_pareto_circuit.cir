@@ -1,0 +1,26 @@
+Common-source NMOS amplifier: gain, bandwidth and supply power traded on a Pareto front
+* 1 kohm source, AC-coupled into the gate.
+VDD vdd 0 5
+VIN in 0 DC 0 AC 1
+RSIG in s 1k
+CIN s g 1u
+* Gate bias divider.
+R1 vdd g 1meg
+R2 g 0 500k
+* Drain load and bypassed source degeneration (sets the bias current).
+RD vdd d 10k
+RSS src 0 1k
+CSS src 0 100u
+M1 d g src 0 nproc L=2u W=20u
+* Output coupled into a 100 kohm || 5 pF load.
+COUT d o 1u
+RL o 0 100k
+CL o 0 5p
+* Generic 1 um-class process, Level 3 (semi-empirical) with weak inversion
+* (NFS), so low-power designs biased below threshold follow the exponential
+* subthreshold law instead of Level 1's square law; parameters derived from
+* TOX, NSUB and UO (SPICE3f3 User's Manual §4.10), the n-channel process of
+* the mos3_* golden circuits in testdata/netlists.
+.model nproc NMOS(LEVEL=3 TOX=20n NSUB=3e16 UO=550 LD=0.1u XJ=0.25u WD=0.05u DELTA=0.5 THETA=0.06 ETA=0.05 KAPPA=0.4 VMAX=1.5e5 NFS=4e11 RSH=20 CGSO=2e-10 CGDO=2e-10 CGBO=1e-10 CJ=4e-4 MJ=0.45 CJSW=3e-10 PB=0.8 JS=1e-4)
+.ac dec 10 100 1g
+.end

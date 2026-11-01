@@ -1,0 +1,8 @@
+LC tank with its capacitance pumped at twice resonance, started by a current pulse
+I1 0 a PULSE(0 10m 0 1u 1u 50u 1)
+CV a 0 1u SCALE=SIN(1 0.1 10.066k)
+L1 a b 1m
+R1 b 0 0.1
+* Max step 0.5u: a pumped resonance amplifies phase error.
+.tran 2u 1m 0 0.5u
+.end

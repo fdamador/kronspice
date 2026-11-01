@@ -1,0 +1,23 @@
+{
+  "name": "filter_topology",
+  "netlist": "embryo.cir",
+  "topology": {
+    "terminals": ["in", "out"],
+    "internal_nodes": 8,
+    "max_parts": 20,
+    "init_parts": 3,
+    "parts": [
+      {"kind": "L", "min": 1e-5, "max": 10, "series": "E24"},
+      {"kind": "C", "min": 1e-10, "max": 1e-4, "series": "E24"},
+      {"kind": "R", "min": 1, "max": 1e6, "series": "E24"}
+    ]
+  },
+  "objectives": [
+    {"kind": "mask", "node": "out", "bands": [
+      {"from": 10, "to": 1000, "min_db": -7.5, "max_db": -5.5},
+      {"from": 3000, "to": 100000, "max_db": -46}
+    ]},
+    {"kind": "parts", "weight": 0.002}
+  ],
+  "ga": {"population": 300, "generations": 200, "seed": 1, "timeout_ms": 2000}
+}

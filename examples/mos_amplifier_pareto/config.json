@@ -1,0 +1,78 @@
+{
+  "name": "mos_amplifier_pareto",
+  "netlist": "circuit.cir",
+  "genes": [
+    {
+      "element": "R1",
+      "min": 100000.0,
+      "max": 10000000.0,
+      "series": "E24"
+    },
+    {
+      "element": "R2",
+      "min": 100000.0,
+      "max": 10000000.0,
+      "series": "E24"
+    },
+    {
+      "element": "RD",
+      "min": 100,
+      "max": 1000000.0,
+      "series": "E24"
+    },
+    {
+      "element": "RSS",
+      "min": 10,
+      "max": 100000.0,
+      "series": "E24"
+    },
+    {
+      "element": "M1",
+      "param": "w",
+      "min": 2e-06,
+      "max": 0.0005
+    },
+    {
+      "element": "M1",
+      "param": "l",
+      "min": 1e-06,
+      "max": 1e-05
+    }
+  ],
+  "objectives": [
+    {
+      "kind": "gain_max",
+      "node": "o",
+      "freq_hz": 10000,
+      "target_db": 40
+    },
+    {
+      "kind": "bandwidth_max",
+      "node": "o",
+      "target_hz": 1000000000.0
+    },
+    {
+      "kind": "supply_power",
+      "sources": [
+        "VDD"
+      ],
+      "weight": 1000
+    },
+    {
+      "kind": "gain_max",
+      "node": "o",
+      "freq_hz": 10000,
+      "target_db": 20,
+      "constraint": true
+    }
+  ],
+  "ga": {
+    "algorithm": "nsga2",
+    "population": 100,
+    "generations": 100,
+    "mutation": 0.2,
+    "sigma": 0.15,
+    "seed": 1,
+    "timeout_ms": 2000
+  }
+}

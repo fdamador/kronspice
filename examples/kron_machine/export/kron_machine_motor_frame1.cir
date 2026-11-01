@@ -1,0 +1,14 @@
+two-phase induction motor
+.model mm MACHINE(L_1_1=0.12 L_2_2=0.12 L_3_3=0.12 L_4_4=0.12 LC_1_1_3=0.11 LC_1_2_4=0.11 LS_1_1_4=-0.11 LS_1_2_3=0.11 N=4)
+.domain mechanical w
+VA sa 0 SIN(0 100 50 0 0 90)
+VB sb 0 SIN(0 100 50 0 0 0)
+RSA sa ia 0.5
+RSB sb ib 0.5
+RRA ra 0 0.8
+RRB rb 0 0.8
+N1 ia 0 ib 0 ra 0 rb 0 w 0 mm
+CJ w 0 0.002 IC=0
+RF w 0 5000
+.tran 0.5m 1.5 uic
+.end

@@ -1,0 +1,22 @@
+{
+  "name": "amplifier_gain",
+  "netlist": "circuit.cir",
+  "genes": [
+    {"element": "R1", "min": 10e3, "max": 1e6, "series": "E24"},
+    {"element": "R2", "min": 1e3, "max": 100e3, "series": "E24"},
+    {"element": "RC", "min": 470, "max": 47e3, "series": "E24"},
+    {"element": "RE1", "min": 10, "max": 2.2e3, "series": "E24"},
+    {"element": "RE2", "min": 100, "max": 10e3, "series": "E24"},
+    {"element": "CF", "min": 1e-12, "max": 1e-9, "series": "E12"},
+    {"element": "CIN", "min": 100e-9, "max": 100e-6, "series": "E12"},
+    {"element": "CE", "min": 1e-6, "max": 1e-3, "series": "E12"}
+  ],
+  "objectives": [
+    {"kind": "gain_at", "node": "o", "freq_hz": 10000, "target_db": 30},
+    {"kind": "cutoff", "node": "o", "target_hz": 200000},
+    {"kind": "cutoff", "node": "o", "target_hz": 100, "edge": "low"},
+    {"kind": "op_voltage", "node": "c", "target": 6, "weight": 0.2},
+    {"kind": "op_voltage", "node": "e", "target": 1.5, "weight": 0.2}
+  ],
+  "ga": {"population": 100, "generations": 300, "tournament": 5, "mutation": 0.25, "sigma": 0.1, "seed": 1, "timeout_ms": 2000, "target_fitness": 0.02}
+}

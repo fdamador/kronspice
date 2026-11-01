@@ -1,0 +1,16 @@
+
+== Low-voltage, high-current pickup on the ordinary solenoid (f1 = 1.167e+06 Hz) ==
+   pickup: 4 turns of 2 mm copper, radius 6.5 cm, L = 4.082 µH, wire 0.072 Ω at f1
+   resonant tuning capacitor C = 1/((2π f1)² L) = 4.56 nF
+   one-sign pulses: 100 V, 50 Ω, width 10 % of 1/f1, at the coupled system's best frequency, 354 cycles
+   pickup                                         C [nF]  load [Ω]   rate/f1 I load [A] V load [V] P load [W]   P in [W] past 50 Ω [W]  eff [%]   coil [V]
+   middle, tuned C = 1/(ω1²L)                       4.56       0.2    1.2975      3.828      0.766     1.4010    11.6919       2.1055     66.5       3651
+                                                ledger: in 0.003514 J = heat 0.003469 J (load 0.0003756 J) + stored 4.23e-05 J (+ time-stepping error 2.7e-06 J)
+   middle, capacitor optimized                      1.14        10    0.9717      0.667      6.668     1.1996     7.7462       1.3138     91.3       3442
+                                                ledger: in 0.002382 J = heat 0.002349 J (load 0.0003185 J) + stored 2.72e-05 J (+ time-stepping error 3.4e-06 J)
+   middle, untuned (no capacitor)                      0         1    1.1073      1.702      1.702     1.3051    10.6053       1.6369     79.7       3502
+                                                ledger: in 0.00323 J = heat 0.003187 J (load 0.0003571 J) + stored 2.85e-05 J (+ time-stepping error 1.5e-05 J)
+   top (high-voltage end), tuned C = 1/(ω1²L)       4.56       0.5    1.0487      2.038      1.019     1.0064     8.2567       1.1590     86.8       2230
+                                                ledger: in 0.002516 J = heat 0.002493 J (load 0.0002707 J) + stored 2.21e-05 J (+ time-stepping error 6.5e-07 J)
+   eff = load power ÷ the power that reaches the primary (past the source's own 50 Ω).
+   The load's power is always less than the pulse source's: the pickup converts voltage to current, it does not add energy.

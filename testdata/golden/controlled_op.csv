@@ -1,0 +1,8 @@
+# reference: exact values (V1 = 2 V; E 3x, G 2 mS into 500 ohm, H 500 ohm and F 3x of the 2 mA in VS) (internal/golden/ref/bjt_ref.py)
+name,value
+v(a),2.0
+v(e),6.0
+v(g),2.0
+v(h),1.0
+v(f),0.6
+i(vs),0.002

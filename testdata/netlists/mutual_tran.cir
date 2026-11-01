@@ -1,0 +1,9 @@
+Coupled inductors (K = 0.8): step into the primary, resistive secondary
+V1 in 0 PULSE(0 1 0 1n 1n 1 2)
+R1 in p 10
+L1 p 0 1m
+L2 s 0 4m
+K1 L1 L2 0.8
+R2 s 0 100
+.tran 2u 1m
+.end

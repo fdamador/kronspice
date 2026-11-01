@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1230" viewBox="0 0 1700 1230" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+  <title>KronSpice architecture</title>
+  <desc>Package layout, dependency direction, external energy channels and evaluation pipeline of kronspice, a pure-Go SPICE-compatible simulator used as the fitness engine for genetically evolved circuits. Derived from CLAUDE.md.</desc>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#334155"/>
+    </marker>
+    <marker id="arrd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/>
+    </marker>
+    <style>
+      .h   { font-size: 16px; font-weight: 600; fill: #0f172a; }
+      .pkg { font-family: Consolas, 'Cascadia Mono', Menlo, monospace; font-weight: 700; }
+      .b   { font-size: 12.5px; fill: #1e293b; }
+      .m   { font-size: 12px; fill: #475569; font-style: italic; }
+      .s   { font-size: 11px; fill: #334155; }
+      .cn  { font-size: 11.5px; font-weight: 600; fill: #0f172a; }
+      .lbl { font-size: 11.5px; fill: #5b21b6; font-style: italic; }
+      .imp { stroke: #334155; stroke-width: 1.8; fill: none; marker-end: url(#arr); }
+      .dat { stroke: #7c3aed; stroke-width: 1.6; fill: none; stroke-dasharray: 6 4; marker-end: url(#arrd); }
+      .entry rect { fill: #f1f5f9; stroke: #64748b; }
+      .ga    rect { fill: #fef3c7; stroke: #d97706; }
+      .ana   rect { fill: #dbeafe; stroke: #2563eb; }
+      .core  rect { fill: #ccfbf1; stroke: #0d9488; }
+      .phys  rect { fill: #ede9fe; stroke: #7c3aed; }
+      .leaf  rect { fill: #fce7f3; stroke: #db2777; }
+      .exch  rect { fill: #dcfce7; stroke: #16a34a; }
+      .panel rect { fill: #ffffff; stroke: #cbd5e1; }
+      g rect { stroke-width: 1.5; }
+      .pill rect { fill: #f8fafc; stroke: #94a3b8; }
+      .st-mod  rect { fill: #dcfce7; stroke: #16a34a; }
+      .st-def  rect { fill: #e0f2fe; stroke: #0284c7; }
+      .st-zero rect { fill: #fef9c3; stroke: #ca8a04; }
+      .st-frm  rect { fill: #f1f5f9; stroke: #64748b; }
+      .st-hyp  rect { fill: #f3e8ff; stroke: #9333ea; stroke-dasharray: 4 3; }
+      .st-not  rect { fill: #ffffff; stroke: #94a3b8; stroke-dasharray: 4 3; }
+    </style>
+  </defs>
+
+  <rect width="1700" height="1230" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="40" y="50" font-size="30" font-weight="700" fill="#0f172a">KronSpice architecture</text>
+  <text x="40" y="78" font-size="14.5" fill="#475569">A SPICE-compatible analog circuit simulator in pure Go, built as the fitness-evaluation engine for genetically evolved circuits</text>
+
+  <!-- Legend -->
+  <g transform="translate(1230,22)">
+    <line x1="0" y1="8" x2="38" y2="8" class="imp"/>
+    <text x="46" y="12" class="s">imports (never upward)</text>
+    <line x1="0" y1="30" x2="38" y2="30" class="dat"/>
+    <text x="46" y="34" class="s">data flow</text>
+    <g class="entry"><rect x="200" y="0" width="14" height="14" rx="3"/></g><text x="220" y="12" class="s">entry points</text>
+    <g class="ga"><rect x="315" y="0" width="14" height="14" rx="3"/></g><text x="335" y="12" class="s">GA layer</text>
+    <g class="ana"><rect x="200" y="22" width="14" height="14" rx="3"/></g><text x="220" y="34" class="s">analysis / Kron</text>
+    <g class="core"><rect x="315" y="22" width="14" height="14" rx="3"/></g><text x="335" y="34" class="s">simulation core</text>
+    <g class="phys"><rect x="200" y="44" width="14" height="14" rx="3"/></g><text x="220" y="56" class="s">physics</text>
+    <g class="leaf"><rect x="315" y="44" width="14" height="14" rx="3"/></g><text x="335" y="56" class="s">leaf packages</text>
+  </g>
+
+  <!-- Row A: entry points -->
+  <g class="entry">
+    <rect x="40" y="100" width="320" height="70" rx="10"/>
+    <text x="54" y="124" class="h"><tspan class="pkg">cmd/kronspice</tspan></text>
+    <text x="54" y="146" class="b">CLI: simulate a netlist → CSV / SPICE3 raw</text>
+    <text x="54" y="162" class="m">stdlib flag</text>
+  </g>
+  <g class="entry">
+    <rect x="380" y="100" width="320" height="70" rx="10"/>
+    <text x="394" y="124" class="h"><tspan class="pkg">cmd/evolve</tspan></text>
+    <text x="394" y="146" class="b">CLI: run a GA experiment from JSON / YAML</text>
+    <text x="394" y="162" class="m">writes runs/&lt;timestamp&gt;-&lt;name&gt;/</text>
+  </g>
+  <g class="entry">
+    <rect x="720" y="100" width="320" height="70" rx="10"/>
+    <text x="734" y="124" class="h"><tspan class="pkg">examples/</tspan></text>
+    <text x="734" y="146" class="b">rc_lowpass · filter_topology · amplifier · solar</text>
+    <text x="734" y="162" class="b">bifilar_coil · homopolar · arc_surge · deep_space …</text>
+  </g>
+
+  <!-- Row B: evo -->
+  <g class="ga">
+    <rect x="40" y="200" width="1000" height="95" rx="10"/>
+    <text x="54" y="224" class="h"><tspan class="pkg">evo/</tspan> — genetic algorithm layer</text>
+    <text x="54" y="246" class="b">genome · encode_values (log scale, E12/E24/E96) · encode_topology (graph / Koza developmental) · operators · fitness · engine · checkpoint</text>
+    <text x="54" y="264" class="b">Worker pool of runtime.NumCPU(), one simulator per worker · seeded *rand.Rand per generation and individual · results sorted by index</text>
+    <text x="54" y="282" class="b">Failed circuits (singular, no convergence, floating node, timeout) → penalty fitness, never a crash · weighted sum, then NSGA-II</text>
+  </g>
+
+  <!-- Row C: analysis + kron -->
+  <g class="ana">
+    <rect x="40" y="330" width="600" height="135" rx="10"/>
+    <text x="54" y="354" class="h"><tspan class="pkg">analysis/</tspan> — analyses on the MNA system</text>
+    <text x="54" y="378" class="b">op · dc sweep · ac (complex128 per frequency) · tran (adaptive step, LTE, breakpoints)</text>
+    <text x="54" y="396" class="b">integrate: backward Euler · trapezoidal (default) · Gear-2</text>
+    <text x="54" y="414" class="b">measure: rise time, gain, −3 dB bandwidth, overshoot, THD, power</text>
+    <text x="54" y="432" class="b">power: quaternion + geometric-algebra power theory  (→ hyper)</text>
+    <text x="54" y="450" class="b">coupled: circuit ↔ plasma channel ↔ bubble ↔ light  (→ plasma, fluid)</text>
+  </g>
+  <g class="ana">
+    <rect x="670" y="330" width="370" height="135" rx="10"/>
+    <text x="684" y="354" class="h"><tspan class="pkg">kron/</tspan> — Kron tensors &amp; diakoptics</text>
+    <text x="684" y="378" class="b">primitive Z / Y · connection C · Z′ = Cᵀ Z C</text>
+    <text x="684" y="396" class="b">mesh &amp; node forms, twin-tested vs. MNA (1e-9)</text>
+    <text x="684" y="414" class="b">orthogonal · exterior open paths · TAN chords</text>
+    <text x="684" y="432" class="b">diakoptics: tear, cache, re-solve only the mutant</text>
+    <text x="684" y="450" class="b">gaframe · polyphase (→ hyper) · uses solver</text>
+  </g>
+
+  <!-- Row D: solver + output -->
+  <g class="core">
+    <rect x="40" y="500" width="600" height="95" rx="10"/>
+    <text x="54" y="524" class="h"><tspan class="pkg">solver/</tspan> — linear &amp; nonlinear solve</text>
+    <text x="54" y="546" class="b">matrix: dense (gonum LU, &lt; ~30 unknowns) · sparse (Gilbert–Peierls, symbolic reuse)</text>
+    <text x="54" y="564" class="b">newton: damping + limiting · reltol 1e-3 · itl1 100 / itl4 10 → ErrNoConvergence</text>
+    <text x="54" y="582" class="b">convergence: Newton → gmin stepping → source stepping → pseudo-transient</text>
+  </g>
+  <g class="core">
+    <rect x="670" y="500" width="370" height="95" rx="10"/>
+    <text x="684" y="524" class="h"><tspan class="pkg">output/</tspan> — results</text>
+    <text x="684" y="546" class="b">result: in-memory vectors + energy ledger</text>
+    <text x="684" y="564" class="b">csv · raw (SPICE3 binary / ASCII)</text>
+    <text x="684" y="582" class="b">one Result type shared by MNA, kron and em</text>
+  </g>
+
+  <!-- Row E: device -->
+  <g class="core">
+    <rect x="40" y="630" width="1000" height="95" rx="10"/>
+    <text x="54" y="654" class="h"><tspan class="pkg">device/</tspan> — one file per device family, stamping through StampContext</text>
+    <text x="54" y="676" class="b">passive R C L K · source V I (DC PULSE SIN PWL EXP AC) · environment (photovoltaic, thermoelectric) · controlled E F G H · switch S W</text>
+    <text x="54" y="694" class="b">arc (Cassie, Mayr, plasma channel → plasma) · diode (SPICE3 level 1) · bjt (Gummel–Poon) · mosfet levels 1–3 (later)</text>
+    <text x="54" y="712" class="b">Device: Setup · Load · LoadAC · Converged · Truncate — every device embeds device.Base, so it carries the full external port set</text>
+  </g>
+
+  <!-- Row F: circuit + netlist -->
+  <g class="core">
+    <rect x="40" y="755" width="600" height="70" rx="10"/>
+    <text x="54" y="779" class="h"><tspan class="pkg">circuit/</tspan> — in-memory circuit model</text>
+    <text x="54" y="801" class="b">nodes, elements, models · builder.go: programmatic API used by evo</text>
+    <text x="54" y="817" class="b">(no text parsing) · Validate() before every simulation</text>
+  </g>
+  <g class="core">
+    <rect x="670" y="755" width="370" height="70" rx="10"/>
+    <text x="684" y="779" class="h"><tspan class="pkg">netlist/</tspan> — SPICE text input</text>
+    <text x="684" y="801" class="b">lexer · parser · .subckt · .param · .tear</text>
+    <text x="684" y="817" class="b">units.go: f p n u m k meg g t mil</text>
+  </g>
+
+  <!-- Right column: physics -->
+  <g class="phys">
+    <rect x="1100" y="200" width="560" height="150" rx="10"/>
+    <text x="1114" y="224" class="h"><tspan class="pkg">env/</tspan> — outside influences, anywhere in the universe</text>
+    <text x="1114" y="246" class="b">Profile = composable Sources + circuit pose and motion</text>
+    <text x="1114" y="264" class="b">star (irradiance, wind, flares) · fields E(t), B(t) · thermal</text>
+    <text x="1114" y="282" class="b">radiation: TID dose, single events, neutrinos (computed, ≈ 0)</text>
+    <text x="1114" y="300" class="b">gravity: time dilation, redshift, Doppler, tidal limit</text>
+    <text x="1114" y="318" class="b">couple → device inputs + attributed ledger inflows · limits</text>
+    <text x="1114" y="336" class="b">presets: earth_noon · leo_storm · mars · europa · near_black_hole</text>
+  </g>
+  <g class="phys">
+    <rect x="1100" y="385" width="560" height="170" rx="10"/>
+    <text x="1114" y="409" class="h"><tspan class="pkg">em/</tspan> — Maxwell's equations in quaternion form</text>
+    <text x="1114" y="431" class="b">nabla (Hamilton ∇) · maxwell (Treatise form) · biquat ∇F = J</text>
+    <text x="1114" y="449" class="b">extract: field solves → lumped R, L, C, K · tline from a TEM solve</text>
+    <text x="1114" y="467" class="b">limits: electrical size d/λ ≤ 1/10, otherwise ErrNotQuasiStatic</text>
+    <text x="1114" y="485" class="b">energy: open-system ledger, Poynting / Tellegen balance</text>
+    <text x="1114" y="503" class="b">lorentz ⟨F Q†⟩ · duality (hypothetical, off by default)</text>
+    <text x="1114" y="521" class="b">fdtd (local Yee solve) · topology (∇·B, toroids) · probes</text>
+    <text x="1114" y="541" class="m">Never runs inside Newton / LU: it supplies parameters and checks</text>
+  </g>
+  <g class="leaf">
+    <rect x="1100" y="590" width="560" height="95" rx="10"/>
+    <text x="1114" y="614" class="h"><tspan class="pkg">hyper/</tspan> — hypercomplex numbers (gonum only)</text>
+    <text x="1114" y="636" class="b">quat: quaternion phasors and rotors (wraps gonum num/quat)</text>
+    <text x="1114" y="654" class="b">ga: Clifford algebra Cl(p,q,r), bitmask blades · G2, G3 + sparse multivector</text>
+    <text x="1114" y="674" class="m">Never imported by solver or device: inner loop stays float64 / complex128</text>
+  </g>
+  <g class="leaf">
+    <rect x="1100" y="720" width="270" height="105" rx="10"/>
+    <text x="1114" y="744" class="h"><tspan class="pkg">plasma/</tspan> (gonum only)</text>
+    <text x="1114" y="766" class="b">saha · conductivity (Spitzer)</text>
+    <text x="1114" y="784" class="b">channel energy balance</text>
+    <text x="1114" y="802" class="b">breakdown · radiation</text>
+  </g>
+  <g class="leaf">
+    <rect x="1390" y="720" width="270" height="105" rx="10"/>
+    <text x="1404" y="744" class="h"><tspan class="pkg">fluid/</tspan> (gonum only)</text>
+    <text x="1404" y="766" class="b">media: H₂O and D₂O tables</text>
+    <text x="1404" y="784" class="b">bubble: R–P, Keller–Miksis, Gilmore</text>
+    <text x="1404" y="802" class="b">acoustic · sonolum</text>
+  </g>
+
+  <!-- Import arrows: main chain -->
+  <line x1="200" y1="170" x2="200" y2="198" class="imp"/>
+  <line x1="540" y1="170" x2="540" y2="198" class="imp"/>
+  <line x1="880" y1="170" x2="880" y2="198" class="imp"/>
+  <line x1="340" y1="295" x2="340" y2="328" class="imp"/>
+  <line x1="855" y1="295" x2="855" y2="328" class="imp"/>
+  <line x1="340" y1="465" x2="340" y2="498" class="imp"/>
+  <path d="M610,465 L690,498" class="imp"/>
+  <line x1="855" y1="465" x2="855" y2="498" class="imp"/>
+  <line x1="340" y1="595" x2="340" y2="628" class="imp"/>
+  <line x1="340" y1="725" x2="340" y2="753" class="imp"/>
+  <line x1="640" y1="790" x2="668" y2="790" class="imp"/>
+
+  <!-- Import arrows: physics -->
+  <line x1="1380" y1="350" x2="1380" y2="383" class="imp"/>
+  <line x1="1380" y1="555" x2="1380" y2="588" class="imp"/>
+  <path d="M1660,330 L1684,330 L1684,640 L1662,640" class="imp"/>
+  <path d="M1040,705 C1070,705 1070,770 1098,770" class="imp"/>
+  <text x="1048" y="792" class="s">arc.go</text>
+
+  <!-- Data-flow arrows -->
+  <line x1="1100" y1="262" x2="1042" y2="262" class="dat"/>
+  <text x="1100" y="178" class="lbl">waveforms, TEMP, EMF (env) · lumped R/L/C/K (em)</text>
+  <text x="1100" y="193" class="lbl">→ wired into circuit.Builder by evo / cmd</text>
+  <line x1="1040" y1="548" x2="1098" y2="520" class="dat"/>
+  <text x="1046" y="580" class="lbl">Result →</text>
+  <text x="1046" y="594" class="lbl">checks</text>
+
+  <!-- exchange band -->
+  <g class="exch">
+    <rect x="40" y="860" width="1620" height="125" rx="10"/>
+    <text x="54" y="884" class="h"><tspan class="pkg">exchange/</tspan> — external energy ports on every element  <tspan class="s" font-weight="400">(leaf, stdlib only · imported by device, env, em, analysis and evo)</tspan></text>
+    <text x="54" y="905" class="b">Every element exposes one ExternalPort per registered channel. No model means exactly 0 W, listed as NotModeled. Every model cites a source. In Kron's terms each port is an open path to the exterior junction Ω of its channel.</text>
+  </g>
+  <g transform="translate(54,920)">
+    <g class="st-mod"><rect x="0" y="0" width="114" height="50" rx="6"/></g>
+    <text x="57" y="21" text-anchor="middle" class="cn">Electrical</text><text x="57" y="39" text-anchor="middle" class="s">modeled (MNA)</text>
+    <g class="st-def"><rect x="121" y="0" width="114" height="50" rx="6"/></g>
+    <text x="178" y="21" text-anchor="middle" class="cn">Light</text><text x="178" y="39" text-anchor="middle" class="s">where defined</text>
+    <g class="st-mod"><rect x="242" y="0" width="114" height="50" rx="6"/></g>
+    <text x="299" y="21" text-anchor="middle" class="cn">Thermal</text><text x="299" y="39" text-anchor="middle" class="s">modeled</text>
+    <g class="st-def"><rect x="363" y="0" width="114" height="50" rx="6"/></g>
+    <text x="420" y="21" text-anchor="middle" class="cn">Magnetic field</text><text x="420" y="39" text-anchor="middle" class="s">with geometry</text>
+    <g class="st-def"><rect x="484" y="0" width="114" height="50" rx="6"/></g>
+    <text x="541" y="21" text-anchor="middle" class="cn">Electric field</text><text x="541" y="39" text-anchor="middle" class="s">with geometry</text>
+    <g class="st-def"><rect x="605" y="0" width="114" height="50" rx="6"/></g>
+    <text x="662" y="21" text-anchor="middle" class="cn">Mechanical</text><text x="662" y="39" text-anchor="middle" class="s">where defined</text>
+    <g class="st-def"><rect x="726" y="0" width="114" height="50" rx="6"/></g>
+    <text x="783" y="21" text-anchor="middle" class="cn">Acoustic</text><text x="783" y="39" text-anchor="middle" class="s">where defined</text>
+    <g class="st-mod"><rect x="847" y="0" width="114" height="50" rx="6"/></g>
+    <text x="904" y="21" text-anchor="middle" class="cn">Ionizing radiation</text><text x="904" y="39" text-anchor="middle" class="s">modeled</text>
+    <g class="st-not"><rect x="968" y="0" width="114" height="50" rx="6"/></g>
+    <text x="1025" y="21" text-anchor="middle" class="cn">Chemical</text><text x="1025" y="39" text-anchor="middle" class="s">not modeled yet</text>
+    <g class="st-zero"><rect x="1089" y="0" width="114" height="50" rx="6"/></g>
+    <text x="1146" y="21" text-anchor="middle" class="cn">Neutrino</text><text x="1146" y="39" text-anchor="middle" class="s">computed, ≈ 0</text>
+    <g class="st-frm"><rect x="1210" y="0" width="114" height="50" rx="6"/></g>
+    <text x="1267" y="21" text-anchor="middle" class="cn">Gravity / frame</text><text x="1267" y="39" text-anchor="middle" class="s">transform, no energy</text>
+    <g class="st-hyp"><rect x="1331" y="0" width="114" height="50" rx="6"/></g>
+    <text x="1388" y="21" text-anchor="middle" class="cn">Magnetic charge</text><text x="1388" y="39" text-anchor="middle" class="s">hypothetical only</text>
+    <g class="st-not"><rect x="1452" y="0" width="140" height="50" rx="6"/></g>
+    <text x="1522" y="21" text-anchor="middle" class="cn">Future 1 … N</text><text x="1522" y="39" text-anchor="middle" class="s">reserved</text>
+  </g>
+
+  <!-- Bottom panel 1: pipeline -->
+  <g class="panel"><rect x="40" y="1010" width="620" height="180" rx="10"/></g>
+  <text x="54" y="1034" class="h">Evaluating one candidate</text>
+  <g class="pill" font-size="12.5" fill="#0f172a">
+    <rect x="54" y="1050" width="128" height="34" rx="17"/><text x="118" y="1072" text-anchor="middle">Genome</text>
+    <rect x="204" y="1050" width="128" height="34" rx="17"/><text x="268" y="1072" text-anchor="middle">circuit.Builder</text>
+    <rect x="354" y="1050" width="128" height="34" rx="17"/><text x="418" y="1072" text-anchor="middle">Validate()</text>
+    <rect x="504" y="1050" width="142" height="34" rx="17"/><text x="575" y="1072" text-anchor="middle">Setup: fix sparsity</text>
+    <rect x="504" y="1112" width="142" height="34" rx="17"/><text x="575" y="1134" text-anchor="middle">Newton + LU</text>
+    <rect x="354" y="1112" width="128" height="34" rx="17"/><text x="418" y="1134" text-anchor="middle">output.Result</text>
+    <rect x="204" y="1112" width="128" height="34" rx="17"/><text x="268" y="1134" text-anchor="middle">ledger + measure</text>
+    <rect x="54" y="1112" width="128" height="34" rx="17"/><text x="118" y="1134" text-anchor="middle">fitness</text>
+  </g>
+  <line x1="182" y1="1067" x2="202" y2="1067" class="imp"/>
+  <line x1="332" y1="1067" x2="352" y2="1067" class="imp"/>
+  <line x1="482" y1="1067" x2="502" y2="1067" class="imp"/>
+  <line x1="575" y1="1084" x2="575" y2="1110" class="imp"/>
+  <line x1="504" y1="1129" x2="484" y2="1129" class="imp"/>
+  <line x1="354" y1="1129" x2="334" y2="1129" class="imp"/>
+  <line x1="204" y1="1129" x2="184" y2="1129" class="imp"/>
+  <text x="54" y="1166" class="s">env inputs and em parameters enter at the Builder · every evaluation runs under a context.Context deadline</text>
+  <text x="54" y="1182" class="s">any error → typed sentinel (errors.Is) → penalty fitness, so the GA learns from broken circuits</text>
+
+  <!-- Bottom panel 2: ledger -->
+  <g class="panel"><rect x="680" y="1010" width="480" height="180" rx="10"/></g>
+  <text x="694" y="1034" class="h">Open-system energy ledger</text>
+  <text x="694" y="1062" font-size="15.5" font-weight="600" fill="#0f172a">dW_stored/dt = P_in − P_out − P_dissipated</text>
+  <text x="694" y="1088" class="b">Kept per element × channel, at every operating point and timestep</text>
+  <text x="694" y="1106" class="b">Residual above integration tolerance ⇒ reported as an error</text>
+  <text x="694" y="1124" class="b">Model-supplied (E/F/G/H) and hypothetical power in their own columns</text>
+  <text x="694" y="1142" class="b">Surplus is never credited to neutrinos</text>
+  <text x="694" y="1160" class="b">Efficiency, harvested energy, standby loss → GA fitness</text>
+  <text x="694" y="1180" class="m">Twin check: Kron open-path power = MNA ledger (1e-9)</text>
+
+  <!-- Bottom panel 3: rules -->
+  <g class="panel"><rect x="1180" y="1010" width="480" height="180" rx="10"/></g>
+  <text x="1194" y="1034" class="h">Design rules</text>
+  <text x="1194" y="1060" class="b">Never panic, hang or exhaust memory: typed errors only</text>
+  <text x="1194" y="1078" class="b">Deterministic: seeded rand, results sorted before selection</text>
+  <text x="1194" y="1096" class="b">Parallel: no shared mutable state, one simulator per worker</text>
+  <text x="1194" y="1114" class="b">Lumped (quasi-static) limit of Maxwell's equations, checked</text>
+  <text x="1194" y="1132" class="b">Solver core float64 / complex128, allocation-free Load and LU</text>
+  <text x="1194" y="1150" class="b">Golden tests vs. ngspice; twin tests for Kron, GA, quaternions</text>
+  <text x="1194" y="1168" class="b">Pure Go, no cgo: gonum, rwl/lufact, stdlib</text>
+
+  <!-- Footer -->
+  <text x="40" y="1216" class="s" fill="#64748b">Build order: M1 exchange + netlist + R/V/I + dense MNA + .OP → M2 .TRAN → M3 .AC/.DC → M4 diode + Newton → M5 evo → M6 sparse LU → M7 BJT → M8 topology genome → M9 MOSFET, kron, hyper, em, env, plasma, fluid → M10 QSpice cross-check</text>
+</svg>

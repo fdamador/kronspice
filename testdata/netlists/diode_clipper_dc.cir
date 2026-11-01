@@ -1,0 +1,8 @@
+Antiparallel diode clipper, DC sweep
+V1 in 0 DC 0
+R1 in out 1k
+D1 out 0 dsi
+D2 0 out dsi
+.model dsi D(IS=2.52e-9 N=1.752 RS=0.568)
+.dc V1 -5 5 0.25
+.end

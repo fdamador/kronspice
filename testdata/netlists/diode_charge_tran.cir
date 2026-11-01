@@ -1,0 +1,7 @@
+Diode with junction and diffusion charge driven at 1 MHz
+V1 in 0 SIN(0 2 1meg)
+R1 in a 1k
+D1 a 0 dc
+.model dc D(IS=1e-14 N=1 CJO=10p VJ=0.7 M=0.4 FC=0.5 TT=20n)
+.tran 2n 3u 0 0.5n
+.end

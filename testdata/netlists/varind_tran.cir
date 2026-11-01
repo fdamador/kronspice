@@ -1,0 +1,6 @@
+Linear inductor whose inductance varies in time: v = L di/dt + i dL/dt
+V1 in 0 SIN(0 1 2k)
+R1 in a 10
+LV a 0 1m SCALE=SIN(1 0.4 3k)
+.tran 2u 2m
+.end

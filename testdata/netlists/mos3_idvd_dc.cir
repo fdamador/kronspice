@@ -1,0 +1,10 @@
+Level-3 NMOS output characteristic through drain/source interchange
+* Static feedback (ETA), short and narrow channel, gate-field mobility (THETA),
+* velocity saturation and KAPPA channel-length modulation.
+VDS d 0 0
+VGS g 0 2.5
+VBS b 0 -0.5
+M1 d g 0 b n3 L=1.2u W=10u NRD=1 NRS=1
+.model n3 NMOS(LEVEL=3 TOX=20n NSUB=3e16 UO=550 LD=0.1u XJ=0.25u WD=0.05u DELTA=0.5 THETA=0.06 ETA=0.05 KAPPA=0.4 VMAX=1.5e5 NFS=4e11 RSH=20 CGSO=2e-10 CGDO=2e-10 CGBO=1e-10 CJ=4e-4 MJ=0.45 CJSW=3e-10 PB=0.8 JS=1e-4)
+.dc VDS -2 5 0.1
+.end

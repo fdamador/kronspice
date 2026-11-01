@@ -1,0 +1,7 @@
+# reference: bisection on the SPICE3 diode equations (internal/golden/ref/diode_ref.py)
+name,value
+i(d1),0.004230647769887578
+i(r1),0.004230647769887578
+i(v1),-0.004230647769887578
+v(a),0.7693522301124223
+v(in),5.0

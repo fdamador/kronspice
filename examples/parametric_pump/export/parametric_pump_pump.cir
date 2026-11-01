@@ -1,0 +1,9 @@
+parametric pump: LC tank, C modulated at twice resonance
+* f0 = 1/(2π√(LC0)) = 5.033 kHz. C(t) = 1u·(1 − 0.1·sin(2ω0·t)) falls while
+* |v| peaks, so the tank's energy grows; the work comes in through C1's
+* mechanical port (ledger inflow), none of it from nowhere.
+C1 a 0 1u SCALE=SIN(1 0.1 10.066k 0 0 180) IC=1
+L1 a b 1m
+R1 b 0 0.1
+.tran 1u 2m UIC
+.end

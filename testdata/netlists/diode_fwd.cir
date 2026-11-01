@@ -1,0 +1,7 @@
+Forward-biased diode with series resistance
+V1 in 0 DC 5
+R1 in a 1k
+D1 a 0 dmod
+.model dmod D(IS=1e-14 N=1.05 RS=10)
+.op
+.end

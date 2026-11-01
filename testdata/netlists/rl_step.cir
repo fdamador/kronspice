@@ -1,0 +1,6 @@
+RL step response (tau = 1 ms)
+V1 in 0 PULSE(0 2 0 1n 1n 1 2)
+R1 in a 10
+L1 a 0 10m
+.tran 10u 5m
+.end

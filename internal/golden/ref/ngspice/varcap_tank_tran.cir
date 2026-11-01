@@ -1,0 +1,13 @@
+varcap_tank_tran: ngspice twin of testdata/netlists/varcap_tank_tran.cir
+* columns: v(a) i(l1)
+I1 0 a PULSE(0 10m 0 1u 1u 50u 1)
+CV a 0 Q='1e-6*(1+0.1*sin(2*pi*10.066e3*time))*V(a)'
+L1 a b 1m
+R1 b 0 0.1
+.options reltol=1e-6 abstol=1e-15 vntol=1e-9
+.control
+tran 2u 1m 0 10n
+linearize
+wrdata out.txt v(a) i(l1)
+.endc
+.end

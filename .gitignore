@@ -1,0 +1,23 @@
+# Build output
+/kronspice
+/kronspice.exe
+*.test
+*.out
+
+# Experiment runs and local results
+/runs/
+internal/golden/docker/logs/
+*.csv.tmp
+
+# Reference library and local sync archives
+/reference/
+/.sync/
+
+# Editor and OS files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+.idea/
+.DS_Store
+Thumbs.db
+__pycache__/

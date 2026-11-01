@@ -1,0 +1,7 @@
+# reference: ngspice-39 operating point of testdata/netlists/bjt_ce_op.cir (internal/golden/ref/ngspice_all.sh)
+name,value
+v(vcc),1.200000000000000e+01
+v(b),2.023269596056322e+00
+v(c),7.706780359115015e+00
+v(e),1.310919541107012e+00
+i(vcc),-1.51324650841140e-03

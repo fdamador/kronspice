@@ -1,0 +1,9 @@
+electrodynamic tether
+VEMF top m DC 1155.0000000000002
+RT m bot 168.70423967740905
+RCT top x 100
+RCB bot y 100
+VS x y DC 3000
+RREF y 0 1e+09
+.op
+.end

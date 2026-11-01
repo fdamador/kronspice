@@ -1,0 +1,7 @@
+parametric LCR (Amador & Eckardt 2012)
+VU s 0 AC 5 0 SIN(0 5 2346.611614119038 0 0 0)
+L s a 0.02 IC=0
+R a c 20
+C c 0 2.3e-07 IC=0
+.tran 4.2614636098416257e-06 0.03 0 4.2614636098416257e-06 uic
+.end

@@ -1,0 +1,16 @@
+Eckardt resonant homopolar
+.model hg MACHINE(G_1_4=0.0005000000000000001 G_2_3=-0.010053096491487341 IC_4=1 L_1_1=1e-09 L_2_2=1e-09 L_3_3=0.001 L_4_4=0.001 N=4)
+.domain mechanical w
+IF 0 f DC 1
+RF f 0 1000
+NH a b b c c d f 0 w 0 hg
+R d a 0.3
+RREF a 0 100000
+RREFB b 0 100000
+RREFC c 0 100000
+RREFD d 0 100000
+CJ w 0 0.01 IC=0
+RW w 0 1e+09
+ITD 0 w DC 1
+.tran 0.0015 3 0 0.0015 uic
+.end

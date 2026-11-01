@@ -1,0 +1,5 @@
+# reference: ngspice-39 operating point of testdata/netlists/divider.cir (internal/golden/ref/ngspice_all.sh)
+name,value
+v(in),1.000000000000000e+01
+v(out),5.000000000000000e+00
+i(v1),-5.00000000000000e-03

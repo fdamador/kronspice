@@ -1,0 +1,7 @@
+series RLC step response, underdamped
+V1 in 0 PULSE(0 1 0 0.1n 0.1n 1 2)
+R1 in a 10
+L1 a b 1m
+C1 b 0 1u
+.tran 1u 1m
+.end

@@ -1,0 +1,8 @@
+Half-wave rectifier: evolve the filter capacitor and load for ripple and mean output
+V1 in 0 SIN(0 10 1k)
+D1 in out dr
+R1 out 0 1k
+C1 out 0 1u
+.model dr D(IS=1e-14 N=1 RS=0.5)
+.tran 10u 8m
+.end
