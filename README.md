@@ -33,7 +33,8 @@ and curious tinkerers are all welcome here as universal engineers.
 | Circuits | Torn, solved piece by piece and rejoined inside a running evolution | [examples/torn_ga](examples/torn_ga) |
 | Rotating machines | Kron's own reference frames, with an induction motor starting up | [examples/kron_machine](examples/kron_machine) |
 | Mechanics and acoustics | Generator → piezo → flask, with force and pressure as network variables | [examples/acoustic_drive](examples/acoustic_drive) |
-| Molecules | Bond vibrations of water as AC resonances | [examples/water_vibration](examples/water_vibration) |
+| Water vibrations | Atoms as capacitors and bonds as inductors, with the molecule's vibrations as AC resonances | [examples/water_vibration](examples/water_vibration) |
+| DNA vibrations | The four bases and two Watson–Crick pairs as circuits, with hydrogen bonds as their own group and infrared light as a current source | [examples/dna_vibration](examples/dna_vibration) |
 | Quantum mechanics | Kron's circuit model of the Schrödinger equation | [examples/kron_schrodinger](examples/kron_schrodinger) |
 
 Kron's program was never finished, and neither is this one: his late work on
