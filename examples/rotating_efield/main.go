@@ -7,7 +7,7 @@
 //
 //  1. Real physics. A magnetic field comes from moving charge (Rowland's
 //     rotating charged disk, 1876) and from a changing electric field (the
-//     displacement current of the Ampère–Maxwell law). Four cases:
+//     displacement current of the Ampère–Maxwell law). Five cases:
 //     a. Rowland disk: B on the axis of a spinning charged disk.
 //     b. A rotating uniform E field (as between quadrature-driven plate
 //     pairs): its displacement current gives B = (μ₀ε₀/2)·∂E/∂t × r.
@@ -20,6 +20,9 @@
 //     the B of the moving charges matches the Ampère–Maxwell law with
 //     the displacement current of that rotating E (checked with the M9h
 //     operators).
+//     e. Röntgen–Eichenwald: a dielectric disk spinning in a fixed E field
+//     is magnetized, M = P × v — the electric mirror of the homopolar
+//     disk, with B = −(εr − 1)·E·v/c² in its mid-plane.
 //
 //  2. Hypothetical physics (opt-in): the force a magnetic charge would
 //     feel in these fields — the dual pair of Joot's Theorem 3.16 —
@@ -164,6 +167,31 @@ func RotatingPair(q, a, w float64) (bCentre, ampere float64) {
 	return bCentre, ampere / scale
 }
 
+// RontgenEichenwald is the electric mirror of the homopolar disk: a
+// dielectric disk (relative permittivity epsR, radius R, thickness h)
+// spinning at w between fixed plates that hold a uniform axial field e0.
+// The polarization P = ε₀(εr − 1)e0 leaves bound charge ±P on the two
+// faces; spinning carries it round as two opposite surface currents
+// ±Pωr (W. C. Röntgen 1888; A. Eichenwald 1903), equivalent to the
+// moving-medium magnetization M = P × v (Minkowski; Jackson §11.10 /
+// Panofsky & Phillips §18-3). It returns the radial B in the mid-plane at
+// radius rho by summing the face currents as rings (Biot–Savart), and the
+// thin-disk value μ₀M = −μ₀Pωρ = −(εr − 1)·e0·v/c², v = ωρ — the 1/c² of
+// the dual relation B′ = B − v×E/c². The ring sum approaches the
+// thin-disk value linearly in h/R (finite-face fringing).
+func RontgenEichenwald(epsR, e0, R, h, w, rho float64) (numeric, thin float64) {
+	const rings = 400
+	p := em.Eps0 * (epsR - 1) * e0
+	for _, face := range [2]struct{ z, sign float64 }{{h / 2, 1}, {-h / 2, -1}} {
+		for k := 0; k < rings; k++ {
+			r := R * (float64(k) + 0.5) / rings
+			l := em.Loop{P: em.Circle([3]float64{0, 0, face.z}, [3]float64{0, 0, 1}, r, 720), I: face.sign * p * w * r * R / rings}
+			numeric += l.B([3]float64{rho, 0, 0})[0]
+		}
+	}
+	return numeric, -em.Mu0 * p * w * rho
+}
+
 func main() {
 	fmt.Println("1a. Rowland disk (σ = 1e−5 C/m², R = 10 cm, 20 000 rpm):")
 	w := 20000 * 2 * math.Pi / 60
@@ -178,6 +206,11 @@ func main() {
 	fmt.Printf("1c. Ring of 1 µC, 5 cm: same static E pattern; B at centre %.3g T at rest, %.3g T spinning at 1000 rev/s\n", rest, spin)
 	bc, ar := RotatingPair(1e-9, 0.05, 2*math.Pi*1000)
 	fmt.Printf("1d. ±1 nC on a 10 cm rod at 1000 rev/s: |B| on the axis 2.5 cm up %.3g T; Ampère–Maxwell residual %.2g of the displacement term (stencil truncation)\n", bc, ar)
+
+	n, thin := RontgenEichenwald(3, 1e6, 0.1, 0.001, 2*math.Pi*50, 0.05)
+	vr := 2 * math.Pi * 50 * 0.05
+	fmt.Printf("1e. Röntgen–Eichenwald: εr = 3 disk (R = 10 cm, 1 mm) spinning at 50 rev/s in fixed 1 MV/m: B_r at r = 5 cm %.3g T (rings) vs %.3g T thin-disk; (εr − 1)·E·v/c² = %.3g T\n",
+		n, thin, 2*1e6*vr/(em.SpeedOfLight*em.SpeedOfLight))
 
 	fmt.Println("2. HYPOTHETICAL — a magnetic charge q_m = 1 A·m (none has ever been observed):")
 	h := em.Hypothetical{MagneticCharge: true}

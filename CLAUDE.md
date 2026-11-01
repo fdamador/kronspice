@@ -1698,7 +1698,16 @@ dp/dt = q (E + v × B)          dℰ/dt = q E · v
 **Magnetic charge `q_m`, velocity `v_m` (the dual):**
 
 ```
-dp/dt = q_m (c B − (1/c) v_m × E)     dℰ/dt = (1/η) q_m B · v_m / c
+dp/dt = q_m (c B − (1/c) v_m × E)     dℰ/dt = q_m c B · v_m
+(q_m here in coulombs. Erratum in the source, checked against
+ reference/GAelectrodynamics.color.V0.3.6.4.pdf, pp. 239–240: Joot defines
+ q_m = ∫ρ_m dV with ρ_m in Wb/m³ (§3.1), so Definition 3.10 should read
+ Q = I(q_m/η)(1 + v_m/c). Theorem 3.16 as printed omits that 1/η in the
+ force and gives the power as (1/η) q_m B·v_m/c; with q_m in Wb the force
+ is q_m(H − ϵ v_m×E), agreeing with his Theorem 3.14, and the power is
+ q_m H·v_m = (1/η) q_m c B·v_m — his own proof, eq. 3.183, gives grade 0 =
+ q_m B·v_m before the scaling by c. The code uses q_m [A·m] = q_m[Wb]/μ₀
+ = c × the coulomb value: q_m(B − v×E/c²) and q_m B·v.)
 ```
 
 `em/lorentz.go` implements the grade-selection form with `hyper/ga` and must
@@ -1821,11 +1830,18 @@ relates the medium's `dT/dK` (K = temperature) to the Thomson coefficient,
 ### Tests
 
 - Grade-selection force/power equals the vector forms, for both pairs.
-- Electric–magnetic duality transform (`E → cB`, `cB → −E`, `q → q_m/c`)
+- Electric–magnetic duality transform (`E → cB`, `cB → −E`, `q → q_m`; `q → q_m/c` with q_m in A·m)
   maps the electric pair onto the magnetic pair.
 - Homopolar EMF matches `½Bω(r_o² − r_i²)` and the shaft-power balance.
 - Displacement-current B field of a known time-varying E field matches the
   analytic result (e.g. a charging parallel-plate capacitor).
+- Röntgen–Eichenwald, the electric mirror of the homopolar disk: a dielectric
+  disk spinning in a fixed axial E field is magnetized, M = P × v, giving
+  B = −(εr − 1)·E·v/c² in its mid-plane (ring sum of the moving bound face
+  charges ±P vs the thin-disk value, `examples/rotating_efield` case 1e). The
+  1/c² is μ₀ε₀, not a fitted factor; it is why the mirror effect is nT where
+  the homopolar one is volts: 1 T at 100 m/s gives 100 V/m, while 1 MV/m at
+  100 m/s gives about 1 nT.
 
 ### Momentum ledger and push–pull designs
 
@@ -3006,6 +3022,11 @@ because it could not be offered under the commercial license.
   selection. Reference only: no license file found.
 - H. A. Rowland, magnetic effect of electric convection (1876) — rotating
   charged disk produces a magnetic field.
+- W. C. Röntgen (1888) and A. Eichenwald (1903) — a dielectric moving in an
+  electric field is magnetized (Röntgen current, M = P × v); H. A. Wilson &
+  M. Wilson (1913) and Hertzberg et al., arXiv:gr-qc/0104101 (2001) —
+  rotating magnetic dielectric; J. D. Jackson, *Classical Electrodynamics*,
+  3rd ed., §11.10 — fields and constitutive relations in moving media.
 - A. M. Cassie, arc model (CIGRE, 1939) and O. Mayr, arc model (1943) —
   dynamic arc conductance (§3g).
 - R. W. Hellwarth, P. Nouchi, "Focused one-cycle electromagnetic pulses,"
