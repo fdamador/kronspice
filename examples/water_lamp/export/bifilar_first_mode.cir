@@ -1,0 +1,9 @@
+bifilar coil, first mode, pulsed primary
+IP 0 p PULSE(0 1 0 2e-07 2e-07 2e-06 1)
+LP p 0 5.974707646431556e-06
+LS s 0 0.004853
+CS s 0 3.014633635100319e-09
+RS s 0 105309.11616312526
+K1 LP LS 0.16502237933600086
+.tran 0.1u 240u
+.end
