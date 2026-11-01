@@ -1,0 +1,86 @@
+Part 1 — electrode pairs in water (cell.go); current from the first electrode to the second
+   pair                                         +5 V       −5 V     +100 V     −100 V     −200 V  fwd/rev 100 V    kronspice
+   lead | water | aluminium                      30 A  -0.00357 A       980 A   -0.0714 A     -28.7 A       1.37e+04      6.8e-17
+   iron | water | aluminium                      30 A  -0.00357 A       980 A   -0.0714 A     -28.7 A       1.37e+04      6.8e-17
+   copper with silver tips | water | aluminium         3 A  -0.00357 A        98 A   -0.0714 A     -20.1 A       1.37e+03      3.1e-16
+   silver-plated iron | water | aluminium        30 A  -0.00357 A       980 A   -0.0714 A     -28.7 A       1.37e+04      6.8e-17
+   iron | water | copper                         30 A       -30 A       980 A      -980 A -1.98e+03 A              —      0.0e+00
+   lead | water | iron                           30 A       -30 A       980 A      -980 A -1.98e+03 A              —      0.0e+00
+   aluminium | water | aluminium            0.00357 A  -0.00357 A    0.0714 A   -0.0714 A     -28.7 A              —      4.7e-15
+   lead | water | aluminium: plates 100 cm² (working area 100 cm²), 1 cm apart, water 0.1 Ω, decomposition onset 2.0 V, galvanic 0.000 V, oxide sparks at 140 V, film 4.38 µF
+   A valve metal against an ordinary metal rectifies; two ordinary metals do not (they make a weak battery:
+   iron | water | copper 0.789 V open circuit);   lead | water | iron -0.321 V open circuit);
+   two valve metals block both ways. Past the oxide's sparking voltage the blocked direction sparks over.
+
+Part 2 — aluminium–lead water cells as rectifiers (kronspice .TRAN, ledger on)
+   circuit                                                  Vdc    ripple       load   efficiency   reverse pk     ledger
+   half-wave, 1 cell, 100 V peak, 60 Hz                  76.2 V   27.28 V    118.3 W        20.5 %        167 V    4.6e-09
+   half-wave, 2 cells in series, 100 V peak, 60 Hz       83.3 V   10.91 V    139.0 W        84.0 %        183 V   -1.6e-09
+   bridge, 1 cell per arm, 100 V peak, 60 Hz             88.0 V    5.21 V    154.8 W        85.0 %         93 V    1.1e-08
+   bridge, 1 cell per arm, 170 V peak (120 V rms), 60 Hz   145.1 V    9.69 V    421.1 W        40.1 %        153 V    1.2e-07
+   bridge, 2 cells per arm, 170 V peak, 60 Hz           146.5 V    8.36 V    429.4 W        85.6 %        156 V    3.5e-09
+   bridge, 1 cell per arm, 100 V peak, 1 kHz             88.3 V    0.32 V    155.9 W        84.1 %         91 V    2.5e-08
+   bridge, 1 cell per arm, 100 V peak, 20 kHz            85.9 V    0.02 V    147.5 W        17.2 %         89 V    2.9e-09
+   Silver counter-electrodes against aluminium (bridge, 1 cell per arm, 100 V peak, 60 Hz):
+   bridge, copper with silver tips | water | aluminium    79.2 V    4.04 V    125.6 W        77.5 %         88 V    7.9e-09
+      the silver is the positive electrode when the cell conducts (0.79 A on average): 10.5 g of silver passes 9.38e+03 C,
+      so if it all dissolved it would last 3.3 h (worst case; then the copper underneath carries the current and corrodes)
+   bridge, silver-plated iron | water | aluminium        88.0 V    5.21 V    154.8 W        85.0 %         93 V    1.1e-08
+      the silver is the positive electrode when the cell conducts (0.88 A on average): 1.05 g of silver passes 938 C,
+      so if it all dissolved it would last 18 min (worst case; then the iron underneath carries the current and corrodes)
+   Efficiency = load power ÷ source power over the last cycles (Pollak's cells: about 75 %, Nodon's 75–80 %, EB 1911).
+   A half-wave rectifier with a filter capacitor sees twice the peak in reverse, so one cell sparks over; two in series
+   hold. The oxide film is a 4.4 µF capacitor: at high frequency it passes current both ways (the 1911 article's
+   warning); compare the 1 kHz and 20 kHz rows.
+
+Part 3 — polarity spark gaps in water as rectifiers (gap.go, gapsim.go)
+   point–plane gap 3 mm in pure water: breaks down at +2415 V (point positive, EXTRAPOLATED from Stygar 2006) and −4830 V (point negative, ×2 declared); leaks through 57.9 MΩ; arc 50 V + 0.5 Ω
+   A one-way spark needs: forward voltage above +Vb, reverse below −Vb·ratio. With a filter capacitor a half-wave
+   rectifier sees 2·Vpeak in reverse, and a bridge needs 2·Vb forward (two gaps in series) while each blocked gap sees
+   the full output: both need a polarity ratio above 2.
+   circuit                                               ratio       Vdc    ripple efficiency   reverse pk    strikes f/b
+   half-wave, resistive load, 4 kV peak                    2.0     900 V    4014 V      96.1 %       3932 V    8617/0      rectifies
+   half-wave, filter capacitor, 4 kV peak                  2.0     366 V    6014 V       7.0 %       4830 V      21/20     breaks down backwards
+   bridge, filter capacitor, 4 kV peak                     2.0       0 V       0 V       0.0 %       2029 V       0/0      never strikes
+   bridge, filter capacitor, 6 kV peak                     2.0    1837 V    7173 V       0.1 %       9474 V     540/520    breaks down backwards
+   bridge, filter capacitor, 6 kV peak                     3.0    3107 V    4519 V      67.9 %       5965 V       6/0      rectifies
+   A spark gap is not a low-drop diode: it conducts only once the voltage passes its breakdown (2.4 kV here), so the
+   output sags until the source exceeds the load voltage by the gaps' breakdown, then jumps back up.
+   The ratio of 2 is declared (J. C. Martin's constants, to be checked) and the breakdown voltages are extrapolated
+   to 60 Hz from microsecond data: a bench measurement of both decides whether a water spark-gap bridge can work.
+
+Part 4 — pulse test (pulse.go): 10 J from a charged capacitor through the device, 1 µH and a 0.1 Ω load
+   device                                           charge          C       peak       rise    to load  in device  left in C
+   lead | water | aluminium                          100 V    0.002 F      470 A    9.22 µs     4.80 J     5.19 J     0.00 J
+   silver-plated iron | water | aluminium            100 V    0.002 F      470 A    9.22 µs     4.80 J     5.19 J     0.00 J
+   copper with silver tips | water | aluminium       100 V    0.002 F      195 A    2.22 µs     0.86 J     8.82 J     0.32 J
+   water polarity gap, 3 mm                        41000 V 1.19e-08 F     4247 A   0.108 µs     0.31 J     1.59 J     8.10 J
+   mist-filled air gap, 1 mm                        8000 V 3.13e-07 F     3510 A   0.505 µs     1.09 J     5.55 J     3.36 J
+   Spark gaps give the highest and fastest pulses (kiloamps in a fraction of a microsecond) because they run at
+   kilovolts; the water cells at 100 V give hundreds of amps in microseconds, limited by the water's resistance.
+   A gap's arc goes out at the first current zero, so energy left ringing in the capacitor stays there (it rings
+   again once the gap re-strikes). The water gap's 40 kV is Stygar's relation at 1 µs, inside its measured range.
+
+Part 5 — frequency sweep (sweep.go): bridge, source 0.1 Ω, load 1 Ω, no filter; amps per volt = mean load current ÷ peak
+   perfect diode bridge: 0.579 A/V at every frequency
+   device (peak volts)                                                  50      100      300       1k       3k      10k      30k     100k
+   lead | water | aluminium                                          0.459    0.459    0.459    0.459    0.460    0.463    0.481    0.508  A/V
+         efficiency                                                    73%      73%      73%      73%      73%      71%      60%      34%
+   silver-plated iron | water | aluminium                            0.459    0.459    0.459    0.459    0.460    0.463    0.481    0.508  A/V
+         efficiency                                                    73%      73%      73%      73%      73%      71%      60%      34%
+   copper with silver tips | water | aluminium                       0.192    0.192    0.192    0.192    0.193    0.193    0.195    0.191  A/V
+         efficiency                                                    31%      31%      31%      30%      30%      29%      22%       8%
+   water polarity gap (ratio 3), 6 kV fixed                          0.247    0.198    0.000    0.000    0.000    0.000    0.000   -0.000  A/V
+         efficiency                                                    47%      47%       0%       0%       0%       0%       0%       0%
+   water polarity gap (ratio 3), voltage raised with frequency       0.239    0.240    0.000   -0.000    0.000   -0.000    0.000    0.000  A/V
+         efficiency                                                    47%      47%       0%       0%       0%       0%       0%       0%
+   Cells: steady to about 3 kHz; above it the oxide film (a capacitor) passes current both ways, so the mean
+   current holds up but the efficiency collapses (34 % at 100 kHz). Silver tips on 10 % of the plate carry less.
+   Water gaps: at a fixed 6 kV the bridge works to 100 Hz and then never strikes, because breakdown rises with
+   frequency (E·τ^⅓, extrapolated). Raising the voltage to the middle of the working window keeps it striking, but
+   above about 100 Hz the gaps that just carried an arc have not recovered (1 ms recovery, declared; never below
+   water vapour's 480 V Paschen minimum) and break down backwards: the bridge shorts. Spark gaps are pulse
+   switches, not high-frequency rectifiers.
+
+The water and the metals add no energy: every watt at the load comes from the AC source, and the rest is heat
+(and, for the cells, some electrolysis).
