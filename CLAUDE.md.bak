@@ -1,4 +1,4 @@
-# CLAUDE.md — gospice
+# CLAUDE.md — kronspice
 
 A SPICE-compatible analog circuit simulator written in pure Go, built to be the
 fitness-evaluation engine for genetically evolved circuits.
@@ -72,11 +72,11 @@ The engine serves this vision by measuring it honestly:
 ## 2. Repository layout
 
 ```
-gospice/
+kronspice/
 ├── CLAUDE.md
-├── go.mod                      # module github.com/<owner>/gospice
+├── go.mod                      # module github.com/<owner>/kronspice
 ├── cmd/
-│   ├── gospice/                # CLI: simulate a netlist, write CSV / raw output
+│   ├── kronspice/                # CLI: simulate a netlist, write CSV / raw output
 │   └── evolve/                 # CLI: run a GA experiment from a YAML/JSON config
 ├── netlist/                    # SPICE netlist lexer, parser, .subckt expansion, .param
 │   └── units.go                # engineering suffixes: f p n u m k meg g t, mil
@@ -199,7 +199,7 @@ Package dependency direction (never import upward):
 cmd → evo → analysis → solver → device → circuit → netlist
           ↘  kron  ↗        ↘ output
               ↓
-            hyper  (quat, ga — leaf packages, import nothing from gospice)
+            hyper  (quat, ga — leaf packages, import nothing from kronspice)
               ↑
              em    (imports hyper + gonum; produces device parameters and checks)
               ↑
@@ -209,7 +209,7 @@ cmd → evo → analysis → solver → device → circuit → netlist
    ↑ device/arc.go uses plasma;  analysis/coupled.go uses plasma + fluid
 
   exchange         (leaf package, stdlib only: external energy channels and ports, §3.1)
-   ↑ imported by device, env, em, analysis, evo — never imports anything from gospice
+   ↑ imported by device, env, em, analysis, evo — never imports anything from kronspice
 ```
 
 `env` produces plain waveforms and parameter values (irradiance, temperature,
@@ -1381,9 +1381,9 @@ Read these for algorithms and expected behavior. **Do not copy code from GPL
 projects into this repository.** Check each project's license before reusing
 any code at all; when in doubt, reimplement from the published equations.
 
-**Licensing of this project.** gospice is dual-licensed, GPL-3.0-only or
+**Licensing of this project.** kronspice is dual-licensed, GPL-3.0-only or
 commercial (`LICENSING.md`). Every new file starts with
-`// SPDX-License-Identifier: GPL-3.0-only OR LicenseRef-gospice-Commercial`
+`// SPDX-License-Identifier: GPL-3.0-only OR LicenseRef-kronspice-Commercial`
 and the copyright line. Only original code, or code under a permissive
 license compatible with both options (MIT, BSD, Apache-2.0, notice kept),
 may be added; copyleft code (GPL, LGPL, AGPL, MPL…) can never be included,
@@ -1537,7 +1537,7 @@ go vet ./... && staticcheck ./...
 go run ./internal/golden/cmd/regen -netlists testdata/netlists -out testdata/golden
 
 # Simulate a netlist
-go run ./cmd/gospice testdata/netlists/rc_lowpass.cir -o out.csv
+go run ./cmd/kronspice testdata/netlists/rc_lowpass.cir -o out.csv
 
 # Run a GA experiment
 go run ./cmd/evolve -config examples/rc_lowpass_values/config.json
