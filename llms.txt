@@ -1,0 +1,64 @@
+# kronspice
+
+> A SPICE-compatible analog circuit simulator written in pure Go, built to sit inside automated design loops (genetic algorithms, optimizers, AI assistants). It simulates a netlist in memory, never panics on a broken circuit, runs thousands of circuits in parallel, keeps an energy ledger for every run, and extends circuit analysis with Gabriel Kron's tensor methods and diakoptics, Maxwell field solvers and hypothesis test benches.
+
+Module: `github.com/fdamador/kronspice` (Go 1.24+, no cgo, one dependency: gonum). Licence: GPL-3.0-only or commercial (LICENSING.md). Repository: https://github.com/fdamador/kronspice
+
+## Run a netlist (no Go code needed)
+
+Install once: `go install github.com/fdamador/kronspice/cmd/kronspice@latest` (release binaries and the `ghcr.io/fdamador/kronspice` image are attached to each tagged release). Then:
+
+```
+kronspice circuit.cir                 # text report: node voltages, elements, energy ledger
+kronspice -json circuit.cir           # one JSON document (schema: output.Document)
+cat circuit.cir | kronspice -json -   # netlist on standard input
+kronspice -o out.csv circuit.cir      # last analysis as CSV
+```
+
+Exit code 0 on success, 1 on a simulation error, 2 on bad flags. In `-json` mode a failure is reported inside the document: `{"ok": false, "error": {"class": "...", "message": "..."}}`. Error classes: `syntax` (netlist), `invalid` (circuit: no ground, floating node, bad value or model, bad analysis spec, electrically large), `singular` (matrix), `no-convergence` (Newton or time step), `ledger` (energy does not balance), `timeout`, `error`.
+
+A netlist is SPICE syntax: title line first, elements, `.model` cards, one or more analyses, `.end`. Node `0` or `gnd` is ground. Values take engineering suffixes (f p n u m k meg g t). Elements: R, C, L, K (coupled inductors), V and I sources (DC, AC, PULSE, SIN, EXP, PWL), E/F/G/H controlled sources, D (SPICE3 diode), Q (Gummel–Poon BJT), M (MOSFET levels 1–3), B (piecewise-linear nonlinear element, `I=pwl(V(..))` or `V=pwl(I(V..))`), and three kronspice extensions: Y (ideal gyrator or transducer), N (Kron machine: windings with L(θ), speed matrix, mechanical port), P (ball-bearing motor). Analyses: `.op`, `.dc`, `.ac`, `.tran`. Not supported: `.subckt`, `.param`, `.include`, switches, transmission-line devices, JFETs, BSIM, noise, pole-zero.
+
+## JSON document (`-json`)
+
+Top level: `tool`, `version`, `ok`, `error`, `title`, `analyses[]`. Each analysis has `kind` and one of:
+
+- `op`: `nodes` (name → V), `elements[]` (name, kind, nodes, voltage, current, power_absorbed, stored_energy, model_supplied), `ledger` (inflow, outflow, dissipation, storage_rate, model_supplied, hypothetical, residual, relative_residual, rows[] per element × channel, supplied[]).
+- `dc`: `sources`, `values[s][k]`, `v` (node → series), `i` (element → series), `max_relative_residual`.
+- `ac`: `freq[]`, `v` and `i` (name → {mag[], phase_deg[]}, peak phasors), `ledger` (inflow, outflow, dissipation, reactive, model_supplied, residual per frequency).
+- `tran`: `step`, `time[]` (resampled on the .tran print step), `v`, `i`, `ledger` (per-point inflow, outflow, dissipation, storage_rate, model_supplied, stored_energy, residual; energies energy_in, energy_out, energy_dissipated, energy_model_supplied, stored_start, stored_end, integration_mismatch, max_relative_residual), `stats` (accepted, rejected, min_step, max_step).
+
+## How to read the energy ledger
+
+Every run books power per element and per external channel (electrical, thermal, light, magnetic, electric, mechanical, acoustic, ionizing, chemical, neutrino, gravitational, hypothetical). `residual = inflow + model_supplied − outflow − dissipation − storage_rate` and must be about zero: a residual above tolerance is a numerical or modelling bug, never a discovery. `model_supplied` is power from idealized active elements (negative resistance, controlled sources); it is listed separately and is never inflow from outside. `hypothetical` is power from hypothesis-mode models and is never counted as real. Channels with no coupling model report exactly 0 and are marked "not modeled".
+
+## Use as a Go library
+
+```go
+c, err := circuit.NewBuilder("divider").
+    VoltageSource("V1", "in", "0", 10).
+    Resistor("R1", "in", "out", 1e3).
+    Resistor("R2", "out", "0", 1e3).
+    Build()
+r, err := analysis.OP(c, analysis.Options{})          // also analysis.DC, analysis.AC, analysis.Tran
+v, _ := r.Voltage("out")                               // 5 V; r.Ledger.Inflow is 0.05 W
+```
+
+Errors are typed sentinels (`errors.Is`): `solver.ErrSingularMatrix`, `analysis.ErrNoConvergence`, `analysis.ErrTimestepTooSmall`, `circuit.ErrFloatingNode`, `em.ErrLedgerResidual`, and more. Every analysis takes `Options.Context` for a deadline. `evo.Penalty(err)` maps any error to a penalty fitness and class name. API reference: https://pkg.go.dev/github.com/fdamador/kronspice
+
+## Evolve a circuit
+
+`go run ./cmd/evolve -config examples/rc_lowpass_values/config.json` runs a genetic algorithm from a JSON config: a netlist, genes (element values or model parameters, log scale, optional E-series snapping, sign mode), objectives (cutoff, gain at f, operating-point voltage, transient mean and ripple, open-circuit voltage, short-circuit current, efficiency, mask, parts), population, generations, seed. Runs are deterministic for a seed and write `runs/<timestamp>-<name>/` with stats, best netlists and a resumable checkpoint. Topology evolution (parts grown from an empty embryo) and NSGA-II fronts are in `evo/` and shown in examples/filter_topology and examples/mos_amplifier_pareto.
+
+## Where things are
+
+- README.md: overview, install, quick start, what is simulated, verification against ngspice.
+- CLAUDE.md: the full design: numerical rules, Kron's methods (§3a), external energy ports (§3.1), the energy ledger (§3c), Maxwell compliance, the register of hypotheses under test with their status, references, milestones.
+- examples/README.md: index of all examples by group, each with its own README (construction, results, sources).
+- doc/STATUS.md: every package and milestone; doc/M*.md: milestone reports with measured results.
+- HISTORICAL.md and NOMENCLATURE.md: Gabriel Kron, universal engineering, his terms in modern language.
+- .claude/skills/kronspice/SKILL.md: instructions for an AI coding assistant working in this repository.
+
+## Rules that apply to any contribution
+
+Pure Go, no cgo, stdlib or gonum only. No panics in library code; typed errors. No global mutable state. SI units, float64 and complex128. Every device carries the full external port set. Every new file starts with the SPDX dual-licence header. Cite the source (paper, book, page) for every equation. Hypothetical models are off by default, labelled in output, and keep their own ledger column; the standard prediction is always computed beside them. Run `go test -race ./...` before declaring work done.
