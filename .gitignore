@@ -21,3 +21,6 @@ internal/golden/docker/logs/
 .DS_Store
 Thumbs.db
 __pycache__/
+
+# Editor backups
+*.md.bak

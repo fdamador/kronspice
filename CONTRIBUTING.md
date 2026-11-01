@@ -18,8 +18,9 @@ signed the project's Contributor License Agreement (CLA). In short, the CLA:
   under commercial terms;
 - does not take away your own right to use your contribution.
 
-Request the CLA from franklinamador1@gmail.com before opening your first
-pull request. Pull requests without a signed CLA cannot be merged.
+The agreement is [CLA.md](CLA.md). Sign it by email to fdamador@comcast.net as
+described there before opening your first pull request. Pull requests
+without a signed CLA cannot be merged.
 
 ## Rules for code
 

@@ -33,8 +33,8 @@ govern.
 
 To keep dual licensing possible, the copyright holder must be able to offer
 every part of the code under both licenses. Contributions are therefore
-accepted only under a Contributor License Agreement — see
-[CONTRIBUTING.md](CONTRIBUTING.md).
+accepted only under a Contributor License Agreement — see [CLA.md](CLA.md)
+and [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Third-party code
 
