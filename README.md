@@ -132,6 +132,19 @@ go run ./cmd/evolve -config examples/rc_lowpass_values/config.json       # evolv
 go run ./cmd/cir2kicad examples/water_vibration/netlists/h2o.cir         # KiCad schematic + results sheet
 ```
 
+From a script or an AI assistant, use the JSON interface: the netlist on
+standard input, one JSON document out, with every analysis, the energy
+ledger and, on failure, the error and its class.
+
+```bash
+cat circuit.cir | kronspice -json -
+```
+
+The document's fields are described in [llms.txt](llms.txt), which is also
+the one-page summary of the project for language-model tools; Claude Code
+sessions in this repository additionally get the `kronspice` skill in
+`.claude/skills/`.
+
 ## What it simulates
 
 - **Elements:** R, C, L, coupled inductors (K), V and I sources (DC, AC,
