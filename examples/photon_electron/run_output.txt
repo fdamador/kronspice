@@ -1,0 +1,143 @@
+Part 1 — the toroidal-photon electron (Williamson & van der Mark 1997) against measurement (CODATA 2018)
+   quantity                                            model               measured
+   charge (eq. 5)                                0.910318 e          1 e (exact)
+   coupling α′ (eq. 8) vs α                       0.00604716             0.00729735
+   magnetic anomaly (g − 2)/2                    0.000962436          0.00115965218
+     with q set to e (= α/2π, QED 1st)           0.001161410          off by 0.0015
+   spin                                    1/2 (double loop)                    1/2
+   size: Compton wavelength λ                    2.426e-12 m point-like to ~1e-18 m
+     loop radius λ/4π                            1.931e-13 m                     
+   model anomaly is 17.0 % below the measured one; the charge is 9.0 % below e.
+   Standard counterpart: the Dirac electron with QED corrections, which gives the measured values.
+
+Part 2 — a closed path as a circuit: plain and crossed two-wire ring lines
+
+   == plain ring: 200 sections, one trip 9.17 µs ==
+     mode     AC peak [Hz] ladder theory [Hz]       diff   wavelengths round ring
+        1           109102           109104 -2.66e-05                      1.0
+        2           218181           218182 -6.63e-06                      2.0
+        3           327205           327206 -2.95e-06                      3.0
+        4           436148           436149 -1.65e-06                      4.0
+   pulse launched at 2.93 V (differential); back at the start after each trip:
+     trip 1 at  9.426 µs:    +2.65 V (+0.90 of launch)
+     trip 2 at 18.581 µs:    +2.02 V (+0.69 of launch)
+     trip 3 at 27.819 µs:    +1.88 V (+0.64 of launch)
+     trip 4 at 37.005 µs:    +1.66 V (+0.57 of launch)
+   ledger: in 3.438e-08 J = heat 1.096e-08 J + stored 2.341e-08 J (+ time-stepping error 1.3e-11 J)
+
+   == crossed ring (conductors swapped once): 200 sections, one trip 9.17 µs ==
+     mode     AC peak [Hz] ladder theory [Hz]       diff   wavelengths round ring
+        1          54548.1          54553.9 -1.06e-04                      0.5
+        2           163646           163648 -1.18e-05                      1.5
+        3           272701           272702 -4.24e-06                      2.5
+        4           381688           381689 -2.17e-06                      3.5
+   pulse launched at 2.93 V (differential); back at the start after each trip:
+     trip 1 at  9.394 µs:    -2.68 V (-0.91 of launch)
+     trip 2 at 18.576 µs:    +2.06 V (+0.70 of launch)
+     trip 3 at 27.730 µs:    -1.72 V (-0.59 of launch)
+     trip 4 at 36.912 µs:    +1.52 V (+0.52 of launch)
+   ledger: in 3.438e-08 J = heat 1.117e-08 J + stored 2.32e-08 J (+ time-stepping error 1.3e-11 J)
+
+On the plain ring the pulse comes back the same way up after every trip; on the crossed ring it comes back
+inverted after one trip and upright after two — the field returns to itself only after a 720° double loop.
+
+Part 3 — light set on the double loop, left alone in empty space (em/fdtd.go, linear Maxwell)
+   ring radius R = λ/4π = 0.07958 m (λ = 1 m), path length 1.035 λ, grid 0.00663 m (R/12), region ±6R
+     time (T)       energy within 2R        in the region    left the region
+            0                 98.93%                 100%                 0%
+        0.125                 65.11%                 100%                 0%
+         0.25                 5.773%                 100%         4.038e-11%
+          0.5             1.594e-06%               90.42%             9.584%
+            1             0.0001033%              0.3495%             99.65%
+          1.5               0.00173%             0.07582%             99.92%
+            2             5.549e-07%             0.01209%             99.99%
+   ledger residual -1.9e-13 of the starting energy; div B 7e-13 (round-off)
+   Standard prediction (linear Maxwell): nothing holds light in a loop, so it leaves at the speed of light.
+   The model needs 100 % to stay for ever; it would need a confining mechanism the paper does not give.
+
+Part 4 — three electron pumps that work (pumps.go)
+   The model's own frequency, m_e c²/h = 1.24e+20 Hz, is about 10⁸ times beyond any circuit,
+   so these pumps run at frequencies circuits reach. Electrons come from metal or ground; energy from a declared source.
+
+   1. Single-electron pump (Pothier et al. 1992; orthodox tunnelling theory)
+      3 junctions of 200 aF, 200 kΩ; gates 50 aF at 90°; 20 mK; charging energy e²/2C = 0.178 meV (2.1 K)
+           drive    electrons per cycle          current  heat per electron (gates)         ledger
+            1 MHz            1.000000000        0.1602 pA                  12.7 µeV       -4.1e-10
+           10 MHz            0.999999977         1.602 pA                  53.1 µeV       -4.1e-08
+           30 MHz            0.999458493         4.804 pA                  93.2 µeV       -3.7e-07
+          100 MHz            0.950531648         15.23 pA                   160 µeV       -4.1e-06
+          300 MHz            0.667354712         32.08 pA                   204 µeV       -1.0e-05
+      uphill against 20 µV at 10 MHz: 0.999998 electrons per cycle; the gates supply 72.8 µeV per cycle =
+      20.0 µeV lifted into the bias source + 52.8 µeV heat (ledger -5.6e-08)
+      Exactly one electron per cycle at low drive (I = e·f); errors grow when the drive outruns the tunnelling (RC ≈ 40 ps).
+
+   2. Multipactor pump in an RF resonator (Farnsworth US 2,091,439; Kishek & Lau 1998)
+      1 mm copper gap, 1 cm², resonator 1 GHz (C = 0.885 pF, L = 28.6 nH, Q = 1000); drive 0.779 mA for 140 V unloaded
+      resonator alone, own integrator vs kronspice transient: largest difference 0.0031 of V0
+      in step (140 V, seed 1000 electrons): grows to 1.98e+08 electrons in the gap, then pulls the gap voltage down to 39 V,
+      stops multiplying; the resonator recovers and a stray electron (one per 20 ns while the gap is empty, declared) restarts it:
+      bursts, as Kishek & Lau found (7 strays used)
+      out of step (300 V): 0 electrons left after 40 periods — no pumping.
+      over 2000 periods (2000 ns): 2.16e+08 electrons collected, average collector current 15.2 µA (second 1000 ns)
+      ledger [nJ]: drive 49.32 = resonator heat 22.98 + impacts on the plates 31.43 + collector 1.78 + stored change -6.876; residual -3.5e-07
+      (the stored change is negative: the bursts also drain the energy the resonator held at the start)
+      energy per collected electron: 1426 eV from the RF drive
+
+   3. Ground charge pump with a resonant drive (§3j; Cockcroft & Walton 1932)
+      10 V at 100 kHz into a series resonator (Q = 20) → 3-stage negative ladder → 100 nF bank, 10 MΩ load; 600 cycles
+      resonator step-up: 10 V → 199.9 V peak (×20.0); bank -1194.7 V against the ideal −2·n·peak = -1199.5 V
+      electrons on the bank's negative plate 7.46e+14 (plus 4.02e+12 through the load), lent by the earth; the bank's earthed plate
+      returns the same number, so the earth's net charge is unchanged.
+      ledger: source 3.559 J = heat 3.425 J + stored 0.133 J (bank 0.0714 J) + time-stepping error 2.7e-05 J
+
+Part 5 — the multipactor pump driven by a standard microwave-oven magnetron, evolved (magnetron.go)
+   source: LG 2M214 (oven magnetron), 2450 MHz, 900 W RF; declared efficiency 70 % + 34.6 W heater → 1320 W from the mains
+   chain: magnetron → circulator → coupling port → copper re-entrant cavity (Q0 = 2000) whose gap multipacts → grid → collector;
+   power the cavity does not take goes to the circulator's water load. Genes: gap, gap area (side ≤ λ/10), coupling β,
+   grid transparency, surface. Fitness: mains watts per collected µA. Limits: Kilpatrick field, gap ≤ 10 kV (non-relativistic).
+   40 designs × 30 generations (seed 2450); search at ≥ 200 steps per period over 1500 periods, results re-run at 800 steps, 2000 periods
+                                    best of gen. 0          evolved
+   gap [mm]                                  2.761            1.519
+   gap area [cm²]                            0.376            1.500
+   coupling β                             0.000139          0.00153
+   grid transparency                          0.03             0.43
+   surface                        copper, as received copper, as received
+   gap amplitude, unloaded [V]                1038             1278
+   peak field / Kilpatrick                   0.009            0.020
+   collector current [µA]                    7.475            659.4
+   mains W per µA                            176.6            2.002
+   electrons per mains joule              3.53e+10         3.12e+12
+   into the cavity [W]                       0.332             2.05
+     cavity wall heat [W]                    0.297             1.79
+     electrons: plates + collector [W]           0.0633            0.816
+   to the water load [W]                     899.7            897.9
+   ledger residual                         4.0e-06          3.9e-06
+   The collector current varies by about ±10 % with step size and run length (burst timing); the order of magnitude is stable.
+   The gap needs only 2.1 W, so with weak coupling 897.9 W of the 900 W goes to the water load: one magnetron could feed
+   about 438 such gaps through a power divider (not modelled). Per watt into the cavity: 321 µA.
+
+Part 6 — scaling up: many multipactor gaps sharing one magnetron (magnetron.go, gene "gaps")
+   N identical gaps take Pout/N each through an ideal isolated power divider (declared lossless); the genetic
+   algorithm now also picks N (1 to 1,000,000). Electrons multiply in proportion to the copper area in the field, so
+   current scales with total gap area and with microwave power; the fitness is still mains watts per collected µA.
+                                  LG 2M214 (oven magnetron) Stellant CWM-100kW (industrial magnetron)
+   frequency, RF power                  2450 MHz, 1 kW            915 MHz, 100 kW
+   gaps in parallel                               2686                     786127
+   gap; area per gap                 0.56 mm; 1.50 cm²          1.52 mm; 3.96 cm²
+   total gap area                             0.403 m²                     311 m²
+   gap voltage (unloaded)                        191 V                      196 V
+   collected current                            1.95 A                      216 A
+   per gap                                      726 µA                     275 µA
+   into the gaps / water load         0.695 / 0.205 kW             76.4 / 23.6 kW
+   mains                                       1.32 kW                     119 kW
+   amps per kW of mains                           1.48                       1.83
+   amps per m² of gap                             4.84                      0.696
+   ledger residual (one gap)                   6.7e-07                    6.1e-07
+   Scaling the better of the two designs (same gaps, more of them, more magnetrons):
+          1 A needs about    0.548 kW from the mains and     1.44 m² of gap plates
+         10 A needs about     5.48 kW from the mains and     14.4 m² of gap plates
+        100 A needs about     54.8 kW from the mains and      144 m² of gap plates
+        300 A needs about      164 kW from the mains and      431 m² of gap plates
+   The searches were still improving when they stopped, so these are lower bounds on what the design space allows.
+   Feeding thousands of gaps needs a real power-distribution structure (a large multi-gap cavity rather than a divider),
+   which is not modelled. The electrons come from the copper; every watt comes from the magnetron.

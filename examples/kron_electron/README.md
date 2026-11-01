@@ -4,12 +4,18 @@ Hypothesis H21 (CLAUDE.md §1): Kron's machine equations model the ring
 electron, with voltage and current as the pressure and flow of energy at
 that scale. This example puts it on the electron test bench of
 [doc/kelvin-references.md](../../doc/kelvin-references.md), next to
-Kelvin's 1899 ring ([kelvin_ring](../kelvin_ring), Lorentz force) and
-Tewari's space-vortex electron ([space_vortex](../space_vortex), H13).
+Kelvin's 1899 ring ([kelvin_ring](../kelvin_ring), Lorentz force),
+Tewari's space-vortex electron ([space_vortex](../space_vortex), H13) and
+the toroidal-photon electron ([photon_electron](../photon_electron), H23).
+The frames are those of [kron_machine](../kron_machine) (milestone
+M9c.1), and the measurement that discriminates the result is magnetic
+resonance, solved in the same frame in [kron_nmr](../kron_nmr).
 
 ```
 go run ./examples/kron_electron -png viz/ring_field.png
+go run ./examples/kron_electron -gif viz/ring_motion.gif
 go test ./examples/kron_electron
+KRONSPICE_EXPORT=1 go test ./examples/kron_electron -run TestExport   # netlists, KiCad schematics, results sheets in export/
 ```
 
 ## The idea, in Kron's terms
@@ -26,40 +32,53 @@ that with e = R = 0 the machine equation is the motion of a charged
 particle in an electromagnetic field. Everything below uses the N machine
 element ([device/machine.go](../../device/machine.go)) unchanged.
 
+The ring quantities are the thin-ring formulas: self-inductance
+L = μ₀·a·(ln(8a/r) − 7/4) (Maxwell, *Treatise* Art. 706), capacitance from
+Smythe §5.17, the inertial inductance m·a²·(2π/q)² above, and the mutual
+inductance between coil and ring from `em.MutualCircles` (Maxwell's
+elliptic form). For the twin test the printed metric is: coil
+6.201×10⁻⁷ H, coil–ring mutual 3.494×10⁻⁸ H, tube and fluid inertial
+inductance 9.87×10⁸ H each, and the ring's own L of 3.1×10⁻⁷ H dropped as
+in Kelvin (or kept, which changes nothing at this scale).
+
 ## 1. Twin test: Kelvin's ring in Kron's frame (standard)
 
 Kelvin's ring (tube +e, fluid −e, each 10 g, radius 5 cm; coil of 20
-kA-turns switched on 5 cm below) becomes a three-winding machine: coil,
-tube, fluid, with Maxwell's mutual inductance of coaxial circles between
-coil and ring and the two inertias on the charge axes. Tube and fluid
-windings are closed through 0 V sources (frictionless), so their flux
-linkages are conserved.
+kA-turns, radius 10 cm, switched on over 1 s, 5 cm below) becomes a
+three-winding machine: coil, tube, fluid, with Maxwell's mutual inductance
+of coaxial circles between coil and ring and the two inertias on the charge
+axes. Tube and fluid windings are closed through 0 V sources
+(frictionless), so their flux linkages are conserved.
 
 | Quantity | Kron machine | Lorentz-force bench |
 |---|---|---|
+| Flux through the ring | 6.98732×10⁻⁴ Wb (Maxwell elliptic) | 6.98736×10⁻⁴ Wb (Biot–Savart) |
 | Moment of momentum, tube | −1.11207×10⁻¹⁰ kg m²/s | −1.11207×10⁻¹⁰ |
 | Moment of momentum, fluid | +1.11207×10⁻¹⁰ | +1.11207×10⁻¹⁰ |
 | Kelvin's eΦ/2π | 1.11207×10⁻¹⁰ | |
 | Fluid angular velocity | 4.44827×10⁻⁶ rad/s | 4.44829×10⁻⁶ |
 | Larmor eB̄/2w | 4.44827×10⁻⁶ | |
 | Kinetic energy | 4.94677×10⁻¹⁶ J | 4.94683×10⁻¹⁶ J |
-| Source work against the ring | = kinetic + mutual-field energy, residual 1.5×10⁻¹³ | residual 8×10⁻¹⁶ |
+| Source work against the ring | = kinetic + mutual-field energy (−9.89×10⁻¹⁶ J), residual 1.5×10⁻¹³ | residual 8×10⁻¹⁶ |
 
 The 1.1×10⁻⁵ difference in kinetic energy is the bench's Biot–Savart flux
 against Maxwell's elliptic value used here. Adding the ring's own
 self-inductance (3×10⁻⁷ H against 10⁹ H of inertial inductance) changes
-nothing at this scale. The engine's ledger closes too, but it is dominated
-by the coil's own 124 J of field energy, which is why the bench's own
-bookkeeping is reported.
+nothing at this scale. The engine's ledger closes too (source 124.028 J,
+machine's ½iᵀLi 124.02 J, mismatch 7.8×10⁻³ J over the ramp's
+breakpoints), but it is dominated by the coil's own 124 J of field energy,
+which is why the bench's own bookkeeping is reported.
 
 ## 2. Torque from the metric (standard)
 
-The same ring, spinning at 1000 rad/s, tilts about a diameter in 1 T:
-frame I with M(θ) = B·π·a²·cos θ between a field winding and the ring. Kron's
-torque ½·iᵀ·(∂L/∂θ)·i is −μ·B·sin θ, and the oscillation released at 0.05 rad
-has period 19.873 s against the pendulum value 19.872 s (2×10⁻⁵). The ring's
-current drifts by 3×10⁻¹⁵ (flux conservation) and the ledger mismatch is
-10⁻⁹ J.
+The same ring, spinning at 1000 rad/s (current 0.159 mA, moment
+1.25×10⁻⁶ A·m²), tilts about a diameter in 1 T: frame I with
+M(θ) = B·π·a²·cos θ between a field winding and the ring, the tilt inertia
+½·m·a² as a capacitor on the mechanical port. Kron's torque
+½·iᵀ·(∂L/∂θ)·i is −μ·B·sin θ, and the oscillation released at 0.05 rad
+has period 19.873 s against the pendulum value 4K(k)/ω₀ = 19.872 s
+(2×10⁻⁵). The ring's current drifts by 6×10⁻¹¹ (flux conservation) and
+the ledger mismatch is 6×10⁻¹⁰ J.
 
 ### Harmonics
 
@@ -86,16 +105,16 @@ which this uniform ring does not.
 ## 3. The electron as the ring (hypothesis)
 
 Charge e; the total angular momentum of the metric is set to ħ/2 and the
-rest follows.
+rest follows (`RingModel.AtSpin`, core radius a/100).
 
-| Ring | a [m] | v/c | μ/μ_B | g | ½LI²/m_e c² |
-|---|---|---|---|---|---|
-| Compton ring, electron mass circulating | 3.86×10⁻¹³ | 0.49 | 0.494 | 0.989 | 0.001 |
-| Half-Compton ring, mass circulating | 1.93×10⁻¹³ | 0.98 | 0.489 | 0.978 | 0.011 |
-| Compton ring, massless (field inertia) | 3.86×10⁻¹³ | 43.6 | 43.6 | 87.2 | 10.9 |
-| Classical-radius ring, massless | 2.82×10⁻¹⁵ | 43.6 | 0.318 | 0.637 | 1490 |
-| Massless ring fitted to the measured moment | 8.86×10⁻¹⁵ | 43.6 | 1.001 | 2.002 | 475 |
-| **Measured (Dirac + QED)** | < 10⁻¹⁸ (scattering) | | 1.00116 | 2.00232 | |
+| Ring | a [m] | v/c | μ/μ_B | g | KE/m_e c² | ½LI²/m_e c² | W_es/m_e c² |
+|---|---|---|---|---|---|---|---|
+| Compton ring, electron mass circulating | 3.86×10⁻¹³ | 0.494 | 0.494 | 0.989 | 0.122 | 0.0014 | 0.0078 |
+| Half-Compton ring, mass circulating | 1.93×10⁻¹³ | 0.978 | 0.489 | 0.978 | 0.478 | 0.011 | 0.0155 |
+| Compton ring, massless (field inertia) | 3.86×10⁻¹³ | 43.6 | 43.6 | 87.2 | 0 | 10.9 | 0.0078 |
+| Classical-radius ring, massless | 2.82×10⁻¹⁵ | 43.6 | 0.318 | 0.637 | 0 | 1490 | 1.06 |
+| Massless ring fitted to the measured moment | 8.86×10⁻¹⁵ | 43.6 | 1.001 | 2.002 | 0 | 475 | 0.338 |
+| **Measured (Dirac + QED)** | < 10⁻¹⁸ (scattering) | | 1.00116 | 2.00232 | | | |
 
 What the bench says:
 
@@ -105,7 +124,8 @@ What the bench says:
 - Only a massless ring (inertia from its own field) reaches the measured
   moment at S = ħ/2, and it does so at 8.9 fm with v = 43.6 c and a
   magnetic energy of 475 m_e c². Every massless thin ring with S = ħ/2 moves
-  at v/c = π/(2α(ln(8a/r) − 7/4)), fixed by the fine-structure constant.
+  at v/c = π/(2α(ln(8a/r) − 7/4)), fixed by the fine-structure constant;
+  at v ≤ c (a ≥ ħ/2m_e c) the massless ring's moment is far below μ_B.
 - Every ring radius lies far above the 10⁻¹⁸ m scattering bound.
 
 ### Natural frequencies of the rings (S = ħ/2, B = 1 T)
@@ -120,8 +140,8 @@ What the bench says:
 | **Measured / reference** | | **28.025 GHz** (ESR) | | | **1.236×10²⁰ Hz** (m_e c²/h) |
 
 - **Precession** is the spin's magnetic-resonance frequency, g·eB/4πm; it
-  is what `kron_nmr` measures, and only the fitted massless ring reaches
-  the measured value, by construction.
+  is what [kron_nmr](../kron_nmr) measures, and only the fitted massless
+  ring reaches the measured value, by construction.
 - **Rotation** is the charge's turning rate, the current's fundamental:
   about half the Compton frequency for the Compton ring (v ≈ c/2).
 - **Tilt libration** is the part-2 pendulum, √(μB/J)/2π: optical
@@ -144,7 +164,9 @@ period), LC self-resonance 177 MHz.
 So the status of H21 is *bounded*: the ring-as-machine reproduces the
 classical ring exactly and inherits its obstacles (g ≤ 1 or v > c). The
 Zeeman polarisation test stays with the 3-D bench of `kelvin_ring`; the
-one-angle N element cannot precess.
+one-angle N element cannot precess. The standard prediction beside every
+row is the Dirac electron with QED (g = 2.002 319 304 36,
+μ = 1.001 16 μ_B); H13 on the same bench gives g = 15/8.
 
 ### Against existing measurements
 
@@ -167,16 +189,13 @@ which is exactly what the g ≤ 1 bound says.
 the meridional plane (left: the wire as two red dots, the axis vertical)
 and in an oblique view at eight azimuths (right). Every line lies in a
 meridional plane and threads the ring once: the far field is a dipole,
-the near field circles the wire. Pictures of toroidal electron models with
-lines that wind around a sphere need a current with a component along the
-ring's axis as well, a second winding in Kron's frame; a single ring
-current cannot produce them.
+the near field circles the wire (`TestFieldLinesClose` checks that lines
+started at 0.3, 0.6 and 0.88 of the radius return to their start to
+10⁻⁹). Pictures of toroidal electron models with lines that wind around a
+sphere need a current with a component along the ring's axis as well, a
+second winding in Kron's frame; a single ring current cannot produce them.
 
 ## 5. Animation
-
-```
-go run ./examples/kron_electron -gif viz/ring_motion.gif
-```
 
 `viz/ring_motion.gif` (90 frames, standard-library `image/gif`) shows the
 two transients as they progress, each panel over its own run with a
@@ -198,18 +217,43 @@ progress bar along its bottom edge:
 The animation is drawn from the solver's own time points (currents and
 θ(t) integrated from ω(t)), not from an analytic motion.
 
+## Tests
+
+| Test | Check | Held to |
+|---|---|---|
+| `TestKelvinTwin` | moments of momentum ∓eΦ/2π, fluid at Larmor's rate, bench ledger closed, with and without the ring's self-inductance; against the Lorentz-force bench's 1.11207×10⁻¹⁰ kg m²/s, 4.44829×10⁻⁶ rad/s and 4.94683×10⁻¹⁶ J | 1e-6; bench 1e-5, kinetic energy 2e-5 |
+| `TestTiltPeriod` | period against 4K(k)/ω₀; ring current conserved | 2e-4; drift 1e-9 |
+| `TestTiltHarmonics` | 3rd and 5th harmonic ratios against the Jacobi series at θ₀ = 1 rad; no even harmonics; small-angle 3rd = θ₀²/64 | 2e-4; 1e-3 |
+| `TestElectronRing` | g·(1 + Le²/4π²ma²) = 1; precession = g × Larmor; Compton ring below c; fitted ring carries the measured moment and is superluminal; every scenario above the size bound | 1e-12; 1e-9 |
+| `TestMasslessSpeed` | v/c = π/(2α(ln(8a/r) − 7/4)) at a = 1 fm, ƛ_C and 0.1 nm | 1e-9 |
+| `TestFrequencies` | Compton ring's c/2πa = m_e c²/h; precession = g·eB/4πm; fitted ring at the measured ESR; Kelvin ring libration period 19.869 s | 1e-9; 1e-12; 1e-4; 0.01 s |
+| `TestFieldLinesClose` | field lines of the ring current close | 1e-9 |
+| `TestExport` | Kelvin's ring (`.tran 5m 2 uic`) and the tilting ring (`.tran 50m 60 uic`) exported with the `N` element | |
+
+## Files
+
+| File | What it holds |
+|---|---|
+| `main.go` | thin-ring L and C, inertial inductance, `KelvinSpec`/`KelvinCircuit`/`RunKelvin`, `TiltSpec`/`TiltCircuit`/`RunTilt`, `TiltHarmonics` and `PendulumHarmonics`, `RingModel` with `AtSpin`, `Frequencies`, `FitMassless` and `Scenarios`, `FieldLine`, the PNG and GIF drawing, and the five-part report |
+| `main_test.go` | the tests above |
+| `export_test.go` | netlists, KiCad schematics and results sheets in `export/` |
+| `viz/ring_field.png`, `viz/ring_motion.gif` | the field-line picture and the animation |
+
 ## Sources
 
 - G. Kron, *Equivalent Circuits of Electric Machinery*, Wiley 1951,
   Epilogue pp. 253–265 (`reference/Equivalent Circuits of Electric
-  Machinery Kron.pdf`).
+  Machinery Kron.pdf`): eqs. 3–4 (the metric), eq. 9 (frame II(b)),
+  eq. 11 (charged particle in a field).
 - W. Thomson (Kelvin), "Magnetism and Molecular Rotation," 1899, *Math.
-  Phys. Papers* V, Art. 175 (`reference/mathematicalphys05kelvuoft.pdf`).
-- J. C. Maxwell, *Treatise*, Art. 706 (ring inductance); W. R. Smythe,
+  Phys. Papers* V, Art. 175 (`reference/mathematicalphys05kelvuoft.pdf`);
+  the bench in [doc/kelvin-references.md](../../doc/kelvin-references.md).
+- J. C. Maxwell, *Treatise*, Art. 706 (ring inductance) and the mutual
+  inductance of coaxial circles (`em/inductance.go`); W. R. Smythe,
   *Static and Dynamic Electricity*, §5.17 (ring capacitance).
 - CODATA 2018 (E. Tiesinga, P. J. Mohr, D. B. Newell, B. N. Taylor, *Rev.
-  Mod. Phys.* 93, 025010, 2021) for e, m_e, ħ, μ_B, g; D. Bourilkov, *Phys.
-  Rev. D* 64, 071701 (2001) for the size bound.
+  Mod. Phys.* 93, 025010, 2021) for e, m_e, ħ, μ_B, g, α; D. Bourilkov,
+  *Phys. Rev. D* 64, 071701 (2001) for the size bound.
 - P. Zeeman, "On the influence of magnetism on the nature of the light
   emitted by a substance," *Phil. Mag.* 43, 226–239, 1897; J. Larmor, "On
   the theory of the magnetic influence on spectra," *Phil. Mag.* 44,
@@ -231,3 +275,5 @@ The animation is drawn from the solver's own time points (currents and
 - R. Gerritsma et al., "Quantum simulation of the Dirac equation," *Nature*
   463, 68–71, 2010 — Zitterbewegung at 2mc²/h in a trapped-ion simulation,
   not in an electron.
+- P. Tewari, *Physics Essays* 31, 108, 2018 — the space-vortex electron
+  (H13) on the same bench, `examples/space_vortex`.

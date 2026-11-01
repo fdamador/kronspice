@@ -32,6 +32,7 @@ normalization is ours divided by c.
 | Two current loops: equal and opposite forces (ledger `Check`); far apart → dipole–dipole 3μ₀m₁m₂/(2πz⁴) | 1e−6; 1 % |
 | **Homopolar circuit**: two-disk open-circuit voltage = 2·EMF; shaft power from the ledger = Σ torque·ω; torque = K·I; ledger closes; two-disk with belt gives > 3× the single disk's power into the same load; GA meets 2 kW at η > 0.95 | as stated |
 | **Rotating E**: rotating uniform E's B satisfies Ampère–Maxwell (3e−10); spinning vs resting charged ring — same static E, B = μ₀I/2a vs 0; rotating charge pair consistent with its displacement current (1.3e−4, stencil truncation) | as stated |
+| **Röntgen–Eichenwald**: dielectric (εr = 3, R = 10 cm) spinning at 50 rev/s in fixed 1 MV/m; ring sum of the moving bound face charges vs thin-disk μ₀P×v = −(εr − 1)Ev/c² (−3.5e−10 T at r = 5 cm); deficit linear in h/R | < 1.5 % at h/R = 0.01; halving h halves it (±5 %) |
 | **Tether**: EMF = vBL; generator F·v = −EMF·I, load + losses = EMF·I; thruster supply = losses + F·v; momentum reaction booked on the field source | 1e−9 |
 
 ## Results worth noting

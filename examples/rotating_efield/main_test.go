@@ -35,3 +35,26 @@ func TestRotatingE(t *testing.T) {
 		t.Errorf("rotating pair: |B| %g, Ampère–Maxwell residual %g", bc, ar)
 	}
 }
+
+// Röntgen–Eichenwald (electric mirror of the homopolar disk): a dielectric
+// spinning in a fixed E field is magnetized, M = P × v, so its mid-plane
+// field is −(εr − 1)·E·v/c². The factor 1/c² is μ₀ε₀ and is not inserted
+// by hand: the ring sum uses only the bound charge ε₀(εr − 1)E and
+// Biot–Savart's μ₀. Tolerances: the ring sum is converged in rings and
+// segments to 1e−5 (checked at 4× resolution); what remains is the finite
+// thickness, which falls linearly in h/R (≈ 0.9 h/R at ρ = R/2), so the
+// test checks 1.5 % at h/R = 0.01 and that halving h halves the deficit.
+func TestRontgenEichenwald(t *testing.T) {
+	const epsR, e0, R, rho = 3.0, 1e6, 0.1, 0.05
+	w := 2 * math.Pi * 50
+	c2 := em.SpeedOfLight * em.SpeedOfLight
+	n1, thin := RontgenEichenwald(epsR, e0, R, 0.002, w, rho)
+	n2, _ := RontgenEichenwald(epsR, e0, R, 0.001, w, rho)
+	if want := -(epsR - 1) * e0 * w * rho / c2; math.Abs(thin-want) > 1e-12*math.Abs(want) {
+		t.Errorf("thin-disk B %g, want −(εr−1)Ev/c² = %g", thin, want)
+	}
+	d1, d2 := 1-n1/thin, 1-n2/thin
+	if d2 < 0 || d2 > 0.015 || math.Abs(d1/d2-2) > 0.05 {
+		t.Errorf("ring-sum deficit %g (h = 2 mm), %g (h = 1 mm): want < 1.5 %% and ratio 2", d1, d2)
+	}
+}

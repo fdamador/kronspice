@@ -1,0 +1,110 @@
+Part 1 — four lamps in the same flashing-lamp circuit (lamps.go)
+
+   == neon NE-2, radioactive starter ==
+      reference: strike 76 V, maintain 58 V (TekWiki NE-2); krypton-85 starter rate declared
+      supply 120 V, R 1e+07 Ω, C 1e-08 F; breakdown 76 V, maintains 58 V; seed electrons 1e+04 per second
+      2 s simulated: 49 flashes; strike at 78 ± 1 V; every 0.039 s ± 6 %
+      expected wait for a starting electron once past breakdown at the supply voltage: 0.000273 s
+      ledger: supply 0.001263 J = heat in R 0.0005703 + lamp (light + heat) 0.000666 + leakage 0 + stored 2.633e-05 J (residual -1.7e-11)
+
+   == neon NE-2, no starter, in the dark ==
+      cosmic rays only (≈2 ion pairs/cm³/s at 1 atm, scaled to ~60 Torr, ~0.03 cm³; declared)
+      supply 120 V, R 1e+07 Ω, C 1e-08 F; breakdown 76 V, maintains 58 V; seed electrons 0.00474 per second
+      36000 s simulated: 67 flashes; strike at 120 ± 0 V; every 540 s ± 100 %
+      expected wait for a starting electron once past breakdown at the supply voltage: 576 s
+      ledger: supply 0.005135 J = heat in R 0.001362 + lamp (light + heat) 0.003701 + leakage 0 + stored 7.2e-05 J (residual 1.0e-05)
+
+   == water-vapour tube, in the dark ==
+      1.2 Torr water vapour, 5 mm gap, at the measured Paschen minimum 480 V (Škoro 2011); maintain 0.76 × strike (NE-2 ratio, declared)
+      supply 600 V, R 2.2e+07 Ω, C 1e-08 F; breakdown 480 V, maintains 365 V; seed electrons 0.00632 per second
+      36000 s simulated: 54 flashes; strike at 600 ± 0 V; every 662 s ± 108 %
+      expected wait for a starting electron once past breakdown at the supply voltage: 792 s
+      ledger: supply 0.0801 J = heat in R 0.01684 + lamp (light + heat) 0.06146 + leakage 0 + stored 0.0018 J (residual 7.3e-06)
+
+   == water-vapour tube, ultraviolet LED starter ==
+      same tube; a UV LED frees electrons from the cathode (rate declared) instead of a radioactive gas
+      supply 600 V, R 2.2e+07 Ω, C 1e-08 F; breakdown 480 V, maintains 365 V; seed electrons 1e+03 per second
+      2 s simulated: 10 flashes; strike at 492 ± 4 V; every 0.174 s ± 5 %
+      expected wait for a starting electron once past breakdown at the supply voltage: 0.005 s
+      ledger: supply 0.01025 J = heat in R 0.003851 + lamp (light + heat) 0.005495 + leakage 0 + stored 0.000907 J (residual -1.7e-11)
+
+   == spark gap in liquid water (pure) ==
+      1 mm, 0.2 cm² electrodes; E·τ^(1/3) = 0.135 ± 12 % (Stygar 2006) EXTRAPOLATED from ≤ 0.6 µs to ms; leakage 0.055 µS/cm
+      supply 3000 V, R 1e+06 Ω, C 1e-08 F; breakdown E·τ^(1/3) = 0.135 MV/cm·µs^(1/3) ± 12 % over 1.0 mm, maintains 50 V; seed electrons not needed (breakdown starts at the electrode in the liquid)
+      2 s simulated: 452 flashes; strike at 1076 ± 91 V; every 0.00442 s ± 11 %
+      ledger: supply 14.33 J = heat in R 11.6 + lamp (light + heat) 2.631 + leakage 0.1025 + stored 0.0007132 J (residual -3.5e-11)
+      leakage through the water splits it: 0.000166 J into hydrogen and oxygen (1.23 V × charge), 7e-10 mol H₂, rest heat
+
+   == air spark gap, dry ==
+      1 mm at 1 atm, Paschen's law (Raizer); room-air small ions as starters and 1 ms recovery (declared)
+      supply 10000 V, R 1e+06 Ω, C 1e-08 F; breakdown 5035 V, maintains 30 V; seed electrons 1e+03 per second
+      2 s simulated: 168 flashes; strike at 6798 ± 894 V; every 0.0118 s ± 27 %
+      expected wait for a starting electron once past breakdown at the supply voltage: 0.00201 s
+      ledger: supply 114.5 J = heat in R 74.69 + lamp (light + heat) 39.49 + leakage 0 + stored 0.3011 J (residual -7.2e-11)
+
+   == air spark gap with water mist ==
+      fog raises breakdown ×1.355 (Liu 2018, 5 cm rod–plane, EXTRAPOLATED to 1 mm); recovery as dry (faster recovery = H5, untested)
+      supply 10000 V, R 1e+06 Ω, C 1e-08 F; breakdown 6822 V, maintains 30 V; seed electrons 1e+03 per second
+      2 s simulated: 110 flashes; strike at 8224 ± 643 V; every 0.0181 s ± 24 %
+      expected wait for a starting electron once past breakdown at the supply voltage: 0.00315 s
+      ledger: supply 90.9 J = heat in R 53.18 + lamp (light + heat) 37.43 + leakage 0 + stored 0.2915 J (residual -8.6e-11)
+
+   lamp                                             supply         strike [V]       flash interval   energy/flash
+   neon NE-2, radioactive starter                    120 V          78 ±   1        0.039 s ± 6 %    1.35e-05 J
+   neon NE-2, no starter, in the dark                120 V         120 ±   0        540 s ± 100 %    5.51e-05 J
+   water-vapour tube, in the dark                    600 V         600 ±   0        662 s ± 108 %     0.00113 J
+   water-vapour tube, ultraviolet LED starter        600 V         492 ±   4        0.174 s ± 5 %    0.000545 J
+   spark gap in liquid water (pure)                 3000 V        1076 ±  91     0.00442 s ± 11 %     0.00582 J
+   air spark gap, dry                              10000 V        6798 ± 894      0.0118 s ± 27 %       0.235 J
+   air spark gap with water mist                   10000 V        8224 ± 643      0.0181 s ± 24 %        0.34 J
+
+Part 2 — each lamp drives the bifilar coil through the 5-turn primary (coil.go)
+   coil: 4.853 mH, first mode 41.61 kHz, Q 83, primary 5.97 µH, mutual 28.1 µH (k = 0.165)
+   reduced coil model vs kronspice transient for the same pulse: largest difference 0.0008 of the peak
+   lamp                                                flashes      coil peak [V]   energy to coil  of flash energy
+   neon NE-2, radioactive starter                           11            0.03036      1.35e-11 J             0.0 %
+      ledger: supply 0.0003397 J = R 0.0001709 + lamp 0.0001456 + leakage 0 + coil 1.349e-11 + stored 2.32e-05 J (residual -5.5e-11)
+   water-vapour tube, ultraviolet LED starter                7            0.04821      2.28e-11 J             0.0 %
+      ledger: supply 0.008046 J = R 0.003222 + lamp 0.003812 + leakage 0 + coil 2.276e-11 + stored 0.001012 J (residual -4.3e-12)
+   spark gap in liquid water (pure)                         41              43.79      9.56e-05 J             0.2 %
+      ledger: supply 2.516 J = R 2.448 + lamp 0.05517 + leakage 0.01266 + coil 9.556e-05 + stored 0.000626 J (residual -5.3e-09)
+   air spark gap with water mist                            14              312.9       0.00189 J             0.6 %
+      ledger: supply 21.9 J = R 21.5 + lamp 0.3353 + leakage 0 + coil 0.001889 + stored 0.06895 J (residual 9.4e-10)
+
+Part 3 — tune the flash circuit to the coil (tuned.go)
+   tuning Lp·Cp = Ls·Cs: with the 5-turn primary Cp = 2.45 µF; coupling k = 0.165, full transfer after 1/(2k·f1) = 72.8 µs
+                                                             flashes    spark [A]  to coil/flash   of flash    of supply    coil peak
+   spark gap in liquid water (pure): untuned (10 nF, Part 2)       41        47.62     2.33e-06 J       0.2 %        0.00 %      43.79 V
+   spark gap in liquid water (pure): tuned, ordinary arc          47        173.4      0.00622 J       4.4 %        0.23 %       2401 V
+   spark gap in liquid water (pure): tuned, quenched gap          47        174.6      0.00622 J       4.4 %        0.23 %       2421 V
+   air spark gap with water mist: untuned (10 nF, Part 2)         14        339.8     0.000135 J       0.6 %        0.01 %      312.9 V
+   air spark gap with water mist: tuned, ordinary arc              5         3490          1.9 J       3.3 %        1.08 %  6.853e+04 V
+   air spark gap with water mist: tuned, quenched gap              5         3486         5.41 J       9.5 %        3.16 %  6.844e+04 V
+   (charging a capacitor from a fixed supply through a resistor loses half the energy in the resistor, so 'of supply' is at most 50 %)
+   genetic algorithm (24 × 12, seed 1) on the mist gap: capacitor 0.249 µF, 20 primary turns, quench after 0.65 of the transfer time
+      → 74.7 % of each flash's energy reaches the coil (4.35 J per flash, spark 438 A, coil peak 5.157e+04 V); 25.5 % of the supply energy; ledger 2.9e-06
+      (20 turns is the top of the allowed range: a longer primary would raise its impedance further)
+      Caution: in a bifilar coil neighbouring turns carry about half the coil voltage, here about 26 kV, far above what
+      enamelled wire holds (a few kV, declared); this coil would need much thicker insulation or a smaller drive (§3e rule).
+
+Part 4 — plates in parallel on the spark side (parallel.go)
+   (a) N mist gaps in parallel across the evolved capacitor: only the first to break down carries the flash
+     gaps         strike [V]       flash interval    spark [A]    to coil/flash     of flash
+        1        6914 ±   29         0.532 s ±   1%          438           4.35 J       74.7 %
+        2        5922 ± 2394         0.468 s ±  60%          438           3.23 J       71.5 %
+        4        4254 ± 2726          0.24 s ± 140%          438           1.34 J       59.7 %
+        8        3602 ± 2452          0.15 s ± 192%          436          0.677 J       45.3 %
+   More gaps give more starting electrons, so a gap also re-strikes before the others have recovered: smaller,
+   more frequent flashes; the spark current does not add.
+   (b) n capacitor sections in parallel, primary turns re-chosen to stay tuned
+   plates     C [µF]    turns   detuning    spark [A]   flash energy    to coil/flash   of flash
+        1      0.249       20      -0.5%          438         5.82 J           4.35 J     74.7 %
+        2      0.498       13      -1.0%          846         11.5 J           6.66 J     57.8 %
+        4      0.997        8       4.7%         1695         23.6 J           7.85 J     33.3 %
+        8       1.99        6      -5.4%         2818         46.2 J            8.3 J     18.0 %
+   More plates raise the energy per flash (×n) and the spark current nearly as much (the retuned primary has less
+   inductance); fewer primary turns couple less,
+   so the share reaching the coil falls — the coil and primary would be redesigned together for a bigger bank.
+
+Every joule comes from the supply; the water adds no energy. Without a radioactive starter a gas lamp in the dark
+waits for cosmic rays; an ultraviolet LED (or room light on a low-work-function cathode) does the starter's job.
