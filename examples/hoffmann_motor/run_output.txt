@@ -1,0 +1,51 @@
+Hoffmann's single-phase squirrel-cage motor (Rev. Mod. Phys. 21, 535, 1949); values declared:
+   stator L11 0.25 H, rotor coils L_S 0.25 H, mutual M 0.23 H, salient pole L_D 0.00 H; Rs 2 Ω, rotor coils 3 Ω;
+   J 1e-03 kg·m², friction 1e-04 N·m·s; 120 V, 60 Hz; two poles, synchronous speed 377.0 rad/s
+
+1. The two frames
+   Stationary rotor coils (eq. 35): the inductances no longer depend on θ (eq. 29):
+      1    0.2500   0.2300   0.0000   0.0000
+      2̄    0.2300   0.2500   0.0000   0.0000
+      3̄    0.0000   0.0000   0.2500   0.0000
+      θ    0.0000   0.0000   0.0000   0.0010
+   but the frame has torsion Ω_λμν (eq. 19), non-zero components: Ω(2̄θ3̄) = -0.125 Ω(3̄θ1) = +0.115 Ω(3̄θ2̄) = +0.125
+   (and Ω(μλν) = −Ω(λμν)); it does not change with θ (spread 1e-16).
+   At 200 random states, eq. 5′ with the torsion gives the frame-I forces to 5e-16;
+   ordinary Lagrange–Maxwell equations on the constant inductances miss by up to 293 % of the largest force.
+
+2. Starting (5 s runs)
+   from rest, frame I                                   final    0.000 rad/s; mains 1409 J = heat 1407 J + stored 2.2 J (mismatch 3e-07)
+   pushed to +40 rad/s, frame I                         final  376.587 rad/s; mains 867 J = heat 796 J + stored 70.5 J (mismatch 2e-06)
+   pushed to +40 rad/s, frame II(b)                     final  376.618 rad/s; mains 867 J = heat 796 J + stored 70.6 J (mismatch 1e-07)
+   pushed to +40 rad/s, eq. 5′ (Runge–Kutta)            final  376.587 rad/s
+   pushed to −40 rad/s, frame I                         final -376.587 rad/s; mains 867 J = heat 796 J + stored 70.5 J (mismatch 2e-06)
+   pushed to +40 rad/s, no torsion (Hoffmann's warning) final   24.261 rad/s; mains 1409 J = heat 1407 J + stored 1.7 J (mismatch 3e-07)
+   A single-phase motor has no starting torque: its pulsating field is two equal fields turning opposite ways.
+   Pushed either way it runs up that way to just under synchronous speed. The three solutions agree
+   (frame I vs eq. 5′: 4.1e-04 rad/s). Without the torsion term there is no speed voltage and no torque:
+   the pushed rotor only coasts down on friction (40 · e^(−5 s · friction/J) = 24.261 rad/s).
+
+3. Torque–speed curve (shaft held at each speed; mean torque over the last 10 cycles)
+        rad/s     torque N·m   salient L_D 0.02
+       -375.1        -0.0714            -0.0845
+       -312.6        -0.7121            -1.3829
+       -250.1        -0.4327            -1.1438
+       -187.6        -0.2619            -0.7854
+       -125.0        -0.1523            -0.4845
+        -62.5        -0.0707            -0.2309
+          0.0         0.0000             0.0000
+         62.5         0.0707             0.2309
+        125.0         0.1523             0.4845
+        187.6         0.2619             0.7854
+        250.1         0.4327             1.1438
+        312.6         0.7121             1.3829
+        375.1         0.0714             0.0845
+   Zero at standstill, odd in speed, largest near 91 % of synchronous speed. Frames I and II(b) agree to 1.7e-03 of the peak.
+   The salient pole (L_D = 0.02 H) makes the stationary coil 2̄ couple more tightly to the stator (L̄22 = L_S − L_D
+   = M), which roughly doubles the torque at most speeds. With no load it runs a little closer to synchronous speed:
+      L_D = 0.00 H: final 376.587 rad/s (slip 0.107 %)
+      L_D = 0.01 H: final 376.694 rad/s (slip 0.079 %)
+      L_D = 0.02 H: final 376.793 rad/s (slip 0.053 %)
+   It does not pull into synchronism at these values (a reluctance motor needs a much larger L_D).
+
+The motor adds no energy: every joule of shaft motion and heat comes from the 120 V supply (or the push).

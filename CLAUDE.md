@@ -416,6 +416,7 @@ kronspice/
 │   ├── helix.go                # Knight helical-line model: free-coil SRF, velocity factor, self-capacitance (§3e)
 │   ├── dipole.go               # oscillating point dipole: Jackson 9.18 fields, Larmor power, Poynting by GA vs vector (molecules ↔ light)
 │   ├── efficiency.go           # ledger efficiency (DC, transient) and Tellegen's sum, M9g
+│   ├── hoffmann.go             # Kron's non-Riemannian form (Hoffmann, Rev. Mod. Phys. 21, 535, 1949): torsion Ω of a non-holonomic frame (eq. 19), new metric (eq. 15), eq. 5′ with the 2Ω term; twin vs frame I to 1e-12, and without Ω the "wrong results" of p. 540
 │   └── energy.go               # open-system energy ledger (Poynting / Tellegen balance)
 ├── fluid/                      # liquid media (§3h); leaf package, gonum only; to be expanded later
 │   ├── media.go                # property tables: water (H₂O), heavy water (D₂O), others; vs. temperature
@@ -511,6 +512,7 @@ and `cmd` wire them into a circuit through `circuit.Builder`, so devices
 never know where their inputs come from.
 
 `em` never imports `analysis` or `solver`. It hands lumped parameters to
+    ├── hoffmann_motor/         # Hoffmann 1949 single-phase squirrel-cage motor: frame I (rotor coils turn, L(θ), eq. 42) vs stationary coils 2̄, 3̄ (constant L̄, eq. 29, torsion Ω eq. 19); kronspice frame I, frame II(b) and eq. 5′ integrated directly agree (376.587 rad/s); no start from rest, runs either way when pushed; without Ω only friction coast-down; torque–speed curve, salient pole L_D; ledgers
 `circuit`/`device` (via the builder) and receives simulation results for its
 energy and validity checks through `output.Result`.
 
@@ -2885,6 +2887,14 @@ because it could not be offered under the commercial license.
   excitation); Kouřil & Vrba §10.2.2.
 - H. Eckardt, "Simulation of resonances in the homopolar generator,"
   A.I.A.S./UPITEC, 13 February 2012 — self-excited twin-disk homopolar,
+- B. Hoffmann, "Kron's Non-Riemannian Electrodynamics," *Rev. Mod. Phys.*
+  21, 535–540 (1949) — Kron's machine theory for physicists: Lagrange–
+  Maxwell equations as geodesics with the inductances as metric (eqs. 1–8),
+  non-holonomic frames, the torsion Ω (eq. 19) and eq. 5′, and the
+  single-phase squirrel-cage motor with stationary rotor coils (eqs. 22–43).
+  Basis of `kron/hoffmann.go` and `examples/hoffmann_motor`. Copy in
+  `reference/hoffmann-1949-krons-non-riemannian-electrodynamics.pdf`
+  (6-page image scan).
   eqs. (1)–(12), parameters p. 4. **Hypothesis source** for H15; analysed
   in `examples/eckardt_homopolar`; copy in
   `reference/eckardt_2012_homopolar_resonances.pdf`. Standard counterpart: the self-exciting
