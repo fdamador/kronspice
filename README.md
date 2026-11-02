@@ -191,8 +191,11 @@ On Windows, `internal/golden/docker/run.ps1` and the VS Code tasks in
 - [NOMENCLATURE.md](NOMENCLATURE.md): Kron's terms in modern electrical engineering language.
 - [doc/STATUS.md](doc/STATUS.md): every package, milestone and command in detail.
 - [CLAUDE.md](CLAUDE.md): design, numerical rules, references and milestones.
+- [book/](book/): the kronspice book, one chapter per part of the engine,
+  each explained through the examples built on it.
 - [examples/](examples/): runnable examples, each with an `export/` folder
-  holding its netlist, KiCad schematic and Kron results sheet.
+  holding its netlist, KiCad schematic and Kron results sheet, and an
+  [index](examples/README.md) of all of them by group.
 - **Research test bench.** kronspice also has field solvers in Maxwell's
   quaternion form, and test benches for proposals beyond standard physics.
   Each is labeled hypothetical and reports the standard-physics prediction

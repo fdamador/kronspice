@@ -103,7 +103,7 @@ modeled, what would count as evidence, and its current status. Rules:
 | H19 | Bopp–Podolsky generalized electrodynamics: higher derivatives in the field equations themselves, (1 + a²□)□A = μ0J (fourth order), one new length a (F. Bopp 1940; B. Podolsky, Phys. Rev. 62, 68, 1942) | `em/podolsky.go` (point-charge potential and field, finite self-energy q²/(8πε0a), Maxwell and massive modes, Coulomb-test bound a < r/ln(1/ε)); `examples/rate_of_change` | untested — standard prediction a = 0 (Maxwell) beside every result; potential falls below Coulomb by e^(−r/a), so only very short-range experiments see it; electron self-energy equals m_e c² at a = 1.409×10⁻¹⁵ m; a lower bound on the Podolsky mass from measured Bhabha scattering is given by Bufalo, Pimentel & Soto, Phys. Rev. D 90, 085012 (2014) — value to be entered from the paper |
 | H20 | Kron's polyhedral waves describe a physical field region: a region of space, with or without plasma, "crystallizes" into Kron's sequence of magnetic (even-dimensional) and dielectric (odd-dimensional) p-networks plus their dual, carrying complete e, h, b, d waves across dimensions, and can take a self-adaptive oscillatory state; crystals realize it (Kron, *J. Math. Anal. Appl.* 5, 46–69, 1962, pp. 46, 50, 53–54, 66–68; stated as physics in his 1958 and 1960 texts, where the waves are "accompanied by … magnetic poles" and the plasma field is "the stage for all cognitive activities", as quoted by Balasubramanian 1968 pp. 8, 15–17) | `kron/polyhedron.go` and `examples/kron_polyhedron` (planned, see below); standard twins `em/fdtd.go`, `em/tlm.go`; `reference/PII_ 0022-247X(62)90005-7.pdf` | untested — Kron himself called the physical interpretation "only tentative" (p. 66); standard prediction: in three dimensions the polyhedron is a discretization of Maxwell's equations (Kron 1944; Tonti's cell method) and agrees with FDTD and TLM to discretization error, a passive linear structure has fixed modes, and X-ray-excited crystal waves follow Ewald–Laue dynamical diffraction |
 | H21 | Kron's machine equations model the ring electron: a closed ring of circulating charge is a one-winding machine (self-inductance L, circulating mass as rotor inertia, speed voltages G), with voltage and current the pressure and flow of energy at that scale; Kron's eq. 11 (1951 Epilogue p. 259) is the formal link, the machine equation with e = R = 0 being the motion of a charged particle in an electromagnetic field (user hypothesis, 2026-10-31) | `examples/kron_electron` on the electron test bench of `doc/kelvin-references.md`, beside `examples/kelvin_ring` (Lorentz-force form) and `examples/space_vortex` (H13); `device/machine.go`, `em/inductance.go` | bounded — step 1 passes: Kelvin's ring as a three-winding machine with the inertia in the metric gives ∓eΦ/2π, Larmor's rate and the bench's kinetic energy to 1e-5, ledger residual 1e-13, and frame I's torque ½iᵀ(∂L/∂θ)i is −μB sin θ (period to 2e-5); step 2 computed: a ring whose mass circulates with its charge has g = 1/(1 + Le²/4π²ma²) ≤ 1 and precesses at Larmor's eB/2m, half the electron's; a massless ring carries the measured moment at S = ħ/2 only at a = 8.9 fm with v = 43.6 c (v/c = π/(2α(ln(8a/r) − 7/4)) for every massless thin ring, set by the fine-structure constant), magnetic energy 475 m_e c²; standard prediction: the Dirac electron with QED (g = 2.002 319 304 36, μ = 1.001 16 μ_B); scattering bounds the electron below 10⁻¹⁸ m, and Kelvin's full ring already gives the Zeeman lines with the wrong polarisation (`examples/kelvin_ring`) |
-| H22 | "Quantumtricity": the quark model and the principles of circuit electricity (V, I, R, P) are one structure, the latter being electricity at the quantum level (user hypothesis, 2026-11-01) | `kron/gauge.go` and `examples/quantumtricity` (planned, see below): the U(1) gauge constraint on Kron's 1944 field network (KCL as Gauss's law), then SU(3) link variables on the same graph | untested — standard prediction: circuit theory is the classical, abelian (U(1)) limit of a lattice gauge theory and the quark model is the non-abelian (SU(3)) one on the same kind of graph; every Kirchhoff sum commutes, so no circuit quantity composes as SU(3) currents do; the quantum level of V, I and R is set by electrons and photons through e and h (Josephson 2e/h, von Klitzing h/e² = 25 812.807 Ω, single-electron pumps I = e·f), with no quark content; conduction current is electrons only, quarks fix only the lattice charge Z; the e/3 charges seen in the fractional quantum Hall effect are collective electron excitations |
+| H22 | "Quantumtricity": the quark model and the principles of circuit electricity (V, I, R, P) are one structure, the latter being electricity at the quantum level (user hypothesis, 2026-11-01) | `kron/gauge.go` and `examples/quantumtricity` (see below): the U(1) gauge constraint on Kron's 1944 field network (KCL as Gauss's law), then SU(3) link variables on the same graph | bounded — step 1 passes: on a two-mesh RLC in Kron's mesh frame KVL is zero holonomy of the branch voltage (2e-16), the voltage is pure gauge, KCL is the rate of the Gauss generator Div Q − ρ (1e-17), the mesh EMF is −jω × the flux holonomy, and the Hamiltonian's terms are the ledger's ½Cv² and ½Li²; the U(1) field on a Yee grid equals `em/fdtd.go` edge by edge to 6.6e-13 (TM110, 4000 steps; ω = Yee's to 1e-7, energy to 9e-15); step 2 null: SU(3) loops on the same graph compose with defect ‖[W_p, W_q]‖/3 = 0.75 (min 0.37 over 200 fields), 0 for the abelian (Cartan) part, and every quantity the simulator carries on a branch — voltage, current, charge, flux, power, in the linear circuit and in a diode pair — composes with defect ≤ 3e-16, the round-off of addition; standard prediction: circuit theory is the classical, abelian (U(1)) limit of a lattice gauge theory and the quark model is the non-abelian (SU(3)) one on the same kind of graph; the quantum level of V, I and R is set by electrons and photons through e and h (K_J = 2e/h = 483 597.848 4 GHz/V, R_K = h/e² = 25 812.807 459 Ω, I = e·f), with no quark content; conduction current is electrons only, quarks fix only the lattice charge Z; the e/3 charges seen in the fractional quantum Hall effect are collective electron excitations |
 | H23 | The electron as a photon with toroidal topology: one Compton-wavelength photon circulating twice round a torus (Williamson & van der Mark, *Ann. Fond. Louis de Broglie* 22, 133, 1997) | `examples/photon_electron`: the paper's charge, coupling and g against measurement; plain and crossed two-wire ring lines as the circuit form of its 720° double loop (AC modes twin the ladder dispersion, pulse round trips, ledger) | bounded — model charge 0.910 e (eq. 5), α′ = (q/e)²α, anomaly α′/2π = 0.000962 against measured 0.00115965218059 (Fan et al., *PRL* 130, 071801, 2023), 17 % low; spin ½ from the double loop, reproduced as the crossed ring's half-integer modes and its sign flip per trip; the self-confinement is assumed, not derived: tested with `em/fdtd.go` — one wavelength set on the (2, 1) double loop in empty space keeps 5.8 % of its energy within 2R after T/4 and 1e-6 after T/2, all of it leaving through the walls (ledger residual 2e-13); so under linear Maxwell the configuration is not self-confined and the model needs a confining mechanism it does not give |
 
 **H6 — the Sun and high-voltage pulse fields (theoretical).** The working
@@ -256,8 +256,7 @@ Established links, each cited:
   effect (de-Picciotto et al. 1997; Saminadayar et al. 1997); they are
   collective excitations of electrons in a two-dimensional gas, not quarks.
 
-Test, in two steps on `kron/gauge.go` and `examples/quantumtricity`
-(planned):
+Test, in two steps on `kron/gauge.go` and `examples/quantumtricity`:
 
 1. **Abelian step (standard).** Write the U(1) gauge constraint on Kron's
    1944 network and show it is KCL; show the Wilson loop (holonomy) of a
@@ -275,6 +274,27 @@ Test, in two steps on `kron/gauge.go` and `examples/quantumtricity`
 A null result at step 2 records that bound; the entry stays, as for every
 hypothesis. The name "quantumtricity" is the user's and is used for the
 example directory only, never in output as an established term.
+
+Status: *bounded*, work in progress (2026-11-01). The gauge sector is
+built and tested; the matter sector is not: the dictionary matches photon
+to gluon, and a quark's circuit counterpart is the electron (a charge field
+at the nodes, entering the Gauss law as ρ), not V, I, R or P. V is the
+electric field on a link, I the matter current along it, P = V·I the work
+term J·E, and R has no gauge-theory counterpart (a gauge theory is
+lossless). The node charge field with its link hopping current is the next
+construction. `kron/gauge.go` builds the cell complex
+of a Kron network (Grad = A, Curl = Cᵀ, Curl∘Grad = 0 is Aᵀ·C = 0), the
+U(1) field with its Gauss generator, Hamiltonian and leapfrog, a Yee grid
+as Kron's 1944 network, and SU(3) link variables with Wilson loops and the
+non-abelian Gauss law. `examples/quantumtricity` runs both steps: step 1
+holds to round-off on the circuit and the field (the U(1) field on the
+Yee grid equals `em/fdtd.go` edge by edge to 6.6e-13, because Hamilton's
+equations on the lattice are Yee's scheme; `em/tlm.go` is not yet
+written, so that twin is pending); step 2 finds SU(3) loops composing with
+defect 0.75 where every circuit quantity, linear or nonlinear, composes
+with defect ≤ 3e-16. What would move the entry: a circuit quantity that
+carries an index transported along branches and whose node sums do not
+commute. None of the simulator's quantities does.
 
 ### Non-goals (for now)
 
@@ -365,6 +385,7 @@ kronspice/
 │   ├── nonlinear.go            # nonlinear circuits in Kron's frame: state-dependent primitive device tensors (M9c.1)
 │   ├── machine.go              # Kron's machine dynamics: Christoffel symbols, rotating (non-holonomic) frames (M9c.1)
 │   ├── gaframe.go              # Kron's network in geometric algebra: branch space, loop/cut-set blades (§3b)
+│   ├── gauge.go                # gauge theory on Kron's network (H22): cell complex (Grad, Curl, Div; Aᵀ·C = 0), U(1) field with Gauss generator, Hamiltonian ½Cv² + ½Li², Yee grid = em/fdtd.go; SU(3) link variables, Wilson loops, non-abelian Gauss law, composition defect
 │   └── polyphase.go            # quaternion polyphase networks, Clarke/Park as rotors, Kron's rotating frames
 ├── em/                         # Maxwell's equations in quaternion form (§3c)
 │   ├── nabla.go                # Hamilton's ∇ operator on discrete quaternion fields
@@ -438,6 +459,7 @@ kronspice/
     ├── space_vortex/           # Tewari's space-vortex electron (H13) on the electron test bench: charge, moment, g = 15/8, hydrogen orbit
     ├── kron_electron/          # H21: a ring of circulating charge as a Kron machine (inertia in the metric); Kelvin's ring twin test, frame-I torque, electron rings vs Dirac (g ≤ 1, massless ring at 43.6 c); viz/: field-line picture and an animated GIF of the switch-on, the tilt and its field (stdlib image/gif)
     ├── kron_nmr/               # magnetic resonance (NMR, ESR) as Kron's frame II(b): Bloch's equations as a 3-winding machine with skew G = Lγ[B]ₓ, rotating frame = Park's frame, T1/T2 as resistors, pickup winding; precession, Rabi, π/2 pulse + FID, CW line vs Bloch; ring (g = 1) vs measured frequencies; GIF
+    ├── quantumtricity/         # H22: circuit theory as U(1) gauge theory on Kron's network (two-mesh RLC in the mesh frame: KVL = zero holonomy, KCL = Gauss generator rate, mesh flux in Φ₀, ½Cv² + ½Li²; Yee grid beside em.FDTD to 7e-13), then SU(3) on the same graph (composition defect 0.75 vs 0 abelian; every circuit quantity ≤ 3e-16, linear and diode); K_J, R_K, I = e·f
     ├── space_power_generator/  # Tewari's SPG test (UPSM pp. 159–160) through the energy ledger: the loaded-EMF assumption
     ├── bearing_motor/          # Huber ball-bearing motor: measurement registry, κ/ω0 fits, can bearing torque explain the SPG? (H13, H14)
     ├── homopolar_bearing/      # Tesla two-disk homopolar with load current through its ball bearings: bore vs magnetic area, measured bearing drop and damage limit, least drive torque per load watt (circuit only)
