@@ -1,0 +1,46 @@
+1. Casimir energy and pressure (per m²) — Forward eqs. 1–2, and real aluminium (Lifshitz, plasma model, λp = 107 nm)
+        gap   energy ideal      energy Al   Al ÷ ideal pressure ideal    pressure Al
+       10 nm  -4.334e-04 J  -5.861e-05 J        0.135  -1.300e+05 Pa  -1.284e+04 Pa
+       20 nm  -5.417e-05 J  -1.245e-05 J        0.230  -8.126e+03 Pa  -1.421e+03 Pa
+      100 nm  -4.334e-07 J  -2.547e-07 J        0.588  -1.300e+01 Pa  -6.586e+00 Pa
+     1000 nm  -4.334e-10 J  -4.056e-10 J        0.936  -1.300e-03 Pa  -1.191e-03 Pa
+   Real metal is not a perfect mirror above its plasma frequency: at 20 nm aluminium gives a fifth of Forward's
+   ideal energy. (Forward eq. 4: below λ/2π the force turns to the van der Waals form; the plasma model includes it.)
+
+2. One leaf pair closing from 1 µm to 20 nm under Forward's servo (100 nm Al leaves, 1 mm/s; Kron's (q, a))
+   perfect mirror leaves:
+      Casimir work 5.4173e-05 J/m²; servo voltage rises to 63.8 V
+      during the stroke the supply gives 2.4162e-02 J/m² and the field stores 2.4216e-02 J/m²
+      after discharging at the stop the supply has gained 5.4023e-05 J/m² (heat 2.9e-08, motion 1.5e-10, residual 1.2e-07)
+      the supply sends 7.587e-04 C/m² into the leaves during the stroke; at discharge all 4.74e+15 electrons/m² come back,
+      each carrying 0.071 eV of Casimir energy out (net charge moved over the whole operation: zero)
+   aluminium leaves:
+      Casimir work 1.2454e-05 J/m²; servo voltage rises to 26.7 V
+      during the stroke the supply gives 4.2208e-03 J/m² and the field stores 4.2332e-03 J/m²
+      after discharging at the stop the supply has gained 1.2315e-05 J/m² (heat 2.4e-08, motion 7.8e-11, residual 1.2e-07)
+      the supply sends 3.172e-04 C/m² into the leaves during the stroke; at discharge all 1.98e+15 electrons/m² come back,
+      each carrying 0.039 eV of Casimir energy out (net charge moved over the whole operation: zero)
+   The Casimir pull grows as 1/a⁴, so the servo must raise the voltage steeply to hold it: the field stores
+   hundreds of times the Casimir work. Forward's gain appears only after the leaves are stopped and discharged:
+   the supply then ends up with the Casimir work, less the servo's losses.
+
+3. The electrical side in kronspice (capacitor C(t) = 4ε0/(L − a(t)) from the stroke, servo voltage, 1 µΩ·m²)
+   perfect mirror: supply gives 2.41528e-02 J (own 2.41615e-02), sends 7.58463e-04 C (own 7.58679e-04); leaves' work on the capacitor 5.41731e-05 J (Casimir 5.41731e-05); ledger mismatch 4e-04
+   aluminium:      supply gives 4.21981e-03 J (own 4.22084e-03), sends 3.17151e-04 C (own 3.17207e-04); leaves' work on the capacitor 1.24543e-05 J (Casimir 1.24542e-05); ledger mismatch 2e-04
+
+4. Reopening the leaves to 1 µm (Forward's "recharge") and the whole cycle
+   perfect mirror: close +5.4023e-05 J/m², reopen -5.4311e-05 J/m², cycle -2.884e-07 J/m² — the supply pays for the reopening
+   aluminium:      close +1.2315e-05 J/m², reopen -1.2592e-05 J/m², cycle -2.771e-07 J/m² — the supply pays for the reopening
+   The Casimir force is conservative: closing gives back what opening costs, and the servo's losses make every
+   cycle a net loss. It is a one-shot release of stored surface energy, like a spring, not a continuous source.
+
+5. Scale
+   One stroke of real Al: 1.23e-05 J per m² of gap, 0.023 J per kg of leaf metal (100 nm leaves, 2 per gap).
+   For comparison: a lithium-ion cell stores about 900,000 J/kg. Even pressing the leaves into full contact cannot
+   release more than their surface energy, about 1.1 J/m² per surface for aluminium (Tyson & Miller 1977) —
+   the same energy that had to be spent to make the separate leaves.
+   As an electron pump: one stroke is a variable-capacitor charge pump driven by the Casimir force. It lifts
+   2.0e+15 electrons per m² by 0.039 eV each, once; reopening costs that back. A continuous pump needs a continuous
+   source of work, as the pumps of photon_electron do.
+
+No energy is created: the ledger closes; what the supply gains is the Casimir (surface) energy of the leaves.
