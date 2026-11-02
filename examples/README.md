@@ -53,6 +53,7 @@ the rest through `go run ./examples/<name>`, and all have
 | [kron_electron](kron_electron) | A ring of circulating charge as a Kron machine: Kelvin's ring twin test, frame-I torque, electron rings against Dirac (g ≤ 1). | H21 | run |
 | [space_vortex](space_vortex) | Tewari's space-vortex electron: charge, moment, g = 15/8, hydrogen orbit, against measurement. | H13 | run |
 | [photon_electron](photon_electron) | Williamson & van der Mark toroidal-photon electron; light on the double loop in FDTD; three working electron pumps with ledgers; magnetron-driven multipactor arrays. | H23, §3i | run |
+| [zpf_hydrogen](zpf_hydrogen) | Puthoff 1987: hydrogen's ground state as a balance of zero-point absorption and radiation; the oscillator in a simulated zero-point field and as a kronspice circuit in zero-point resistor noise. | H24 | run |
 | [rotating_efield](rotating_efield) | Can a rotating E field make a B field? Displacement current, Rowland disk, Röntgen–Eichenwald disk; the magnetic-charge prediction labelled hypothetical. | §3f, H2 | run |
 | [rate_of_change](rate_of_change) | Where higher time derivatives enter: water's Debye response as a circuit twin, and Bopp–Podolsky electrodynamics beside Maxwell. | H19 | run |
 | [quantumtricity](quantumtricity) | Work in progress. Circuit theory as U(1) gauge theory on Kron's network (KVL zero holonomy, KCL the Gauss generator, Yee grid = FDTD to round-off), then SU(3) on the same graph: no circuit quantity composes non-abelianly so far; the matter sector (quark ↔ electron) is not yet modeled. | H22 | run |
