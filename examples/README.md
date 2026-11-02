@@ -57,6 +57,7 @@ the rest through `go run ./examples/<name>`, and all have
 | [photon_electron](photon_electron) | Williamson & van der Mark toroidal-photon electron; light on the double loop in FDTD; three working electron pumps with ledgers; magnetron-driven multipactor arrays. | H23, §3i | run |
 | [zpf_hydrogen](zpf_hydrogen) | Puthoff 1987: hydrogen's ground state as a balance of zero-point absorption and radiation; the oscillator in a simulated zero-point field and as a kronspice circuit in zero-point resistor noise. | H24 | run |
 | [forward_casimir](forward_casimir) | Forward 1984 vacuum-fluctuation battery: Casimir cohesion of charged leaves under a servo supply, as a Kron (q, a) circuit with ledger and kronspice twin; one-shot gain, cycle is a net loss. | H25 | run |
+| [plasmoid_rings](plasmoid_rings) | Nachamkin 1992 force-free plasmoids as toroidal current rings: his field and numbers checked, radiation lifetimes, a spheromak ring decaying in kronspice, and a collapsing electron ring driven by a kronspice bank. | H26 | run |
 | [rotating_efield](rotating_efield) | Can a rotating E field make a B field? Displacement current, Rowland disk, Röntgen–Eichenwald disk; the magnetic-charge prediction labelled hypothetical. | §3f, H2 | run |
 | [rate_of_change](rate_of_change) | Where higher time derivatives enter: water's Debye response as a circuit twin, and Bopp–Podolsky electrodynamics beside Maxwell. | H19 | run |
 | [quantumtricity](quantumtricity) | Work in progress. Circuit theory as U(1) gauge theory on Kron's network (KVL zero holonomy, KCL the Gauss generator, Yee grid = FDTD to round-off), then SU(3) on the same graph: no circuit quantity composes non-abelianly so far; the matter sector (quark ↔ electron) is not yet modeled. | H22 | run |
@@ -88,6 +89,7 @@ the rest through `go run ./examples/<name>`, and all have
 |---|---|---|---|
 | [water_vibration](water_vibration) | H₂O bonds as a circuit: atoms as mass capacitors, bonds as spring inductors; AC peaks are the IR fundamentals; predicts D₂O and HDO. | doc/chemistry-plan.md | run |
 | [kron_schrodinger](kron_schrodinger) | Kron's 1945 Schrödinger network on the (ρ, z) plane: H atom and the H₂⁺ bond; LC-circuit twin in kronspice AC. | §3a.1 | run |
+| [kron_polyhedron](kron_polyhedron) | Kron's field network and 1962 polyhedron against his printed numbers: 1945 cavity, waveguide, Tables I–VI; frames as integer vectors recovered by the GA; the oscillatory frame in closed form. | §3a.1, H20 | run |
 | [dna_vibration](dna_vibration) | The four DNA bases and the Watson–Crick pairs as circuits (AMBER OL15): absorption, pairing modes, stacks, sound renderings. | doc/chemistry-plan.md | run |
 
 ## Common conventions
