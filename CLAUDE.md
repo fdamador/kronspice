@@ -515,6 +515,7 @@ never know where their inputs come from.
 `em` never imports `analysis` or `solver`. It hands lumped parameters to
     ├── hoffmann_motor/         # Hoffmann 1949 single-phase squirrel-cage motor: frame I (rotor coils turn, L(θ), eq. 42) vs stationary coils 2̄, 3̄ (constant L̄, eq. 29, torsion Ω eq. 19); kronspice frame I, frame II(b) and eq. 5′ integrated directly agree (376.587 rad/s); no start from rest, runs either way when pushed; without Ω only friction coast-down; torque–speed curve, salient pole L_D; ledgers
     ├── zpf_hydrogen/           # Puthoff 1987 (H24): hydrogen ground state as a zero-point-fluctuation balance — eqs. 18–20 with CODATA (a0, −13.6057 eV), restoring averaged balance, 1-D oscillator in a simulated zero-point field (½ħω0, absorbed = radiated), kronspice LC tank in Callen–Welton resistor noise with ledger; later SED simulations and the standard answer stated
+    ├── kaluza_kron/            # Kaluza 1921 five-dimensional unification: eq. 3 checked from his metric; exact 5-D geodesic = Lorentz force with q/m = 2p_w/√(1+p_w²) (charge = fifth-dimension momentum, capped at 2√G per mass; electron needs 2×10²¹); Klein circle R = 2l_P/√α = 3.8×10⁻³⁴ m; the same construction in a Kron machine (cyclic winding charges, conserved flux linkages, Routh-reduced rotor) — geodesic, reduced and kronspice agree
 `circuit`/`device` (via the builder) and receives simulation results for its
 energy and validity checks through `output.Result`.
 
@@ -2904,6 +2905,12 @@ because it could not be offered under the commercial license.
   Y. Zou, *Phys. Lett. A* (2003), doi:10.1016/j.physleta.2003.08.022;
   T. M. Nieuwenhuizen & M. T. P. Liska, *Phys. Scr.* T165, 014006 (2015).
   Copy in `reference/puthoff-1987-hydrogen-ground-state-zpf.pdf`.
+- Th. Kaluza, "Zum Unitätsproblem der Physik," *Sitzungsber. Preuss. Akad.
+  Wiss. Berlin (Math. Phys.)* 1921, 966–972 — the five-dimensional metric
+  framed by the electromagnetic potential, the "cylinder condition" Hoffmann
+  later applies to Kron's machines; O. Klein, *Z. Phys.* 37, 895 (1926), the
+  compact fifth dimension. `examples/kaluza_kron`. Copy (V. T. Toth's
+  translation) in `reference/kaluza-1921-unification-problem-toth.pdf`.
   eqs. (1)–(12), parameters p. 4. **Hypothesis source** for H15; analysed
   in `examples/eckardt_homopolar`; copy in
   `reference/eckardt_2012_homopolar_resonances.pdf`. Standard counterpart: the self-exciting

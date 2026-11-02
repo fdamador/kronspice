@@ -34,6 +34,7 @@ the rest through `go run ./examples/<name>`, and all have
 |---|---|---|---|
 | [kron_machine](kron_machine) | Kron's moving inductors: induction-motor start-up in frames I and II; a parametric inductance against Mathieu (M9c.1). | §3a, M9c.1 | run |
 | [hoffmann_motor](hoffmann_motor) | Hoffmann 1949 on Kron's non-Riemannian electrodynamics: a single-phase squirrel-cage motor on rotating and on stationary rotor coils, the torsion term, three solutions agreeing. | §3a, M9c.1 | run |
+| [kaluza_kron](kaluza_kron) | Kaluza 1921: charge as motion along a fifth dimension (exact 5-D geodesic = Lorentz force), his electron difficulty, Klein's circle; the same construction as a Kron machine with cyclic winding charges. | §3a, §3f | run |
 | [parametric_pump](parametric_pump) | Netlist of the LC tank pumped by a capacitor modulated at twice resonance; envelope growth against Mathieu's rate, pump work on the ledger. | §3a, M9c.1 | netlist |
 | [parametric_lcr](parametric_lcr) | Amador & Eckardt 2012 series R, L, C(t): every case of the paper with the capacitor pump's power on the ledger. | H16 | run |
 | [homopolar](homopolar) | Tesla US 406,968 homopolar dynamo as machine elements from the Lorentz force; EMF, torque, shaft balance; GA on geometry (M9n). | §3f, M9n | run |
