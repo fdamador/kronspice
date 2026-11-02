@@ -23,15 +23,15 @@ added, it gets a row in `examples/README.md` and a place in a chapter.
 | # | Chapter | Examples | Status |
 |---|---|---|---|
 | 1 | [Circuits and the ledger](01-circuits-and-the-ledger.md) | rc_lowpass_values, negative_resistance_gain, rectifier_filter | written |
-| 2 | [Evolution](02-evolution.md) | amplifier_gain, filter_topology, mos_amplifier_pareto, torn_ga | planned |
-| 3 | [Kron's machines](03-krons-machines.md) | kron_machine, parametric_pump, parametric_lcr, homopolar, homopolar_bearing, bearing_motor, kron_nmr | planned |
-| 4 | [Power and polyphase](04-power-and-polyphase.md) | power_filter | planned |
-| 5 | [Fields from Maxwell](05-fields-from-maxwell.md) | pcb_layout, rotating_efield, rate_of_change | planned |
-| 6 | [Coils, pulses and gaps](06-coils-pulses-and-gaps.md) | bial_bifilar, pulsed_bifilar, water_lamp, sparkgap_diode, sparkgap_diodebridge | planned |
-| 7 | [Networks beyond circuits](07-networks-beyond-circuits.md) | acoustic_drive, water_vibration, dna_vibration, kron_schrodinger | planned |
-| 8 | [Craft and space](08-craft-and-space.md) | tether, coiled_tether, ring_towers, double_hull, machine_spacetime | planned |
-| 9 | [The electron test bench](09-the-electron-test-bench.md) | kelvin_ring, vortex_ring, space_vortex, kron_electron, photon_electron | planned |
-| 10 | [Hypotheses under test](10-hypotheses-under-test.md) | eckardt_homopolar, parametric_lcr, pais_cavity, space_power_generator | planned |
+| 2 | [Evolution](02-evolution.md) | amplifier_gain, filter_topology, mos_amplifier_pareto, torn_ga | written |
+| 3 | [Kron's machines](03-krons-machines.md) | kron_machine, parametric_pump, parametric_lcr, homopolar, homopolar_bearing, bearing_motor, kron_nmr | written |
+| 4 | [Power and polyphase](04-power-and-polyphase.md) | power_filter | written |
+| 5 | [Fields from Maxwell](05-fields-from-maxwell.md) | pcb_layout, rotating_efield, rate_of_change | written |
+| 6 | [Coils, pulses and gaps](06-coils-pulses-and-gaps.md) | bial_bifilar, pulsed_bifilar, water_lamp, sparkgap_diode, sparkgap_diodebridge | written |
+| 7 | [Networks beyond circuits](07-networks-beyond-circuits.md) | acoustic_drive, water_vibration, dna_vibration, kron_schrodinger | written |
+| 8 | [Craft and space](08-craft-and-space.md) | tether, coiled_tether, ring_towers, double_hull, machine_spacetime | written |
+| 9 | [The electron test bench](09-the-electron-test-bench.md) | kelvin_ring, vortex_ring, space_vortex, kron_electron, photon_electron | written |
+| 10 | [Hypotheses under test](10-hypotheses-under-test.md) | eckardt_homopolar, parametric_lcr, pais_cavity, space_power_generator | written |
 
 ## The shape of a chapter
 
