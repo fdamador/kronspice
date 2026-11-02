@@ -273,10 +273,14 @@ loaded EMF.
 | H18 | no steering on a high-Q ring; σ, flux, speed and vibration figures beyond material limits | no force on a closed cavity; thrust ≤ P/c | untested |
 | H21 (chapter 9) | g ≤ 1 for a mass ring; massless ring needs 43.6 c | Dirac + QED; ESR 28 GHz/T | bounded |
 | H23 (chapter 9) | light leaves the loop in under half a period | linear Maxwell | bounded |
+| H22, [quantumtricity](../examples/quantumtricity) | circuit theory is U(1) on Kron's network (KVL zero holonomy, KCL the Gauss generator, Yee grid = FDTD to 7e-13); SU(3) loops on the same graph compose with defect 0.75, every circuit quantity with 3e-16 | circuit electricity is the abelian classical limit; V, I, R quantized by e and h | bounded |
 
 In every case the engine found the energy, and in every case it was
 already on the books: shaft work in H15, the pump in H16, the loaded EMF
-in H13. None of these is a verdict on the idea behind the entry. Each is
+in H13. H22 is the one entry about structure rather than energy: the
+quark model and circuit theory are both gauge theories on a graph, and
+the test found the difference between them to be exactly the difference
+between SU(3) and U(1), with no circuit quantity on the non-abelian side. None of these is a verdict on the idea behind the entry. Each is
 a statement of what the published equations or numbers contain, with the
 measurement that would change the status written next to it.
 
@@ -299,6 +303,7 @@ go run ./examples/parametric_lcr
 go run ./examples/space_power_generator
 go run ./examples/bearing_motor
 go run ./examples/pais_cavity
+go run ./examples/quantumtricity
 go run ./cmd/kronspice examples/eckardt_homopolar/export/eckardt_homopolar_driven.cir
 go run ./cmd/kronspice examples/parametric_lcr/export/parametric_lcr_fig5_pumped_c.cir
 ```
