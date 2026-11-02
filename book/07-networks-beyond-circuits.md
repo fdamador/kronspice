@@ -382,6 +382,19 @@ The water netlists `d2o.cir`, `hdo.cir` and `h218o.cir` sit beside
 `h2o.cir`, and `examples/dna_vibration/netlists/` holds each base and pair
 as a netlist; all of them also open in ngspice.
 
+## Kron's polyhedron, checked against his numbers
+
+Kron's late work extended the field network to a sequence of networks of rising
+dimension. [kron_polyhedron](../examples/kron_polyhedron) builds his 1945
+cavity and the 1962 curve-fitting polyhedron and compares them with every number
+he printed. A planar reference frame turns out to be a vector of whole numbers,
+which the genetic algorithm recovers from a printed table column. The
+"oscillatory" column, which fits any function without adjustment, returns its
+input: all 13 characteristics depend on only four values, and a frame orthogonal
+to them fits anything, random numbers included. That is an inference from the
+tables, and it says nothing either way about the physical claims of register
+entry H20. Two columns and the full three-dimensional cell remain unreproduced.
+
 ## Sources
 
 - G. Kron, *Tensor Analysis of Networks*, Wiley, 1939, Ch. V p. 133 —

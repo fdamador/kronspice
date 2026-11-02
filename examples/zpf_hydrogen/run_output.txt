@@ -1,0 +1,39 @@
+1. Puthoff's balance with CODATA values (Phys. Rev. D 35, 3266, 1987)
+   m·ω·r² = ħ (eq. 20) with the Coulomb orbit gives r = 5.291772e-11 m (Bohr radius a0 = 5.291772e-11 m),
+   orbit frequency 6.5797e+15 Hz, energy -13.6057 eV (Bohr and Schrödinger, infinitely heavy proton: -13.6057 eV)
+   there: absorbed from the zero-point field (eq. 18) 4.669288e-08 W, radiated (eq. 19) 4.669288e-08 W
+   Without the zero-point field the orbit would spiral in within 1.56e-11 s (classical collapse).
+
+2. Is the balance a stable one? Net power P_abs − P_rad on Coulomb orbits (averaged, as in the paper)
+   r = 0.5 a0: absorbed/radiated = 1.414, net +3.095e-07 W
+   r = 0.7 a0: absorbed/radiated = 1.195, net +3.797e-08 W
+   r = 0.9 a0: absorbed/radiated = 1.054, net +3.850e-09 W
+   r = 1.0 a0: absorbed/radiated = 1.000, net -2.847e-17 W
+   r = 1.1 a0: absorbed/radiated = 0.953, net -1.484e-09 W
+   r = 1.5 a0: absorbed/radiated = 0.816, net -1.693e-09 W
+   r = 2.0 a0: absorbed/radiated = 0.707, net -8.548e-10 W
+   Inside a0 the orbit gains energy, outside it loses: the averaged balance pulls back to a0 with time constant
+   9.34e-11 s (≈ 614349 orbits). The ratio absorbed/radiated is ħ/(mωr²), which falls as r^½ on Coulomb orbits.
+
+3. The paper's oscillator in a simulated zero-point field (scaled units m = ω0 = ħ = 1; own Runge–Kutta)
+   damping Γω0 = 0.01 (the electron's at the hydrogen orbit frequency is 2.6e-07; larger here so a run spans 524 relaxation times),
+   field below 2 ω0 (declared cut), 16 independent random-phase runs
+   mean energy 0.5037 ± 0.0009 ħω0   (expected for this field 0.5036; ½ħω0 = 0.5000)
+   absorbed 0.005076, radiated 0.005077   (expected 0.005076; eq. 16: ħΓω0³/2 = 0.005000)
+   In steady state the oscillator radiates what it absorbs (difference 0.03 %) and holds ½ħω0 of energy.
+
+4. The same oscillator as a kronspice circuit: series L = 1 H, C = 1 F, R = 0.01 Ω, driven by R's zero-point noise
+   (one-sided S_V = ħωR/π, Callen–Welton 1951; ħ scaled to 1 J·s — the circuit is linear, energies scale with ħ)
+   stored energy 0.4916 ± 0.0035 ħω0 (expected 0.4935); ledger: noise source 645.0 J = resistor 639.3 J + stored 4.59 J (mismatch 0.002)
+   The resistor's zero-point noise and its dissipation balance — the fluctuation–dissipation pair behind Puthoff's
+   radiation balance (his footnote 13). Net, the zero-point field supplies nothing: what goes in comes back out.
+
+5. Where this stands (H24)
+   - Puthoff's result is at the level of Bohr theory, as he says. Quantum mechanics' ground state has zero orbital
+     angular momentum and a spread of radii (most probable a0, mean 1.5 a0); a single orbit with L = ħ is not it.
+     Extending SED to the Schrödinger ground state was, in his words, "yet to be achieved" (footnote 17).
+   - Full SED simulations since: Cole & Zou (Phys. Lett. A, 2003) report the Schrödinger ground-state density;
+     Nieuwenhuizen & Liska (Phys. Scr. T165, 014006, 2015), with longer runs, find the atom self-ionizes.
+   - Energy: the balance is zero net exchange. The zero-point field here is not an energy source.
+   - The energy and size come out right because eq. 20 is Bohr's condition: -13.6057 eV, the same as Bohr and
+     Schrödinger for an infinitely heavy proton (measured ionization energy 13.598 eV includes the proton's recoil).

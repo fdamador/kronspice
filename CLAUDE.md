@@ -101,10 +101,14 @@ modeled, what would count as evidence, and its current status. Rules:
 | H17 | Rotor Mössbauer anomaly: the energy shift between centre and rim of a fast rotor is ΔE/E = k·u²/c² with k ≈ 0.68, not the relativistic 1/2 | `spacetime.RotorShift` with k as a parameter; standard k = 1/2 beside it (§3l) | deviation reported, not independently reproduced — k = 0.68 ± 0.03 (Kholmetskii et al., Phys. Scr. 79, 2009), 0.69 ± 0.02 (Yarman et al., Can. J. Phys., doi:10.1139/cjp-2015-0063), 0.596 ± 0.006 from a reanalysis of Kündig 1963 (Phys. Scr. 77, 2008) against Kündig's own agreement with 1/2 within 1.1 %; interpretation disputed: clock desynchronization giving k = 2/3 (Corda, arXiv:2203.02282) against slit-broadening artifacts (Friedman & Nowik, Phys. Scr. 85, 065702, 2012). Needs an independent group with full line-shape measurement |
 | H18 | Inertial mass reduction of a craft by a "polarized vacuum" from a charged, vibrating, microwave-driven resonant-cavity hull (Pais, US 10,144,532 B2, 2018) | `examples/pais_cavity`: the annular cavity as a ring line solved by Happ two-level diakoptics (twin MNA), ledger, and the patent's σ, flux, rotation and vibration figures against physical limits | untested — standard prediction: no net force on a closed cavity, mass unchanged, thrust ≤ P/c (3.3 mN per MW); the patent's σ = 1 C/m² needs 1.1×10¹¹ V/m (wall pressure 5.6×10¹⁰ Pa, field emission drains it in ~10⁻¹⁶ s); its 10³³ W/m² needs wall speed R_v·ν ≈ 3×10¹³ c; 10⁹–10¹⁸ Hz wall vibration lies above copper's Debye frequency (7.1×10¹² Hz); 30,000 rpm at 2 m exceeds carbon-fibre burst speed 3.3×; the cited gyroscope weight loss (Hayasaka & Takeuchi 1989) was not reproduced (Faller et al. 1990; Quinn & Picard 1990; Nitschke & Wilmarth 1990) |
 | H19 | Bopp–Podolsky generalized electrodynamics: higher derivatives in the field equations themselves, (1 + a²□)□A = μ0J (fourth order), one new length a (F. Bopp 1940; B. Podolsky, Phys. Rev. 62, 68, 1942) | `em/podolsky.go` (point-charge potential and field, finite self-energy q²/(8πε0a), Maxwell and massive modes, Coulomb-test bound a < r/ln(1/ε)); `examples/rate_of_change` | untested — standard prediction a = 0 (Maxwell) beside every result; potential falls below Coulomb by e^(−r/a), so only very short-range experiments see it; electron self-energy equals m_e c² at a = 1.409×10⁻¹⁵ m; a lower bound on the Podolsky mass from measured Bhabha scattering is given by Bufalo, Pimentel & Soto, Phys. Rev. D 90, 085012 (2014) — value to be entered from the paper |
-| H20 | Kron's polyhedral waves describe a physical field region: a region of space, with or without plasma, "crystallizes" into Kron's sequence of magnetic (even-dimensional) and dielectric (odd-dimensional) p-networks plus their dual, carrying complete e, h, b, d waves across dimensions, and can take a self-adaptive oscillatory state; crystals realize it (Kron, *J. Math. Anal. Appl.* 5, 46–69, 1962, pp. 46, 50, 53–54, 66–68; stated as physics in his 1958 and 1960 texts, where the waves are "accompanied by … magnetic poles" and the plasma field is "the stage for all cognitive activities", as quoted by Balasubramanian 1968 pp. 8, 15–17) | `kron/polyhedron.go` and `examples/kron_polyhedron` (planned, see below); standard twins `em/fdtd.go`, `em/tlm.go`; `reference/PII_ 0022-247X(62)90005-7.pdf` | untested — Kron himself called the physical interpretation "only tentative" (p. 66); standard prediction: in three dimensions the polyhedron is a discretization of Maxwell's equations (Kron 1944; Tonti's cell method) and agrees with FDTD and TLM to discretization error, a passive linear structure has fixed modes, and X-ray-excited crystal waves follow Ewald–Laue dynamical diffraction |
+| H20 | Kron's polyhedral waves describe a physical field region: a region of space, with or without plasma, "crystallizes" into Kron's sequence of magnetic (even-dimensional) and dielectric (odd-dimensional) p-networks plus their dual, carrying complete e, h, b, d waves across dimensions, and can take a self-adaptive oscillatory state; crystals realize it (Kron, *J. Math. Anal. Appl.* 5, 46–69, 1962, pp. 46, 50, 53–54, 66–68; stated as physics in his 1958 and 1960 texts, where the waves are "accompanied by … magnetic poles" and the plasma field is "the stage for all cognitive activities", as quoted by Balasubramanian 1968 pp. 8, 15–17) | `kron/polyhedron.go`, `kron/curvefit.go`, `examples/kron_polyhedron`; standard twins `em/fdtd.go`, `em/tlm.go`; `reference/PII_ 0022-247X(62)90005-7.pdf`; `doc/kron-figure-catalogue.md` | untested — physical claims have no test yet; Kron himself called the physical interpretation "only tentative" (p. 66); the 2-D lattice and first planar frame reproduce his numbers, and his oscillatory column equals its input (fits any values, random numbers included), so its fit is no evidence for the physical reading; standard prediction: in three dimensions the polyhedron is a discretization of Maxwell's equations (Kron 1944; Tonti's cell method) and agrees with FDTD and TLM to discretization error, a passive linear structure has fixed modes, and X-ray-excited crystal waves follow Ewald–Laue dynamical diffraction |
 | H21 | Kron's machine equations model the ring electron: a closed ring of circulating charge is a one-winding machine (self-inductance L, circulating mass as rotor inertia, speed voltages G), with voltage and current the pressure and flow of energy at that scale; Kron's eq. 11 (1951 Epilogue p. 259) is the formal link, the machine equation with e = R = 0 being the motion of a charged particle in an electromagnetic field (user hypothesis, 2026-10-31) | `examples/kron_electron` on the electron test bench of `doc/kelvin-references.md`, beside `examples/kelvin_ring` (Lorentz-force form) and `examples/space_vortex` (H13); `device/machine.go`, `em/inductance.go` | bounded — step 1 passes: Kelvin's ring as a three-winding machine with the inertia in the metric gives ∓eΦ/2π, Larmor's rate and the bench's kinetic energy to 1e-5, ledger residual 1e-13, and frame I's torque ½iᵀ(∂L/∂θ)i is −μB sin θ (period to 2e-5); step 2 computed: a ring whose mass circulates with its charge has g = 1/(1 + Le²/4π²ma²) ≤ 1 and precesses at Larmor's eB/2m, half the electron's; a massless ring carries the measured moment at S = ħ/2 only at a = 8.9 fm with v = 43.6 c (v/c = π/(2α(ln(8a/r) − 7/4)) for every massless thin ring, set by the fine-structure constant), magnetic energy 475 m_e c²; standard prediction: the Dirac electron with QED (g = 2.002 319 304 36, μ = 1.001 16 μ_B); scattering bounds the electron below 10⁻¹⁸ m, and Kelvin's full ring already gives the Zeeman lines with the wrong polarisation (`examples/kelvin_ring`) |
 | H22 | "Quantumtricity": the quark model and the principles of circuit electricity (V, I, R, P) are one structure, the latter being electricity at the quantum level (user hypothesis, 2026-11-01) | `kron/gauge.go` and `examples/quantumtricity` (see below): the U(1) gauge constraint on Kron's 1944 field network (KCL as Gauss's law), then SU(3) link variables on the same graph | bounded — step 1 passes: on a two-mesh RLC in Kron's mesh frame KVL is zero holonomy of the branch voltage (2e-16), the voltage is pure gauge, KCL is the rate of the Gauss generator Div Q − ρ (1e-17), the mesh EMF is −jω × the flux holonomy, and the Hamiltonian's terms are the ledger's ½Cv² and ½Li²; the U(1) field on a Yee grid equals `em/fdtd.go` edge by edge to 6.6e-13 (TM110, 4000 steps; ω = Yee's to 1e-7, energy to 9e-15); step 2 null: SU(3) loops on the same graph compose with defect ‖[W_p, W_q]‖/3 = 0.75 (min 0.37 over 200 fields), 0 for the abelian (Cartan) part, and every quantity the simulator carries on a branch — voltage, current, charge, flux, power, in the linear circuit and in a diode pair — composes with defect ≤ 3e-16, the round-off of addition; standard prediction: circuit theory is the classical, abelian (U(1)) limit of a lattice gauge theory and the quark model is the non-abelian (SU(3)) one on the same kind of graph; the quantum level of V, I and R is set by electrons and photons through e and h (K_J = 2e/h = 483 597.848 4 GHz/V, R_K = h/e² = 25 812.807 459 Ω, I = e·f), with no quark content; conduction current is electrons only, quarks fix only the lattice charge Z; the e/3 charges seen in the fractional quantum Hall effect are collective electron excitations |
 | H23 | The electron as a photon with toroidal topology: one Compton-wavelength photon circulating twice round a torus (Williamson & van der Mark, *Ann. Fond. Louis de Broglie* 22, 133, 1997) | `examples/photon_electron`: the paper's charge, coupling and g against measurement; plain and crossed two-wire ring lines as the circuit form of its 720° double loop (AC modes twin the ladder dispersion, pulse round trips, ledger) | bounded — model charge 0.910 e (eq. 5), α′ = (q/e)²α, anomaly α′/2π = 0.000962 against measured 0.00115965218059 (Fan et al., *PRL* 130, 071801, 2023), 17 % low; spin ½ from the double loop, reproduced as the crossed ring's half-integer modes and its sign flip per trip; the self-confinement is assumed, not derived: tested with `em/fdtd.go` — one wavelength set on the (2, 1) double loop in empty space keeps 5.8 % of its energy within 2R after T/4 and 1e-6 after T/2, all of it leaving through the walls (ledger residual 2e-13); so under linear Maxwell the configuration is not self-confined and the model needs a confining mechanism it does not give |
+| H24 | Hydrogen's ground state as a zero-point-fluctuation-determined state: in stochastic electrodynamics the orbiting electron absorbs from the random zero-point field exactly what it radiates when m·ω·r² = ħ (Puthoff, *Phys. Rev. D* 35, 3266, 1987) | `examples/zpf_hydrogen`: the paper's balance with CODATA values (gives a0 and −13.6057 eV, i.e. Bohr's condition); the averaged balance is restoring about a0 (τ = 9.3×10⁻¹¹ s); the paper's 1-D oscillator in a simulated zero-point field holds ½ħω0 with absorbed = radiated (0.03 %); kronspice LC tank in its resistor's zero-point (Callen–Welton) noise holds the expected energy, ledger closes | reproduced at Bohr-theory level, as the paper claims; beyond it untested here — the QM ground state has L = 0 and a spread of radii; full SED simulations: Cole & Zou 2003 report the Schrödinger density, Nieuwenhuizen & Liska 2015 find self-ionization at long times; zero net energy exchange (not an energy source) |
+| H25 | Electrical energy from the vacuum by the Casimir cohesion of charged foliated conductors, the "vacuum-fluctuation battery" (Forward, *Phys. Rev. B* 30, 1700, 1984) | `examples/forward_casimir`: Lifshitz energy for real Al (λp = 107 nm: 0.23 of the ideal at 20 nm); one leaf pair as a Kron (q, a) system under Forward's servo, ledger closed, kronspice twin of the electrical side; reopening the leaves | one-shot release of surface (Casimir) energy, consistent with energy conservation (Cole & Puthoff 1993); 12 µJ/m² per Al stroke, 0.02 J/kg; a close–reopen cycle is a net loss (computed) — not a continuous source |
+| H26 | Long-lived plasmoids (ball lightning) as force-free time-harmonic electromagnetic fields in a plasma, stabilized by vortical flow and non-radiating at a resonant size (Nachamkin, PL-TR-92-3044, 1992) | `examples/plasmoid_rings`: his l = 1 Beltrami field (field lines on nested tori around a current ring); his electron density = cold-plasma dispersion ω² = ωp² + α²c²; Appendix B recomputed; exact leaky l = 1 resonances of the plasma sphere; zero-frequency limit as a spheromak ring decaying in kronspice; collapsing electron ring driven by a kronspice bank | field mathematics sound; his example needs electron quiver 2.6c (non-relativistic model broken); resonant size does not stop radiation (energy lifetime ~1 µs); TE and TM halves need different sizes; a 1 MJ, 10 cm spheromak lives 19 µs at 10 eV and needs 14 keV for 1 s — not ball lightning in air |
+| H27 | Ken Shoulders' "EVs": micrometre beads of about 10¹¹ electrons at near-solid density, few ions, moving at c/10, held together by zero-point fluctuations (Shoulders, *EV: A Tale of Discovery*, 1987; patents 5,018,180 et seq.) | `examples/shoulders_ev`: bead electrostatics and relativistic Coulomb explosion; Casimir, Boyer sphere, magnetic pinch and Brillouin trap as containers; Gauss's law against his kilovolt probe readings; charge (C·V) and energy budgets of his 1 pF and 40 pF sources; kronspice source discharge and EV strike on a 1 pF anode into 50 Ω with ledgers | standard prediction: a 1 µm, 10¹¹-electron bead needs 2.77 J (3×10⁶ × his 1 µJ source), pushes out at 1.5×10¹⁸ Pa and doubles in radius in 1.7×10⁻¹⁵ s; Casimir pressure is 10²¹ too weak and pushes outward on a sphere; kV escape energies need a ≥14 cm "container" or ≤3×10⁵ net electrons; charge collected per shot can never exceed C·V of the source. Test: Faraday cup + ledger on one shot. Mainstream counterpart: Mesyats ectons |
 
 **H6 — the Sun and high-voltage pulse fields (theoretical).** The working
 idea is that the Sun's energy, and its formation, involve high-voltage
@@ -173,6 +177,41 @@ Higher dimensions (k > 3) have no standard physical counterpart; polyhedra
 with k > 3 remain legitimate as estimators for the GA (the paper's own use)
 and are reported as such, never as fields. Status stays *untested* until step
 1 is built; a null result at steps 2 and 3 records a bound, as for every entry.
+
+*What the references in hand supply, and what they do not* (every drawing
+and table read from the page images, 2026-11-01; transcriptions, numbers
+and the build plan in `doc/kron-figure-catalogue.md`). The 1962 paper gives
+everything step 1 needs at k = 3: Fig. 1 (p. 49) is the 1944 Maxwell cell
+with every element's impedance written out (dielectric lines
+`Z = (h₁/h₂h₃)(Δu¹/Δu²Δu³)(c/εp)`, conductive `c/σ`, magnetic
+`(h₂h₃/h₁)(Δu²Δu³/Δu¹)(μp/4c)`, ideal transformers `L = M = ∞`; SI values
+and the working of the transformers in Balasubramanian 1968 eqs. 5-3/5-4
+and Figs. 10–11), Fig. 2 the primal and dual polyhedra, Fig. 3 the
+four-point example with its data matrix and six trial functions, pp. 54–55
+the tearing and regression algorithm in eight steps (`β̂ = (XₜX)⁻¹Xₜy`,
+`ŷ = Xβ̂`, errors `E′ − I′ = y − ŷ`), and Tables I–VI the six functions and
+their divided differences to eight figures, the reproduction target
+(Table I transcribed in the catalogue). The q-network rule for q ≥ 2,
+first thought missing, is held at second hand: Balasubramanian's Fig. 9
+(p. 152) reproduces Kron's 1959 algebraic diagram for space filters (an
+orthogonal network per dimension, ε on odd and μ on even dimensions,
+incidence matrices M^q_{q+1} as div and curl⁻¹ between them) and
+Nicholson 1974 pp. 4–6 give its equations (the orthogonal solution N, the
+four incidence relations, the propagation recursion); Kron 1959 (*AIEE
+Trans.* 78, 554–561) is still wanted to confirm signs and the 1/4 at
+q = 2, 3. Numerical targets beyond the tables: Kron 1945 Fig. 14 (a 4 × 4
+TE cavity with its analyzer potentials and residuals) and Balasubramanian
+Figs. 15–16 (waveguide matching-impedance error, 1 % at Δz/λ = 5 %, 4 % at
+10 %). No source gives the oscillatory reference frame,
+which Kron says "has not been reduced as yet to a routine computer procedure"
+(p. 67). `examples/kron_polyhedron` infers it from the tables: a frame is a
+residual direction of whole numbers (the GA recovers frame 1 from the printed
+column), and the oscillatory column is the identity, met exactly by any frame
+orthogonal to the 4-dimensional range of the characteristics. The GA does not
+reach that on Kron's objective; a closed form does. The second planar frame,
+the LS + linear column and the full 3-D cell (step 1's k = 3 validation) are not
+yet reproduced, so step 1 is partly done. The physical claims (plasma, crystals) have
+no equations in any source and stay hypothesis.
 
 **H21 — Kron's machine equations as a model of the ring electron.** The
 hypothesis reads a closed ring of circulating charge as one of Kron's
@@ -380,6 +419,8 @@ kronspice/
 │   ├── chords.go               # TAN interaction terms ("chords"), affine source terms, radiation edges
 │   ├── diakoptics.go           # tearing into subnetworks, solving, interconnecting
 │   ├── autotear.go             # automatic cut sets: BFS level partition, ground as common bus, retry with fewer pieces (§3a rule 5)
+│   ├── polyhedron.go           # Kron's Maxwell cell in SI, TE field lattice, his 1945 cavity, thesis waveguide (H20)
+│   ├── curvefit.go             # Kron 1962 polyhedron: characteristics, frames as residual directions, one-mesh circuit, closed-form oscillatory frame (H20)
 │   ├── happ.go                 # Happ 1971: Table 12.1 piecewise algorithm, two-level single-common-bus diakoptics, Ch. XI mesh/nodal with paths ignored
 │   ├── jacobian.go             # tearing of every Newton Jacobian, as an analysis solver backend (M9c)
 │   ├── nonlinear.go            # nonlinear circuits in Kron's frame: state-dependent primitive device tensors (M9c.1)
@@ -416,6 +457,7 @@ kronspice/
 │   ├── helix.go                # Knight helical-line model: free-coil SRF, velocity factor, self-capacitance (§3e)
 │   ├── dipole.go               # oscillating point dipole: Jackson 9.18 fields, Larmor power, Poynting by GA vs vector (molecules ↔ light)
 │   ├── efficiency.go           # ledger efficiency (DC, transient) and Tellegen's sum, M9g
+│   ├── hoffmann.go             # Kron's non-Riemannian form (Hoffmann, Rev. Mod. Phys. 21, 535, 1949): torsion Ω of a non-holonomic frame (eq. 19), new metric (eq. 15), eq. 5′ with the 2Ω term; twin vs frame I to 1e-12, and without Ω the "wrong results" of p. 540
 │   └── energy.go               # open-system energy ledger (Poynting / Tellegen balance)
 ├── fluid/                      # liquid media (§3h); leaf package, gonum only; to be expanded later
 │   ├── media.go                # property tables: water (H₂O), heavy water (D₂O), others; vs. temperature
@@ -458,6 +500,7 @@ kronspice/
     ├── vortex_ring/            # Kelvin 1867 vortex atoms via his ring-electromagnet analogy: ring speed from inductance, leapfrogging rings
     ├── space_vortex/           # Tewari's space-vortex electron (H13) on the electron test bench: charge, moment, g = 15/8, hydrogen orbit
     ├── kron_electron/          # H21: a ring of circulating charge as a Kron machine (inertia in the metric); Kelvin's ring twin test, frame-I torque, electron rings vs Dirac (g ≤ 1, massless ring at 43.6 c); viz/: field-line picture and an animated GIF of the switch-on, the tilt and its field (stdlib image/gif)
+    ├── kron_polyhedron/        # H20 step 1: Kron 1945 cavity and Fig. 15, thesis waveguide, Kron 1962 Tables I–VI; planar frames as integer vectors recovered by the GA through a one-mesh circuit (dissipation = error-square); oscillatory frame in closed form
     ├── kron_nmr/               # magnetic resonance (NMR, ESR) as Kron's frame II(b): Bloch's equations as a 3-winding machine with skew G = Lγ[B]ₓ, rotating frame = Park's frame, T1/T2 as resistors, pickup winding; precession, Rabi, π/2 pulse + FID, CW line vs Bloch; ring (g = 1) vs measured frequencies; GIF
     ├── quantumtricity/         # H22: circuit theory as U(1) gauge theory on Kron's network (two-mesh RLC in the mesh frame: KVL = zero holonomy, KCL = Gauss generator rate, mesh flux in Φ₀, ½Cv² + ½Li²; Yee grid beside em.FDTD to 7e-13), then SU(3) on the same graph (composition defect 0.75 vs 0 abelian; every circuit quantity ≤ 3e-16, linear and diode); K_J, R_K, I = e·f
     ├── space_power_generator/  # Tewari's SPG test (UPSM pp. 159–160) through the energy ledger: the loaded-EMF assumption
@@ -511,6 +554,13 @@ and `cmd` wire them into a circuit through `circuit.Builder`, so devices
 never know where their inputs come from.
 
 `em` never imports `analysis` or `solver`. It hands lumped parameters to
+    ├── hoffmann_motor/         # Hoffmann 1949 single-phase squirrel-cage motor: frame I (rotor coils turn, L(θ), eq. 42) vs stationary coils 2̄, 3̄ (constant L̄, eq. 29, torsion Ω eq. 19); kronspice frame I, frame II(b) and eq. 5′ integrated directly agree (376.587 rad/s); no start from rest, runs either way when pushed; without Ω only friction coast-down; torque–speed curve, salient pole L_D; ledgers
+    ├── zpf_hydrogen/           # Puthoff 1987 (H24): hydrogen ground state as a zero-point-fluctuation balance — eqs. 18–20 with CODATA (a0, −13.6057 eV), restoring averaged balance, 1-D oscillator in a simulated zero-point field (½ħω0, absorbed = radiated), kronspice LC tank in Callen–Welton resistor noise with ledger; later SED simulations and the standard answer stated
+    ├── kaluza_kron/            # Kaluza 1921 five-dimensional unification: eq. 3 checked from his metric; exact 5-D geodesic = Lorentz force with q/m = 2p_w/√(1+p_w²) (charge = fifth-dimension momentum, capped at 2√G per mass; electron needs 2×10²¹); Klein circle R = 2l_P/√α = 3.8×10⁻³⁴ m; the same construction in a Kron machine (cyclic winding charges, conserved flux linkages, Routh-reduced rotor) — geodesic, reduced and kronspice agree
+    ├── forward_casimir/        # Forward 1984 vacuum-fluctuation battery (H25): Casimir energy ideal and Lifshitz for real Al; one charged leaf pair as a Kron (q, a) electromechanical system under Forward's servo with ledger; kronspice varying-capacitor twin; close–reopen cycle is a net loss; as an electron pump: a one-shot Casimir-driven variable-capacitor pump
+    ├── einstein_teleparallel/  # Einstein 1928 distant parallelism vs Kron: the motor's stationary-coil frame is a 4-bein; Einstein's torsion = frame anholonomy = Hoffmann's Ω lowered by L̄; φ (his EM potential) = 0 for Kron's frame, frame-dependent; Einstein's connection flat, the machine's curved; his eqs. 5–9 checked on plane waves; kronspice motor built from the torsion alone equals frame II(b)
+    ├── plasmoid_rings/         # Nachamkin 1992 force-free plasmoids (H26) as toroidal current rings: Beltrami field on nested tori, cold-plasma dispersion, Appendix B (quiver 2.6c), exact leaky resonances (µs lifetimes), spheromak ring decay in kronspice (Spitzer), collapsing electron ring (R ∝ B^-½) driven by a kronspice bank, all with ledgers
+    ├── shoulders_ev/           # Shoulders 1987 EVs (H27): 10¹¹-electron 1 µm bead tested — self-energy 2.77 J, fs Coulomb explosion, Casimir/Boyer/magnetic/Brillouin containers fail, Gauss's law vs his kV readings, C·V charge and energy budgets of his sources; kronspice source discharge and EV strike into a 50 Ω scope with ledgers; Faraday-cup test
 `circuit`/`device` (via the builder) and receives simulation results for its
 energy and validity checks through `output.Result`.
 
@@ -2770,7 +2820,9 @@ because it could not be offered under the commercial license.
   dual as a least-squares estimator of functions of k variables and their
   divided differences; Kron's own placement of the polyhedral program in the
   exterior-form calculus of Cartan, de Rham, Hodge and Whitney (§3a.1,
-  HISTORICAL.md). Copy in `reference/` (`PII_ 0022-247X(62)90005-7.pdf`).
+  HISTORICAL.md). Copy in `reference/` (`PII_ 0022-247X(62)90005-7.pdf`);
+  Figs. 1–3, the algorithm and Table I transcribed from the page images in
+  `doc/kron-figure-catalogue.md`.
 - P. Russer, "The Transmission Line Matrix Method," TU München (chapter,
   21 pp.) — 2-D and 3-D TLM, boundaries, discrete Green's functions, skin
   effect, nonlinear lumped elements in the mesh; cites Kron 1944 as the
@@ -2795,7 +2847,9 @@ because it could not be offered under the commercial license.
   1974 (journal version *Int. J. Control* 20(4), 529–555) — Kron's
   polyhedron model, p-networks and the scattering problem; the one
   continuation of Kron's multidimensional networks we hold. Copy in
-  `reference/` (`acse research report 26.pdf`, scanned, no text layer).
+  `reference/` (`acse research report 26.pdf`, scanned, no text layer;
+  read from the page images, its equations and figures transcribed in
+  `doc/kron-figure-catalogue.md`).
   Its companion, ACSE Report 14 (1973; *Proc. IEE* 120, 1545–1557), is open
   at White Rose eprints 86081.
 - N. V. Balasubramanian, *Differential structures in electromagnetic field
@@ -2807,7 +2861,9 @@ because it could not be offered under the commercial license.
   from six of Kron's 1958–65 polyhedron papers that are otherwise
   unobtainable, so it is the project's text for them (HISTORICAL.md). Bridge
   between `kron/` and `em/` (§3a.1 item 8) and background for
-  `kron/machine.go`. Copy in `reference/` (`642931.pdf`).
+  `kron/machine.go`. Copy in `reference/` (`642931.pdf`); its field-network
+  figures (5–17, including Fig. 9, Kron's 1959 space-filter diagram) and
+  the waveguide results are transcribed in `doc/kron-figure-catalogue.md`.
 - D. V. Steward, "Partitioning and tearing systems of equations," *SIAM J.
   Numer. Anal. Ser. B* 2, 345–365, 1965 — partitioning algorithms (§3a).
 - A. Brameller, M. N. John, M. R. Scott, *Practical Diakoptics for Electrical
@@ -2885,6 +2941,50 @@ because it could not be offered under the commercial license.
   excitation); Kouřil & Vrba §10.2.2.
 - H. Eckardt, "Simulation of resonances in the homopolar generator,"
   A.I.A.S./UPITEC, 13 February 2012 — self-excited twin-disk homopolar,
+- B. Hoffmann, "Kron's Non-Riemannian Electrodynamics," *Rev. Mod. Phys.*
+  21, 535–540 (1949) — Kron's machine theory for physicists: Lagrange–
+  Maxwell equations as geodesics with the inductances as metric (eqs. 1–8),
+  non-holonomic frames, the torsion Ω (eq. 19) and eq. 5′, and the
+  single-phase squirrel-cage motor with stationary rotor coils (eqs. 22–43).
+  Basis of `kron/hoffmann.go` and `examples/hoffmann_motor`. Copy in
+  `reference/hoffmann-1949-krons-non-riemannian-electrodynamics.pdf`
+  (6-page image scan).
+- H. E. Puthoff, "Ground state of hydrogen as a zero-point-fluctuation-
+  determined state," *Phys. Rev. D* 35, 3266–3269 (1987) — the SED balance
+  of absorbed zero-point and radiated Larmor power, m·ω·r² = ħ (H24,
+  `examples/zpf_hydrogen`). Later full SED simulations: D. C. Cole &
+  Y. Zou, *Phys. Lett. A* (2003), doi:10.1016/j.physleta.2003.08.022;
+  T. M. Nieuwenhuizen & M. T. P. Liska, *Phys. Scr.* T165, 014006 (2015).
+  Copy in `reference/puthoff-1987-hydrogen-ground-state-zpf.pdf`.
+- Th. Kaluza, "Zum Unitätsproblem der Physik," *Sitzungsber. Preuss. Akad.
+  Wiss. Berlin (Math. Phys.)* 1921, 966–972 — the five-dimensional metric
+  framed by the electromagnetic potential, the "cylinder condition" Hoffmann
+  later applies to Kron's machines; O. Klein, *Z. Phys.* 37, 895 (1926), the
+  compact fifth dimension. `examples/kaluza_kron`. Copy (V. T. Toth's
+  translation) in `reference/kaluza-1921-unification-problem-toth.pdf`.
+- R. L. Forward, "Extracting electrical energy from the vacuum by cohesion
+  of charged foliated conductors," *Phys. Rev. B* 30, 1700 (1984) (H25,
+  `examples/forward_casimir`); D. C. Cole & H. E. Puthoff, "Extracting
+  energy and heat from the vacuum," *Phys. Rev. E* 48, 1562 (1993);
+  A. Lambrecht & S. Reynaud, *Eur. Phys. J. D* 8, 309 (2000), plasma
+  wavelengths for the Lifshitz force. Copy in
+  `reference/forward-1984-vacuum-fluctuation-battery.pdf`.
+- A. Einstein, "New possibility for a unified field theory of gravitation
+  and electricity," *Sitzungsber. Preuss. Akad. Wiss.* 1928, 224–227
+  (A. Unzicker's translation) — distant parallelism: 4-bein, torsion Λ,
+  φ_μ = Λ^α_μα as electromagnetic potential (`examples/einstein_teleparallel`);
+  T. Sauer, *Historia Mathematica* 33, 399 (2006), its history 1928–31.
+  Copy in `reference/einstein-1928-distant-parallelism-unzicker.pdf`.
+- J. Nachamkin, *Force-Free Time-Harmonic Plasmoids*, PL-TR-92-3044
+  (Phillips Laboratory, 1992), DTIC AD-A257 765 (H26,
+  `examples/plasmoid_rings`). Copy in
+  `reference/nachamkin-1992-force-free-plasmoids.pdf`.
+- K. R. Shoulders, *EV: A Tale of Discovery* (Jupiter Technologies, Austin,
+  1987) — electron clusters ("EVs") from fast cathode discharges (H27,
+  `examples/shoulders_ev`); H. E. Puthoff, M. A. Piestrup, "Charge
+  confinement by Casimir forces," arXiv:physics/0408114; G. A. Mesyats,
+  *Plasma Phys. Control. Fusion* 47, A109 (2005), ectons. Copy in
+  `reference/shoulders-1987-ev-tale-of-discovery.pdf`.
   eqs. (1)–(12), parameters p. 4. **Hypothesis source** for H15; analysed
   in `examples/eckardt_homopolar`; copy in
   `reference/eckardt_2012_homopolar_resonances.pdf`. Standard counterpart: the self-exciting

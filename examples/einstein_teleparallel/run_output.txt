@@ -1,0 +1,43 @@
+1. Einstein's 4-bein is Kron's frame (Hoffmann's single-phase motor: q1, q2, q3, θ — four coordinates)
+   Einstein's torsion Λ (coordinate form, his eq. 9–10 of June 7) in the frame's components equals minus
+   the frame's anholonomy (sign convention): difference 6e-11.
+   Hoffmann's Ω (kron.Torsion, eq. 19) is that torsion with one index lowered by the inductances: Ω_λμν = L̄_νρ·Λ^ρ_λμ,
+   difference 3e-17. Same object: Kron's non-Riemannian frame is a teleparallel 4-bein.
+   Einstein's own connection has torsion 2Λ (check 1e-10).
+
+2. Einstein's electromagnetic potential φ_μ = Λ^α_μα (his eq. 2) on the motor
+   Kron's frame (stationary rotor coils, a rotation): φ = (0e+00, 0e+00, 0e+00, 7e-11) — a "pure gravitational" field to Einstein
+   the same motor in a frame whose rotor legs also grow as e^{0.3θ}: φ_θ = 0.300
+   In Kron's machine the frame is a choice of current paths; the motor is the same in both. So φ here is not
+   a field the machine has but a property of the frame chosen — Einstein's own worry that "the separation of the
+   gravitational and electromagnetic field seems arbitrary".
+
+3. Curvature
+   Einstein's distant-parallelism connection: largest curvature component 0e+00 (and 0e+00 in the scaled frame) —
+   flat, all its geometry is torsion.
+   The machine's own connection (Christoffel symbols of its inductances and inertia): largest component 541
+   (mixed units of henry and kg·m²; what matters is that it is not zero — the machine's space is curved).
+   Kron's torsion is that curved space seen from a moving frame (Hoffmann eq. 17); it cannot remove the curvature.
+   Einstein's torsion replaces curvature. Same mathematics of frames, different geometry.
+
+4. Einstein's first approximation (§2), plane waves e^{p·x} with x⁴ imaginary
+   p² ≠ 0                  4 solutions of eq. 5; largest φ 6.3e-17; eq. 8 8e-17, eq. 9 9e-17, eq. 7 1e-16; R_αβ when φ = 0: 2e-16
+   p² ≠ 0, complex         4 solutions of eq. 5; largest φ 4.2e-16; eq. 8 1e-16, eq. 9 5e-17, eq. 7 2e-16; R_αβ when φ = 0: 3e-16
+   p² = 0 (light-like)    10 solutions of eq. 5; largest φ 0.5; eq. 8 0e+00, eq. 9 0e+00, eq. 7 0e+00; R_αβ when φ = 0: 0e+00
+   Away from the light cone the only solutions are coordinate changes (φ = 0, R = 0). On it, φ ≠ 0 obeys
+   ∂φ = 0 and □φ = 0 — Maxwell's vacuum equations — and with φ = 0 the metric obeys R_αβ = 0. Einstein's
+   first-approximation claims hold.
+
+5. The motor in kronspice, built from Einstein's torsion alone (120 V, 60 Hz, pushed to 40 rad/s, 4 s)
+   speed matrix G = 2(Ω_θλν + Ω_νλθ) from the torsion: [[0 0 0] [0 0 0.27] [-0.23 -0.23 0]] (kron.RotatingFrame: [[0 0 0] [0 0 0.27] [-0.23 -0.23 0]])
+   frame I (coils turn with the rotor)      final speed  376.7928 rad/s; ledger mismatch 1e-06
+   Kron frame II(b) (kron.RotatingFrame)    final speed  376.8235 rad/s; ledger mismatch 5e-08
+   built from Einstein's torsion            final speed  376.8235 rad/s; ledger mismatch 5e-08
+   same inductances, torsion removed        final speed   26.8128 rad/s; ledger mismatch 4e-07
+   The torsion motor and Kron's frame II(b) agree to 2e-12 rad/s; frame I to 0.03 rad/s (time step).
+   Without the torsion it only coasts: 40·e^{−4 s·friction/J} = 26.81 rad/s.
+
+Answer: Einstein's paper gives Kron's non-holonomic frames their geometric language — a 4-bein whose
+torsion carries the motion — and kronspice runs a motor from that torsion alone. It does not make Kron's
+machines electromagnetism in Einstein's sense: their torsion is trace-free (φ = 0) and sits on a curved space.
+Einstein's theory itself was dropped by 1931; its gravity survives as the teleparallel equivalent of GR.

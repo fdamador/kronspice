@@ -1,0 +1,38 @@
+1. The force-free field (Nachamkin eq. 8, l = 1; the spheromak field)
+   ∇×F = αF to 2e-10, ∇·F = 0 to 1e-11; a traced field line keeps its flux ψ to 1e-14 (it stays on its torus)
+   the tori nest around a current ring at 0.611 of the radius (61.1 mm for R = 10 cm): the plasmoid's "electron ring"
+
+2. His critical frequency is the cold-plasma cutoff; Appendix B recomputed (R = 10 cm, k = 2686 /m)
+   charge density ρ = (m/e)ε0c²(k² − α²) = -32.63 C/m³ (his −32.63), 8.532e+17 electrons (his 8.532×10¹⁷)
+   that density's plasma frequency satisfies ω² = ωp² + α²c² to -4e-17: his plasmoid is a standing wave of a cold
+   plasma whose wavenumber is α, and his critical frequency ω0 = αc is the cutoff of that wave.
+   his field for C = 0.01 at 126 GHz: E0 = C·R·ω²/|e/m| = 3.566e+09 V/m (his 3.566×10⁹)
+   but then the electrons' oscillation speed is ω·C·R = 7.92e+08 m/s = 2.64 c — above the speed of light, so his
+   non-relativistic electron model does not hold for his own example; real electrons would be relativistic and
+   the field ~1,000 times air's breakdown strength.
+
+3. Does the resonant size stop radiation? l = 1 resonances of the plasma sphere (exact, outgoing waves only)
+   TE (his M part)  128.1583 GHz, needs αR = 4.4933; Q = 4.8e+05; energy lifetime 6e-07 s
+   TM (his N part)  128.1471 GHz, needs αR = 2.7437; Q = 9.4e+05; energy lifetime 1.2e-06 s
+   The plasmoid radiates: with nothing feeding it from outside, its energy leaks away in about a microsecond.
+   And the two halves of the force-free field need different sizes (αR = 4.49 and 2.74): an equal mix of them,
+   which is what makes E parallel to H, is not one free mode of the sphere. It would need driving or surface
+   currents, the weak point Nachamkin names himself. At 1 MJ the initial radiated power is ~2e+12 W.
+
+4. The zero-frequency limit: the spheromak, a force-free current ring (1 MJ, R = 10 cm), in kronspice
+   field scale B0 = 80 T, ring current 7.43 MA, magnetic pressure 2.5e+04 atm (held only by a wall or outside field)
+   T =   1 eV: ring L = 3.62e-08 H, R = 0.0303 Ω; energy lifetime 5.98e-07 s (kronspice 5.98e-07 s); heat 9.997e+05 J of 1e+06 J
+   T =  10 eV: ring L = 3.62e-08 H, R = 0.000957 Ω; energy lifetime 1.89e-05 s (kronspice 1.89e-05 s); heat 9.997e+05 J of 1e+06 J
+   T = 100 eV: ring L = 3.62e-08 H, R = 3.03e-05 Ω; energy lifetime 0.000598 s (kronspice 0.000598 s); heat 9.997e+05 J of 1e+06 J
+   To last one second it would need T = 14082 eV (163 million K): fusion-plasma temperatures. Ball lightning
+   reported to last seconds cannot be a resistive spheromak in air.
+
+5. A collapsing electron ring (electron-ring compressor; bank and coil in kronspice)
+   bank 1000 µF at 10 kV → coil 10 µH (16 turns/m): field 0.050 → 1.984 T in a quarter period
+   ring radius 16.4 → 2.60 cm (law R ∝ B^-½: 2.60 cm); momentum ×6.3007 (law ×6.2989)
+   electron energy 2.0 → 15.0 MeV; work of the induced field 2.0808e-12 J = energy gain 2.0808e-12 J per electron
+   canonical angular momentum (cyclic azimuth) held to 6e-04; ring current with 10¹³ electrons 456 → 2933 A
+   the bank (5e+04 J) drives the coil; the ring takes 21 J of it; kronspice ledger -1e-09
+   The ring collapses because the field around it rises, and every joule it gains comes from the bank.
+
+No energy appears from the plasmoid or the void inside the ring: radiation, resistance and the bank account for all of it.

@@ -1,0 +1,41 @@
+1. Kaluza's equations 1–3
+   α = √(κ/2), κ = 8πG/c²: 3.0548e-14 (Kaluza: 3.06×10⁻¹⁴)
+   Three-index symbols of his 5-D metric (eq. 1) against his closed forms (eq. 3), sample fields:
+   largest difference 6.8e-27 with his α, 1.8e-13 with α = 0.7 — eq. 3 holds as printed.
+   His electron e/m = 1.77×10⁷ is e/m in electromagnetic units per gram (today 1.7588e+07).
+
+2. A charge in a magnetic field as free motion in five dimensions (exact geodesic; c = G = 1, Gaussian)
+   Metric ĝ = (η + k²AA, kA; kA, 1), k = 2√G, uniform B = 0.05 along z, speed 0.3 c
+        p_w        q/m       radius      Lorentz            ω      Lorentz  p_w drift
+       0.10     0.1990     31.60540     31.60540     0.009492     0.009492    6.7e-12
+       0.30     0.5747     10.94442     10.94442     0.027411     0.027411    2.7e-13
+       1.00     1.4142      4.44750      4.44750     0.067454     0.067454    1.7e-14
+       3.00     1.8974      3.31497      3.31497     0.090499     0.090499    9.6e-15
+      10.00     1.9901      3.16054      3.16054     0.094920     0.094920    6.8e-15
+   Nothing depends on w, so the momentum p_w along it is conserved (to round-off), and the 4-D path is a
+   Lorentz-force orbit with q/m = k·p_w/√(1 + p_w²): charge is motion along the fifth dimension.
+   Kaluza's eq. 8a, ρ0/μ0 = 2α·u⁰, is the small-p_w part of this curve.
+
+3. Kaluza's difficulty with the electron (p. 971), and Klein's answer
+   q/m in these units can never exceed k = 2 (√G per unit mass), however fast the motion along w.
+   Electron: e/(m√G) = 2.041e+21;  proton: 1.112e+18. Neither fits on a classical 5-D geodesic.
+   Klein (1926): x⁰ is a circle; quantum momentum p_w = nħ/R makes charge come in steps n·e when
+   R = 2√G·ħ/(c·e) = 2 l_P/√α = 3.784e-34 m. The first charged mode then weighs ħ/(Rc) = 5.21e+17 GeV —
+   near the Planck mass, not an electron. (In my first reply I gave 1.3×10⁻³³ m: that paired the Heaviside
+   coupling √(16πG) with the Gaussian charge, a factor √(4π) too large.)
+
+4. The same construction in a Kron machine (stator coil, rotor coil, mutual M·cos θ; windings superconducting)
+   L1 = L2 = 1.0 H, M = 0.5 H, J = 0.01 kg·m²; start i1 = 1.0 A, i2 = 0.5 A, θ = 0.3 rad, at rest
+   conserved flux linkages ψ1 = 1.2388 Wb, ψ2 = 0.9777 Wb (Kron geodesic: drift 4e-15; energy drift 6e-15)
+    t (s)    Kron geodesic      rotor alone        kronspice
+      0.1     -0.707296 rad/s     -0.707296 rad/s     -0.706973 rad/s
+      0.5     -0.923503 rad/s     -0.923503 rad/s     -0.923217 rad/s
+      1.0      1.439010 rad/s      1.439010 rad/s      1.438928 rad/s
+      1.5     -1.340890 rad/s     -1.340890 rad/s     -1.341042 rad/s
+      2.0      0.666266 rad/s      0.666266 rad/s      0.666265 rad/s
+   largest speed difference: rotor alone 1.1e-10 rad/s, kronspice 3.7e-04 rad/s; kronspice ledger mismatch 3e-11
+   The charges never appear in the inductances (cylinder condition), so their momenta — flux linkages — are
+   conserved, like p_w. Eliminating them leaves the rotor in a potential set by the fluxes: the machine's
+   version of the force the fifth dimension leaves behind. Kron's machine is a working Kaluza model.
+
+No energy appears from the extra dimension: the 5-D geodesic conserves its norm and the machine its energy.
