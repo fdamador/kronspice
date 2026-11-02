@@ -518,6 +518,7 @@ never know where their inputs come from.
     ├── zpf_hydrogen/           # Puthoff 1987 (H24): hydrogen ground state as a zero-point-fluctuation balance — eqs. 18–20 with CODATA (a0, −13.6057 eV), restoring averaged balance, 1-D oscillator in a simulated zero-point field (½ħω0, absorbed = radiated), kronspice LC tank in Callen–Welton resistor noise with ledger; later SED simulations and the standard answer stated
     ├── kaluza_kron/            # Kaluza 1921 five-dimensional unification: eq. 3 checked from his metric; exact 5-D geodesic = Lorentz force with q/m = 2p_w/√(1+p_w²) (charge = fifth-dimension momentum, capped at 2√G per mass; electron needs 2×10²¹); Klein circle R = 2l_P/√α = 3.8×10⁻³⁴ m; the same construction in a Kron machine (cyclic winding charges, conserved flux linkages, Routh-reduced rotor) — geodesic, reduced and kronspice agree
     ├── forward_casimir/        # Forward 1984 vacuum-fluctuation battery (H25): Casimir energy ideal and Lifshitz for real Al; one charged leaf pair as a Kron (q, a) electromechanical system under Forward's servo with ledger; kronspice varying-capacitor twin; close–reopen cycle is a net loss; as an electron pump: a one-shot Casimir-driven variable-capacitor pump
+    ├── einstein_teleparallel/  # Einstein 1928 distant parallelism vs Kron: the motor's stationary-coil frame is a 4-bein; Einstein's torsion = frame anholonomy = Hoffmann's Ω lowered by L̄; φ (his EM potential) = 0 for Kron's frame, frame-dependent; Einstein's connection flat, the machine's curved; his eqs. 5–9 checked on plane waves; kronspice motor built from the torsion alone equals frame II(b)
 `circuit`/`device` (via the builder) and receives simulation results for its
 energy and validity checks through `output.Result`.
 
@@ -2920,6 +2921,12 @@ because it could not be offered under the commercial license.
   A. Lambrecht & S. Reynaud, *Eur. Phys. J. D* 8, 309 (2000), plasma
   wavelengths for the Lifshitz force. Copy in
   `reference/forward-1984-vacuum-fluctuation-battery.pdf`.
+- A. Einstein, "New possibility for a unified field theory of gravitation
+  and electricity," *Sitzungsber. Preuss. Akad. Wiss.* 1928, 224–227
+  (A. Unzicker's translation) — distant parallelism: 4-bein, torsion Λ,
+  φ_μ = Λ^α_μα as electromagnetic potential (`examples/einstein_teleparallel`);
+  T. Sauer, *Historia Mathematica* 33, 399 (2006), its history 1928–31.
+  Copy in `reference/einstein-1928-distant-parallelism-unzicker.pdf`.
   eqs. (1)–(12), parameters p. 4. **Hypothesis source** for H15; analysed
   in `examples/eckardt_homopolar`; copy in
   `reference/eckardt_2012_homopolar_resonances.pdf`. Standard counterpart: the self-exciting
