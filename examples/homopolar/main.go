@@ -216,12 +216,45 @@ func main() {
 	gens := flag.Int("gens", 20, "generations")
 	pop := flag.Int("pop", 30, "population")
 	ptarget := flag.Float64("p", 2000, "required output power [W]")
+	dualOnly := flag.Bool("dual", false, "stop after the dual-motor machine (skip the GA)")
+	data := flag.String("data", "", "write the resonance figure data (CSV) to this directory and exit")
 	flag.Parse()
+	if *data != "" {
+		if err := writeResonanceData(*data); err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
 	d := Defaults()
 	report("Tesla two-disk, belt", d)
 	d1 := d
 	d1.TwoDisk = false
 	report("single disk, rim brush", d1)
+	fmt.Println()
+	if err := runDual(); err != nil {
+		log.Fatal(err)
+	}
+	if err := runResonance(); err != nil {
+		log.Fatal(err)
+	}
+	if err := runFastPump(); err != nil {
+		log.Fatal(err)
+	}
+	if err := runSchumann(); err != nil {
+		log.Fatal(err)
+	}
+	if err := runRPMSchumann(); err != nil {
+		log.Fatal(err)
+	}
+	if err := runOutputTank(); err != nil {
+		log.Fatal(err)
+	}
+	if err := runRectifier(); err != nil {
+		log.Fatal(err)
+	}
+	if *dualOnly {
+		return
+	}
 	s, err := evo.Run(context.Background(), Problem(*ptarget), evo.Options{Population: *pop, Generations: *gens, Seed: 1}, nil, nil)
 	if err != nil {
 		log.Fatal(err)
