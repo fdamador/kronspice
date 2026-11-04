@@ -281,7 +281,48 @@ a frame dragging 3.7×10⁻¹⁰ of Earth's own, far below any instrument. No
 energy enters a circuit from spacetime curvature by itself; the
 gravitational channel of chapter 1 carries no power.
 
-## 8.7 What to keep
+## 8.7 The Earth as a machine
+
+[earth_machine](../examples/earth_machine) treats the planet itself as
+three Kron networks. Layer 1 is the core dynamo as Rikitake's two-disk
+machine: two N elements, each disk excited by the other's coil. It
+reverses its field on its own, 71 times in t = 50 to 1000 at μ = 1, A = 1,
+with books closed to 2×10⁻⁷.
+
+Layer 2 is Wilson's global circuit. The fair-weather air is a stack of
+60 leaky shells, each a resistor in parallel with a capacitor. The
+thunderstorms are a current source that lifts charge from the ground to
+the ionosphere. Calibrated on three measured values (V_I = 250 kV,
+J = 2 pA/m², E0 = 120 V/m), the ladder gives a global current of 1,020 A
+and a resistance of 244.9 Ω. The Earth's charge comes out at −5.42×10⁵ C,
+Gauss's law at the surface. The balancing positive charge is in the air,
+half of it below 1.42 km, and almost none of it at the ionosphere. So the
+Earth is not a spherical capacitor of 0.076 F: its effective capacitance
+is Q/V_I = 2.17 F. The relaxation time R·C_eff is exactly ε0/σ0 = 531 s,
+and the storms keep 255 MW flowing. Against a daily ±15 % swing in storm
+activity (the Carnegie curve), V_I follows 4.4 minutes behind.
+
+Layer 3 is the Earth–ionosphere cavity as a transmission line in
+colatitude, one band per degree. With perfect walls the ladder's modes
+are Legendre's c/(2πa)·√(n(n+1)) to 4×10⁻⁴, and the engine's AC sweep
+peaks on them. With v/c and the damping fitted to the first Schumann mode
+alone (7.8 Hz, Q = 5), modes 2 to 5 fall at 13.6, 19.2, 24.8 and 30.3 Hz,
+against the measured 14.3, 20.8, 27.3 and 33.8 Hz. The measured modes
+imply a phase velocity that rises from 0.736c to 0.824c with frequency:
+one constant ionosphere height cannot give them, which is the reason the
+literature uses frequency-dependent electric and magnetic heights. With
+those heights the ladder is rebuilt at every frequency, and all five
+modes come within 2 %, with a predicted Q of 4.2 to 4.7.
+
+The three layers then link. Each band's air column, the leaky shells of
+layer 2, becomes the shunt branch of the cavity ladder. One fixed network
+then gives a single 250 kV ionosphere at DC and Schumann peaks at ELF,
+8 % low, with an electric height that comes from the conductivity
+profile instead of a fit. The dynamo reaches the air through cosmic-ray
+shielding of its conductivity, and every layer keeps its own channel in
+one ledger.
+
+## 8.8 What to keep
 
 - A net force needs a momentum ledger as a net energy needs an energy
   ledger. The tether's drag is paid by the orbit, its thrust by the
@@ -311,6 +352,7 @@ go run ./examples/coiled_tether
 go run ./examples/ring_towers
 go run ./examples/double_hull
 go run ./examples/machine_spacetime
+go run ./examples/earth_machine
 go test ./examples/tether ./examples/coiled_tether ./examples/machine_spacetime ./spacetime
 ```
 

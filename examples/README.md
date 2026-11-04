@@ -81,6 +81,7 @@ the rest through `go run ./examples/<name>`, and all have
 |---|---|---|---|
 | [tether](tether) | Electrodynamic tether in low Earth orbit: push and pull against a planetary field, momentum ledger. | §3f | run |
 | [ring_towers](ring_towers) | Towers on the Earth–ionosphere ring as an LC ladder: traveling, standing and cancelling waves, synchronized pairs, DC bias. | §3e | run |
+| [earth_machine](earth_machine) | The Earth as three Kron networks: Rikitake two-disk geodynamo (field reversals), the global atmospheric circuit as leaky shells (250 kV, 1 kA, Earth's charge), the Earth–ionosphere cavity as a line in colatitude (Schumann modes vs Legendre and measurement, two-height ionosphere); then one network for circuit and cavity, the dynamo's cosmic-ray shielding, paper107 drive studies. | §3a, §3f | run |
 | [double_hull](double_hull) | A craft's double wall as a ring waveguide: gap voltage per section, DC bias, vacuum multipactor and Kilpatrick checks, GA for a target voltage. | §3i | run |
 | [pais_cavity](pais_cavity) | Pais US 10,144,532 B2 annular cavity as a ring line by Happ two-level diakoptics; the patent's figures against physical limits. | H18 | run |
 

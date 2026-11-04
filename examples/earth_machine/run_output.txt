@@ -1,0 +1,242 @@
+Layer 2 — the global atmospheric electric circuit as a Kron ladder of leaky shells
+  anchors (declared, measured): V_I = 250 kV, J = 2.0 pA/m², E0 = 120 V/m, ionosphere at 60 km
+  calibrated profile σ(z) = σ0·exp(z/H): σ0 = 1.67e-14 S/m, H = 2.08 km (60 shells)
+  global storm current I = J·4πR² = 1020 A; global resistance 244.9 Ω
+  V_I: circuit 249.84 kV, exact ladder 249.84 kV (rel. diff 9e-06); flat column 250 kV (sphericity −0.07 %)
+  Earth's charge: circuit -5.42e+05 C, −ε0·E0·4πR² = -5.42e+05 C
+  balancing positive charge: 5.42e+05 C in the air (half of it below 1.42 km), 1.7e-06 C at the ionosphere
+  capacitance: geometric shell to 60 km 0.076 F; effective Q/V_I = 2.17 F
+  relaxation: R·C_eff = 531 s = ε0/σ0 = 531 s (8.9 min) — without storms the charge would leak away in minutes
+  power: V_I·I = 255 MW from the storms, all dissipated as heat; engine ledger residual -4e-06
+  switch-on transient: V_I reaches 63 % in 229 s; circuit vs exact ladder within 8e-05 of V_I
+  Carnegie curve (±15 % daily storm current): V_I follows with amplitude ratio 0.999691 and a lag of 4.4 min
+
+Layer 2 refinements
+  one exponential column (as above): V_I 249.83 kV, half the space charge below 1.42 km
+  two-scale column (declared: boundary layer 1.5 km, free-air scale height 5 km; solved H_BL = 1.09 km):
+    V_I 249.67 kV, E0 119.8 V/m, half the space charge below 0.72 km; τ = ε0/σ0 = 531 s unchanged —
+    Q = ε0·E0·A and I = J·A make R·C_eff = ε0/σ0 for any profile.
+  land (29 %, σ0 1e-14 S/m) and ocean (σ0 2.2e-14 S/m) columns in parallel, same storm current:
+    V_I 224.8 kV; land: 160 A, E0 108 V/m; ocean: 860 A, E0 108 V/m (the same V_I over both: J ∝ σ, E0 equal)
+  storm generators with an upward and a downward path (declared, all storms in parallel):
+    R_up [Ω]  R_down [Ω]  R_cloud [Ω]  I_s needed [A]  reaching ionosphere  P_gen [MW]  in storms [MW]  fair weather [MW]  ledger
+    50        100         1000             1423         71.7 %                 573         318             255       3e-07
+    100       100         500              1928         52.9 %                 875         620             255       5e-07
+    100       500         250              4468         22.8 %                3851        3596             255       1e-07
+  the generator must lift more current, and do more work, than the fair-weather circuit carries;
+  the rest returns locally (lightning to ground, point discharge, precipitation currents).
+
+Layer 3 — the Earth–ionosphere cavity as a Kron transmission-line ladder (Schumann resonances)
+  perfect cavity, 181 bands of 1°: ladder modes vs Legendre c/(2πa)·√(n(n+1))
+    n=1  ladder 10.5910 Hz  Legendre 10.5913 Hz  (rel. -3e-05)
+    n=2  ladder 18.3432 Hz  Legendre 18.3446 Hz  (rel. -8e-05)
+    n=3  ladder 25.9393 Hz  Legendre 25.9432 Hz  (rel. -0.0002)
+    n=4  ladder 33.4841 Hz  Legendre 33.4926 Hz  (rel. -0.0003)
+    n=5  ladder 41.0044 Hz  Legendre 41.0198 Hz  (rel. -0.0004)
+  engine AC sweep, Q1 = 300, driven at the pole: peaks 10.590 18.343 25.939 33.484 41.004 Hz; AC ledger residual ≤ 0
+  lossy cavity fitted to mode 1 only (f = 7.8 Hz, Q = 5): v/c = √(h_e/h_m) = 0.7402 (h_e = 49.3 km at h_m = 90 km), α = 4.93 1/s
+    n  model mode f [Hz]  Q    spectrum peak at pole  measured   model/measured   implied v/c
+    1      7.80          5.0       7.48                7.8      1.000            0.736
+    2     13.55          8.7      13.20               14.3      0.948            0.780
+    3     19.18         12.2      18.83               20.8      0.922            0.802
+    4     24.77         15.8      24.42               27.3      0.907            0.815
+    5     30.34         19.4      29.99               33.8      0.898            0.824
+  equator station (odd modes have a node there, P_n(0) = 0): peaks 13.58 24.78 35.91 Hz; AC ledger residual ≤ 0
+  one constant velocity puts modes 2–5 increasingly low (the measured implied v/c rises with
+  frequency) and gives Q ∝ f; both need ionospheric heights that depend on frequency.
+
+Layer 3 refinement — frequency-dependent ionospheric heights (two-scale-height model)
+  fitted to the five measured frequencies and Q1 = 5 (rms error 0.0095):
+    at 8 Hz: h_e = 52.3 km, h_m = 90.2 km; scale heights ζe = 0.55 km, ζm = 9.94 km
+    n   mode f [Hz]  Q     measured  model/measured  pole spectrum peak (rebuilt ladder, engine AC)
+    1      7.96       5.0     7.8     1.020           7.66
+    2     14.27       4.7    14.3     0.998           13.77
+    3     20.64       4.5    20.8     0.992           20.14
+    4     27.11       4.3    27.3     0.993           26.82
+    5     33.68       4.2    33.8     0.996           34.02
+    engine AC ledger residual ≤ 0 over 781 rebuilt ladders
+  the heights' frequency dependence lifts modes 2–5 onto the measurements and keeps Q from
+  growing ∝ f; Q2–Q5 are predictions (reported values stay near 4–6, Sentman 1995).
+
+Linking the layers
+  (A) one network: 61 bands × 40 shells to 100 km (two-scale profile of layer 2), series path at h_m = 90 km
+    DC: ionosphere 249.59–250.27 kV across all bands (one equipotential; layer 2 gives 249.7 kV), 255 MW, ledger 2e-09
+    ELF, same network (stroke at the pole): spectrum peaks 7.2 13.0 18.9 24.9 30.9 37.0 Hz; equator 13.5 25.3 37.2 Hz; measured [7.8 14.3 20.8 27.3 33.8]; AC ledger ≤ 0e+00
+    electric height from the profile, σ(z) = ωε0: 45.6 km at 8 Hz, 52.7 km at 33 Hz (layer-3 fit: 52.3 km at 8 Hz)
+  (B) dynamo → atmosphere: unshielded ion production ×2.0 (declared), σ ∝ √q:
+    dipole gone: V_I 176.8 kV (circuit with σ × √2: 176.7 kV), relaxation time 376 s; dipole at its mean: V_I 250 kV
+    over a Rikitake run (|dipole| ∝ |I1|, normalized to its RMS): V_I mean 219 kV, minimum 177 kV at each reversal
+    the two time scales are far apart (minutes for the air, kyr for a reversal): the link is quasi-static.
+  (C) one ledger: the dynamo's drive enters on the mechanical channel (core convection; geodynamo ohmic
+    losses are estimated at 0.2–0.5 TW, Christensen & Tilgner, Nature 429, 169, 2004), the storms on the
+    thermal channel (layer 2: 0.26–3.9 GW with the storm paths), and the cavity draws on lightning, part of
+    the storms' work; no layer supplies another with energy, the dynamo only modulates the air's conductivity.
+
+Stacked design — the two disks (eddies) on one axis, each inside the other's coil
+  geometry of examples/homopolar scaled to the disk radius (coil 1.2 r_o, 0.4 r_o long); at its gap 0.53 r_o:
+  each coil's stray field on its own disk KS = 0.519 of M (homopolar: 0.519), coil–coil coupling KM = 0.387 (0.387)
+  so a stacked loop excites itself at (1 + KS)·M·ω: a feedback coil built into the geometry.
+  circuit vs RK4 at that gap, t ≤ 10: |ΔI1| ≤ 0.0012; engine ledger mismatch -3e-06 J
+  μ = 1, A = 1, t = 20 000 (RK4), against the gap:
+    gap [r_o]   KS      KM      reversals  mean interval  CV     RMS I1   mean ω1, ω2
+    side by side  0       0        1438         13.76       0.99   1.343
+    0.53        0.5190  0.3870      0           NaN       NaN   0.811    0.66, 0.66
+    1.00        0.2630  0.1932      0           NaN       NaN   0.890    0.79, 0.79
+    1.50        0.1406  0.1053      0           NaN       NaN   0.936    0.88, 0.88
+    2.00        0.0813  0.0621      0           NaN       NaN   0.962    0.92, 0.92
+    3.00        0.0326  0.0256      0           NaN       NaN   0.984    0.97, 0.97
+    4.00        0.0157  0.0125      0           NaN       NaN   0.992    0.98, 0.98
+    6.00        0.0052  0.0042      0           NaN       NaN   0.998    1.00, 0.99
+  no gap reverses: Rikitake's chaos rests on a conserved speed difference A = ω1 − ω2 (both disks feel
+  the same back torque M·I1·I2). Any self-coupling adds KS·M·Ii², different on each disk, so A drains away:
+    gap 6 r_o (KS = 0.0052): A = 1.00 at t = 0, 0.77 at 50, 0.35 at 200, 0.005 at 1000
+  and with A gone the field locks to one polarity, a steady dynamo, however weak the stray coupling.
+  Holding A with unequal drive torques, G1 = 1 + δ, G2 = 1 − δ:
+    gap [r_o]   δ      reversals  mean interval  CV     A held at
+    0.53        0.1        0           NaN       NaN   0.250
+    0.53        0.3        0           NaN       NaN   0.732
+    0.53        0.5     5119          3.87       0.13   0.960
+    1.50        0.1        0           NaN       NaN   1.213
+    1.50        0.3        0           NaN       NaN   3.211
+    1.50        0.5        0           NaN       NaN   4.695
+  only close stacking with a strong imbalance reverses, and then like a clock (interval ≈ the 3.9
+  oscillation period, CV 0.13), not chaotically. Stacked eddies make a stable dynamo; irregular
+  reversals need the two loops to couple only through each other's field, as side by side.
+  The ledger is the same as side by side: the drive pays for field and heat, stacking adds no input.
+
+Task 2 — convergence of the reversal statistics (μ = 1, A = 1)
+  RK4, t = 20000:
+    h = 0.004  1385 reversals, mean 14.35, CV 0.99, max 79; KS vs h = 0.0005: D = 0.062, p = 0.01
+    h = 0.002  1442 reversals, mean 13.78, CV 0.99, max 79; KS vs h = 0.0005: D = 0.027, p = 0.65
+    h = 0.001  1470 reversals, mean 13.52, CV 1.00, max 79; KS vs h = 0.0005: D = 0.022, p = 0.88
+    h = 0.0005 1473 reversals, mean 13.49, CV 1.01, max 79; KS vs h = 0.0005: D = 0.005, p = 1.00
+  kronspice circuit (trapezoidal, LTE control, max step dt), t = 4000:
+    dt = 0.02   269 reversals, mean 14.42, CV 0.96; KS vs RK4 h = 0.0005: D = 0.077, p = 0.13
+    dt = 0.01   307 reversals, mean 12.58, CV 0.96; KS vs RK4 h = 0.0005: D = 0.057, p = 0.38
+    dt = 0.005  291 reversals, mean 13.31, CV 0.96; KS vs RK4 h = 0.0005: D = 0.057, p = 0.39
+  counts at a fixed time differ run to run (chaos); the interval distributions agree.
+
+Task 3 — the (μ, A) plane: reversal statistics against an exponential (Poisson) and the polarity record
+    μ     A    reversals  mean    CV    max/mean   KS D vs exp  p(boot)  last peak/median peak
+    0.5   0.5   3729       5.17   0.34      1.8      0.488       0.0025    0.87
+    0.5   1     5281       3.73   0.05      2.1      0.613       0.0025    1.09
+    0.5   2     6587       3.01   0.00      1.0      0.632       0.0025    1.00
+    0.5   4     8631       2.29   0.00      1.0      0.632       0.0025    1.00
+    1     0.5   1311      14.16   0.88      6.0      0.274       0.0025    1.14
+    1     1     1438      13.76   0.99      5.8      0.253       0.0025    1.17
+    1     2     1437      13.78   1.10      5.7      0.221       0.0025    1.23
+    1     4     2118       9.34   0.84      3.4      0.265       0.0025    1.19
+    2     0.5   1818      10.37   0.37      3.1      0.507       0.0025    1.03
+    2     1     2090       9.48   0.43      3.2      0.372       0.0025    1.08
+    2     2     2262       8.75   0.40      2.8      0.328       0.0025    1.12
+    2     4     2702       7.33   0.42      2.1      0.383       0.0025    1.08
+  polarity record (declared): Cenozoic mean polarity interval of order 0.2–0.3 Myr; the Cretaceous Normal
+  Superchron ≈ 38 Myr (≈ 121–84 Ma; Ogg, Geologic Time Scale 2020, ch. 5), so longest/mean ≳ 100;
+  the dipole weakens before reversing (Valet & Meynadier, Nature 366, 234, 1993; Valet et al., Nature 435, 802, 2005).
+  Rikitake: intervals have a floor at the oscillation period (no short chrons), longest/mean ≲ 10, and the
+  field swings wider, not weaker, before it reverses. Self-consistent 3-D dynamos (Glatzmaier & Roberts,
+  Nature 377, 203, 1995) are the benchmark the two-disk model does not reach.
+
+Task 4a — modulated drive torque G = 1 + 0.3·sin(ωd·t), swept across the natural frequency 1.495
+    unmodulated: RMS I1 1.344, 0.0747 reversals per unit time
+    ωd/ωn   RMS I1   reversals/time   mean interval
+    0.25    1.339    0.0632           15.84
+    0.50    1.325    0.0447           22.33
+    0.75    1.313    0.0326           30.81
+    0.90    1.343    0.0865           11.57
+    1.00    1.329    0.0609           16.41
+    1.10    1.331    0.0537           18.54
+    1.25    1.333    0.0569           17.12
+    1.50    1.328    0.0471           21.02
+    2.00    1.342    0.0684           14.63
+    3.00    1.343    0.0733           13.58
+  circuit (SIN torque sources) vs RK4 at ωd = ωn, t ≤ 10: |ΔI1| ≤ 0.0076; engine ledger mismatch 2e-05 J
+  standard prediction: a driven chaotic oscillator; any resonance is the system's own (no new term).
+
+Task 4b — each disk on its own speed drive (paper107 §14.5.2.2): the field equations become linear
+  standard prediction: L·İ = (−R·1 + M·[[0, ω1],[ω2, 0]])·I grows at (−R + M·√(ω1ω2))/L when ω1ω2 > 0,
+  decays at −R/L (oscillating at M·√|ω1ω2|/L) when ω1ω2 < 0: self-excitation needs ω1ω2 > (R/M)².
+    ω1     ω2     exact     circuit   RK4
+    2      2      +1.0000   +1.0000   +1.0000
+    2      0.8    +0.2649   +0.2649   +0.2649
+    1      1      +0.0000   +0.0000   +0.0000
+    0.5    1.5    -0.1340   -0.1340   -0.1340
+    3      0.2    -0.2254   -0.2254   -0.2254
+    2      -2     -1.0000   -1.0000   -1.0000
+  prescribed profiles ω1 = 1 + 0.5·sin(ωm·t), ω2 = 1 + 0.5·sin(ωm·t + φ) (mean speeds at threshold):
+    ωm    φ      circuit   RK4     (in phase the sum mode's mean growth is ⟨ω⟩ − 1 = 0: bounded; a 30-unit window reads it within ±0.03)
+    1     0      +0.0184   +0.0184
+    1     180    -0.0523   -0.0523
+    0.2   180    -0.0666   -0.0666
+    2     180    -0.0314   -0.0314
+    4     180    -0.0124   -0.0124
+  opposed modulation lowers ⟨√(ω1ω2)⟩ below the mean speed: the field decays at the old threshold.
+
+Task 4c — a feedback coil around each disk (K·M; K > 0 aids the cross field, K < 0 opposes it)
+    K      reversals  mean interval  CV    RMS I1   mean ω1   (Bullard alone: self-excites when K·M·ω > R)
+    -0.50      21         17.95       4.36   0.359    1481.763
+    -0.25      78         15.06       2.94   0.525    1464.706
+    +0.00    1438         13.76       0.99   1.343    1.810
+    +0.25       0           NaN       NaN   0.894    0.799
+    +0.50       0           NaN       NaN   0.816    0.667
+    +0.75       0           NaN       NaN   0.756    0.572
+  circuit (machine element with G[0][0] = −K·M) vs RK4 at K = 0.5, t ≤ 10: |ΔI1| ≤ 0.0014; ledger mismatch 3e-06 J
+  K > 0: the field locks to one polarity (no reversals): each loop now feeds itself as well as the other.
+  K < 0: the coil's I² torque drives the shaft forward, the field weakens and reversals become rare.
+  the feedback coil changes how the drive's energy splits between field and heat; it adds no input:
+  its EMF K·M·ω·I is paid by the back torque K·M·I² on the shaft (the ledger closes in every case).
+
+Task 4d — Tesla's opposed fields (US 406,968; paper107 §14.5.2.1) in the cross-excited machine
+  co-rotating, coil 2 rewound: about I = 0, λ = −R ± i·M·√(ω1ω2): -1.000 ± 1.000i at ω1 = ω2 = 1
+  run: |I1| after t = 60 is 1.7e-27; the shafts spin up without load (ω1 = 61.2)
+  so with each disk excited by the other, opposed fields cannot self-excite; Tesla's magnets excite
+  his disks separately, and his opposed arrangement only makes the EMFs add along the belt (examples/homopolar).
+  Reversing a disk and its coil together (case 3) restores the loop gain: the sign of the loop matters, not the spin.
+
+Task 4e — rotating-frame terms (paper107 §14.4) and the machine element under dω/dt ≠ 0
+  disk at ω(t) = 5·sin(10t), field 1 A: loop current vs exact solution within 7e-06 of its peak; engine ledger mismatch 5e-06 J
+  the speed EMF M·ω(t)·I_f follows the instantaneous speed: nothing in the lumped machine needs dω/dt.
+  laboratory disk: B = 1 T, r = 10 cm, Ω = 2π·50 rad/s, peak dΩ/dt = 3142 rad/s², electron cyclotron ω_c = 1.76e+11 1/s
+    motional EMF ½BΩr² = 1.571 V
+    angular (Stewart–Tolman) EMF (m/e)·(dΩ/dt)·r²/2 = 8.93e-11 V (ratio 6e-11)
+    centrifugal EMF (m/e)·Ω²r²/2 = 2.81e-09 V (ratio Ω/ω_c = 2e-09)
+    Coriolis force on a drift electron 2mΩv vs evB: ratio 2Ω/ω_c = 4e-09
+  these are the standard inertial terms of the rotating frame; the lumped machine omits them at ~1e-9.
+  paper107 states no further, measurable term; its ECE reading stays in the register (H15, H16),
+  where the Maxwell–Lorentz prediction above is the standard counterpart.
+
+Rikitake two-disk dynamo (μ = 1, A = 1) — the geodynamo as a Kron machine
+  equilibrium: I1² = k² = 1.618034 (the golden ratio), natural period 2π/√(k²+k⁻²) = 4.2018
+
+Case 1  co-rotating (Rikitake)
+  kronspice: 71 reversals, interval min 3.92 mean 12.17 max 70.36, CV 0.92 (Poisson: 1)
+  RK4 ref:   49 reversals, mean interval 17.30
+  max |I1| after t=50: 4.53; |ΔI1| vs RK4 over t ≤ 10: 0.0041
+  energy from the trace (t > 0): drive in 2581 = heat 2578 + Δstored 3.078; residual 0.00047 (1.8e-05%)
+  engine ledger (whole run, UIC start included): integration mismatch 1.1e-05 J (4e-09 of the drive work)
+  final shaft speeds ω1 = 2.47, ω2 = 1.47
+
+Case 2  disk 2 reversed, same wiring
+  kronspice: 0 reversals, interval min 0.00 mean 0.00 max 0.00, CV 0.00 (Poisson: 1)
+  RK4 ref:   0 reversals, mean interval 0.00
+  max |I1| after t=50: 6.67e-14; |ΔI1| vs RK4 over t ≤ 10: 0.0048
+  energy from the trace (t > 0): drive in 1.002e+06 = heat 0.6233 + Δstored 1.002e+06; residual 0.67 (6.7e-05%)
+  engine ledger (whole run, UIC start included): integration mismatch -4.2e-05 J (-4e-11 of the drive work)
+  final shaft speeds ω1 = 1e+03, ω2 = -1e+03
+
+Case 3  disk 2 reversed, coil 2 rewound
+  kronspice: 71 reversals, interval min 3.92 mean 12.17 max 70.36, CV 0.92 (Poisson: 1)
+  RK4 ref:   49 reversals, mean interval 17.30
+  max |I1| after t=50: 4.53; |ΔI1| vs RK4 over t ≤ 10: 0.0041
+  energy from the trace (t > 0): drive in 2581 = heat 2578 + Δstored 3.078; residual 0.00047 (1.8e-05%)
+  engine ledger (whole run, UIC start included): integration mismatch 1.1e-05 J (4e-09 of the drive work)
+  final shaft speeds ω1 = 2.47, ω2 = -1.47
+
+Case 4  co-rotating, coil 2 rewound (Tesla's opposed fields)
+  kronspice: 0 reversals, interval min 0.00 mean 0.00 max 0.00, CV 0.00 (Poisson: 1)
+  RK4 ref:   0 reversals, mean interval 0.00
+  max |I1| after t=50: 6.67e-14; |ΔI1| vs RK4 over t ≤ 10: 0.0072
+  energy from the trace (t > 0): drive in 1.001e+06 = heat 0.434 + Δstored 1.001e+06; residual 0.67 (6.7e-05%)
+  engine ledger (whole run, UIC start included): integration mismatch -4.1e-05 J (-4e-11 of the drive work)
+  final shaft speeds ω1 = 1e+03, ω2 = 1e+03
+
