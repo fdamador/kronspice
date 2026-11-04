@@ -24,3 +24,6 @@ __pycache__/
 
 # Editor backups
 *.md.bak
+
+# Claude Code personal settings
+.claude/settings.local.json

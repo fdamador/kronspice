@@ -239,6 +239,11 @@ type recorder struct {
 	wf    *output.Waveforms
 	tol   float64
 	first bool
+	// imposedFirst is true when the first recorded point is a UIC point:
+	// its element powers belong to an imposed, not a solved, state (an
+	// inductor's initial current can sit in a reference resistor until the
+	// first step), so they are not integrated (finish).
+	imposedFirst bool
 	// peakScale is the largest Σ|power| seen so far. Round-off in the solved
 	// powers scales with the largest quantities in the run, not with the
 	// powers at one instant: when every power is momentarily near zero
@@ -309,6 +314,9 @@ func (r *recorder) record(t float64, imposed bool) error {
 		return err
 	}
 	wf := r.wf
+	if len(wf.Time) == 0 {
+		r.imposedFirst = imposed
+	}
 	wf.Time = append(wf.Time, t)
 	for n := 1; n < s.c.NumNodes(); n++ {
 		wf.V[n] = append(wf.V[n], s.x[n-1])
@@ -348,6 +356,13 @@ func (r *recorder) finish() error {
 	trap := func(y []float64) float64 {
 		sum := 0.0
 		for k := 1; k < n; k++ {
+			if k == 1 && r.imposedFirst {
+				// The first step is backward Euler, whose energy change is
+				// booked at its right end; the imposed UIC point's powers
+				// are not a solved state and are left out.
+				sum += y[1] * (t[1] - t[0])
+				continue
+			}
 			sum += 0.5 * (y[k] + y[k-1]) * (t[k] - t[k-1])
 		}
 		return sum
