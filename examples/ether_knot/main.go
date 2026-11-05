@@ -44,9 +44,11 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"math"
+	"os"
 	"runtime"
 	"sync"
 )
@@ -486,7 +488,14 @@ func gaussLinking(a, b [][3]float64) float64 {
 }
 
 func main() {
+	ring := flag.String("ring", "", "instead of the main run: strike the knot (box 24 ℓ and 16 ℓ, h 0.15 and 0.1), write ring_b*_h*.json and ops_*.txt here for ring.py and modes.py")
 	flag.Parse()
+	if *ring != "" {
+		if err := runRing(*ring); err != nil {
+			fmt.Println("error:", err)
+		}
+		return
+	}
 	fmt.Println("ether_knot (H29 step 2): does a nonlinear ether hold a knot of field energy at a fixed size?")
 	fmt.Println("Energy E = κ2∫(∂n)² + κ4∫|B_n|²: the ether's stiffness plus the knotted light's magnetic energy")
 	fmt.Println("(B_n = −16 × Rañada's knotted B for the starting map). Units: κ2 = κ4 = 1, length ℓ = √(κ4/κ2).")
@@ -543,4 +552,37 @@ func main() {
 	fmt.Println("\nStandard prediction: Derrick (1964) — the magnetic term alone spreads the knot, the stiffness alone")
 	fmt.Println("shrinks it; together they fix its size at ℓ = √(κ4/κ2) and its energy, ≈ 548·√(κ2κ4) by this run (Faddeev & Niemi 1997).")
 	fmt.Println("What the model does not fix: κ2 and κ4 themselves — no measured ether stiffness exists to set them.")
+}
+
+// runRing relaxes the knot on three grids, checks its two zero modes,
+// strikes it three ways and writes the records (and the operators of the
+// box-16 grid) for ring.py and modes.py.
+func runRing(dir string) error {
+	fmt.Println("ether_knot vibrations: the relaxed knot struck three ways (breathing, squashing, twisting)")
+	for _, c := range [][3]float64{{16, 0.15, 26}, {24, 0.15, 40}, {16, 0.1, 26}} {
+		a := NewAxi(c[0], c[0], c[1], 1, 1, 1)
+		a.Relax(120000, 0.05, 1e-10, 0, nil)
+		o := a.Operators(1e-5)
+		slide, turn := a.ZeroModes(o)
+		fmt.Printf("  box %g ℓ, h %g ℓ: %d dofs; zero modes ω² (slide along z, turn about ẑ) %.1e, %.1e\n", c[0], c[1], 2*len(o.Free), slide, turn)
+		out := map[string][]float64{}
+		for name, v := range a.Strikes() {
+			ts, ov := a.Ring(o, v, c[2], 0.2*c[1])
+			out[name], out["t"] = ov, ts
+		}
+		j, err := json.Marshal(out)
+		if err != nil {
+			return err
+		}
+		if err := os.WriteFile(fmt.Sprintf("%s/ring_b%g_h%g.json", dir, c[0], c[1]), j, 0o644); err != nil {
+			return err
+		}
+		if c[0] == 16 && c[1] == 0.15 {
+			if err := o.Write(fmt.Sprintf("%s/ops_b%g_h%g.txt", dir, c[0], c[1])); err != nil {
+				return err
+			}
+		}
+	}
+	fmt.Println("  written; frequencies: python3 examples/ether_knot/ring.py " + dir + "/ring_*.json")
+	return nil
 }

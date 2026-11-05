@@ -1,0 +1,20 @@
+ether_knot vibrations: the relaxed knot struck three ways (breathing, squashing, twisting)
+  box 16 ℓ, h 0.15 ℓ: 45156 dofs; zero modes ω² (slide along z, turn about ẑ) 2.2e-04, 9.9e-08
+  box 24 ℓ, h 0.15 ℓ: 101442 dofs; zero modes ω² (slide along z, turn about ẑ) 1.6e-04, -3.5e-07
+  box 16 ℓ, h 0.1 ℓ: 101442 dofs; zero modes ω² (slide along z, turn about ẑ) 1.5e-04, 1.6e-07
+  written; frequencies: python3 examples/ether_knot/ring.py examples/ether_knot/vib/ring_*.json
+examples/ether_knot/vib/ring_b16_h0.15.json: box 16 l, record to t = 20 l/c
+  breathing omega 0.429, decay 0.115, Q 1.9 (amp 0.55); omega 0.508, decay 0.226, Q 1.1 (amp 0.41); omega 1.312, decay 0.302, Q 2.2 (amp 0.09)
+  squashing omega 1.416, decay 0.101, Q 7.0 (amp 0.46)
+  twisting  omega 0.931, decay 0.275, Q 1.7 (amp 0.53); omega 0.457, decay 0.157, Q 1.5 (amp 0.15); omega 1.409, decay 0.303, Q 2.3 (amp 0.10)
+examples/ether_knot/vib/ring_b24_h0.15.json: box 24 l, record to t = 36 l/c
+  breathing omega 0.447, decay 0.117, Q 1.9 (amp 0.61); omega 0.463, decay 0.462, Q 0.5 (amp 0.41)
+  squashing omega 1.415, decay 0.101, Q 7.0 (amp 0.45)
+  twisting  omega 0.859, decay 0.385, Q 1.1 (amp 0.93); omega 1.116, decay 0.435, Q 1.3 (amp 0.64); omega 0.444, decay 0.119, Q 1.9 (amp 0.09)
+examples/ether_knot/vib/ring_b16_h0.1.json: box 16 l, record to t = 20 l/c
+  breathing omega 0.498, decay 0.125, Q 2.0 (amp 0.54); omega 1.449, decay 0.503, Q 1.4 (amp 0.09)
+  squashing omega 1.385, decay 0.116, Q 6.0 (amp 0.46)
+  twisting  omega 0.829, decay 0.309, Q 1.3 (amp 0.56); omega 1.326, decay 0.397, Q 1.7 (amp 0.20); omega 0.498, decay 0.153, Q 1.6 (amp 0.18)
+box 16 l, h 0.15 l, 45156 dofs
+  omega (c/l):       0.0003  0.0015  0.2519  0.2771  0.3087  0.3101  0.3713  0.3839  0.4198  0.4575  0.4590  0.4669  0.4778  0.4814
+  share within 3 l:    0.64    0.97    0.02    0.08    0.00    0.00    0.05    0.02    0.17    0.00    0.00    0.05    0.02    0.01
