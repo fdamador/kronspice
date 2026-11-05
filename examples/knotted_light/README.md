@@ -12,6 +12,8 @@ together?
 ```
 go run ./examples/knotted_light      # about 30 s
 go test ./examples/knotted_light     # -short skips the 3-D solve
+go run ./examples/knotted_light -viz examples/knotted_light/viz   # also the 3-D field lines
+python3 examples/knotted_light/viz/render.py                      # knot_3d.png, knot_time.png
 ```
 
 ## The field
@@ -79,6 +81,18 @@ Faddeev and Niemi's knot solitons (1997). Step 2 is to add such a term,
 declared and labelled, and look for the size at which a knot stops
 spreading.
 
+## Pictures
+
+`viz/knot_3d.png`: 24 magnetic field lines of the exact hopfion at t = 0,
+seeded on three nested rings (light: near the axis, dark: near the core);
+all close, and the first pair links once. `viz/knot_time.png`: the same
+family at t = 0, 1, 2 and 3 L0/c on one scale, seeds scaled by the knot's
+size √(1 + t²), with a grey sphere at the energy's rms radius (1.00, 1.41,
+2.23, 3.16 L0); all 24 lines close at every time and the linking stays
+1.000. Seeds sit half a step off the y-axis, whose field line in this
+solution passes through infinity. `viz/knot_lines.json` holds the traced
+lines for the pictures and for an interactive viewer.
+
 ## Tests
 
 | Test | Checks | Held to |
@@ -95,6 +109,7 @@ This example has no circuit, so it has no `export_test.go`.
 |---|---|
 | `main.go` | the hopfion (Bateman form, helicity sign check), the vector-potential and helicity bookkeeping beside `em/fdtd.go`, field-line tracing and the Gauss linking integral, the run and report |
 | `main_test.go` | the tests above |
+| `viz.go`, `viz/render.py` | `-viz`: the traced 3-D lines (`viz/knot_lines.json`) and the two pictures |
 | `run_output.txt` | the run above |
 
 ## Sources

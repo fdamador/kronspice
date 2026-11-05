@@ -43,7 +43,9 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"log"
 	"math"
 	"math/cmplx"
 
@@ -427,6 +429,14 @@ func (k Knot) Run() (Result, error) {
 }
 
 func main() {
+	viz := flag.String("viz", "", "also write 3-D field lines for viz/render.py and the viewer to this directory")
+	flag.Parse()
+	if *viz != "" {
+		if err := writeViz(*viz, []float64{0, 1, 2, 3}); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("3-D field lines written to", *viz)
+	}
 	fmt.Println("knotted_light (H29, step 1): Rañada's knotted light (hopfion) in the field solver")
 	fmt.Println("Question: does topology alone, under linear Maxwell equations, hold a knot of light together?")
 	k := DefaultKnot()
