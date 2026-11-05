@@ -1,0 +1,11 @@
+# Ramp-length independence check (fdamador_neutrino Part 4), 2026-11-04
+# 12 realizations per row on identical noise (seed 1951); E and exp in units of ħω0;
+# ramp = raised-cosine switch-on length in units of Q; 0 = abrupt start (the original biased run).
+RESULT Q=10.17 ramp=0Q E=0.5230 se=0.0144 exp=0.4817 dev=2.9sigma inout=1.0011
+RESULT Q=10.17 ramp=2Q E=0.4815 se=0.0005 exp=0.4817 dev=-0.4sigma inout=1.0012
+RESULT Q=10.17 ramp=5Q E=0.4815 se=0.0005 exp=0.4817 dev=-0.4sigma inout=1.0012
+RESULT Q=10.17 ramp=8Q E=0.4814 se=0.0005 exp=0.4817 dev=-0.4sigma inout=1.0012
+RESULT Q=40.68 ramp=0Q E=0.5004 se=0.0051 exp=0.4916 dev=1.7sigma inout=1.0051
+RESULT Q=40.68 ramp=2Q E=0.4900 se=0.0031 exp=0.4916 dev=-0.5sigma inout=1.0052
+RESULT Q=40.68 ramp=5Q E=0.4900 se=0.0031 exp=0.4916 dev=-0.5sigma inout=1.0053
+RESULT Q=40.68 ramp=8Q E=0.4899 se=0.0031 exp=0.4916 dev=-0.6sigma inout=1.0053
