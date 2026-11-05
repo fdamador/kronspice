@@ -109,7 +109,8 @@ func TestAxiEqualsThreeD(t *testing.T) {
 }
 
 // Coarse grid: with both terms the knot settles (energy stops falling)
-// near the virial balance E2 ≈ E4 and keeps a core of order ℓ; with the
+// near the virial balance (E2/E4 = 0.83 at h = 0.15, rising to 0.997 as
+// h → 0 in the run's grid study) and keeps a core of order ℓ; with the
 // magnetic term alone it spreads, with the stiffness alone it shrinks.
 func TestEtherHoldsKnot(t *testing.T) {
 	if testing.Short() {
@@ -118,7 +119,7 @@ func TestEtherHoldsKnot(t *testing.T) {
 	a := NewAxi(8, 8, 0.15, 1, 1, 1)
 	e2, e4, n := a.Relax(20000, 0.05, 1e-7, 0, nil)
 	core, _ := a.Size()
-	if n >= 20000 || math.Abs(e2/e4-1) > 0.12 || core < 0.8 || core > 1.6 {
+	if n >= 20000 || math.Abs(e2/e4-1) > 0.2 || core < 0.8 || core > 1.6 {
 		t.Errorf("both terms: steps %d, E2/E4 %.4f, core %.3f", n, e2/e4, core)
 	}
 	b := NewAxi(8, 8, 0.15, 1, 0, 1)
@@ -130,10 +131,15 @@ func TestEtherHoldsKnot(t *testing.T) {
 	}
 	c := NewAxi(8, 8, 0.15, 1, 1, 0)
 	c0, _ := c.Size()
-	c.Relax(2000, 0.05, 0, 0, nil)
+	s0 := c.Total()
+	c.Relax(100, 0.05, 0, 0, nil)
 	c1, _ := c.Size()
-	if c1 >= c0*0.8 {
+	if c1 >= c0*0.9 {
 		t.Errorf("stiffness only: core %.3f → %.3f, want shrinking", c0, c1)
+	}
+	c.Relax(1000, 0.05, 0, 0, nil)
+	if e := c.Total(); e > 0.05*s0 {
+		t.Errorf("stiffness only: energy %.3f of %.3f after 1100 steps, want the knot gone through the lattice", e, s0)
 	}
 	t.Logf("both: E %.3f E2/E4 %.4f core %.3f; magnetic only rms %.3f → %.3f; stiffness only core %.3f → %.3f",
 		e2+e4, e2/e4, core, r0, r1, c0, c1)

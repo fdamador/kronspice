@@ -516,29 +516,31 @@ func main() {
 	fmt.Printf("   extrapolated to h → 0 (h = 0.07, 0.05): E = %.1f, E2/E4 = %.4f (virial theorem: 1)\n", e0, r0)
 	fmt.Println("   Battye & Sutcliffe (PRL 81, 4798, 1998), 3-D lattice of 100³: E = 504 (spacing not stated)")
 
-	fmt.Println("\n2. Controls (box 10, h 0.1, 6000 steps from the same start)")
-	for _, k := range [][2]float64{{0, 1}, {1, 0}} {
-		a := NewAxi(10, 10, 0.1, 1, k[0], k[1])
-		name := "magnetic energy only (κ2 = 0: knotted light, no ether)"
-		if k[1] == 0 {
-			name = "ether stiffness only (κ4 = 0)"
-		}
-		fmt.Println("   " + name)
-		a.Relax(6000, 0.05, 0, 1500, func(s int, e2, e4 float64) {
-			co, r := a.Size()
-			fmt.Printf("     step %5d  E %.3f  core radius %.3f  rms radius %.3f\n", s, k[0]*e2+k[1]*e4, co, r)
-		})
-	}
+	fmt.Println("\n2. Controls (box 10, h 0.1, from the same start)")
+	fmt.Println("   magnetic energy only (κ2 = 0: knotted light, no ether) — Derrick: spreads")
+	b := NewAxi(10, 10, 0.1, 1, 0, 1)
+	b.Relax(6000, 0.05, 0, 1500, func(s int, e2, e4 float64) {
+		_, r := b.Size()
+		fmt.Printf("     step %5d  E %.3f  rms radius %.3f\n", s, e4, r)
+	})
+	fmt.Println("   ether stiffness only (κ4 = 0) — Derrick: shrinks; m_z at the core = −1 while the knot is there")
+	c := NewAxi(10, 10, 0.1, 1, 1, 0)
+	c.Relax(1000, 0.05, 0, 100, func(s int, e2, e4 float64) {
+		co, _ := c.Size()
+		fmt.Printf("     step %5d  E %.3f  core radius %.3f  m_z at core %+.3f\n", s, e2, co, c.m[2][c.at(int(co/c.H-0.5), (c.NZ-1)/2)])
+	})
+	fmt.Println("   (the core reaches the grid spacing by step 200 and the knot unties through the lattice: a grid")
+	fmt.Println("    cannot hold topology below its own spacing; in the continuum it shrinks to a point)")
 
-	fmt.Println("\n3. The relaxed knot in 3-D (finest grid above, resampled on 81³ over ±5 ℓ)")
-	g := best.To3D(81, 5)
+	fmt.Println("\n3. The relaxed knot in 3-D (finest grid above, resampled on 101³ over ±8 ℓ)")
+	g := best.To3D(101, 8)
 	e2, e4 := g.Energy(nil)
 	l, gap := g.Linking([3]float64{0.6, 0, 0}, [3]float64{-0.6, 0, 0})
-	l2, gap2 := g.Linking([3]float64{0, 0, 0.8}, [3]float64{1.6, 0, 0})
-	fmt.Printf("   3-D energy E2 %.2f + E4 %.2f = %.2f (box ±5)\n", e2, e4, e2+e4)
+	l2, gap2 := g.Linking([3]float64{1.4, 0, 0}, [3]float64{0, 0.9, 0.4})
+	fmt.Printf("   3-D energy E2 %.2f + E4 %.2f = %.2f (grid h = 0.16: E4 reads low by O(h²))\n", e2, e4, e2+e4)
 	fmt.Printf("   linking of preimage curves (field lines of B_n): %.4f (gap %.3f ℓ), %.4f (gap %.3f ℓ) — Hopf charge 1\n", l, gap, l2, gap2)
 
 	fmt.Println("\nStandard prediction: Derrick (1964) — the magnetic term alone spreads the knot, the stiffness alone")
-	fmt.Println("shrinks it; together they fix its size at ℓ = √(κ4/κ2) and its energy at ≈ 548·√(κ2κ4) (Faddeev & Niemi 1997).")
+	fmt.Println("shrinks it; together they fix its size at ℓ = √(κ4/κ2) and its energy, ≈ 548·√(κ2κ4) by this run (Faddeev & Niemi 1997).")
 	fmt.Println("What the model does not fix: κ2 and κ4 themselves — no measured ether stiffness exists to set them.")
 }
