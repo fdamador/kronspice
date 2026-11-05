@@ -203,6 +203,11 @@ at the measured mode frequencies (equal loudness, 1.2 s decay). The
 crossing removes every even member of the series, which is the spin-½
 property heard rather than seen.
 
+`viz/harmonics.wav` (14 s) adds those modes one at a time, 1.6 s each: the
+plain ring 880 → +440 → +294 → +221 Hz, then the crossed ring 880 → +293 →
++176 → +126 Hz. Parts 1–3 have no harmonics of their own: each is a single
+linear resonance, one tone at 440 Hz.
+
 ## Tests
 
 | Test | Checks | Held to |

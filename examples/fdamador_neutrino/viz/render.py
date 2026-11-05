@@ -10,6 +10,7 @@ Writes
                                ring held by the zero-point field
   viz/fdamador_neutrino.wav    the whole sound, five parts with gaps (44.1 kHz, 16-bit mono)
   viz/sound_*.wav              each part on its own
+  viz/harmonics.wav            the ring lines' modes added one at a time (plain, then crossed)
 
 Sound: every real frequency here is far above hearing (the ceramic ring 2.06 GHz,
 the ring lines 20-160 MHz, the 0.1 eV neutrino ring 24 THz). Each sound is the
@@ -190,3 +191,23 @@ write(os.path.join(HERE, "fdamador_neutrino.wav"), allx)
 print("wrote", os.path.join(HERE, "fdamador_neutrino.wav"), f"({len(allx) / RATE:.1f} s)")
 for n in order:
     print(f"  {n}: {len(parts[n]) / RATE:.2f} s")
+
+# ---------------------------------------------------------------- harmonics
+# The ring lines' modes one at a time: each step adds the next mode and
+# holds the growing chord for 1.6 s, first the plain ring (undertones
+# 1, ½, ⅓, ¼ of the top mode), then the crossed ring (1, ⅓, ⅕, ⅐: every
+# even member gone). The top mode is 880 Hz in both.
+step = 1.6
+hx = []
+for name in ["plain", "crossed"]:
+    m = np.sort(load(f"dual_{name}_modes.csv")[:, 0])[::-1]
+    f_audio = m / m.max() * 880.0
+    ts = np.arange(int(step * RATE)) / RATE
+    for n in range(1, len(f_audio) + 1):
+        x = sum(np.sin(2 * np.pi * f * ts) for f in f_audio[:n]) / np.sqrt(n)  # about equal loudness per step
+        hx.append(fade(x, ms=25))
+    hx.append(np.zeros(int(0.8 * RATE)))
+harm = np.concatenate(hx)
+harm = harm / np.max(np.abs(harm)) * 0.8
+write(os.path.join(HERE, "harmonics.wav"), harm)
+print("wrote", os.path.join(HERE, "harmonics.wav"), f"({len(harm) / RATE:.1f} s)")
