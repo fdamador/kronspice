@@ -175,6 +175,48 @@ func TestFDTDGaussAndLedger(t *testing.T) {
 		worst/scale, err2, qmax, l.SourceWork, l.W-l.W0, l.MaterialLoss, l.Residual())
 }
 
+// Magnetic face sources (used for Huygens surfaces) and edge currents
+// together, in an absorbing box with a lossy slab: the ledger closes to
+// round-off and a source in the absorber is refused.
+func TestFDTDMagneticSourceLedger(t *testing.T) {
+	n, dx := 24, 0.005
+	f, err := NewFDTD(FDTDConfig{N: [3]int{n, n, n}, D: [3]float64{dx, dx, dx}, Ledger: true, Absorber: 5,
+		Material: func(x, y, z float64) (float64, float64) {
+			if z > 0.08 {
+				return 3, 0.02
+			}
+			return 1, 0
+		}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	pulse := func(t0, w, a float64) func(float64) float64 {
+		return func(t float64) float64 { return a * math.Exp(-math.Pow((t-t0)/w, 2)) }
+	}
+	for _, s := range []FaceSource{{0, 10, 11, 12, pulse(1.5e-10, 4e-11, 3e8)}, {2, 13, 9, 11, pulse(2.5e-10, 6e-11, -2e8)}, {1, 12, 12, 10, func(t float64) float64 { return 1e8 * math.Sin(2e10*t) }}} {
+		if err := f.AddMagneticSource(s); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := f.AddSource(EdgeSource{2, 11, 12, 11, pulse(2e-10, 5e-11, 1)}); err != nil {
+		t.Fatal(err)
+	}
+	if f.AddMagneticSource(FaceSource{0, 2, 10, 10, pulse(0, 1, 1)}) == nil {
+		t.Error("magnetic source in the absorber accepted")
+	}
+	for f.Steps < 700 {
+		f.Step()
+	}
+	l := f.Ledger()
+	if r := math.Abs(l.Residual()) / math.Abs(l.SourceWork); r > 1e-10 {
+		t.Errorf("ledger residual %.3g of source work %.3g J", l.Residual(), l.SourceWork)
+	}
+	if l.Absorbed <= 0 || l.MaterialLoss <= 0 {
+		t.Errorf("absorbed %.3g, heat %.3g: want both positive", l.Absorbed, l.MaterialLoss)
+	}
+	t.Logf("work %.4g J = field %.4g + heat %.4g + absorbed %.4g (residual %.2g)", l.SourceWork, l.W-l.W0, l.MaterialLoss, l.Absorbed, l.Residual())
+}
+
 // A short current element (Hertzian dipole) in an absorbing box radiates
 // Larmor's power ω⁴p²/(12πε0c³), p = I0·dz/ω; the absorbed power is the
 // radiated power and the ledger closes.

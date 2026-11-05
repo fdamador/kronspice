@@ -1,0 +1,43 @@
+ether_knot (H29 step 2): does a nonlinear ether hold a knot of field energy at a fixed size?
+Energy E = κ2∫(∂n)² + κ4∫|B_n|²: the ether's stiffness plus the knotted light's magnetic energy
+(B_n = −16 × Rañada's knotted B for the starting map). Units: κ2 = κ4 = 1, length ℓ = √(κ4/κ2).
+Axisymmetric (Q = 1) relaxation from Rañada's Hopf map; arrested Newton flow, dt = 0.05 h.
+
+1. Stiffness + magnetic: grid and box study
+   box (ℓ) | h (ℓ) | steps | E | E2 (stiffness) | E4 (magnetic) | E2/E4 | core radius | rms radius
+         10 |   0.1 |  4000 | 541.084 |        261.147 |       279.937 | 0.9329 |       1.150 | 1.816
+         16 |   0.1 |  6000 | 540.244 |        262.109 |       278.135 | 0.9424 |       1.150 | 1.870
+         16 |  0.07 |  8000 | 544.004 |        268.062 |       275.942 | 0.9714 |       1.225 | 1.911
+         16 |  0.05 | 12000 | 545.701 |        270.656 |       275.046 | 0.9840 |       1.225 | 1.929
+   extrapolated to h → 0 (h = 0.07, 0.05): E = 547.5, E2/E4 = 0.9972 (virial theorem: 1)
+   Battye & Sutcliffe (PRL 81, 4798, 1998), 3-D lattice of 100³: E = 504 (spacing not stated)
+
+2. Controls (box 10, h 0.1, from the same start)
+   magnetic energy only (κ2 = 0: knotted light, no ether) — Derrick: spreads
+     step     0  E 311.713  rms radius 1.003
+     step  1500  E 6.835  rms radius 3.229
+     step  3000  E 0.600  rms radius 4.182
+     step  4500  E 0.148  rms radius 5.124
+     step  6000  E 0.087  rms radius 5.125
+   ether stiffness only (κ4 = 0) — Derrick: shrinks; m_z at the core = −1 while the knot is there
+     step     0  E 270.795  core radius 0.950  m_z at core -0.997
+     step   100  E 236.362  core radius 0.750  m_z at core -0.994
+     step   200  E 129.480  core radius 0.350  m_z at core -0.016
+     step   300  E 66.072  core radius 2.650  m_z at core +0.754
+     step   400  E 53.879  core radius 2.550  m_z at core +0.774
+     step   500  E 37.233  core radius 2.550  m_z at core +0.849
+     step   600  E 20.961  core radius 3.650  m_z at core +0.941
+     step   700  E 14.569  core radius 5.650  m_z at core +0.979
+     step   800  E 10.057  core radius 5.650  m_z at core +0.983
+     step   900  E 6.719  core radius 5.350  m_z at core +0.989
+     step  1000  E 4.943  core radius 1.750  m_z at core +0.986
+   (the core reaches the grid spacing by step 200 and the knot unties through the lattice: a grid
+    cannot hold topology below its own spacing; in the continuum it shrinks to a point)
+
+3. The relaxed knot in 3-D (finest grid above, resampled on 101³ over ±8 ℓ)
+   3-D energy E2 297.28 + E4 255.40 = 552.68 (grid h = 0.16: E4 reads low by O(h²))
+   linking of preimage curves (field lines of B_n): 1.0001 (gap 0.019 ℓ), 1.0002 (gap 0.011 ℓ) — Hopf charge 1
+
+Standard prediction: Derrick (1964) — the magnetic term alone spreads the knot, the stiffness alone
+shrinks it; together they fix its size at ℓ = √(κ4/κ2) and its energy, ≈ 548·√(κ2κ4) by this run (Faddeev & Niemi 1997).
+What the model does not fix: κ2 and κ4 themselves — no measured ether stiffness exists to set them.

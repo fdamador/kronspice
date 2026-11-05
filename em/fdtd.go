@@ -91,6 +91,25 @@ type EdgeSource struct {
 	Current func(t float64) float64
 }
 
+// FaceSource is an impressed magnetic current density M(t) [V/m²] on one B
+// face: Comp 0, 1, 2 for the x, y or z face of cell (I, J, K), entering
+// Faraday's law as ∂B/∂t = −curl E − M. Physical magnetic currents are not
+// known; the solver uses them as equivalent sources, together with edge
+// currents, on a Huygens surface that injects a declared incoming wave
+// (total-field/scattered-field, Taflove & Hagness, Computational
+// Electrodynamics, 3rd ed., ch. 5). Their work on the field is booked in
+// SourceWork like that of edge currents:
+//
+//	W^{n+1} − W^n ∋ −dt Σ H^{n+½}·(M^n + M^{n+1})/2 dV
+//
+// from the same derivation as the ledger above, with M^{n+1} the density
+// applied in step n's B update (it is called with the time of E^{n+1}).
+type FaceSource struct {
+	Comp    int
+	I, J, K int
+	M       func(t float64) float64
+}
+
 type eCoef struct {
 	ca, cb     float64
 	eps        float64 // ε [F/m]
@@ -114,6 +133,8 @@ type FDTD struct {
 	eTab   []eCoef
 	bTab   []bCoef
 	src    []EdgeSource
+	msrc   []FaceSource
+	mPrev  []float64 // each face source's density in the previous step
 	ledger bool
 	led    FieldLedger
 	absorb int
@@ -390,6 +411,30 @@ func (f *FDTD) AddSource(s EdgeSource) error {
 	return nil
 }
 
+// AddMagneticSource adds an impressed magnetic current on a face inside
+// the array and outside the absorbing layer.
+func (f *FDTD) AddMagneticSource(s FaceSource) error {
+	if s.Comp < 0 || s.Comp > 2 || s.M == nil {
+		return fmt.Errorf("%w: magnetic source component %d", ErrFDTDSource, s.Comp)
+	}
+	ijk := [3]int{s.I, s.J, s.K}
+	for a := 0; a < 3; a++ {
+		hi := f.N[a] - 2
+		if a == s.Comp {
+			hi = f.N[a] - 1
+		}
+		if ijk[a] < 0 || ijk[a] > hi {
+			return fmt.Errorf("%w: magnetic source at (%d, %d, %d) outside the array", ErrFDTDSource, s.I, s.J, s.K)
+		}
+	}
+	if f.bTab[f.bIdx[s.Comp][f.index(s.I, s.J, s.K)]].rAbs != 0 {
+		return fmt.Errorf("%w: magnetic source at (%d, %d, %d) inside the absorber", ErrFDTDSource, s.I, s.J, s.K)
+	}
+	f.msrc = append(f.msrc, s)
+	f.mPrev = append(f.mPrev, 0)
+	return nil
+}
+
 func (f *FDTD) each(fn func(c, i, j, k, n int)) {
 	for c := 0; c < 3; c++ {
 		for k := 0; k < f.N[2]; k++ {
@@ -628,7 +673,25 @@ func (f *FDTD) Step() {
 	if f.ledger {
 		prev = &f.bPrev
 	}
+	// Magnetic sources: B^{n+½} before this update, density at the time of E^{n+1}.
+	tE := f.Time() + dt
+	mOld := make([]float64, len(f.msrc))
+	mNow := make([]float64, len(f.msrc))
+	for q, s := range f.msrc {
+		n := f.index(s.I, s.J, s.K)
+		mOld[q] = f.B[s.Comp][n]
+		mNow[q] = s.M(tE)
+	}
 	lb, wm := f.faraday(f.E, 1, f.B, prev)
+	for q, s := range f.msrc {
+		n := f.index(s.I, s.J, s.K)
+		f.B[s.Comp][n] -= dt * mNow[q] // da = 1, db = dt outside the absorber
+		if f.ledger {
+			wm -= mOld[q] * dt * mNow[q]
+			f.led.SourceWork -= dt * mOld[q] / Mu0 * 0.5 * (f.mPrev[q] + mNow[q]) * dV
+		}
+		f.mPrev[q] = mNow[q]
+	}
 	f.Steps++
 	if f.ledger {
 		f.led.MaterialLoss += dt * lm * dV

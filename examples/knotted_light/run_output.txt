@@ -1,0 +1,77 @@
+knotted_light (H29, step 1): Rañada's knotted light (hopfion) in the field solver
+Question: does topology alone, under linear Maxwell equations, hold a knot of light together?
+
+Grid: 10 cells per L0, region ±6 L0, absorber 12 cells. Helicity sign of the formula: +1
+Field-line seeds (L0): [0.6 0 0] and [-0.6 0 0]; linking number at t = 0 (exact): 1.0000
+Solver helicity at t = 0 / exact: 0.9921
+
+  t (L0/c) | energy within 2 L0: solver / exact | absorbed | rms radius | helicity: solver / exact | curl A − B | linking of two B lines: exact (closed) / solver (closed)
+      0.00 |            0.9659 / 0.9662 |   0.0000 |      0.996 |    1.0000 / 1.0000 |    0.0e+00 | +1.0000 (true) / +1.0000 (true)
+      0.50 |            0.9554 / 0.9564 |   0.0001 |      1.114 |    0.9999 / 0.9999 |    3.5e-15 | +1.0000 (true) / +1.0043 (true)
+      1.00 |            0.9050 / 0.9102 |   0.0001 |      1.411 |    0.9992 / 0.9995 |    6.0e-15 | +1.0000 (true) / +1.0000 (true)
+      1.50 |            0.7297 / 0.7513 |   0.0001 |      1.800 |    0.9982 / 0.9988 |    9.7e-15 | +1.0000 (true) / +9.0758 (false)
+      2.00 |            0.3990 / 0.3918 |   0.0001 |      2.233 |    0.9971 / 0.9976 |    1.3e-14 | +1.0000 (true) / +7.9840 (false)
+      3.00 |            0.0186 / 0.0200 |   0.0003 |      3.159 |    0.9935 / 0.9933 |    2.0e-14 | +1.0000 (true) / +3.3650 (false)
+      4.00 |            0.0012 / 0.0012 |   0.0007 |      4.117 |    0.9873 / 0.9824 |    2.9e-14 | +1.0000 (true) / +3.9961 (false)
+
+Ledger residual -4.8e-13 of the starting energy; max |div B| 5.2e-15 (relative)
+
+Standard prediction: linking conserved (topology carried by Maxwell's equations), energy not held:
+the knot expands at c while staying linked. Holding it needs a nonlinear term (Skyrme; Faddeev–Niemi;
+Derrick's theorem: no static lump of a linear field in three dimensions).
+
+
+H30: implosion and explosion — the incoming half of the knot fed in through a Huygens surface
+Before t = 0 the exact knot contracts; after, it expands. The surface (a cube of half-width 5.75 L0)
+injects the declared incoming wave; the ledger books what it puts in and takes out.
+
+Part 1: one knot, tightest at t = 0 (one knot = 1.748e-10 J at E0 = 1 V/m, L0 = 1 m); 160080 edge + 158700 face sources on the surface
+  t (L0/c) | within 2 L0: solver / exact | inside surface | put in / taken out | leak (numerical) | field error | linking (gap, L0)
+       -10 |        0.0000 / 0.0000 |         0.0041 |   0.0000 / 0.0000 |          0.0e+00 |       0.000 | —
+        -6 |        0.0000 / 0.0000 |         0.8198 |   0.8157 / 0.0000 |          7.2e-08 |       0.001 | —
+        -4 |        0.0012 / 0.0012 |         0.9883 |   0.9842 / 0.0000 |          8.5e-08 |       0.003 | —
+        -3 |        0.0220 / 0.0220 |         0.9899 |   0.9858 / 0.0000 |          8.5e-08 |       0.011 | —
+        -2 |        0.3773 / 0.3934 |         0.9902 |   0.9861 / 0.0000 |          8.5e-08 |       0.030 | —
+        -1 |        0.9055 / 0.9150 |         0.9903 |   0.9862 / 0.0000 |          8.5e-08 |       0.037 | —
+         0 |        0.9567 / 0.9661 |         0.9903 |   0.9862 / 0.0000 |          8.5e-08 |       0.043 | +1.0000 (0.034)
+         1 |        0.8969 / 0.9048 |         0.9903 |   0.9862 / 0.0000 |          8.6e-08 |       0.050 | —
+         2 |        0.4129 / 0.3893 |         0.9902 |   0.9862 / 0.0001 |          8.8e-08 |       0.060 | —
+         3 |        0.0183 / 0.0180 |         0.9899 |   0.9862 / 0.0005 |          1.1e-07 |       0.015 | —
+         4 |        0.0012 / 0.0012 |         0.9883 |   0.9862 / 0.0020 |          4.5e-07 |       0.004 | —
+         6 |        0.0000 / 0.0000 |         0.8390 |   0.9862 / 0.1498 |          1.6e-03 |       0.001 | —
+        10 |        0.0000 / 0.0000 |         0.0038 |   0.9862 / 0.9799 |          6.6e-03 |       0.080 | —
+Ledger residual -1.8e-13 of one knot's energy
+
+Part 2: a pulsing knot — knots tightest at t = 0, 8, 16 L0/c, all fed in from the boundary
+  t (L0/c) | within 2 L0: solver / exact | inside surface | put in / taken out | leak (numerical) | field error | linking (gap, L0)
+        -4 |        0.0012 / 0.0012 |         0.9890 |   0.0000 / 0.0000 |          0.0e+00 |       0.001 | —
+        -3 |        0.0220 / 0.0219 |         0.9908 |   0.0017 / 0.0000 |          5.0e-08 |       0.005 | —
+        -2 |        0.3834 / 0.3917 |         0.9946 |   0.0056 / 0.0000 |          2.4e-06 |       0.016 | —
+        -1 |        0.9055 / 0.9151 |         1.0308 |   0.0418 / 0.0000 |          1.3e-05 |       0.022 | —
+         0 |        0.9571 / 0.9668 |         1.1726 |   0.1836 / 0.0000 |          1.7e-05 |       0.027 | +1.0000 (0.020)
+         1 |        0.8972 / 0.9057 |         1.4716 |   0.4826 / 0.0000 |          1.8e-05 |       0.035 | —
+         2 |        0.4049 / 0.3892 |         1.8126 |   0.8236 / 0.0000 |          1.9e-05 |       0.043 | —
+         3 |        0.0173 / 0.0170 |         1.9668 |   0.9778 / 0.0000 |          1.9e-05 |       0.013 | —
+         4 |        0.0016 / 0.0016 |         1.9782 |   0.9892 / 0.0000 |          1.9e-05 |       0.004 | —
+         5 |        0.0208 / 0.0209 |         1.9653 |   0.9892 / 0.0129 |          3.8e-05 |       0.011 | —
+         6 |        0.3760 / 0.3921 |         1.8332 |   0.9892 / 0.1439 |          1.1e-03 |       0.030 | —
+         7 |        0.9066 / 0.9161 |         1.5063 |   0.9892 / 0.4683 |          3.7e-03 |       0.037 | —
+         8 |        0.9579 / 0.9674 |         1.3610 |   0.9892 / 0.6130 |          4.3e-03 |       0.042 | +1.0000 (0.035)
+         9 |        0.8977 / 0.9056 |         1.5095 |   1.1379 / 0.6130 |          4.4e-03 |       0.050 | —
+        10 |        0.4108 / 0.3872 |         1.8178 |   1.4462 / 0.6130 |          4.4e-03 |       0.060 | —
+        11 |        0.0172 / 0.0169 |         1.9675 |   1.5958 / 0.6130 |          4.4e-03 |       0.016 | —
+        12 |        0.0016 / 0.0016 |         1.9784 |   1.6068 / 0.6130 |          4.4e-03 |       0.005 | —
+        13 |        0.0210 / 0.0210 |         1.9650 |   1.6068 / 0.6263 |          4.4e-03 |       0.011 | —
+        14 |        0.3780 / 0.3942 |         1.8317 |   1.6068 / 0.7581 |          6.0e-03 |       0.030 | —
+        15 |        0.9066 / 0.9161 |         1.4680 |   1.6068 / 1.1180 |          9.8e-03 |       0.037 | —
+        16 |        0.9573 / 0.9668 |         1.1794 |   1.6068 / 1.4057 |          1.1e-02 |       0.043 | +1.0000 (0.037)
+        17 |        0.8967 / 0.9046 |         1.0276 |   1.6068 / 1.5572 |          1.1e-02 |       0.050 | —
+        18 |        0.4104 / 0.3868 |         0.9948 |   1.6068 / 1.5900 |          1.1e-02 |       0.060 | —
+        19 |        0.0182 / 0.0179 |         0.9909 |   1.6068 / 1.5939 |          1.1e-02 |       0.015 | —
+        20 |        0.0012 / 0.0012 |         0.9891 |   1.6068 / 1.5957 |          1.1e-02 |       0.005 | —
+Net work of the surface over the middle cycle (t = 4 … 12): +0.0046 knot energies (in = out)
+Ledger residual -1.5e-12 of one knot's energy
+
+Standard prediction: Maxwell's equations are time-symmetric, so the contraction is the expansion run
+backwards; a knot rebuilt every period needs an incoming wave supplied from outside at one knot's
+energy per period (power U·c/(8 L0) here). The run shows the bookkeeping, not a source for that wave.
