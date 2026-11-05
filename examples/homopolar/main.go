@@ -217,8 +217,15 @@ func main() {
 	pop := flag.Int("pop", 30, "population")
 	ptarget := flag.Float64("p", 2000, "required output power [W]")
 	dualOnly := flag.Bool("dual", false, "stop after the dual-motor machine (skip the GA)")
+	rimOnly := flag.Bool("rim", false, "run only part I (rim bearings, adjustable feedback) and exit")
 	data := flag.String("data", "", "write the resonance figure data (CSV) to this directory and exit")
 	flag.Parse()
+	if *rimOnly {
+		if err := runRimBearing(); err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
 	if *data != "" {
 		if err := writeResonanceData(*data); err != nil {
 			log.Fatal(err)
@@ -250,6 +257,9 @@ func main() {
 		log.Fatal(err)
 	}
 	if err := runRectifier(); err != nil {
+		log.Fatal(err)
+	}
+	if err := runRimBearing(); err != nil {
 		log.Fatal(err)
 	}
 	if *dualOnly {

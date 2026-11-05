@@ -190,7 +190,99 @@ x = 0.756 with h = 1. The secondary's common end is on the shafts' common:
 The bridge is nonlinear, so only the engine models it. Its check is the
 ledger.
 
-## 6. Where the energy comes from
+## 6. Ball bearings at the rims and an adjustable feedback (part I)
+
+Here each disk's rim collector is a ball-bearing bank: the kronspice P
+element, with its inner race turning with the disk. The loop becomes
+
+```
+shaft 1 → disk 1 → rim bearings 1 → R_int → coil 1 → load → coil 2 → R_int → rim bearings 2 → disk 2 → shaft 2 → common
+```
+
+The bearings are modeled from measured data:
+- **Contact drop:** almost constant, 0.73 V per bank (Safdarzadeh et al.,
+  *Lubricants* 12, 148, 2024).
+- **Damage limit:** 0.3 A/mm² of Hertzian contact area, scaled to a 300 mm
+  rim by A ∝ (F·d)^(2/3). That is a 7.5× extrapolation from the measured
+  40 mm bearing, and is labelled as one.
+- **Huber torque:** κψ has never been measured, so it is swept.
+
+The declared bank is four 300 mm races at 5 kN each. It carries
+**24.8 A** at the damage limit (8.3 A at 0.1 A/mm²). Its speed factor d·n
+is 530 000 mm·rpm at 1768 rpm, which needs a bearing rated for it.
+
+**The physics that decides the design.** The bearing drop is a fixed voltage,
+while the disks' EMF is proportional to the current. At any fixed feedback,
+the loop therefore has one equilibrium current:
+
+```
+I* = 2·V_b / (2·M_s·ω − R_loop)
+```
+
+That equilibrium is unstable. Above I* the current grows; below it, the
+field collapses.
+
+**1. The part G machine (copper, 4 turns) on rim bearings.**
+
+| Speed (× onset) | I* |
+|---|---|
+| 1.0 | no equilibrium |
+| 1.5 | no equilibrium |
+| 2.0 | 29.5 kA |
+| 2.5 | 4.5 kA |
+
+- At the 10 kA design current the bearings would carry 404× their damage
+  limit and give off 15 kW of heat.
+- The engine with P elements equals RK4 either side of I* (0.964 and 1.030
+  after 0.5 s), and the ledger closes to 10⁻¹⁰.
+- **No copper-coil design can work at a current a bearing carries.** 1.6 T on
+  the disk needs about 48 kA·turns whatever the turn count. In this winding
+  window that is 37 kW of coil heat per coil, against 82 W generated per
+  disk at the bearing limit.
+
+**2. The bearing-matched design: superconducting field coils.**
+
+- **Set point:** 19.8 A, 0.8 × the damage limit.
+- **Coils:** 2438 turns each for 1.6 T on the disk; loop inductance 45 H.
+- **Load:** 0.261 Ω in series.
+- **Voltages:** each disk makes 3.32 V; each bearing bank drops 0.73 V.
+- **Fixed feedback:** 5 % off the equilibrium, the current runs away either
+  way: to 17.19 A or to 22.53 A after 600 s (RK4: 17.14 A and 22.48 A). The
+  engine ledger closes to 10⁻⁹.
+
+**The adjustable feedback is what makes it work.** A PI regulator trims K_v
+(an adjustable own-disk feedback coupling, between −0.5 and +1.0) to hold
+the set current. A proportional term is required: an integral-only law
+cannot hold an unstable loop.
+
+| Stage | Result |
+|---|---|
+| Start | a 7.4 A pulse from a small supply (the least is 5.0 A at full feedback) |
+| Build-up | 95 % of the set current after 283 s |
+| Steady state | 19.81 A at K_v = 0, field 1.60 T |
+| Power | load 102 W, bearings 29 W, drives 131.5 W (78 % to the load) |
+| Energy books | drive 393 kJ = load 300 kJ + bearings 86 kJ + stored 7.5 kJ (residual 2×10⁻⁸) |
+
+**Huber torque, κψ per race swept, regulated:**
+- **EM mode:** the drives pay the same 0.355 N·m per shaft at κψ = 0, 10⁻⁴
+  and 10⁻³. The Huber torque on each shaft (0.01–0.1 N·m) is matched exactly
+  by the extra disk torque the feedback adds to cover the bearings'
+  back-EMF. At 10⁻² the feedback can't make up the back-EMF, and the current
+  collapses.
+- **Thermal mode:** it returns at most η = 10 % of the bearing heat as shaft
+  work (≤ 0.008 N·m).
+
+**What this means for a build.**
+- Ball bearings can collect the current only if the field coils are
+  superconducting (or otherwise almost lossless). The cryocooler's power is
+  outside this model and would have to be added to the books.
+- The machine then runs at tens of amps and about a hundred watts, set by
+  the bearings' damage limit, not at kiloamps.
+- It needs a start pulse and a closed-loop feedback adjuster. In a real
+  machine the iron's saturation would also stop a runaway, but the model is
+  linear.
+
+## 7. Where the energy comes from
 
 Every watt at the outputs comes from the two motors and their speed drives:
 
@@ -202,7 +294,7 @@ Every watt at the outputs comes from the two motors and their speed drives:
 The neutrino and other unmodeled channels are zero. No step adds energy:
 not the stacking, the resonance, the tank Q nor the transformer.
 
-## 7. Declared inputs
+## 8. Declared inputs
 
 All of these are illustrative, not measured:
 
@@ -219,7 +311,12 @@ All of these are illustrative, not measured:
 - snubber, 10 Ω + 100 µF per machine;
 - diode model (I_s 10⁻⁹ A, n 1.5, r_s 2 mΩ);
 - bank, 50 mF per machine, pre-charged to 200 V;
-- DC load, 20 Ω per machine.
+- DC load, 20 Ω per machine;
+- part I: four 300 mm rim races per disk at 5 kN each, 1 mΩ per race; the
+  bearing damage limit's Hertz scaling to that size (an extrapolation);
+  thermal-mode η = 0.10; superconducting field coils (cryocooler power not
+  modeled); the regulator's K_v range of −0.5 to +1.0, K_p = 2 and
+  τ = 100 s; a 7.4 A start pulse.
 
 The one tank between the coils is two per-machine tanks in series: twice
 each impedance and half each capacitance (R_ac 20 Ω, secondary 0.1 Ω,
@@ -228,10 +325,11 @@ builds a tank per machine and one tank shared in parallel by both machines
 (`Dual.Output`), with tests for each.
 **These values will be optimized later for a commercial device.**
 
-## 8. Reproducing
+## 9. Reproducing
 
 ```
-go run ./examples/homopolar -dual                 # all parts, A–H
+go run ./examples/homopolar -dual                 # all parts, A–I
+go run ./examples/homopolar -rim                  # part I only
 go test ./examples/homopolar                      # twins, ledgers, the three output connections
 python examples/homopolar/viz/plot_schematic.py   # the schematic (schemdraw, matplotlib)
 ```
