@@ -1,0 +1,36 @@
+fdamador_neutrino (H28): the toroidal field inverted — E is the ring, B circles it
+Hypothesis: this structure is the neutrino. Standard prediction beside every result.
+
+1. The E-ring resonator (a = 10 mm, r = 2.5 mm, εr = 100, tan δ = 1e-4)
+   L = 2.156e-08 H, C = 2.767e-13 F, f0 = 2.0606 GHz, ka = 0.432
+   R_rad = 6.862 Ω, R_d = 0.02791 Ω, Q = 40.52 (radiation alone 40.68)
+   kronspice AC: f0 = 2.0606 GHz, Q = 40.52, ledger residual 0.0e+00
+   ring-down (40 periods): Q = 40.53; kick 3.151e-13 J = radiated + heat 3.144e-13 J + stored 6.7e-16 J, mismatch -2.5e-18 J, residual 0.0e+00
+   net charge: 0 by construction; lost to ground 9.4e-15 of one section's charge
+   magnetic moment: peak 1.65e-06 A·m², over the last 10 periods mean -0.007 of their peak (it oscillates)
+   quasi-static check at f0 (em.CheckQuasiStatic): diameter 0.137 λ, section 0.0180 λ
+   Q against εr (formula; kronspice AC):
+     εr    30: f0 3.762 GHz, ka 0.788, Q_rad 6.685, Q 6.68; AC Q 6.68
+     εr   100: f0 2.061 GHz, ka 0.432, Q_rad 40.68, Q 40.52; AC Q 40.52
+     εr   300: f0 1.19 GHz, ka 0.249, Q_rad 211.4, Q 207; AC Q 207
+     εr  1000: f0 0.6516 GHz, ka 0.137, Q_rad 1286, Q 1140; AC Q 1140
+
+2. Neutrino test bench (mass 0.1 eV declared, 10 MeV, SN1987A 168,000 years)
+   ω0 = mc²/ħ = 1.519e+14 rad/s, γ = 1e+08, proper time 5.302e+04 s, Q needed 8.05e+18
+   vacuum ring (εr = 1, a/r = 4): ka = 4.32 (lumped model invalid), Q ≈ 0.041, lifetime ≈ 2.7e-16 s
+   to survive: ka = 7.41e-07, effective εr = 3.4e+13, ring radius 1.46e-12 m
+   oscillating moment with one quantum ħω0 stored: 0.073 μB (time average 0)
+   Measured: charge consistent with 0; static moment < 2.8e-11 μB (Borexino 2017); m < 0.45 eV (KATRIN 2025).
+   Standard prediction: Dirac or Majorana neutrino, weak interaction only, moment ~3e-20 μB·(m/0.1 eV).
+
+3. The inverted ring line: series C (E along the path), shunt L (B round it)
+   plain   ring (ledger residual 0.0e+00):
+     mode 1: AC 80.1141 MHz, theory 80.1146 MHz, 1 wavelengths round the ring
+     mode 2: AC 40.0782 MHz, theory 40.0771 MHz, 2 wavelengths round the ring
+     mode 3: AC 26.74 MHz, theory 26.74 MHz, 3 wavelengths round the ring
+     mode 4: AC 20.079 MHz, theory 20.0782 MHz, 4 wavelengths round the ring
+   crossed ring (ledger residual 0.0e+00):
+     mode 1: AC 160.21 MHz, theory 160.209 MHz, 0.5 wavelengths round the ring
+     mode 2: AC 53.4204 MHz, theory 53.4207 MHz, 1.5 wavelengths round the ring
+     mode 3: AC 32.0725 MHz, theory 32.0735 MHz, 2.5 wavelengths round the ring
+     mode 4: AC 22.9313 MHz, theory 22.9323 MHz, 3.5 wavelengths round the ring
