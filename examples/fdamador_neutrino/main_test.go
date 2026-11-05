@@ -124,3 +124,31 @@ func TestDualRingModes(t *testing.T) {
 		}
 	}
 }
+
+// The zero-point field as inflow: the ring settles at the expected energy
+// (½ħω0 for its noise modes), the magnetic channel's books close (zero-point
+// in = radiated out + stored), the energy fluctuates like random noise, and
+// the magnetic moment still averages to zero.
+func TestZeroPointInflow(t *testing.T) {
+	if testing.Short() {
+		t.Skip("zero-point noise runs")
+	}
+	z := DefaultZPFRing()
+	z.Runs = 3
+	r, err := z.Run()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if d := math.Abs(r.Energy - r.ExpEnergy); d > math.Max(4*r.Spread, 0.03) {
+		t.Errorf("stored %.4f ± %.4f ħ, expected %.4f", r.Energy, r.Spread, r.ExpEnergy)
+	}
+	if bal := math.Abs(r.ZPIn-r.RadOut-r.Stored) / r.RadOut; bal > 2e-3 {
+		t.Errorf("magnetic channel: in %.4g = out %.4g + stored %.4g? (rel %.1e)", r.ZPIn, r.RadOut, r.Stored, bal)
+	}
+	if r.Fluctuation < 0.7 || r.Fluctuation > 1.3 {
+		t.Errorf("energy fluctuation σ/⟨E⟩ = %.2f, expected ≈ 1 for a random field", r.Fluctuation)
+	}
+	if r.MeanMomentRatio > 0.01 {
+		t.Errorf("mean moment %.2g of its rms, expected ≈ 0", r.MeanMomentRatio)
+	}
+}

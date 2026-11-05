@@ -10,7 +10,9 @@ neutrino test bench next to the measured values and the standard
 prediction.
 
 ```
-go run ./examples/fdamador_neutrino                                     # about 15 s
+go run ./examples/fdamador_neutrino                                     # about 1 minute
+go run ./examples/fdamador_neutrino -viz examples/fdamador_neutrino/viz # also the chart and sound data (about 2 minutes)
+python3 examples/fdamador_neutrino/viz/render.py                       # resonance.png and the .wav files
 go test ./examples/fdamador_neutrino                                   # -short skips the ring-line sweeps
 KRONSPICE_EXPORT=1 go test ./examples/fdamador_neutrino -run TestExport # netlists, KiCad schematics, results sheets
 ```
@@ -122,6 +124,85 @@ Agreement is within 5×10⁻⁵ and both AC ledgers balance. Crossing the
 conductors still gives half-integer modes, so the 720° (spin ½) property of
 the photon electron survives the inversion.
 
+## 4. Inflow: the zero-point field balances the outflow
+
+The ring loses energy through its radiation resistance. By the
+fluctuation–dissipation theorem (Callen & Welton 1951) that resistance is
+also a noise source: the field the ring radiates into drives it back. At
+the neutrino ring's 0.1 eV the thermal part is negligible even in the
+2.7 K cosmic background (occupation e⁻⁴³⁰), so the inflow is the
+zero-point part, S_V = ħωR_rad/π. It is booked on the magnetic-field
+channel, and R_rad is a resistor whose power leaves on that same channel,
+so inflow and outflow sit in one ledger column.
+
+Scaled loop (L = 1 H, C = 1 F, R_rad = 1/Q, ħ → 1 J·s; the circuit is
+linear, so energies scale with ħ), 4 realizations at the bench ring's
+radiation Q of 40.7:
+
+| Quantity | kronspice | Expected |
+|---|---|---|
+| Stored energy | 0.4941 ± 0.0067 ħω₀ | 0.4916 (½ħω₀ for the noise modes present) |
+| Magnetic channel | zero-point in 391.77 J = radiated out 389.36 J + stored 2.15 J | in = out + stored; time-stepping 6.7×10⁻⁴ of the outflow |
+| Energy fluctuation σ/⟨E⟩ | 0.97 | ≈ 1 for a random field |
+| Mean magnetic moment | 1.9×10⁻⁴ of its rms | 0 |
+
+**Does the Casimir effect add inflow?** No, but it changes the outflow. The
+Casimir force comes from boundaries changing which zero-point modes fit
+between them. That is a fixed energy shift, a one-shot release at most
+(see [forward_casimir](../forward_casimir), H25), not a continuous supply.
+The same boundaries also change how fast the ring radiates (the Purcell
+factor F, R_rad → F·R_rad), and the zero-point noise changes with it, so
+the held energy should not depend on F:
+
+| Purcell factor F | Q | Stored (kronspice) | Expected | Lifetime |
+|---|---|---|---|---|
+| 4 (enhanced) | 10.2 | 0.4794 ± 0.0023 ħω₀ | 0.4817 | ×¼ |
+| 1 (free space) | 40.7 | 0.4941 ± 0.0067 ħω₀ | 0.4916 | ×1 |
+| 0.2 (suppressed) | 203 | 0.4843 ± 0.0318 ħω₀ | 0.4942 | ×5 |
+
+So the zero-point field does balance the outflow: the ring never decays
+to zero and the books close. But what it holds is half a quantum of
+random noise, ½ħω₀ = 0.05 eV for the 0.1 eV ring, with fluctuations as
+large as the mean. Every mode of every oscillator gets the same, so it
+singles out no particle. A coherent ring lasting SN1987A's proper time
+would need F ≈ 5×10⁻²¹; the classic measurement of inhibited emission
+found about 20× (Hulet, Hilfer & Kleppner 1985), and a free neutrino has
+no walls.
+
+One lesson from building it: the first version read 8 % high at low Q.
+The noise started at a non-zero voltage, so the t = 0 operating point
+charged the series capacitors through the 1 GΩ DC bleeders, an offset that
+relaxes over 4×10⁹ s and sat in the stored energy as a bias proportional
+to R_rad. Ramping the noise on from zero during the discarded settling time
+removed it (both points then within 0.5σ). The expected value computed
+beside the result is what exposed it.
+
+## Chart and sound
+
+`viz/resonance.png`: (1) the E-ring's resonance at εr 30–1000, narrowing
+as Q rises; (2) Q against εr, formula and kronspice, on the εr^1.5 line;
+(3, 4) the plain and crossed inverted ring lines' spectra with the modes
+labelled in wavelengths round the ring; (5) one zero-point run, the
+stored energy fluctuating about ½ħω₀.
+
+`viz/fdamador_neutrino.wav` (15 s, 44.1 kHz) and `viz/sound_*.wav`: every
+real frequency is far above hearing (2.06 GHz, 20–160 MHz, 24 THz), so
+each sound is slowed by one factor, keeping every frequency ratio, decay
+and Q:
+
+| Part | Source | Audible |
+|---|---|---|
+| 1. Ceramic ring, εr 100 (Q 40.5) | kronspice ring-down | 440 Hz, a 0.14 s tick |
+| 2. Ceramic ring, εr 1000 (Q 1140) | kronspice ring-down | 440 Hz, a 3.4 s bell |
+| 3. Ring held by the zero-point field | kronspice noise run | a hiss centred on 440 Hz, 2.8 s |
+| 4. Plain inverted ring line | four highest AC modes, synthesized | 880, 440, 294, 221 Hz: the undertone series 1, ½, ⅓, ¼ |
+| 5. Crossed inverted ring line | the same | 880, 293, 176, 126 Hz: the odd undertones 1, ⅓, ⅕, ⅐ |
+
+Parts 1–3 are the simulated waveforms themselves; parts 4 and 5 are tones
+at the measured mode frequencies (equal loudness, 1.2 s decay). The
+crossing removes every even member of the series, which is the spin-½
+property heard rather than seen.
+
 ## Tests
 
 | Test | Checks | Held to |
@@ -131,6 +212,7 @@ the photon electron survives the inversion.
 | `TestQScaling` | Q_rad ∝ εr^1.5; closed form = ω₀L/R_rad; AC at εr = 300 | 1e-12; 2e-3 |
 | `TestBench` | proper time; the required ring resonates at mc²/ħ with exactly the required Q; vacuum ring electrically large | 1e-9 |
 | `TestDualRingModes` | plain and crossed CL-ring modes against the ladder dispersion; ledgers | 1e-4; 1e-9 |
+| `TestZeroPointInflow` | stored energy = expected for the noise modes; magnetic channel in = out + stored; σ/⟨E⟩ ≈ 1; mean moment ≈ 0 | 4σ or 0.03; 2e-3; 0.7–1.3; 0.01 |
 | `TestExport` | E-ring and both ring lines exported (torn-solution tolerance 1e-6 for the E-ring, from 1 GΩ bleeders beside 0.29 Ω) | |
 
 ## Files
@@ -139,6 +221,8 @@ the photon electron survives the inversion.
 |---|---|
 | `main.go` | `ERing` (L, C, R_rad, Q, the kronspice loop, AC and ring-down), `Bench` (the neutrino test), `DualRing` (inverted ring lines) and the report |
 | `main_test.go` | the tests above |
+| `zpf.go` | Part 4: `ZPFRing`, the scaled loop in its radiation resistance's zero-point noise, on the magnetic channel |
+| `viz.go`, `viz/render.py` | `-viz` data; the chart `viz/resonance.png` and the sound files |
 | `export_test.go` | netlists, KiCad schematics and results sheets in `export/` |
 | `run_output.txt` | the run above |
 
@@ -151,4 +235,7 @@ the photon electron survives the inversion.
 - M. Agostini et al. (Borexino), *Phys. Rev. D* 96, 091103 (2017) — neutrino magnetic moment < 2.8×10⁻¹¹ μB.
 - M. Aker et al. (KATRIN), *Science* 388, 180 (2025) — m_ν < 0.45 eV.
 - SN1987A neutrino burst: Kamiokande-II (Hirata et al., *PRL* 58, 1490, 1987) and IMB (Bionta et al., *PRL* 58, 1494, 1987); LMC distance about 51 kpc.
+- H. B. Callen, T. A. Welton, "Irreversibility and generalized noise," *Phys. Rev.* 83, 34 (1951) — the zero-point noise of a resistance.
+- E. M. Purcell, *Phys. Rev.* 69, 681 (1946) — boundaries change the emission rate; R. G. Hulet, E. S. Hilfer, D. Kleppner, "Inhibited spontaneous emission by a Rydberg atom," *PRL* 55, 2137 (1985).
+- H. E. Puthoff, *Phys. Rev. D* 35, 3266 (1987) — the zero-point balance of [zpf_hydrogen](../zpf_hydrogen) (H24), whose noise construction Part 4 follows.
 - B. W. Lee, R. E. Shrock, *Phys. Rev. D* 16, 1444 (1977); K. Fujikawa, R. E. Shrock, *PRL* 45, 963 (1980) — the standard Dirac-neutrino moment 3eG_F m_ν/(8√2π²).

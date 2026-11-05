@@ -34,3 +34,19 @@ Hypothesis: this structure is the neutrino. Standard prediction beside every res
      mode 2: AC 53.4204 MHz, theory 53.4207 MHz, 1.5 wavelengths round the ring
      mode 3: AC 32.0725 MHz, theory 32.0735 MHz, 2.5 wavelengths round the ring
      mode 4: AC 22.9313 MHz, theory 22.9323 MHz, 3.5 wavelengths round the ring
+
+4. Inflow: the zero-point field of the radiation resistance (Callen–Welton), booked on the magnetic channel
+   Scaled loop: L = 1 H, C = 1 F (ω0 = 1), R_rad = 1/Q, ħ → 1 J·s; energies in ħ, so ½ħω0 = 0.5
+   Q = 40.68 (the bench ring's radiation Q), 4 realizations:
+     stored energy 0.4941 ± 0.0067 ħω0 (expected 0.4916 for the same noise modes)
+     ledger, magnetic channel: zero-point in 391.77 J = radiated out 389.36 J + stored 2.15 J, time-stepping 6.7e-04 of the outflow
+     inflow / outflow = 1.0062 (the difference is the energy the ring filled up with)
+     energy fluctuation σ/⟨E⟩ = 0.97 (≈ 1: random, not a fixed quantum); mean moment 1.9e-04 of its rms
+   Boundaries change the radiation rate (Purcell factor F: R_rad → F·R_rad, the same mode-density change
+   that gives the Casimir force); the noise changes with it, so the held energy should not:
+     F = 4    (Q =  10.17): stored 0.4794 ± 0.0023 ħω0 (expected 0.4817); in/out 1.0028; lifetime ×0.25
+     F = 0.2  (Q =  203.4): stored 0.4843 ± 0.0318 ħω0 (expected 0.4942); in/out 1.0336; lifetime ×5
+   For the neutrino ring: the zero-point field holds it at ½ħω0 = 0.05 eV (half the declared mass-energy) whatever F is,
+   but that state is noise. To keep a coherent ring for SN1987A's proper time needs F ≈ 5.1e-21 (vacuum Q 0.041 → 8.1e+18);
+   the classic measurement of inhibited emission found ~20× (Hulet, Hilfer & Kleppner, PRL 55, 2137, 1985), and a
+   free neutrino has no walls. Standard prediction: the vacuum is the ground state; net exchange with it is zero.

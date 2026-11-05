@@ -74,7 +74,9 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"log"
 	"math"
 	"math/cmplx"
 	"sort"
@@ -448,6 +450,14 @@ func (d DualRing) Modes(n int, fStart, fStop float64) ([]float64, float64, error
 }
 
 func main() {
+	viz := flag.String("viz", "", "also write the data for viz/render.py (chart and sound) to this directory")
+	flag.Parse()
+	if *viz != "" {
+		if err := writeViz(*viz); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("viz data written to", *viz, "— run python3 viz/render.py for the chart and the sound")
+	}
 	fmt.Println("fdamador_neutrino (H28): the toroidal field inverted — E is the ring, B circles it")
 	fmt.Println("Hypothesis: this structure is the neutrino. Standard prediction beside every result.")
 
@@ -524,4 +534,40 @@ func main() {
 			fmt.Printf("     mode %d: AC %.6g MHz, theory %.6g MHz, %g wavelengths round the ring\n", m, peaks[m-1]/1e6, d.ModeFrequency(m)/1e6, k)
 		}
 	}
+
+	// Part 4.
+	fmt.Println("\n4. Inflow: the zero-point field of the radiation resistance (Callen–Welton), booked on the magnetic channel")
+	fmt.Println("   Scaled loop: L = 1 H, C = 1 F (ω0 = 1), R_rad = 1/Q, ħ → 1 J·s; energies in ħ, so ½ħω0 = 0.5")
+	z := DefaultZPFRing()
+	zr, err := z.Run()
+	if err != nil {
+		fmt.Println("   ", err)
+		return
+	}
+	fmt.Printf("   Q = %.4g (the bench ring's radiation Q), %d realizations:\n", z.Q, z.Runs)
+	fmt.Printf("     stored energy %.4f ± %.4f ħω0 (expected %.4f for the same noise modes)\n", zr.Energy, zr.Spread, zr.ExpEnergy)
+	fmt.Printf("     ledger, magnetic channel: zero-point in %.2f J = radiated out %.2f J + stored %.2f J, time-stepping %.1e of the outflow\n",
+		zr.ZPIn, zr.RadOut, zr.Stored, zr.Mismatch)
+	fmt.Printf("     inflow / outflow = %.4f (the difference is the energy the ring filled up with)\n", zr.InflowOverOutflow)
+	fmt.Printf("     energy fluctuation σ/⟨E⟩ = %.2f (≈ 1: random, not a fixed quantum); mean moment %.1e of its rms\n", zr.Fluctuation, zr.MeanMomentRatio)
+	fmt.Println("   Boundaries change the radiation rate (Purcell factor F: R_rad → F·R_rad, the same mode-density change")
+	fmt.Println("   that gives the Casimir force); the noise changes with it, so the held energy should not:")
+	for _, f := range []float64{4, 0.2} {
+		x := z
+		x.Q = z.Q / f
+		x.Runs = 2
+		xr, err := x.Run()
+		if err != nil {
+			fmt.Println("   ", err)
+			continue
+		}
+		fmt.Printf("     F = %-4g (Q = %6.4g): stored %.4f ± %.4f ħω0 (expected %.4f); in/out %.4f; lifetime ×%g\n",
+			f, x.Q, xr.Energy, xr.Spread, xr.ExpEnergy, xr.InflowOverOutflow, 1/f)
+	}
+	fmt.Printf("   For the neutrino ring: the zero-point field holds it at ½ħω0 = %.3g eV (half the declared mass-energy) whatever F is,\n",
+		0.5*DefaultBench().MassEV)
+	fmt.Printf("   but that state is noise. To keep a coherent ring for SN1987A's proper time needs F ≈ %.1e (vacuum Q %.2g → %.2g);\n",
+		b.VacuumQ/b.QNeeded, b.VacuumQ, b.QNeeded)
+	fmt.Println("   the classic measurement of inhibited emission found ~20× (Hulet, Hilfer & Kleppner, PRL 55, 2137, 1985), and a")
+	fmt.Println("   free neutrino has no walls. Standard prediction: the vacuum is the ground state; net exchange with it is zero.")
 }
