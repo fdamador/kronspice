@@ -94,6 +94,19 @@ type Dual struct {
 	// IronGain multiplies every coupling and inductance of the coils, as an
 	// iron magnetic circuit would below saturation (declared; 0 or 1: air).
 	IronGain float64
+	// SuperField declares superconducting field coils: no coil resistance
+	// (the cryocooler's power is outside the circuit and not modeled).
+	SuperField bool
+	// FeedbackK adds an adjustable own-disk feedback coupling K_v·M to the
+	// stacked self-coupling K_S (a feedback winding moved or tapped; declared
+	// idealization: it changes the speed-EMF coefficient only, not L). Reg,
+	// when set, trims K_v in RunRK4 to hold the loop current at a target
+	// (series output only).
+	FeedbackK float64
+	Reg       *Regulator
+	// Rim, when set (series output), takes each disk's rim current through
+	// a ball-bearing bank (P element) between the rim and R_int.
+	Rim *RimBearing
 }
 
 // OutputMode is how the loops feed the output tank. In OutShared and
@@ -170,6 +183,9 @@ func (m Dual) MCoils() float64 {
 func (m Dual) Coil() (L, R float64) {
 	L = m.gain() * em.Nagaoka(m.Rc, m.Lc, m.N)
 	R = material.Copper.Resistivity * 2 * math.Pi * m.Rc * m.N * m.N / m.Aw
+	if m.SuperField {
+		R = 0
+	}
 	return
 }
 
@@ -188,7 +204,7 @@ func (m Dual) LoopR() float64 {
 func (m Dual) loop() (l11, l12, kself, r float64) {
 	L, _ := m.Coil()
 	if m.Stacked {
-		return L, m.MCoils(), m.MFar() / m.Coupling(), m.LoopR()
+		return L, m.MCoils(), m.MFar()/m.Coupling() + m.FeedbackK, m.LoopR()
 	}
 	return L * (1 + m.K*m.K), 2 * m.Kc * m.K * L, m.K, m.LoopR()
 }
@@ -270,7 +286,7 @@ func (m Dual) stackedCircuit() (*circuit.Circuit, error) {
 		// coil (the main field on this disk), w2 this loop's coil (its stray
 		// field on this disk).
 		s.G[0][1] = -M
-		s.G[0][2] = -MF
+		s.G[0][2] = -(MF + m.FeedbackK*M)
 		s.IC[0], s.IC[1], s.IC[2] = iOwn, iOther, iOwn
 		return s
 	}
@@ -286,12 +302,22 @@ func (m Dual) stackedCircuit() (*circuit.Circuit, error) {
 		// the coils' mutual change sign: the coils' fields aid.
 		i := m.I0[0]
 		s1, s2 := spec(i, -i), spec(-i, i)
-		s1.G[0][1] = M  // coil 2's main field on disk 1
-		s2.G[0][2] = MF // coil 2's stray field on disk 2
+		s1.G[0][1] = M                  // coil 2's main field on disk 1
+		s2.G[0][2] = MF + m.FeedbackK*M // coil 2's stray (and feedback) field on disk 2
 		b.MachineModel("u1", s1).MachineModel("u2", s2)
 		b.Machine("N1", "u1", [][2]string{{"0", "b1"}, {"d2", "e2"}, {"c1", "d1"}}, "w1", "0")
 		b.Machine("N2", "u2", [][2]string{{"0", "b2"}, {"d1", "e1"}, {"c2", "d2"}}, "w2", "0")
-		b.Resistor("R1", "b1", "c1", R-m.RLoad).Resistor("R2", "b2", "c2", R-m.RLoad)
+		rim1, rim2 := "b1", "b2"
+		if m.Rim != nil {
+			// rim → bearing bank → R_int; the bank's shaft port is its disk's shaft
+			rim1, rim2 = "r1", "r2"
+			kb, rb := m.Rim.bank()
+			for _, n := range []string{"1", "2"} {
+				b.BearingMotorVF("PRIM"+n, "b"+n, "r"+n, "w"+n, "0", rb, m.Rim.VF, kb, m.Rim.W0, m.Rim.Thermal, m.Rim.Eta)
+				b.Resistor("RREFr"+n, "r"+n, "0", 1e3)
+			}
+		}
+		b.Resistor("R1", rim1, "c1", R-m.RLoad).Resistor("R2", rim2, "c2", R-m.RLoad)
 		// LC2 entered from g2 (coil 2 reversed), carrying +I in the loop's direction: the coils' mutual aids
 		b.InductorIC("LC1", "e1", "g1", L, i).InductorIC("LC2", "g2", "e2", L, i)
 		b.Mutual("KC", "LC1", "LC2", m.MCoils()/L)
@@ -356,7 +382,7 @@ func (m Dual) hasTank() bool { return m.Stacked && (m.CParallel > 0 || m.LPrim >
 // shared reports whether both loops feed one tank in parallel, series
 // whether they feed one tank between their coils.
 func (m Dual) shared() bool { return m.Output == OutShared && m.hasTank() }
-func (m Dual) series() bool { return m.Output == OutSeries && m.hasTank() }
+func (m Dual) series() bool { return m.Output == OutSeries && m.Stacked && m.RLoad > 0 }
 
 // TankScale is how the built tank relates to the per-loop values: its
 // impedances are z × theirs (capacitances ÷ z), and it carries i × one
@@ -455,6 +481,7 @@ func (m Dual) shafts(b *circuit.Builder) {
 type DualTrace struct {
 	T, I1, I2, W1, W2 []float64
 	V1, IP1, IS1      []float64 // loop 1's output voltage, primary and secondary currents (RK4, with an output tank)
+	K                 []float64 // the feedback coupling K_v (RK4, series output)
 	Mismatch, In      float64
 }
 
@@ -558,11 +585,17 @@ func (m Dual) RunRK4(tEnd, h float64) DualTrace {
 			// wound to aid), disk 2's EMF counts backwards round the loop:
 			// 2·(l11 + l12)·İ = M·(1+ks)·(ω1 − ω2)·I − 2·R_int·I − v
 			v := tankD(&s, &d, 0, i1)
-			d[0] = (M*(1+ks)*(w1-w2)*i1 - 2*(R-m.RLoad)*i1 - v) / (2 * (l11 + l12))
+			k := ks
+			if m.Reg != nil {
+				k = ks - m.FeedbackK + m.Reg.k(i1, s[5]) // the regulated K_v replaces the fixed one
+				d[5] = m.Reg.rate(i1, s[5])
+			}
+			vb, t1, t2 := m.Rim.loop(i1, w1, w2)
+			d[0] = (M*(1+k)*(w1-w2)*i1 - 2*(R-m.RLoad)*i1 - v - vb) / (2 * (l11 + l12))
 			d[1] = -d[0]
 			if m.Speed == nil {
-				d[2] = (torque(0, t) - m.Windage*w1 - M*(1+ks)*i1*i1) / J
-				d[3] = (torque(1, t) - m.Windage*w2 + M*(1+ks)*i1*i1) / J
+				d[2] = (torque(0, t) - m.Windage*w1 - M*(1+k)*i1*i1 + t1) / J
+				d[3] = (torque(1, t) - m.Windage*w2 + M*(1+k)*i1*i1 + t2) / J
 			}
 			return d
 		}
@@ -590,6 +623,9 @@ func (m Dual) RunRK4(tEnd, h float64) DualTrace {
 	s[0], s[1], s[2], s[3] = m.I0[0], m.I0[1], m.W0[0], m.W0[1]
 	if se {
 		s[1] = -m.I0[0]
+		if m.Reg != nil {
+			s[5] = m.FeedbackK
+		}
 	}
 	switch {
 	case se && xfmr:
@@ -624,6 +660,9 @@ func (m Dual) RunRK4(tEnd, h float64) DualTrace {
 			}
 			v, _ := out(i, s[4], s[6])
 			tr.V1, tr.IP1, tr.IS1 = append(tr.V1, v), append(tr.IP1, s[6]), append(tr.IS1, s[8])
+		}
+		if se && m.Reg != nil {
+			tr.K = append(tr.K, m.Reg.k(s[0], s[5]))
 		}
 		k1 := f(t, s)
 		var a, bb, c [10]float64

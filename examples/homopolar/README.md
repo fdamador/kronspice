@@ -296,6 +296,28 @@ L_p 433 µH, a 25 mF bank and a 40 Ω DC load.
   holds 449 V and feeds 5.1 kW to the DC load. The engine ledger closes to
   4×10⁻⁸.
 
+### Ball bearings at the rims and an adjustable feedback (`bearing_rim.go`)
+
+Each disk's rim current goes through a ball-bearing bank (P element, measured
+0.73 V drop and damage limit, Huber κψ swept) in the series loop. The
+bearing drop is a fixed voltage, so at fixed feedback the loop has one
+unstable equilibrium current, I* = 2·V_b/(2·M_s·ω − R).
+
+- **The copper machine** cannot reach I* below 2× its onset speed. At 10 kA
+  its bearings would run at 404× their damage limit. No copper field coil
+  can excite itself at a bearing's current: 1.6 T costs 37 kW per coil
+  against 82 W made per disk.
+- **The bearing-matched design** uses superconducting field coils of 2438
+  turns, set to 19.8 A (0.8 × the rim bank's 24.8 A limit). A PI regulator
+  on the adjustable feedback K_v starts it from a 7.4 A pulse and holds the
+  set current at 1.6 T: 102 W to the load, 29 W in the bearings, from
+  131.5 W at the drives.
+- **Huber torque, EM mode:** it leaves the regulated drive torque unchanged.
+  Thermal mode returns ≤ 10 % of the bearing heat.
+
+Run `go run ./examples/homopolar -rim` for this part alone. Section 6 of
+[REPORT.md](REPORT.md) has the details.
+
 [REPORT.md](REPORT.md) has the full write-up, and the schematic is below.
 The values are a first pass, to be optimized for a commercial device.
 
@@ -314,6 +336,7 @@ The values are a first pass, to be optimized for a commercial device.
 | `viz/plot_resonance.py` | the resonance figure |
 | `rpm_schumann.go` | rpm = 1768·(1 ± h·sin 2π·7.8t): mean-speed rule, iron variant at its onset, exact Bessel ripple, DC and AC out |
 | `output_tank.go`, `output_tank_test.go` | one R_L ∥ C ∥ L_p between the machines' coils (shafts common, shaft 2 counter-rotating, secondary common on the shafts), conjugate match, steady mean speed, tank-Q sweep, bridge into a capacitor bank; tests: series and shared circuits = RK4, each = the per-loop tanks, co-rotating decay, difference mode, rectifier ledger |
+| `bearing_rim.go`, `bearing_rim_test.go` | rim ball-bearing banks (P elements, Hertz-scaled damage limit), the unstable equilibrium current, the superconducting bearing-matched design, the PI regulator on the adjustable feedback, Huber κψ swept in EM and thermal modes; tests: Hertz scaling, engine = RK4 with P elements, instability, regulated set point and books, no Huber gain |
 | `viz/plot_schematic.py` | the schematic (schemdraw) |
 | `REPORT.md` | the dual-motor report |
 | `export_test.go` | netlists, KiCad schematics and results sheets in `export/` |
