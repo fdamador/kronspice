@@ -98,3 +98,70 @@ func TestKnotInSolver(t *testing.T) {
 		t.Errorf("ledger residual %.1e", r.Residual)
 	}
 }
+
+// H30: the knot's energy density at t = 0 is spherically symmetric (so the
+// radial integral of knotEnergy is its total), and that total agrees with
+// a 3-D sum over a large cube.
+func TestKnotEnergy(t *testing.T) {
+	h := Hopfion{}
+	u := func(x, y, z float64) float64 {
+		F := h.F(x, y, z, 0)
+		return real(F[0]*cmplx.Conj(F[0]) + F[1]*cmplx.Conj(F[1]) + F[2]*cmplx.Conj(F[2]))
+	}
+	for _, r := range []float64{0.3, 0.9, 2.5} {
+		ref := u(r, 0, 0)
+		for _, d := range [][3]float64{{0, 1, 0}, {0, 0, 1}, {1, 1, 1}, {-0.3, 0.8, -0.5}} {
+			n := math.Sqrt(d[0]*d[0] + d[1]*d[1] + d[2]*d[2])
+			if v := u(r*d[0]/n, r*d[1]/n, r*d[2]/n); math.Abs(v-ref) > 1e-12*ref {
+				t.Errorf("r = %g, direction %v: %.6g against %.6g", r, d, v, ref)
+			}
+		}
+	}
+	U := knotEnergy()
+	var s float64
+	const h3, L = 0.05, 8.0
+	for x := -L + h3/2; x < L; x += h3 {
+		for y := -L + h3/2; y < L; y += h3 {
+			for z := -L + h3/2; z < L; z += h3 {
+				s += u(x, y, z) * h3 * h3 * h3
+			}
+		}
+	}
+	if math.Abs(s/U-1) > 2e-3 { // the cube misses the tail beyond 8 L0
+		t.Errorf("3-D sum %.6g against radial %.6g", s, U)
+	}
+}
+
+// H30, coarse grid: the incoming half enters through the Huygens surface,
+// the knot is rebuilt at the centre as the exact solution says, its lines
+// link once at t = 0, it leaves through the same surface, little leaks
+// past it, and the ledger closes.
+func TestImplosionThroughSurface(t *testing.T) {
+	if testing.Short() {
+		t.Skip("3-D field solve")
+	}
+	cy := DefaultImplosion()
+	cy.Cells, cy.Half, cy.Start, cy.Times = 6, 5, -8, []float64{0, 8}
+	r, err := cy.Run()
+	if err != nil {
+		t.Fatal(err)
+	}
+	peak, end := r.Samples[0], r.Samples[1]
+	if peak.In < 0.9 || peak.Out > 1e-3 {
+		t.Errorf("t = 0: put in %.4f, taken out %.4f knot energies; want almost all in, none out", peak.In, peak.Out)
+	}
+	if math.Abs(peak.InsideFDTD-peak.InsideExact) > 0.05 {
+		t.Errorf("t = 0: within 2 L0 %.4f, exact %.4f", peak.InsideFDTD, peak.InsideExact)
+	}
+	if math.Abs(peak.Link-1) > 0.02 || peak.Gap > 0.2 {
+		t.Errorf("t = 0: linking %.4f with gap %.3f L0, want 1", peak.Link, peak.Gap)
+	}
+	if math.Abs(end.Out-end.In) > 0.05 || end.Leak > 0.05 {
+		t.Errorf("t = 8: in %.4f, out %.4f, leak %.4f", end.In, end.Out, end.Leak)
+	}
+	if math.Abs(r.Residual) > 1e-10 {
+		t.Errorf("ledger residual %.2g", r.Residual)
+	}
+	t.Logf("in %.4f out %.4f leak %.2g; t = 0: %.4f vs %.4f, linking %.4f (gap %.3f); residual %.1e",
+		end.In, end.Out, end.Leak, peak.InsideFDTD, peak.InsideExact, peak.Link, peak.Gap, r.Residual)
+}

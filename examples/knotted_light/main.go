@@ -215,6 +215,36 @@ func trace(b func(p [3]float64) [3]float64, p0 [3]float64, step float64, maxLen 
 	return line, false
 }
 
+// traceGap follows a field line once round and stops at its closest return
+// to the start (after it has gone at least 1 L0), so a line that nearly
+// closes, as one traced on a slightly inexact field does, gives a loop
+// closed by a short chord. gap is that closest return, in L0; a gap much
+// smaller than the loop keeps the Gauss linking number near a whole
+// number.
+func traceGap(b func(p [3]float64) [3]float64, p0 [3]float64, step, maxLen float64) (line [][3]float64, gap float64) {
+	full, _ := trace(b, p0, step, maxLen)
+	best, at := math.Inf(1), -1
+	var s float64
+	for i := 1; i < len(full); i++ {
+		s += step
+		if s < 1 {
+			continue
+		}
+		p := full[i]
+		d := math.Sqrt((p[0]-p0[0])*(p[0]-p0[0]) + (p[1]-p0[1])*(p[1]-p0[1]) + (p[2]-p0[2])*(p[2]-p0[2]))
+		if d < best {
+			best, at = d, i
+		}
+		if best < 0.3 && d > best+0.3 { // past the first close return
+			break
+		}
+	}
+	if at < 0 {
+		return full, math.Inf(1)
+	}
+	return full[:at+1], best
+}
+
 // Linking is the Gauss linking number of two closed curves:
 // (1/4π) ∮∮ (r1 − r2)·(dr1 × dr2) / |r1 − r2|³.
 func Linking(a, b [][3]float64) float64 {
@@ -428,8 +458,11 @@ func (k Knot) Run() (Result, error) {
 	return res, nil
 }
 
+var skip30 *bool
+
 func main() {
 	viz := flag.String("viz", "", "also write 3-D field lines for viz/render.py and the viewer to this directory")
+	skip30 = flag.Bool("h29only", false, "run H29 step 1 only (skip H30, about 3 minutes)")
 	flag.Parse()
 	if *viz != "" {
 		if err := writeViz(*viz, []float64{0, 1, 2, 3}); err != nil {
@@ -458,4 +491,57 @@ func main() {
 	fmt.Println("\nStandard prediction: linking conserved (topology carried by Maxwell's equations), energy not held:")
 	fmt.Println("the knot expands at c while staying linked. Holding it needs a nonlinear term (Skyrme; Faddeev–Niemi;")
 	fmt.Println("Derrick's theorem: no static lump of a linear field in three dimensions).")
+	if *skip30 {
+		return
+	}
+	reportH30()
+}
+
+// reportH30 runs and prints H30: implosion then explosion, and the pulsing knot.
+func reportH30() {
+	fmt.Println("\n\nH30: implosion and explosion — the incoming half of the knot fed in through a Huygens surface")
+	fmt.Println("Before t = 0 the exact knot contracts; after, it expands. The surface (a cube of half-width 5.75 L0)")
+	fmt.Println("injects the declared incoming wave; the ledger books what it puts in and takes out.")
+	im, err := DefaultImplosion().Run()
+	if err != nil {
+		fmt.Println("error:", err)
+		return
+	}
+	fmt.Printf("\nPart 1: one knot, tightest at t = 0 (one knot = %.4g J at E0 = 1 V/m, L0 = 1 m); %d edge + %d face sources on the surface\n", im.Knot, im.NE, im.NB)
+	fmt.Println("  t (L0/c) | within 2 L0: solver / exact | inside surface | put in / taken out | leak (numerical) | field error | linking (gap, L0)")
+	printCycle(im)
+	fmt.Printf("Ledger residual %.1e of one knot's energy\n", im.Residual)
+
+	pu, err := DefaultPulsing().Run()
+	if err != nil {
+		fmt.Println("error:", err)
+		return
+	}
+	fmt.Println("\nPart 2: a pulsing knot — knots tightest at t = 0, 8, 16 L0/c, all fed in from the boundary")
+	fmt.Println("  t (L0/c) | within 2 L0: solver / exact | inside surface | put in / taken out | leak (numerical) | field error | linking (gap, L0)")
+	printCycle(pu)
+	net := func(t float64) float64 {
+		for _, s := range pu.Samples {
+			if s.T == t {
+				return s.In - s.Out
+			}
+		}
+		return math.NaN()
+	}
+	fmt.Printf("Net work of the surface over the middle cycle (t = 4 … 12): %+.4f knot energies (in = out)\n", net(12)-net(4))
+	fmt.Printf("Ledger residual %.1e of one knot's energy\n", pu.Residual)
+	fmt.Println("\nStandard prediction: Maxwell's equations are time-symmetric, so the contraction is the expansion run")
+	fmt.Println("backwards; a knot rebuilt every period needs an incoming wave supplied from outside at one knot's")
+	fmt.Println("energy per period (power U·c/(8 L0) here). The run shows the bookkeeping, not a source for that wave.")
+}
+
+func printCycle(r CycleResult) {
+	for _, s := range r.Samples {
+		link := "—"
+		if s.Traced {
+			link = fmt.Sprintf("%+.4f (%.3f)", s.Link, s.Gap)
+		}
+		fmt.Printf("  %8.0f | %13.4f / %.4f | %14.4f | %8.4f / %.4f | %16.1e | %11.3f | %s\n",
+			s.T, s.InsideFDTD, s.InsideExact, s.Box, s.In, s.Out, s.Leak, s.FieldErr, link)
+	}
 }

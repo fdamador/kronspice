@@ -1,4 +1,4 @@
-# Knotted light: does topology alone hold a knot together? (H29, step 1)
+# Knotted light: does topology alone hold a knot together? (H29 step 1, H30)
 
 Hypothesis H29 (CLAUDE.md §1, user hypothesis 2026-11-05): particles are
 knots of field energy, held together by their topology, since a knot
@@ -81,6 +81,101 @@ Faddeev and Niemi's knot solitons (1997). Step 2 is to add such a term,
 declared and labelled, and look for the size at which a knot stops
 spreading.
 
+## H30: implosion and explosion
+
+Hypothesis H30 (CLAUDE.md §1, user hypothesis 2026-11-05, after Walter
+Russell's "rhythmic balanced interchange" of compression and expansion):
+a particle is a cycle of implosion and explosion, and its energy books
+balance only when the inward half is counted as well as the outward one.
+
+The exact knot already has both halves. Maxwell's equations are
+time-symmetric, and the hopfion before t = 0 is the expanding knot run
+backwards: it comes in from far away, is tightest at t = 0, and leaves
+(energy within 2 L0, exact: 0.021 at t = −3, 0.963 at 0, 0.021 at +3).
+Step 1 above watched only the second half.
+
+**How the incoming half is fed in.** A closed Huygens surface, a cube of
+half-width 5.75 L0, surrounds the knot (total-field/scattered-field;
+Taflove & Hagness, *Computational Electrodynamics*, 3rd ed., ch. 5).
+Inside it the solver carries the whole field; outside, only what departs
+from the declared incoming wave, which is zero up to discretization
+error. The surface is a sheet of equivalent sources: 160,080 edge currents
+and 158,700 magnetic face currents (`em.FaceSource`, added for this, with
+its own exact ledger term and test). So the solver's ledger books every
+joule the surface puts in and takes out. The declared incoming wave
+stands in for whatever an ether, an absorber or any other medium would
+have to supply. The run reads its power off the ledger; where it would
+come from is the open question.
+
+```
+go run ./examples/knotted_light               # step 1 and H30, about 3 min
+go run ./examples/knotted_light -h29only      # step 1 only
+python3 examples/knotted_light/viz/render_h30.py   # viz/h30_cycle.png from run_output.txt
+```
+
+**Part 1: one implosion, then one explosion** (t = −10 … 10 L0/c; energies
+as fractions of one knot's energy):
+
+| t (L0/c) | Within 2 L0, solver | Exact | Inside the surface | Put in by the surface | Taken out |
+|---|---|---|---|---|---|
+| −10 | 0.0000 | 0.0000 | 0.004 | 0 | 0 |
+| −4 | 0.0012 | 0.0012 | 0.988 | 0.984 | 0 |
+| −2 | 0.377 | 0.393 | 0.990 | 0.986 | 0 |
+| 0 | 0.957 | 0.966 | 0.990 | 0.986 | 0 |
+| 2 | 0.413 | 0.389 | 0.990 | 0.986 | 0.0001 |
+| 6 | 0.0000 | 0.0000 | 0.839 | 0.986 | 0.150 |
+| 10 | 0.0000 | 0.0000 | 0.004 | 0.986 | 0.980 |
+
+- **Every joule is accounted for.** The surface put in 0.986 of a knot and
+  took out 0.980; the other 0.0066 leaked past it into the absorber (the
+  grid's dispersion makes the solver's wave differ slightly from the
+  declared one). Ledger residual 1.8×10⁻¹³ of the knot's energy.
+- **The knot survives the implosion.** At t = 0 two magnetic field lines
+  traced on the solver's own field come back to within 0.034 L0 of their
+  starting points, and their linking number is 1.0000. (Lines traced on
+  an inexact field do not close exactly. Each is closed at its nearest
+  return, a chord much shorter than the loop, which keeps the Gauss
+  integral at a whole number.) The solver's field is 4.3 % from the exact
+  one within 2 L0, after the wave has crossed 10 L0 of grid.
+
+**Part 2: a pulsing knot.** Knots tightest at t = 0, 8 and 16 L0/c are
+fed through the same surface, a train of implosions and explosions with
+period 8 L0/c. The first starts inside the surface at t = −4; the next two
+come in through it.
+
+| Peak at t (L0/c) | Within 2 L0, solver | Exact | Linking of two solver lines (gap) |
+|---|---|---|---|
+| 0 | 0.9571 | 0.9668 | 1.0000 (0.020 L0) |
+| 8 | 0.9579 | 0.9674 | 1.0000 (0.035 L0) |
+| 16 | 0.9573 | 0.9668 | 1.0000 (0.037 L0) |
+
+- The knot is rebuilt at the centre every period, to the same energy and
+  with the same linking.
+- Over the middle cycle (t = 4 … 12) the surface's net work is
+  +0.0046 knot energies, which equals the energy that leaked past it: in
+  equals out. Ledger residual 1.5×10⁻¹².
+- The surface's "put in" and "taken out" columns count each step's net
+  flow. When an arriving and a departing knot overlap, they show only the
+  difference, so the gross flow each way (one knot per period) cannot be
+  read from them.
+
+**Conclusion.** Under linear Maxwell, an imploding and exploding knot
+holds its topology through both halves, and a knot can be kept pulsing
+indefinitely. The cost is an inward wave, supplied from outside, of one
+knot's energy per period (here U·c/(8 L0)), which the ledger now books as
+inflow. That is the standard prediction too: the equations are
+time-symmetric, so the contraction is the expansion reversed. What the
+run does not supply is a source for the inward wave. Candidates to test
+next, each as a declared medium with its own ledger column: the absorber
+response of distant matter (Wheeler & Feynman, *Rev. Mod. Phys.* 17, 157,
+1945), the zero-point field (inward, but random; compare H28 Part 4), and
+a vacuum or ether that is itself nonlinear (Born–Infeld 1934;
+Euler–Heisenberg 1936, the measured QED vacuum), which could also hold the
+knot in place (H29 step 2).
+
+`viz/h30_cycle.png` plots both parts: energy within 2 L0 (solver and
+exact) and the surface's cumulative work in and out.
+
 ## Pictures
 
 `viz/knot_3d.png`: 24 magnetic field lines of the exact hopfion at t = 0,
@@ -100,6 +195,9 @@ lines for the pictures and for an interactive viewer.
 | `TestLinkingKnownCurves` | Gauss linking integral: Hopf link = ±1, separated circles = 0 | 1e-3 |
 | `TestHopfionExact` | the field is null (F·F = 0); traced B lines close and link once at t = 0 and t = 3 | 1e-12; 1e-3 |
 | `TestKnotInSolver` | coarse grid: energy spreads as the exact solution says; helicity kept as exact; curl A = B; ledger | 0.02; 0.02; 1e-12; 1e-10 |
+| `TestKnotEnergy` | the knot's energy density at t = 0 is spherically symmetric; radial total = 3-D sum | 1e-12; 2e-3 |
+| `TestImplosionThroughSurface` | H30, coarse grid: ≥ 0.9 of a knot enters through the Huygens surface, the centre reaches the exact energy, linking 1 at t = 0, in = out, ledger | 0.05; 0.02; 0.05; 1e-10 |
+| `em.TestFDTDMagneticSourceLedger` | the solver's magnetic face sources: ledger closes with them, sources in the absorber refused | 1e-10 |
 
 This example has no circuit, so it has no `export_test.go`.
 
@@ -107,6 +205,8 @@ This example has no circuit, so it has no `export_test.go`.
 
 | File | What it holds |
 |---|---|
+| `cycle.go` | H30: the Huygens surface (edge and face sources from the declared incoming train), part 1 and part 2 runs |
+| `viz/render_h30.py` | `viz/h30_cycle.png` from `run_output.txt` |
 | `main.go` | the hopfion (Bateman form, helicity sign check), the vector-potential and helicity bookkeeping beside `em/fdtd.go`, field-line tracing and the Gauss linking integral, the run and report |
 | `main_test.go` | the tests above |
 | `viz.go`, `viz/render.py` | `-viz`: the traced 3-D lines (`viz/knot_lines.json`) and the two pictures |
@@ -116,6 +216,10 @@ This example has no circuit, so it has no `export_test.go`.
 
 - A. F. Rañada, "A topological theory of the electromagnetic field," *Lett. Math. Phys.* 18, 97–106 (1989).
 - W. T. M. Irvine, D. Bouwmeester, "Linked and knotted beams of light," *Nature Physics* 4, 716–720 (2008).
+- A. Taflove, S. C. Hagness, *Computational Electrodynamics: The Finite-Difference Time-Domain Method*, 3rd ed. (Artech House, 2005), ch. 5 — the total-field/scattered-field surface.
+- J. A. Wheeler, R. P. Feynman, "Interaction with the absorber as the mechanism of radiation," *Rev. Mod. Phys.* 17, 157–181 (1945).
+- W. Russell, *The Universal One* (1926); *The Secret of Light* (1947) — compression and expansion as "rhythmic balanced interchange" (qualitative; no equations).
+- M. Born, L. Infeld, *Proc. R. Soc. A* 144, 425 (1934); W. Heisenberg, H. Euler, *Z. Phys.* 98, 714 (1936) — nonlinear vacuum electrodynamics.
 - H. Kedia, I. Bialynicki-Birula, D. Peralta-Salas, W. T. M. Irvine, "Tying knots in light fields," *PRL* 111, 150404 (2013) — the Bateman construction used here.
 - H. K. Moffatt, "The degree of knottedness of tangled vortex lines," *J. Fluid Mech.* 35, 117–129 (1969) — helicity as linking.
 - G. H. Derrick, *J. Math. Phys.* 5, 1252 (1964); T. H. R. Skyrme, *Proc. R. Soc. A* 260, 127 (1961); L. Faddeev, A. J. Niemi, "Stable knot-like structures in classical field theory," *Nature* 387, 58–61 (1997).
