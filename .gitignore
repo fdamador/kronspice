@@ -27,3 +27,6 @@ __pycache__/
 
 # Claude Code personal settings
 .claude/settings.local.json
+
+# Private AIAS paper evaluations (own repo: fdamador/aias-evaluations)
+/examples/AIAS/
