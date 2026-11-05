@@ -59,7 +59,7 @@ func (d DualRing) Spectrum(fStart, fStop float64, pts int) (freq, z []float64, e
 func (z ZPFRing) Trace(keep int) (t, i, e []float64, err error) {
 	rng := rand.New(rand.NewSource(z.Seed))
 	v := z.noise(rng, 1/z.Q)
-	ramp := 5 * z.Q
+	ramp := z.Ramp * z.Q
 	for k := range v {
 		if tt := float64(k) * z.Dt; tt < ramp {
 			v[k] *= 0.5 * (1 - math.Cos(math.Pi*tt/ramp))

@@ -177,6 +177,15 @@ to R_rad. Ramping the noise on from zero during the discarded settling time
 removed it (both points then within 0.5σ). The expected value computed
 beside the result is what exposed it.
 
+The ramp was added after the mismatch was seen, so it was then tested for
+whether it steers the result. On identical noise (12 realizations each),
+ramps of 2Q, 5Q and 8Q give 0.4815, 0.4815 and 0.4814 ħω₀ at Q = 10.2
+(expected 0.4817) and 0.4900, 0.4900, 0.4899 at Q = 40.7 (expected
+0.4916), while an abrupt start brings back exactly the biased 0.5230 and
+0.5004. Raw rows in `ramp_check.txt`; the full account, with the equations
+and the record of events, is in the reference document
+[The 8 % zero-point bias](https://claude.ai/artifact/RvCYRSsSTSUjKchKxgeToa).
+
 ## Chart and sound
 
 `viz/resonance.png`: (1) the E-ring's resonance at εr 30–1000, narrowing
@@ -218,6 +227,7 @@ linear resonance, one tone at 440 Hz.
 | `TestBench` | proper time; the required ring resonates at mc²/ħ with exactly the required Q; vacuum ring electrically large | 1e-9 |
 | `TestDualRingModes` | plain and crossed CL-ring modes against the ladder dispersion; ledgers | 1e-4; 1e-9 |
 | `TestZeroPointInflow` | stored energy = expected for the noise modes; magnetic channel in = out + stored; σ/⟨E⟩ ≈ 1; mean moment ≈ 0 | 4σ or 0.03; 2e-3; 0.7–1.3; 0.01 |
+| `TestRampIndependence` | ramps 2Q and 8Q agree on identical noise, at the expected value; an abrupt start shows the start-up excess | 0.002; 4σ or 0.01; > 0.02 |
 | `TestExport` | E-ring and both ring lines exported (torn-solution tolerance 1e-6 for the E-ring, from 1 GΩ bleeders beside 0.29 Ω) | |
 
 ## Files
@@ -229,6 +239,7 @@ linear resonance, one tone at 440 Hz.
 | `zpf.go` | Part 4: `ZPFRing`, the scaled loop in its radiation resistance's zero-point noise, on the magnetic channel |
 | `viz.go`, `viz/render.py` | `-viz` data; the chart `viz/resonance.png` and the sound files |
 | `export_test.go` | netlists, KiCad schematics and results sheets in `export/` |
+| `ramp_check.txt` | the ramp-length independence check, raw rows |
 | `run_output.txt` | the run above |
 
 ## Sources

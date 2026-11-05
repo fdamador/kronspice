@@ -48,13 +48,18 @@ type ZPFRing struct {
 	Band float64 // highest noise frequency [rad/s]
 	Runs int
 	Seed int64
+	// Ramp is the raised-cosine switch-on of the noise, in units of Q
+	// (seconds, with ω0 = 1). 0 starts the noise abruptly, which leaves a
+	// frozen DC charge on the series capacitors (see Run); the default 5
+	// ends inside the 10Q settling time that is discarded.
+	Ramp float64
 }
 
 // DefaultZPFRing: the bench ring's radiation Q (40.68), 4 sections, 2¹⁵
 // points 0.25 s apart (8,192 s, about 200 relaxation times), noise to 2ω0,
 // 4 realizations.
 func DefaultZPFRing() ZPFRing {
-	return ZPFRing{Q: DefaultERing().QRad(), N: 4, Pts: 1 << 15, Dt: 0.25, Step: 0.02, Band: 2, Runs: 4, Seed: 1951}
+	return ZPFRing{Q: DefaultERing().QRad(), N: 4, Pts: 1 << 15, Dt: 0.25, Step: 0.02, Band: 2, Runs: 4, Seed: 1951, Ramp: 5}
 }
 
 // ZPFResult holds averages over the realizations (energies in units of ħ,
@@ -144,13 +149,13 @@ func (z ZPFRing) Run() (ZPFResult, error) {
 	r := 1 / z.Q
 	for run := 0; run < z.Runs; run++ {
 		v := z.noise(rng, r)
-		// Ramp the noise on from zero over the first 5Q seconds (raised
+		// Ramp the noise on from zero over the first Ramp·Q seconds (raised
 		// cosine), inside the discarded settling time. Without it the
 		// t = 0 operating point charges the series capacitors to the
 		// noise's first value through the 1 GΩ bleeders, an offset that
 		// relaxes only over R_B·C ≈ 4×10⁹ s and sits in the stored energy
 		// as a bias proportional to the noise power, i.e. to R_rad.
-		ramp := 5 * z.Q
+		ramp := z.Ramp * z.Q
 		for i := range v {
 			if t := float64(i) * z.Dt; t < ramp {
 				v[i] *= 0.5 * (1 - math.Cos(math.Pi*t/ramp))

@@ -152,3 +152,35 @@ func TestZeroPointInflow(t *testing.T) {
 		t.Errorf("mean moment %.2g of its rms, expected ≈ 0", r.MeanMomentRatio)
 	}
 }
+
+// The ramp that switches the zero-point noise on does not steer the result:
+// on identical noise, ramps of 2Q and 8Q give the same stored energy, at
+// the expected value, while an abrupt start (no ramp) shows the frozen
+// start-up charge as a clear excess. See zpf.go and the reference
+// document on the 8 % bias.
+func TestRampIndependence(t *testing.T) {
+	if testing.Short() {
+		t.Skip("zero-point noise runs")
+	}
+	run := func(ramp float64) ZPFResult {
+		z := DefaultZPFRing()
+		z.Q /= 4 // Q ≈ 10, where the start-up bias is largest
+		z.Runs = 3
+		z.Ramp = ramp
+		r, err := z.Run()
+		if err != nil {
+			t.Fatal(err)
+		}
+		return r
+	}
+	r0, r2, r8 := run(0), run(2), run(8)
+	if d := math.Abs(r2.Energy - r8.Energy); d > 0.002 {
+		t.Errorf("ramps 2Q and 8Q differ by %.4f ħω0 (%.4f vs %.4f)", d, r2.Energy, r8.Energy)
+	}
+	if d := math.Abs(r2.Energy - r2.ExpEnergy); d > math.Max(4*r2.Spread, 0.01) {
+		t.Errorf("ramped: %.4f ± %.4f, expected %.4f", r2.Energy, r2.Spread, r2.ExpEnergy)
+	}
+	if ex := r0.Energy - r0.ExpEnergy; ex < 0.02 {
+		t.Errorf("abrupt start should show the start-up charge as an excess; got %+.4f", ex)
+	}
+}
