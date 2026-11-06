@@ -82,9 +82,11 @@ and the GA adds nothing there. `TestGAMinimumPower` records the shortfall.
   outer branches come out with the sign reversed and the third exact, but the
   inner rows have a rank-3 error map, not a single residual direction, so no
   frame of this form gives it.
-- **The full 3-D cell with its ideal transformers** (Kron 1962 Fig. 1). Its
-  values are in `kron.FieldCell`, but only the 2-D TE reduction is built and
-  tested. Stage B of the catalogue's plan is still open.
+- **The full 3-D cell with its ideal transformers** (Kron 1962 Fig. 1) is
+  now built, in `kron/maxwell3d.go` and its tests, not in this example. It
+  equals Yee's space-discrete equations; its TM110 pole, a straight wire
+  and a coaxial TEM pulse match theory and `em/fdtd.go`. Still open from
+  stage B of the catalogue's plan: the TLM twin.
 - **q-networks in general.** `kron.CurveFit` handles this one polyhedron. The
   second-difference formula `S = −(Δz/L)(A/L)` is read off the tables, not
   derived from Kron's construction.
