@@ -103,12 +103,15 @@ masses (*Nucl. Phys. B* 228, 552, 1983):
 | Isoscalar radius (fm) | 0.59 | 0.72 |
 | g_A | 0.61 | 1.23 |
 
-These are quoted, not computed here. The knot gives the neutron a negative
-moment and the moment ratio to 2 % with no charged parts at all, but the
-absolute moments and sizes come out about 30 % low. Our ether knot (H29,
+`skyrme/` computes the knot itself and reproduces these: μ_p +1.880,
+μ_n −1.324, ratio 1.419, radius 0.595 fm (g_A not computed). The knot
+gives the neutron a negative moment and the moment ratio to 3 % with no
+charged parts at all, but the absolute moments and sizes come out about
+30 % low. The same folder builds helium-4 as one knot of winding 4 (a
+cube): it holds together, but binds 267 MeV (7.7 %) against the measured
+28.3 MeV (0.75 %). Figures: `skyrme/fig*.png`. Our ether knot (H29,
 `examples/ether_knot`) is Faddeev's two-component cousin of this model;
-the nucleon needs Skyrme's four-component field. Computing it is a natural
-next step.
+the nucleon needs Skyrme's four-component field.
 
 ## 5. Neutron decay
 
