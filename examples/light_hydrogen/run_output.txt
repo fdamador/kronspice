@@ -1,0 +1,113 @@
+light_hydrogen (H32): hydrogen from the light models — electron H23, proton H31, binding H29
+
+1. Scales: the constituents against the atom
+   electron ring (H23) radius λ_C/4π           193.1 fm
+   proton light ring (H31) radius ħ/m_p c     0.2103 fm   (measured charge radius 0.84075 fm)
+   quark rings (H31), rms charge radius       0.6782 fm
+   Bohr radius a0                               52918 fm
+   electron ring / a0 = 0.0036, proton ring / a0 = 4.0e-06: at the atom's scale both are point charges
+   and point moments, so the atom's equation is the Coulomb problem with charges q_e and q_p (Part 2)
+
+2. The bound state as Kron's 1945 Schrödinger network (radial ladder for s states, network.go)
+   series inductors = kinetic energy, shunt inductors = −Z/r, unit capacitors = energy; ψ = node voltage
+   Z = 1.000000: E_1s = -0.499999997 Ha, E_2s = -0.125000000 Ha (h → 0); exact −Z²/2 = -0.500000000, −Z²/8 = -0.125000000
+   Z = 0.910318: E_1s = -0.414339490 Ha, E_2s = -0.103584873 Ha (h → 0); exact −Z²/2 = -0.414339492, −Z²/8 = -0.103584873
+   kronspice twin (h = 0.1 a0, 299 nodes, AC resonance by bisection): E_1s = -0.4987562112 Ha, network matrix -0.4987562112 (diff 7.9e-15)
+   the network is linear in the potential, so the light models change only Z = q_e q_p / e²
+
+3. Spectrum, neutrality and proton size, model by model
+   electron + proton                            charge (e)    1S (eV)   Lyα (nm)     1S–2S size
+   toroidal photon (H23) + light ring (H31)        +0.0897    11.2686    146.701     -0.926 MHz
+   toroidal photon (H23) + quark rings (H31)       +0.0897    11.2686    146.701     -0.535 MHz
+   toroidal photon, q set to e + light ring (H31)    +0.0000    13.5983    121.568     -0.907 MHz
+   toroidal photon, q set to e + quark rings (H31)    +0.0000    13.5983    121.568     -0.338 MHz
+   measured (Dirac + QED) + measured               +0.0000    13.5983    121.568     +0.000 MHz
+   measured: charge |q| < 1e-21 e (Bressi et al. 2011); ionization 13.5984 eV; Lyman-α 121.5668 nm (NIST)
+   1S–2S measured to 10 Hz (Parthey et al. 2011): the size column is the shift from the measured-radius value
+   standard (Bohr, reduced mass) 1S–2S 2466.038424 THz against measured 2466.061413 THz: the remaining 23.0 GHz is Dirac + QED (Lamb)
+
+4. The 21 cm line: the electron's spin cloud as coaxial current loops round the proton ring (hyperfine.go)
+   electron + proton                             μ_e (μB)  μ_p (μN) kronspice zz    ν (MHz) /measured
+   toroidal photon (H23) + light ring (H31)      0.911194    1.0000 5.785e-26 J    349.218   0.24586
+   toroidal photon (H23) + quark rings (H31)     0.911194    2.7928 1.616e-25 J    975.311   0.68664
+   toroidal photon (H23) + Skyrme knot (H31)     0.911194    1.8800 1.088e-25 J    656.529   0.46221
+   toroidal photon, q set to e + light ring (H31)  1.001161    1.0000 8.425e-26 J    508.623   0.35808
+   toroidal photon, q set to e + quark rings (H31)  1.001161    2.7928 2.353e-25 J   1420.506   1.00007
+   toroidal photon, q set to e + Skyrme knot (H31)  1.001161    1.8800 1.584e-25 J    956.211   0.67320
+   measured (Dirac + QED) + measured             1.001160    2.7928 2.353e-25 J   1420.503   1.00007
+   circuit: 32 electron loops + the proton ring, K couplings to the ring. Interaction ΣM·I_p·I_k from the
+   solved currents against μ_p·B(0) = (2/3)μ0 μ_p μ_e|ψ(0)|²: diff 1.3e-05 (the proton ring's finite size)
+   ledger stored energy against ½ΣLI² + ΣMII: 4.4e-16; ledger residual 0.0e+00
+   the circuit gives the aligned/anti-aligned (zz) energy ±U; spin ½ (S·S, not S_zS_z) makes the splitting 4U
+   measured 1420.405752 MHz; the standard Fermi value is 0.0069% off (Breit, recoil and proton-structure terms)
+
+5. What would hold the electron's light: the ether knot of H29, fixed by the electron's mass and size
+   core radius 1.2ℓ = 193.1 fm → ℓ = 160.9 fm; energy 547.5√(κ2κ4) = m_e c² → κ2 = 0.0009294 J/m, κ4 = 2.406e-29 J·m
+   its squashing tone ω = 1.416 c/ℓ: ħω = 1.737 MeV = 3.40 m_e c² — an excited electron at 2.248 MeV
+   no excited electron has been seen: collider searches exclude excited electrons to the TeV scale (PDG 2024),
+   and g − 2 limits the electron's size to about 10⁻¹⁸ m, against the knot's 10⁻¹³ m
+   the knot also carries no charge and no spin ½; those still come from H23's assumption, not from the knot
+
+6. The spectrum from the frequency response of the whole network (spectrum.go)
+   Z = 1.000000: AC sweep of 8000 frequencies over 1299 nodes; poles pinned, h = 0.1 and 0.05 a0, extrapolated h → 0
+       n      pole h=0.1    matrix h=0.1        pole h→0   exact −Z²/2n²   rel. diff
+       1   -0.4987562112   -0.4987562112   -0.4999984496   -0.5000000000    -3.1e-06
+       2   -0.1249219725   -0.1249219725   -0.1249999756   -0.1250000000    -1.9e-07
+       3   -0.0555401320   -0.0555401320   -0.0555555534   -0.0555555556    -3.9e-08
+       4   -0.0312451187   -0.0312451187   -0.0312499996   -0.0312500000    -1.2e-08
+       5   -0.0199980004   -0.0199980004   -0.0199999999   -0.0200000000    -5.2e-09
+   Z = 0.910318: AC sweep of 8000 frequencies over 1427 nodes; poles pinned, h = 0.1 and 0.05 a0, extrapolated h → 0
+       n      pole h=0.1    matrix h=0.1        pole h→0   exact −Z²/2n²   rel. diff
+       1   -0.4134846441   -0.4134846441   -0.4143386084   -0.4143394918    -2.1e-06
+       2   -0.1035312793   -0.1035312793   -0.1035848591   -0.1035848730    -1.3e-07
+       3   -0.0460271288   -0.0460271288   -0.0460377201   -0.0460377213    -2.6e-08
+       4   -0.0258928660   -0.0258928660   -0.0258962180   -0.0258962182    -8.4e-09
+       5   -0.0165722065   -0.0165722065   -0.0165735796   -0.0165735797    -3.6e-09
+   line             measured nm  q = e (poles)    q = 0.910 e q = e − measured
+   Lyman α               121.57       121.5689       146.7019       -0.0011 nm
+   Lyman β               102.57       102.5737       123.7797       +0.0037 nm
+   Lyman γ                97.25        97.2551       117.3615       +0.0051 nm
+   Lyman δ                94.97        94.9757       114.6108       +0.0057 nm
+   Balmer α (Hα)         656.46       656.4698       792.1882       +0.0098 nm
+   Balmer β (Hβ)         486.27       486.2739       586.8061       +0.0039 nm
+   Balmer γ (Hγ)         434.17       434.1731       523.9340       +0.0031 nm
+   1S–2S from the poles: q = e 2466.028388 THz, q = 0.910 e 2043.548496 THz; measured 2466.061413 THz (q = e: 13.4 ppm low,
+   of which ~9 ppm is fine structure + Lamb shift, the rest the extrapolation)
+   The frequency response carries the spectrum: each pole is a level, and the poles' differences are the lines.
+   With q = e they fall on measured hydrogen to the 0.01 nm listed; with the toroidal-photon charge every line is 1/Z² = 1.207× long.
+
+7. Hydrogen under pressure: the network's outer short circuit as a wall moved in (pressure.go)
+   Russell's "high pressure, short waves" read as the confined atom (Michels, de Boer & Bijl, Physica 4, 981, 1937)
+   wall (a0)   E_1s (Ha)   E_2s (Ha)   E_2p (Ha) Lyman α (nm)     pressure
+     60.000   -0.500000   -0.125000   -0.125000       121.57          ≈ 0
+     12.000   -0.500000   -0.121416   -0.123255       121.01          ≈ 0
+      8.000   -0.499975   -0.084739   -0.104450       115.26  0.00157 GPa
+      6.000   -0.499277   +0.012725   -0.055556       102.74   0.0765 GPa
+      5.000   -0.496417   +0.141254   +0.007594        90.45    0.525 GPa
+      4.000   -0.483265   +0.420236   +0.143527        72.73     3.71 GPa
+      3.500   -0.464357   +0.682201   +0.271197        61.98     10.3 GPa
+      3.000   -0.423967   +1.111685   +0.481250        50.36     30.1 GPa
+      2.500   -0.334910   +1.865480   +0.851978        38.41     97.7 GPa
+      2.200   -0.232033   +2.613776   +1.221912        31.35      213 GPa
+      2.000   -0.125000   +3.327509   +1.576019        26.80      375 GPa
+      1.900   -0.054055   +3.778129   +1.800077        24.59      506 GPa
+      1.835   +0.000219   +4.113959   +1.967265        23.18      618 GPa
+      1.700   +0.139101   +4.946516   +2.382388        20.32      956 GPa
+      1.600   +0.271312   +5.711991   +2.764741        18.28 1.35e+03 GPa
+      1.500   +0.437018   +6.644122   +3.231051        16.32 1.93e+03 GPa
+   compression raises every level and shortens every line; the free atom's 2s = 2p splits (2p stays lower);
+   at r_c = 2 a0 the ground state is exactly −1/8 Ha, and at 1.835 a0 it reaches zero: the atom is ionized by pressure.
+   For scale: the pressure at the centre of the Earth is about 364 GPa (PREM), close to the r_c = 2 a0 row.
+
+8. The two-lobed state: 2p_z, two spheres meeting at a nodal plane (the network with l = 1)
+   network, centrifugal term l(l+1)/2r² in the shunts: E_2p = -0.125000000 Ha (h → 0), exact −1/8; equal to E_2s in the free atom
+   kronspice twin (h = 0.1 a0, 399 nodes): -0.125026081484 Ha against the matrix -0.125026081484 (diff 1.8e-14)
+   density r²e^(−r)cos²θ: two lobes on the axis, zero on the central plane; 1s → 2p is Lyman α, the line Fig. 2 matches
+
+figures written to examples/light_hydrogen/viz
+
+Summary: the light atom is a Coulomb atom whose charge is q_e = 0.910 e. That leaves it charged (0.090 e,
+excluded at 10⁻²¹ e), shifts every line by Z² = 0.829, and lowers the 21 cm line by Z³·(q_e/e) ≈ 0.69 times the proton factor.
+With q set to e, the levels are Bohr's; the light-ring proton then misses 21 cm by its moment (1 μN against 2.793)
+and 1S–2S by its size; the quark-ring proton, fitted to the moment, gets 21 cm and misses 1S–2S because it is smaller
+(0.678 fm against 0.841): 0.34 MHz, against a measurement good to 10 Hz.

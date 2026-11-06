@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="456" viewBox="0 0 960 456" font-family="system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="960" height="456" fill="#fcfcfb"/>
+<text x="24.0" y="30.0" text-anchor="start" fill="#0b0b0b" font-size="17" font-weight="600">Fig. 4 — The 21 cm line from the current-loop circuit, model by model</text>
+<text x="24.0" y="52.0" text-anchor="start" fill="#52514e" font-size="13" font-weight="400">ν / measured 1420.406 MHz; kronspice loop interaction × 4 / h</text>
+<line x1="260.0" y1="80.0" x2="260.0" y2="346.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="260.0" y="364.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">0.0</text>
+<line x1="376.4" y1="80.0" x2="376.4" y2="346.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="376.4" y="364.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">0.2</text>
+<line x1="492.7" y1="80.0" x2="492.7" y2="346.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="492.7" y="364.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">0.4</text>
+<line x1="609.1" y1="80.0" x2="609.1" y2="346.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="609.1" y="364.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">0.6</text>
+<line x1="725.5" y1="80.0" x2="725.5" y2="346.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="725.5" y="364.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">0.8</text>
+<line x1="841.8" y1="80.0" x2="841.8" y2="346.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="841.8" y="364.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">1.0</text>
+<line x1="260.0" y1="346.0" x2="900.0" y2="346.0" stroke="#9a988f" stroke-width="1"/>
+<text x="580.0" y="388.0" text-anchor="middle" fill="#52514e" font-size="13" font-weight="400">ν / ν measured</text>
+<line x1="841.8" y1="80.0" x2="841.8" y2="346.0" stroke="#0b0b0b" stroke-width="1.5" stroke-dasharray="4 4"/>
+<rect x="260.0" y="89.0" width="143.0" height="20" rx="4" fill="#eb6834"/>
+<text x="248.0" y="104.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">q = 0.910 e + light ring</text>
+<text x="411.0" y="104.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">349.2 MHz</text>
+<rect x="260.0" y="127.0" width="268.9" height="20" rx="4" fill="#eb6834"/>
+<text x="248.0" y="142.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">q = 0.910 e + Skyrme knot</text>
+<text x="536.9" y="142.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">656.5 MHz</text>
+<rect x="260.0" y="165.0" width="399.5" height="20" rx="4" fill="#eb6834"/>
+<text x="248.0" y="180.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">q = 0.910 e + quark rings</text>
+<text x="667.5" y="180.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">975.3 MHz</text>
+<rect x="260.0" y="203.0" width="208.3" height="20" rx="4" fill="#2a78d6"/>
+<text x="248.0" y="218.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">q = e + light ring</text>
+<text x="476.3" y="218.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">508.6 MHz</text>
+<rect x="260.0" y="241.0" width="391.7" height="20" rx="4" fill="#2a78d6"/>
+<text x="248.0" y="256.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">q = e + Skyrme knot</text>
+<text x="659.7" y="256.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">956.2 MHz</text>
+<rect x="260.0" y="279.0" width="581.9" height="20" rx="4" fill="#2a78d6"/>
+<text x="248.0" y="294.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">q = e + quark rings</text>
+<text x="849.9" y="294.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">1420.5 MHz</text>
+<rect x="260.0" y="317.0" width="581.9" height="20" rx="4" fill="#0b0b0b"/>
+<text x="248.0" y="332.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">measured e + measured p</text>
+<text x="849.9" y="332.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">1420.5 MHz</text>
+<rect x="260.0" y="428.0" width="14" height="4" rx="2" fill="#eb6834"/>
+<text x="280.0" y="433.0" text-anchor="start" fill="#0b0b0b" font-size="13" font-weight="400">toroidal-photon charge 0.910 e</text>
+<rect x="504.0" y="428.0" width="14" height="4" rx="2" fill="#2a78d6"/>
+<text x="524.0" y="433.0" text-anchor="start" fill="#0b0b0b" font-size="13" font-weight="400">charge set to e</text>
+<rect x="640.0" y="428.0" width="14" height="4" rx="2" fill="#0b0b0b"/>
+<text x="660.0" y="433.0" text-anchor="start" fill="#0b0b0b" font-size="13" font-weight="400">measured particles</text>
+</svg>

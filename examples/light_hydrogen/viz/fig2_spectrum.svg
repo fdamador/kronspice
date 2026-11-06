@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="440" viewBox="0 0 960 440" font-family="system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="960" height="440" fill="#fcfcfb"/>
+<text x="24.0" y="30.0" text-anchor="start" fill="#0b0b0b" font-size="17" font-weight="600">Fig. 2 — The spectrum read from the poles, against measured hydrogen</text>
+<text x="24.0" y="52.0" text-anchor="start" fill="#52514e" font-size="13" font-weight="400">Lyman and Balmer lines from the levels of Fig. 1 (h → 0), vacuum wavelengths</text>
+<line x1="248.9" y1="80.0" x2="248.9" y2="320.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="248.9" y="338.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">100</text>
+<line x1="343.5" y1="80.0" x2="343.5" y2="320.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="343.5" y="338.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">200</text>
+<line x1="438.1" y1="80.0" x2="438.1" y2="320.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="438.1" y="338.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">300</text>
+<line x1="532.7" y1="80.0" x2="532.7" y2="320.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="532.7" y="338.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">400</text>
+<line x1="627.3" y1="80.0" x2="627.3" y2="320.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="627.3" y="338.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">500</text>
+<line x1="721.9" y1="80.0" x2="721.9" y2="320.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="721.9" y="338.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">600</text>
+<line x1="816.5" y1="80.0" x2="816.5" y2="320.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="816.5" y="338.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">700</text>
+<line x1="911.1" y1="80.0" x2="911.1" y2="320.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="911.1" y="338.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">800</text>
+<line x1="230.0" y1="320.0" x2="930.0" y2="320.0" stroke="#9a988f" stroke-width="1"/>
+<text x="580.0" y="362.0" text-anchor="middle" fill="#52514e" font-size="13" font-weight="400">wavelength (nm)</text>
+<text x="216.0" y="124.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">measured hydrogen (NIST)</text>
+<line x1="269.3" y1="96.0" x2="269.3" y2="144.0" stroke="#0b0b0b" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="251.3" y1="96.0" x2="251.3" y2="144.0" stroke="#0b0b0b" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="246.3" y1="96.0" x2="246.3" y2="144.0" stroke="#0b0b0b" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="244.2" y1="96.0" x2="244.2" y2="144.0" stroke="#0b0b0b" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="775.3" y1="96.0" x2="775.3" y2="144.0" stroke="#0b0b0b" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="614.3" y1="96.0" x2="614.3" y2="144.0" stroke="#0b0b0b" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="565.0" y1="96.0" x2="565.0" y2="144.0" stroke="#0b0b0b" stroke-width="2.5" stroke-linecap="round"/>
+<text x="274.3" y="156.0" text-anchor="start" fill="#52514e" font-size="11" font-weight="400">Lyα</text>
+<text x="780.3" y="156.0" text-anchor="start" fill="#52514e" font-size="11" font-weight="400">Hα</text>
+<text x="619.3" y="156.0" text-anchor="start" fill="#52514e" font-size="11" font-weight="400">Hβ</text>
+<text x="570.0" y="156.0" text-anchor="start" fill="#52514e" font-size="11" font-weight="400">Hγ</text>
+<text x="216.0" y="204.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">network, q = e</text>
+<line x1="269.3" y1="176.0" x2="269.3" y2="224.0" stroke="#2a78d6" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="251.4" y1="176.0" x2="251.4" y2="224.0" stroke="#2a78d6" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="246.3" y1="176.0" x2="246.3" y2="224.0" stroke="#2a78d6" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="244.2" y1="176.0" x2="244.2" y2="224.0" stroke="#2a78d6" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="775.3" y1="176.0" x2="775.3" y2="224.0" stroke="#2a78d6" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="614.3" y1="176.0" x2="614.3" y2="224.0" stroke="#2a78d6" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="565.0" y1="176.0" x2="565.0" y2="224.0" stroke="#2a78d6" stroke-width="2.5" stroke-linecap="round"/>
+<text x="274.3" y="236.0" text-anchor="start" fill="#52514e" font-size="11" font-weight="400">Lyα</text>
+<text x="780.3" y="236.0" text-anchor="start" fill="#52514e" font-size="11" font-weight="400">Hα</text>
+<text x="619.3" y="236.0" text-anchor="start" fill="#52514e" font-size="11" font-weight="400">Hβ</text>
+<text x="570.0" y="236.0" text-anchor="start" fill="#52514e" font-size="11" font-weight="400">Hγ</text>
+<text x="216.0" y="284.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">network, q = 0.910 e (H23)</text>
+<line x1="293.1" y1="256.0" x2="293.1" y2="304.0" stroke="#eb6834" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="271.4" y1="256.0" x2="271.4" y2="304.0" stroke="#eb6834" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="265.3" y1="256.0" x2="265.3" y2="304.0" stroke="#eb6834" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="262.7" y1="256.0" x2="262.7" y2="304.0" stroke="#eb6834" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="903.7" y1="256.0" x2="903.7" y2="304.0" stroke="#eb6834" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="709.4" y1="256.0" x2="709.4" y2="304.0" stroke="#eb6834" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="649.9" y1="256.0" x2="649.9" y2="304.0" stroke="#eb6834" stroke-width="2.5" stroke-linecap="round"/>
+<text x="298.1" y="316.0" text-anchor="start" fill="#52514e" font-size="11" font-weight="400">Lyα</text>
+<text x="908.7" y="316.0" text-anchor="start" fill="#52514e" font-size="11" font-weight="400">Hα</text>
+<text x="714.4" y="316.0" text-anchor="start" fill="#52514e" font-size="11" font-weight="400">Hβ</text>
+<text x="654.9" y="316.0" text-anchor="start" fill="#52514e" font-size="11" font-weight="400">Hγ</text>
+<text x="230.0" y="404.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">Blue lies on black to the 0.01 nm shown (Bohr levels; the 10⁻⁵ left is fine structure and the Lamb shift).</text>
+<text x="230.0" y="424.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">Orange is the same pattern stretched by 1/Z² = 1.207: the light atom&#39;s lines are 21 % too long.</text>
+</svg>

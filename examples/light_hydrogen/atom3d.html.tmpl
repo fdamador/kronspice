@@ -1,0 +1,247 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-only OR LicenseRef-kronspice-Commercial -->
+<!-- Copyright (C) 2026 Franklin Amador -->
+<!-- Written by `go run ./examples/light_hydrogen -svg viz` from atom3d.html.tmpl with the scene of that run; do not edit by hand. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body { margin: 0; } [hidden] { display: none !important; }</style>
+<title>Light Hydrogen in 3-D</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one instrument panel — title, view switch, the 3-D stage, then a legend and the numbers that set every size. */
+:root {
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --fg: #14171c;
+  --muted: #5a6170;
+  --rule: #dde1e7;
+  --cloud: #2a78d6;
+  --light: #eb6834;
+  --proton: #14171c;
+  --font-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111317; --panel: #181b21; --fg: #eef0f3; --muted: #a3aab6; --rule: #2b3039;
+    --cloud: #3987e5; --light: #f07a4a; --proton: #eef0f3; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111317; --panel: #181b21; --fg: #eef0f3; --muted: #a3aab6; --rule: #2b3039;
+  --cloud: #3987e5; --light: #f07a4a; --proton: #eef0f3; color-scheme: dark;
+}
+html, body { background: var(--bg); color: var(--fg); }
+body { font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-block: 24px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 16px; }
+header { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: end; justify-content: space-between; }
+h1 { font-size: 1.6rem; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+.sub { margin: 4px 0 0; color: var(--muted); max-width: 62ch; }
+.switch { display: inline-flex; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; background: var(--panel); }
+.switch button { font: inherit; font-size: 0.9rem; padding: 8px 14px; border: 0; background: transparent; color: var(--muted); cursor: pointer; }
+.switch button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.switch button:focus-visible { outline: 2px solid var(--cloud); outline-offset: -2px; }
+.stage { position: relative; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden;
+  aspect-ratio: 16 / 10; max-width: 100%; touch-action: none; cursor: grab; }
+.stage:active { cursor: grabbing; }
+.stage canvas { display: block; width: 100%; height: 100%; }
+.tag { position: absolute; transform: translate(-50%, -100%); font-family: var(--font-data); font-size: 12px; color: var(--fg);
+  background: color-mix(in srgb, var(--panel) 82%, transparent); padding: 2px 6px; border-radius: 4px; white-space: nowrap; pointer-events: none; }
+.hint { position: absolute; left: 12px; bottom: 10px; font-size: 12px; color: var(--muted); pointer-events: none; }
+.below { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.legend, .facts { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+.legend h2, .facts h2 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 8px; }
+.legend ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.legend li { display: flex; gap: 10px; align-items: baseline; }
+.sw { width: 14px; height: 4px; border-radius: 2px; flex: none; transform: translateY(-3px); }
+dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; }
+dt { color: var(--muted); }
+dd { margin: 0; font-family: var(--font-data); font-variant-numeric: tabular-nums; text-align: right; }
+.note { color: var(--muted); font-size: 0.9rem; margin: 0; max-width: 75ch; }
+@media (max-width: 480px) { .stage { aspect-ratio: 4 / 5; } }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Light hydrogen in 3-D</h1>
+      <p class="sub" id="caption">The atom at its own scale: the electron's 1s cloud and the spin-current loops that make the 21 cm line, round the proton.</p>
+    </div>
+    <div class="switch" role="group" aria-label="Scale">
+      <button id="btn-atom" aria-pressed="true">Atom · Bohr radii</button>
+      <button id="btn-twolobes" aria-pressed="false">2p<sub>z</sub> · two lobes</button>
+      <button id="btn-particles" aria-pressed="false">Particles · femtometres</button>
+    </div>
+  </header>
+
+  <div class="stage" id="stage" aria-label="3-D view; drag to turn, scroll or pinch to zoom">
+    <div class="hint">Drag to turn · scroll or pinch to zoom</div>
+  </div>
+
+  <div class="below">
+    <div class="legend">
+      <h2>In view</h2>
+      <ul id="legend"></ul>
+    </div>
+    <div class="facts">
+      <h2>Sizes from the model</h2>
+      <dl id="facts"></dl>
+    </div>
+  </div>
+  <p class="note">Russell compared in <code>doc/russell-octave-report.md</code>. Computed by <code>examples/light_hydrogen</code> in kronspice (hypothesis H32). The cloud is 6,000 points drawn from |ψ<sub>1s</sub>|²; the 32 loops are the circuit whose mutual-inductance energy with the proton ring gives Fermi's contact energy. The electron's double loop is the (2, 1) path of Williamson &amp; van der Mark. The particles' view spans 0.006 Bohr radii, a single point in the atom's view.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const SCENE = __SCENE__;
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const stage = document.getElementById("stage");
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+stage.prepend(renderer.domElement);
+const camera = new THREE.PerspectiveCamera(38, 1, 0.01, 1000);
+const scene = new THREE.Scene();
+const groups = { atom: new THREE.Group(), twolobes: new THREE.Group(), particles: new THREE.Group() };
+scene.add(groups.atom, groups.twolobes, groups.particles);
+const mats = [];
+function mat(kind, token, extra) {
+  const m = kind === "line" ? new THREE.LineBasicMaterial(Object.assign({ transparent: true }, extra))
+          : kind === "points" ? new THREE.PointsMaterial(Object.assign({ transparent: true, sizeAttenuation: true }, extra))
+          : new THREE.MeshBasicMaterial(extra || {});
+  mats.push([m, token]); return m;
+}
+// three.js is y-up; the physics is z-up: map (x, y, z) → (x, z, −y).
+const V = p => new THREE.Vector3(p[0], p[2], -p[1]);
+
+// --- Atom view (Bohr radii) ---
+{
+  const g = groups.atom;
+  const pos = new Float32Array(SCENE.cloud.length * 3);
+  SCENE.cloud.forEach((p, i) => { const v = V(p); pos.set([v.x, v.y, v.z], 3 * i); });
+  const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  g.add(new THREE.Points(geo, mat("points", "--cloud", { size: 0.035, opacity: 0.55, depthWrite: false })));
+  for (const [rho, z, I] of SCENE.loops) {
+    const pts = []; for (let k = 0; k <= 96; k++) { const t = 2 * Math.PI * k / 96; pts.push(V([rho * Math.cos(t), rho * Math.sin(t), z])); }
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), mat("line", "--light", { opacity: 0.35 + 0.65 * I })));
+  }
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(0.035, 24, 16), mat("mesh", "--proton")));
+  const axis = new THREE.Line(new THREE.BufferGeometry().setFromPoints([V([0, 0, -2.4]), V([0, 0, 2.4])]),
+    mat("line", "--muted", { opacity: 0.6 }));
+  g.add(axis);
+}
+// --- 2p_z view (Bohr radii / 2.5, so it fits the same frame) ---
+{
+  const g = groups.twolobes, s = 0.4;
+  const pos = new Float32Array(SCENE.cloud2p.length * 3);
+  SCENE.cloud2p.forEach((p, i) => { const v = V([p[0] * s, p[1] * s, p[2] * s]); pos.set([v.x, v.y, v.z], 3 * i); });
+  const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  g.add(new THREE.Points(geo, mat("points", "--cloud", { size: 0.035, opacity: 0.55, depthWrite: false })));
+  const ring = []; for (let k = 0; k <= 96; k++) { const t = 2 * Math.PI * k / 96; ring.push(V([2.6 * Math.cos(t), 2.6 * Math.sin(t), 0])); }
+  g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(ring), mat("line", "--light", { opacity: 0.9 })));
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(0.035, 24, 16), mat("mesh", "--proton")));
+  g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([V([0, 0, -3.2]), V([0, 0, 3.2])]), mat("line", "--muted", { opacity: 0.6 })));
+}
+// --- Particles view (femtometres / 100) ---
+{
+  const g = groups.particles, s = 0.01;
+  const curve = new THREE.CatmullRomCurve3(SCENE.doubleLoop.slice(0, -1).map(p => V([p[0] * s, p[1] * s, p[2] * s])), true);
+  g.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 600, 0.035, 10, true), mat("mesh", "--light")));
+  const R = SCENE.protonRingFm * s, pts = [];
+  for (let k = 0; k <= 64; k++) { const t = 2 * Math.PI * k / 64; pts.push(V([R * Math.cos(t), R * Math.sin(t), 0])); }
+  g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), mat("line", "--proton", { opacity: 1 })));
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(0.03, 20, 14), mat("mesh", "--proton")));
+  g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([V([0, 0, -1.6]), V([0, 0, 1.6])]), mat("line", "--muted", { opacity: 0.6 })));
+}
+
+const VIEWS = {
+  atom: {
+    dist: 6.2, caption: "The atom at its own scale: the electron's 1s cloud and the spin-current loops that make the 21 cm line, round the proton.",
+    tags: [[[0, 0, 0], "proton (0.21 fm, enlarged)"], [[0, 0, 2.5], "spin axis z"], [[1.3, 0, 0.5], "spin-current loop"], [[0, 0, -1.9], "1s cloud"]],
+    legend: [["--cloud", "Electron 1s cloud, sampled from |ψ|²"], ["--light", "Spin-current loops; brighter = more current"], ["--proton", "Proton (drawn enlarged)"]],
+  },
+  twolobes: {
+    dist: 8.2, caption: "The 2p_z state: two lobes meeting at a central plane, with the proton at the point between them — the shape of Russell's two spheres.",
+    tags: [[[0, 0, 0], "proton"], [[0, 0, 2.2], "lobe"], [[0, 0, -2.2], "lobe"], [[2.6, 0, 0], "nodal plane z = 0 (no electron)"]],
+    legend: [["--cloud", "Electron 2p_z cloud, sampled from r²e^(−r)cos²θ (scale ×0.4)"], ["--light", "The central plane, where the density is zero"], ["--proton", "Proton (drawn enlarged)"]],
+  },
+  particles: {
+    dist: 6.4, caption: "The particles at their own scale: the electron as light going twice round a 193 fm ring, with the proton's 0.21 fm ring at the centre.",
+    tags: [[[SCENE.electronRingFm * 0.01 * 1.5, 0, 0], "electron's light, double loop"], [[0, 0, 0], "proton ring 0.21 fm"], [[0, 0, 1.7], "z"]],
+    legend: [["--light", "Electron: one Compton wavelength of light, twice round the ring"], ["--proton", "Proton light ring, true size (the dot marks it)"]],
+  },
+};
+const facts = [
+  ["Bohr radius a₀", SCENE.bohrFm.toLocaleString("en", { maximumFractionDigits: 0 }) + " fm"],
+  ["Electron ring λ_C/4π", SCENE.electronRingFm.toFixed(1) + " fm"],
+  ["Proton light ring ħ/m_p c", SCENE.protonRingFm.toFixed(4) + " fm"],
+  ["Electron ring / a₀", (SCENE.electronRingFm / SCENE.bohrFm).toFixed(4)],
+  ["Spin-current loops", SCENE.loops.length],
+];
+document.getElementById("facts").innerHTML = facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
+
+let view = "atom", yaw = 0.7, pitch = 0.32, dist = VIEWS.atom.dist, tags = [];
+function setView(v) {
+  view = v; dist = VIEWS[v].dist;
+  for (const k in groups) groups[k].visible = k === v;
+  document.getElementById("btn-atom").setAttribute("aria-pressed", v === "atom");
+  document.getElementById("btn-twolobes").setAttribute("aria-pressed", v === "twolobes");
+  document.getElementById("btn-particles").setAttribute("aria-pressed", v === "particles");
+  document.getElementById("caption").textContent = VIEWS[v].caption;
+  document.getElementById("legend").innerHTML = VIEWS[v].legend.map(([t, s]) => `<li><span class="sw" style="background:var(${t})"></span><span>${s}</span></li>`).join("");
+  tags.forEach(t => t.el.remove());
+  tags = VIEWS[v].tags.map(([p, s]) => { const el = document.createElement("div"); el.className = "tag"; el.textContent = s; stage.appendChild(el); return { p: V(p), el }; });
+}
+document.getElementById("btn-atom").onclick = () => setView("atom");
+document.getElementById("btn-particles").onclick = () => setView("particles");
+document.getElementById("btn-twolobes").onclick = () => setView("twolobes");
+
+function applyTheme() {
+  renderer.setClearColor(new THREE.Color(css("--panel")));
+  for (const [m, t] of mats) m.color = new THREE.Color(css(t));
+}
+applyTheme();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
+new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+// Drag to turn, wheel or pinch to zoom.
+const ptrs = new Map(); let pinch0 = 0, dist0 = 0, last = 0;
+stage.addEventListener("pointerdown", e => { stage.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]); last = performance.now();
+  if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; pinch0 = Math.hypot(a[0] - b[0], a[1] - b[1]); dist0 = dist; } });
+stage.addEventListener("pointermove", e => {
+  if (!ptrs.has(e.pointerId)) return;
+  const [px, py] = ptrs.get(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]); last = performance.now();
+  if (ptrs.size === 1) { yaw -= (e.clientX - px) * 0.008; pitch = Math.max(-1.45, Math.min(1.45, pitch + (e.clientY - py) * 0.008)); }
+  else if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; const d = Math.hypot(a[0] - b[0], a[1] - b[1]); if (pinch0) dist = Math.max(1.5, Math.min(20, dist0 * pinch0 / d)); }
+});
+const up = e => { ptrs.delete(e.pointerId); pinch0 = 0; };
+stage.addEventListener("pointerup", up); stage.addEventListener("pointercancel", up);
+stage.addEventListener("wheel", e => { e.preventDefault(); dist = Math.max(1.5, Math.min(20, dist * Math.exp(e.deltaY * 0.001))); last = performance.now(); }, { passive: false });
+
+const still = matchMedia("(prefers-reduced-motion: reduce)");
+function resize() { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+new ResizeObserver(resize).observe(stage); resize();
+setView("atom");
+
+const v = new THREE.Vector3();
+function frame(t) {
+  if (!still.matches && ptrs.size === 0 && t - last > 2500) yaw += 0.0025;
+  camera.position.set(dist * Math.cos(pitch) * Math.sin(yaw), dist * Math.sin(pitch), dist * Math.cos(pitch) * Math.cos(yaw));
+  camera.lookAt(0, 0, 0);
+  renderer.render(scene, camera);
+  const w = stage.clientWidth, h = stage.clientHeight;
+  for (const tg of tags) { v.copy(tg.p).project(camera); tg.el.style.left = ((v.x + 1) / 2 * w) + "px"; tg.el.style.top = ((1 - v.y) / 2 * h - 6) + "px"; tg.el.hidden = v.z > 1; }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+
+</body>
+</html>
