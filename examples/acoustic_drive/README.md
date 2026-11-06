@@ -84,8 +84,9 @@ measurements. A hydrophone calibration of the real flask sets them; after
 that the chain is a design tool, and an evolvable one (matching network,
 transducer and drive frequency for the least power at a target pressure).
 The bubble itself (Rayleigh–Plesset or Keller–Miksis dynamics, collapse,
-light) was milestone M9p and is out of scope for now (CLAUDE.md §1,
-non-goals); this chain ends at the pressure a bubble would be driven by.
+light) was milestone M9p and stays out of the engine (CLAUDE.md §1,
+non-goals); it enters as a cited equivalent circuit in
+[bubble_collapse](../bubble_collapse), which puts it on this chain's node p.
 [doc/future-work.md](../../doc/future-work.md) notes that these acoustic
 modes, about 25 kHz, sit ten orders of magnitude below molecular
 vibration frequencies.

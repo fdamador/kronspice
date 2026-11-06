@@ -1,0 +1,551 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: GPL-3.0-only OR LicenseRef-kronspice-Commercial -->
+<!-- Copyright (C) 2026 Franklin Amador -->
+<!-- Report template for examples/bubble_collapse: go run ./examples/bubble_collapse -report examples/bubble_collapse/viz/report.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bubble and Knot</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+html { color-scheme: light }
+body { margin: 0 }
+img { max-width: 100% }
+[hidden] { display: none !important }
+
+/* Layout: a single reading column (≈ 72ch) that widens to full-width figure bands for the 3D scenes and paired charts. */
+:root {
+  --bg: #f5f6f8; --surface: #ffffff; --ink: #11151b; --ink2: #49505b; --muted: #747b86; --rule: #e1e4e9; --grid: #eceef2;
+  --accent: #4b45c9; --glow: #7c5cff;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+  --pos: #2a78d6; --neg: #eb6834; --mid: #c9ccd2;
+  --good: #1a7f4b; --warn: #a86a00; --bad: #c0392b;
+  --display: "Newsreader", Georgia, "Times New Roman", serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --scene: #0d1016;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1217; --surface: #161a21; --ink: #eceef2; --ink2: #b9bfc9; --muted: #8a919c; --rule: #262b34; --grid: #20252d;
+  --accent: #9a95ff; --glow: #a58bff;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+  --pos: #3987e5; --neg: #d95926; --mid: #3a3f48;
+  --good: #3fbf7f; --warn: #e0a030; --bad: #ef6b5e; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f1217; --surface: #161a21; --ink: #eceef2; --ink2: #b9bfc9; --muted: #8a919c; --rule: #262b34; --grid: #20252d;
+  --accent: #9a95ff; --glow: #a58bff;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+  --pos: #3987e5; --neg: #d95926; --mid: #3a3f48;
+  --good: #3fbf7f; --warn: #e0a030; --bad: #ef6b5e; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 17px/1.6 var(--body); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 64px; display: grid; gap: 56px }
+.col { max-width: 72ch }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; text-wrap: balance; margin: 0; line-height: 1.15 }
+h1 { font-size: clamp(2.1rem, 5vw, 3.2rem) }
+h2 { font-size: 1.75rem }
+h3 { font-size: 1.15rem; font-family: var(--body); font-weight: 600 }
+p { margin: 0 }
+.stack { display: grid; gap: 14px }
+.eyebrow { font: 500 12px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted) }
+.lede { font-size: 1.15rem; color: var(--ink2) }
+.mono, .num { font-family: var(--mono); font-variant-numeric: tabular-nums }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px }
+.tile { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 16px 18px; display: grid; gap: 4px; min-width: 0 }
+.tile .lab { font-size: 13px; color: var(--muted) }
+.tile .val { font: 600 1.6rem/1.2 var(--body); font-variant-numeric: tabular-nums }
+.tile .sub { font-size: 13px; color: var(--ink2) }
+figure { margin: 0; display: grid; gap: 10px; min-width: 0 }
+figcaption { font-size: 14px; color: var(--ink2); max-width: 80ch }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px }
+.chart { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 12px 12px 6px; position: relative; min-width: 0 }
+.chart h3 { margin: 2px 4px 6px; font-size: 15px }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--ink2); margin: 0 4px 6px }
+.legend span { display: inline-flex; align-items: center; gap: 6px }
+.legend i { width: 14px; height: 3px; border-radius: 2px; display: inline-block }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 6px 8px; font: 12px/1.45 var(--mono); color: var(--ink); box-shadow: 0 4px 14px rgb(0 0 0 / .12); white-space: nowrap; z-index: 3 }
+.axis text { fill: var(--muted); font: 11px var(--mono) }
+.axis line, .axis path { stroke: var(--rule) }
+.gridl { stroke: var(--grid); stroke-width: 1 }
+.alab { fill: var(--ink2); font: 12px var(--body) }
+/* 3D scenes */
+.theatre { background: var(--scene); border-radius: 14px; padding: 14px; display: grid; gap: 12px; color: #e9ebf2 }
+.scenes { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px }
+.scene { position: relative; aspect-ratio: 1 / 1; max-width: 100%; border-radius: 10px; overflow: hidden; background: #070910; touch-action: none; cursor: grab }
+.scene canvas { width: 100% !important; height: 100% !important; display: block }
+.scene .hud { position: absolute; left: 12px; top: 10px; right: 12px; display: flex; justify-content: space-between; gap: 8px; font: 12px/1.5 var(--mono); color: #c8cbe0; pointer-events: none }
+.scene .hud b { color: #fff; font-weight: 500 }
+.scene .name { position: absolute; left: 12px; bottom: 10px; font: 600 14px var(--body); color: #fff; pointer-events: none }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; font: 13px var(--mono) }
+.controls button { font: 600 13px var(--body); color: #0d1016; background: #e9ebf2; border: 0; border-radius: 6px; padding: 7px 14px; cursor: pointer }
+.controls button:focus-visible, input[type=range]:focus-visible, .seg button:focus-visible { outline: 2px solid var(--glow); outline-offset: 2px }
+.controls input[type=range] { flex: 1 1 220px; accent-color: #a58bff }
+.controls label { color: #aeb2c6 }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 6px }
+.seg button { font: 13px var(--body); color: var(--ink2); background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 5px 12px; cursor: pointer }
+.seg button[aria-pressed=true] { color: var(--surface); background: var(--ink); border-color: var(--ink) }
+.theatre .note { font-size: 13px; color: #aeb2c6 }
+/* tables */
+.tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--rule); vertical-align: top }
+th { font-weight: 600; color: var(--ink2); font-size: 13px }
+td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap }
+tr:last-child td { border-bottom: 0 }
+.chip { display: inline-flex; align-items: center; gap: 6px; font: 600 12px var(--body); padding: 2px 9px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap }
+.chip.good { color: var(--good) } .chip.warn { color: var(--warn) } .chip.bad { color: var(--bad) }
+.slices { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px }
+.slice { display: grid; gap: 4px; font: 12px var(--mono); color: var(--ink2) }
+.slice canvas { width: 100%; aspect-ratio: 1; border-radius: 6px; image-rendering: auto; background: var(--surface); border: 1px solid var(--rule) }
+.globe { aspect-ratio: 16/10 }
+.scale { display: flex; align-items: center; gap: 8px; font: 12px var(--mono); color: var(--ink2) }
+.scale i { flex: 0 0 160px; height: 8px; border-radius: 4px }
+ul.plain { margin: 0; padding-left: 1.1em; display: grid; gap: 6px }
+footer { font-size: 13px; color: var(--muted) }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="stack col">
+  <div class="eyebrow">kronspice · examples/bubble_collapse · 5 Nov 2026</div>
+  <h1>Bubble and Knot</h1>
+  <p class="lede">Is the energy at the centre of a collapsing, light-emitting bubble a large-scale version of the knot of light that implodes and explodes in <span class="mono">knotted_light</span>? This report puts a single sonoluminescing argon bubble on kronspice's acoustic flask as an equivalent circuit, follows every joule, estimates its light and spectrum against measurement, and measures whether its flash carries the knot's topology.</p>
+</header>
+
+<section class="tiles" aria-label="Key results">
+  <div class="tile"><span class="lab">Energy in per acoustic cycle</span><span class="val" id="t-in"></span><span class="sub" id="t-in-s"></span></div>
+  <div class="tile"><span class="lab">Bubble's load on the flask</span><span class="val" id="t-load"></span><span class="sub" id="t-load-s"></span></div>
+  <div class="tile"><span class="lab">Flash helicity, knot</span><span class="val" id="t-hk"></span><span class="sub" id="t-hk-s"></span></div>
+  <div class="tile"><span class="lab">Flash helicity, hot gas</span><span class="val" id="t-ht"></span><span class="sub" id="t-ht-s"></span></div>
+</section>
+
+<section class="stack">
+  <div class="stack col">
+    <h2>The two implosions, side by side</h2>
+    <p>Left: the argon bubble over one 25 kHz cycle, radius to scale in micrometres, gas coloured by its temperature, the sound pulse it throws off at the collapse as a shell travelling at 1,501 m/s, and the light flash. Right: the exact knotted light (Rañada's hopfion), 12 magnetic field lines on three nested tori, from t = −3 to +3 L₀/c. Drag either scene to turn it.</p>
+  </div>
+  <div class="theatre">
+    <div class="scenes">
+      <div class="scene" id="sc-bubble"><div class="hud"><span>t − t<sub>min</sub> <b id="h-t">0</b></span><span>R <b id="h-r">0</b></span><span>T <b id="h-T">0</b></span></div><div class="name">Argon bubble in water</div></div>
+      <div class="scene" id="sc-knot"><div class="hud"><span>t <b id="h-kt">0</b> L₀/c</span><span>rms size <b id="h-ks">1.00</b> L₀</span><span>linking <b>1</b></span></div><div class="name">Knotted light (hopfion)</div></div>
+    </div>
+    <div class="controls">
+      <button id="play" type="button">Pause</button>
+      <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Animation time">
+      <label for="speed">speed</label>
+      <select id="speed" aria-label="Playback speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select>
+    </div>
+    <p class="note">The two clocks are aligned at the moment of greatest compression. The bubble's clock is stretched near the collapse (the whole 40 µs cycle against the 1 ns around the minimum); the knot's runs evenly. The knot passes through itself and leaves unchanged, linked once at every time; the bubble stops on its gas, heats to about 15,000 K, glows for 180 ps, and throws away 93 % of the energy it took in as sound.</p>
+  </div>
+</section>
+
+<section class="stack">
+  <div class="stack col">
+    <h2>One acoustic cycle</h2>
+    <p>The bubble grows from 4.5 µm to 32.6 µm while the flask's pressure is low, then the liquid falls in. The equivalent circuit (liquid inertance in parallel with a pulsating sphere's radiation resistance, wall viscosity, argon with a hard core) and the Keller–Miksis equation agree on the slow motion; they differ at the collapse, where the wall approaches the speed of sound and both models are approximate.</p>
+  </div>
+  <div class="pair">
+    <figure><div class="chart" id="c-cycle"></div><figcaption>Radius over the sixth cycle from rest. R<sub>max</sub> agrees to 0.4 % and the minimum's timing to 0.1 % of a cycle.</figcaption></figure>
+    <figure><div class="chart" id="c-zoom"></div><figcaption>The last 4 ns before and after the minimum (circuit model). The radius stops on the gas's hard core.</figcaption></figure>
+  </div>
+  <div class="pair">
+    <figure><div class="chart" id="c-pulse"></div><figcaption>Power leaving as sound and as light, each as a fraction of its own peak. The sound pulse peaks at 2.7 kW for a few nanoseconds; the light peaks at 64 µW for 180 ps.</figcaption></figure>
+    <figure><div class="chart" id="c-ledger"></div><figcaption>The ledger, accumulated over the cycle. Work in from the sound field equals viscous heat plus radiated sound plus the change in stored energy; the residual is 6×10⁻¹⁰ of the input.</figcaption></figure>
+  </div>
+</section>
+
+<section class="stack">
+  <div class="stack col">
+    <h2>The bubble as a load on the flask</h2>
+    <p>The bubble's fundamental admittance, Y₁ = −U₁/P₁, goes onto the centre node of acoustic_drive's matched chain as a resistor and a capacitor. Only the fundamental of the bubble's volume velocity does work against the sinusoidal pressure, so this captures its power draw exactly.</p>
+  </div>
+  <div class="pair">
+    <figure><div class="chart" id="c-chain"></div><figcaption>Centre pressure per volt of generator EMF around the breathing mode. The bubble lowers the peak by 1.4 %.</figcaption></figure>
+    <div class="tablewrap" style="align-self:start"><table id="tb-chain"><thead><tr><th>At 1.3 atm</th><th>No bubble</th><th>With bubble</th></tr></thead><tbody></tbody></table></div>
+  </div>
+</section>
+
+<section class="stack">
+  <div class="stack col">
+    <h2>Can the collapse run backwards?</h2>
+    <p>The knot's implosion is its explosion run backwards: Maxwell's equations are time-symmetric. The test for the bubble: run it from R<sub>max</sub> through the collapse and back out, flip its momentum, run the drive backwards, and see whether it retraces its path.</p>
+  </div>
+  <div class="seg" role="group" aria-label="Losses in the reversal run" id="rev-seg">
+    <button type="button" data-k="lossless" aria-pressed="true">No losses</button>
+    <button type="button" data-k="viscous" aria-pressed="false">Viscosity only</button>
+    <button type="button" data-k="radiation" aria-pressed="false">Sound radiation only</button>
+    <button type="button" data-k="full" aria-pressed="false">Both</button>
+  </div>
+  <figure><div class="chart" id="c-rev"></div><figcaption id="rev-cap"></figcaption></figure>
+</section>
+
+<section class="stack">
+  <div class="stack col">
+    <h2>Spectrum and flash against measurement</h2>
+    <p>The light is estimated as the standard account has it, at its simplest: argon ionized according to the Saha equation at the core's temperature, emitting free–free radiation (bremsstrahlung) from an optically thin, uniform core. Three things can be compared with real flashes.</p>
+  </div>
+  <div class="pair">
+    <figure><div class="chart" id="c-spec"></div><figcaption id="spec-cap"></figcaption></figure>
+    <div class="tablewrap" style="align-self:start"><table id="tb-meas"><thead><tr><th>Quantity</th><th>Model</th><th>Measured</th><th>Match</th></tr></thead><tbody></tbody></table></div>
+  </div>
+  <div class="col"><p>The width test agrees. The intensity and the colour do not: an optically thin gas at the model's 15,000 K peak emits most in the blue-green and too little in the ultraviolet. Hilgenfeldt, Grossmann &amp; Lohse reach the measured spectra with electron–neutral bremsstrahlung, recombination, a lowered ionization potential and heat loss, all left out here. None of the shortfall points to a non-thermal source.</p></div>
+</section>
+
+<section class="stack">
+  <div class="stack col">
+    <h2>Does the flash carry the knot's topology?</h2>
+    <p>A knot of field energy carries net optical helicity: more photons of one handedness than the other. Thermal light from random currents carries none on average. The test is the whole flash's degree of circular polarization, P<sub>c</sub> = ΣV / ΣI over 600 probes on a sphere and over every frequency, measured in kronspice's field solver for four sources. The core is 1.75 wavelengths across, as the collapsed bubble is for 450 nm light.</p>
+  </div>
+  <figure><div class="chart" id="c-pc"></div><figcaption>Degree of circular polarization of each source. The hopfion's value from its exact field at the same probes is +0.9999. Every field-solver ledger closes to 4×10⁻¹⁴ or better.</figcaption></figure>
+  <div class="stack">
+    <div class="seg" role="group" aria-label="Source on the globe" id="globe-seg"></div>
+    <div class="theatre">
+      <div class="scene globe" id="sc-globe"><div class="hud"><span id="g-name"></span><span>P<sub>c</sub> <b id="g-pc"></b></span></div></div>
+      <div class="scale" style="color:#c8cbe0"><span>−1 opposite handedness</span><i id="g-scale"></i><span>+1 spin along travel</span></div>
+      <p class="note">Each point of the probe sphere is coloured by the local V/I of the light passing through it, faded where little light passes. The hopfion is one colour everywhere. The rotating dipole is circular on its axis, but the two hemispheres have opposite handedness, so they cancel: an electric dipole alone cannot carry helicity. The hot gas is speckle with no net sign.</p>
+    </div>
+  </div>
+  <div class="stack">
+    <h3>The fields in the solver</h3>
+    <div class="slices" id="slices"></div>
+    <p class="col" style="font-size:14px;color:var(--ink2)">|E| on the plane z = 0 (the field solver's own grid, ±6.75 λ₀). The inner circle is the hot core, the outer the probe sphere. Top row: the hopfion spreading as √(1 + t²); bottom: the thermal core shining and its light leaving as an incoherent shell. Times are in λ₀/c.</p>
+  </div>
+</section>
+
+<section class="stack col">
+  <h2>Verdict</h2>
+  <ul class="plain">
+    <li><strong>As an energy cycle, the picture holds.</strong> The bubble is a driven implosion and explosion, one per acoustic period, with its inward supply booked: the flask's standing wave delivers 14.3 nJ per cycle and 13.3 nJ leaves as a sound pulse. That is the structure H30 found for the pulsing knot, with the flask in the role of the declared medium.</li>
+    <li><strong>As physics, it does not.</strong> The collapse is a flow of matter stopped by gas pressure, irreversible through the sound it radiates; the knot is a linear field that passes through itself. The bubble's flow is spherically symmetric and carries no linking.</li>
+    <li><strong>The light is thermal in every test made here.</strong> Its width does not depend on colour, as measured. Its polarization is zero within the speckle of random currents, against +0.9996 for the knot.</li>
+    <li><strong>A bench test that separates them:</strong> a polarimeter on single flashes. A knotted field gives P<sub>c</sub> of order 1; thermal light gives at most the counting floor, 1/√N ≈ 3×10⁻³ for 10⁵ photons.</li>
+  </ul>
+</section>
+
+<section class="stack col">
+  <h2>How it was computed</h2>
+  <ul class="plain">
+    <li>Bubble: R₀ = 4.5 µm argon (γ = 5/3, hard core R₀/8.86) in water at 300 K, 1.3 atm at the matched flask's peak, 25.02 kHz (Brenner, Hilgenfeldt &amp; Lohse, <em>Rev. Mod. Phys.</em> 74, 425, 2002). Water from IAPWS: ρ, c (IAPWS-95), μ = 853.8 µPa·s, σ = 71.69 mN/m.</li>
+    <li>Equivalent circuit: inertance ρ/4πR whose dependence on volume gives Kron's Christoffel term (Kron 1951, Epilogue eqs. 3–4), parallel radiation resistance ρc/4πR² (Kinsler et al. §7.2), viscous resistance μ/πR³. Equal to Rayleigh–Plesset without losses (tested to 10⁻⁹); equal to linear acoustics at small amplitude (10⁻⁴). Dormand–Prince 5(4), tolerance 10⁻¹⁰.</li>
+    <li>Light: Saha ionization of argon (NIST levels), free–free emission (Rybicki &amp; Lightman eqs. 5.14b, 5.15b), Gaunt factor 1.2. Measured flashes: Gompf et al., <em>PRL</em> 79, 1405 (1997).</li>
+    <li>Polarization: kronspice's Yee field solver at 8 cells per λ₀ with an absorbing layer and exact energy ledger; Stokes V and I from the transverse field at 600 probes on a sphere at 6 λ₀. Helicity and duality: Calkin (1965); Cameron, Barnett &amp; Yao (2012). The knot: Rañada (1989); Kedia et al. (2013).</li>
+    <li>Run it: <span class="mono">go run ./examples/bubble_collapse</span>; this report's data: <span class="mono">-data report_data.json</span>.</li>
+  </ul>
+</section>
+
+<footer>kronspice is dual-licensed GPL-3.0-only or commercial. Hypothesis register entry H30 (CLAUDE.md §1).</footer>
+</div>
+
+<script id="data" type="application/json">__DATA__</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+const D = JSON.parse(document.getElementById('data').textContent);
+const B = D.bubble, H = D.helicity;
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fmt = (x, d = 2) => Number(x).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+const sgn = (x, d = 4) => (x >= 0 ? '+' : '−') + Math.abs(x).toFixed(d);
+const NS = 'http://www.w3.org/2000/svg';
+const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+
+// ---------- tiles ----------
+const chain = D.chain.rows;
+const thermal = H.runs.filter(r => r.name.startsWith('thermal'));
+document.getElementById('t-in').textContent = fmt(B.In_nJ, 1) + ' nJ';
+document.getElementById('t-in-s').textContent = fmt(B.Rad_nJ, 1) + ' nJ leaves as sound, ' + fmt(B.Visc_nJ, 2) + ' nJ as viscous heat';
+document.getElementById('t-load').textContent = fmt(chain[1][5] * 1e3, 2) + ' mW';
+document.getElementById('t-load-s').textContent = (100 * chain[1][5] / chain[1][4]).toFixed(1) + ' % of the flask’s own losses; drive ' + chain[0][2].toFixed(3) + ' → ' + chain[1][2].toFixed(3) + ' V';
+document.getElementById('t-hk').textContent = 'P꜀ ' + sgn(H.runs[0].pc);
+document.getElementById('t-hk').textContent = 'Pc ' + sgn(H.runs[0].pc);
+document.getElementById('t-hk-s').textContent = 'exact field ' + sgn(H.runs[0].pcExact) + '; one handedness';
+document.getElementById('t-ht').textContent = 'Pc ' + sgn(H.thermalMean, 3);
+document.getElementById('t-ht-s').textContent = 'rms ' + H.thermalRMS.toFixed(3) + ' over ' + thermal.length + ' random cores; no net handedness';
+
+// ---------- line charts ----------
+function nice(min, max, n) {
+  const span = max - min, step0 = span / n, mag = Math.pow(10, Math.floor(Math.log10(step0)));
+  const f = step0 / mag, step = (f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10) * mag;
+  const ticks = []; for (let v = Math.ceil(min / step) * step; v <= max + step * 1e-9; v += step) ticks.push(+v.toPrecision(12));
+  return ticks;
+}
+function lineChart(id, o) {
+  const host = document.getElementById(id); host.innerHTML = '';
+  if (o.title) { const h = document.createElement('h3'); h.textContent = o.title; host.appendChild(h); }
+  if (o.series.length > 1) {
+    const lg = document.createElement('div'); lg.className = 'legend';
+    o.series.forEach(s => { const sp = document.createElement('span'); sp.innerHTML = '<i style="background:' + css(s.color) + '"></i>' + s.name; lg.appendChild(sp); });
+    host.appendChild(lg);
+  }
+  const W = 560, Hh = o.h || 300, m = { l: 58, r: 16, t: 10, b: 42 };
+  const svg = el('svg', { viewBox: `0 0 ${W} ${Hh}`, role: 'img', 'aria-label': o.aria || o.title || '' }, host);
+  let xs = [], ys = [];
+  o.series.forEach(s => s.pts.forEach(p => { xs.push(p[0]); ys.push(p[1]); }));
+  const xmin = o.xmin ?? Math.min(...xs), xmax = o.xmax ?? Math.max(...xs);
+  let ymin = o.ymin ?? Math.min(...ys), ymax = o.ymax ?? Math.max(...ys);
+  if (o.ymin === undefined) { const pad = (ymax - ymin) * 0.06; ymin -= pad; ymax += pad; }
+  const X = v => m.l + (v - xmin) / (xmax - xmin) * (W - m.l - m.r);
+  const Y = v => Hh - m.b - (v - ymin) / (ymax - ymin) * (Hh - m.t - m.b);
+  const ax = el('g', { class: 'axis' }, svg);
+  nice(ymin, ymax, 5).forEach(v => { if (v < ymin || v > ymax) return; el('line', { x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v), class: 'gridl' }, ax); const t = el('text', { x: m.l - 8, y: Y(v) + 4, 'text-anchor': 'end' }, ax); t.textContent = (o.yfmt || (x => x))(v); });
+  nice(xmin, xmax, 6).forEach(v => { if (v < xmin || v > xmax) return; const t = el('text', { x: X(v), y: Hh - m.b + 18, 'text-anchor': 'middle' }, ax); t.textContent = (o.xfmt || (x => x))(v); });
+  el('line', { x1: m.l, x2: W - m.r, y1: Hh - m.b, y2: Hh - m.b }, ax);
+  const xl = el('text', { x: (m.l + W - m.r) / 2, y: Hh - 6, 'text-anchor': 'middle', class: 'alab' }, svg); xl.textContent = o.xlabel;
+  const yl = el('text', { x: 14, y: (m.t + Hh - m.b) / 2, 'text-anchor': 'middle', class: 'alab', transform: `rotate(-90 14 ${(m.t + Hh - m.b) / 2})` }, svg); yl.textContent = o.ylabel;
+  (o.marks || []).forEach(mk => { el('line', { x1: X(mk.x), x2: X(mk.x), y1: m.t, y2: Hh - m.b, stroke: css('--muted'), 'stroke-width': 1, opacity: .5 }, svg); const t = el('text', { x: X(mk.x) + 4, y: m.t + 12, class: 'alab', style: 'font-size:11px' }, svg); t.textContent = mk.label; });
+  o.series.forEach(s => {
+    const d = s.pts.filter(p => p[0] >= xmin && p[0] <= xmax).map((p, i) => (i ? 'L' : 'M') + X(p[0]).toFixed(1) + ' ' + Y(Math.max(ymin, Math.min(ymax, p[1]))).toFixed(1)).join('');
+    el('path', { d, fill: 'none', stroke: css(s.color), 'stroke-width': s.w || 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round', opacity: s.op || 1 }, svg);
+  });
+  // hover
+  const cross = el('line', { y1: m.t, y2: Hh - m.b, stroke: css('--muted'), 'stroke-width': 1, visibility: 'hidden' }, svg);
+  const dots = o.series.map(s => el('circle', { r: 4, fill: css(s.color), stroke: css('--surface'), 'stroke-width': 2, visibility: 'hidden' }, svg));
+  const tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true; host.appendChild(tip);
+  const hit = el('rect', { x: m.l, y: m.t, width: W - m.l - m.r, height: Hh - m.t - m.b, fill: 'transparent' }, svg);
+  const near = (pts, x) => { let lo = 0, hi = pts.length - 1; while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (pts[mid][0] < x) lo = mid; else hi = mid; } return Math.abs(pts[lo][0] - x) < Math.abs(pts[hi][0] - x) ? pts[lo] : pts[hi]; };
+  const move = ev => {
+    const r = svg.getBoundingClientRect(), sx = (ev.clientX - r.left) / r.width * W;
+    const x = xmin + (sx - m.l) / (W - m.l - m.r) * (xmax - xmin);
+    cross.setAttribute('x1', X(x)); cross.setAttribute('x2', X(x)); cross.setAttribute('visibility', 'visible');
+    let html = '<div>' + o.xlabel.split(' [')[0] + ' ' + (o.xtip || (v => v.toPrecision(4)))(x) + '</div>';
+    o.series.forEach((s, i) => { const p = near(s.pts, x); if (!p) return; dots[i].setAttribute('cx', X(p[0])); dots[i].setAttribute('cy', Y(Math.max(ymin, Math.min(ymax, p[1])))); dots[i].setAttribute('visibility', 'visible'); html += '<div><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + css(s.color) + ';margin-right:6px"></span>' + s.name + ' ' + (o.ytip || (v => v.toPrecision(4)))(p[1]) + '</div>'; });
+    tip.innerHTML = html; tip.hidden = false;
+    const hr = host.getBoundingClientRect(); let left = ev.clientX - hr.left + 14; if (left + tip.offsetWidth > hr.width - 4) left = ev.clientX - hr.left - tip.offsetWidth - 14;
+    tip.style.left = left + 'px'; tip.style.top = (ev.clientY - hr.top - 10) + 'px';
+  };
+  hit.addEventListener('pointermove', move);
+  hit.addEventListener('pointerleave', () => { tip.hidden = true; cross.setAttribute('visibility', 'hidden'); dots.forEach(d => d.setAttribute('visibility', 'hidden')); });
+}
+
+function drawCharts() {
+  const tmin = B.tmin_us;
+  lineChart('c-cycle', { title: 'Bubble radius over one cycle', xlabel: 'Time in the cycle [µs]', ylabel: 'Radius [µm]',
+    series: [{ name: 'Equivalent circuit', color: '--s1', pts: B.cycle.map(p => [p[0], p[1]]) }, { name: 'Keller–Miksis', color: '--s2', pts: B.km, w: 1.5 }],
+    marks: [{ x: tmin, label: 'collapse' }], ymin: 0, ymax: 35, xtip: v => v.toFixed(2) + ' µs', ytip: v => v.toFixed(2) + ' µm' });
+  lineChart('c-zoom', { title: 'Around the minimum', xlabel: 'Time from the minimum [ns]', ylabel: 'Radius [µm]',
+    series: [{ name: 'Radius', color: '--s1', pts: B.zoom.map(p => [p[0], p[1]]) }], ymin: 0, xtip: v => v.toFixed(3) + ' ns', ytip: v => v.toFixed(3) + ' µm' });
+  const sMax = Math.max(...B.zoom.map(p => p[3])), lMax = Math.max(...B.zoom.map(p => p[4]));
+  lineChart('c-pulse', { title: 'What leaves at the collapse', xlabel: 'Time from the minimum [ns]', ylabel: 'Fraction of peak power',
+    series: [{ name: 'Sound (peak ' + fmt(sMax / 1e3, 2) + ' kW)', color: '--s2', pts: B.zoom.map(p => [p[0], p[3] / sMax]) }, { name: 'Light (peak ' + fmt(lMax, 1) + ' µW)', color: '--s1', pts: B.zoom.map(p => [p[0], p[4] / lMax]) }],
+    ymin: 0, ymax: 1.05, xtip: v => v.toFixed(3) + ' ns', ytip: v => v.toFixed(3) });
+  lineChart('c-ledger', { title: 'Ledger over the cycle', xlabel: 'Time in the cycle [µs]', ylabel: 'Accumulated energy [nJ]',
+    series: [{ name: 'In from the sound field', color: '--s1', pts: B.ledger.map(p => [p[0], p[1]]) }, { name: 'Radiated sound', color: '--s2', pts: B.ledger.map(p => [p[0], p[3]]) }, { name: 'Viscous heat', color: '--s3', pts: B.ledger.map(p => [p[0], p[2]]) }, { name: 'Change in stored', color: '--s4', pts: B.ledger.map(p => [p[0], p[4]]) }],
+    xtip: v => v.toFixed(2) + ' µs', ytip: v => v.toFixed(3) + ' nJ' });
+  lineChart('c-chain', { title: 'Flask response', xlabel: 'Frequency [kHz]', ylabel: 'Centre pressure per volt [kPa/V]',
+    series: [{ name: 'No bubble', color: '--s1', pts: D.chain.without }, { name: 'With bubble', color: '--s2', pts: D.chain.with }], xtip: v => v.toFixed(4) + ' kHz', ytip: v => v.toFixed(2) + ' kPa/V', xfmt: v => v.toFixed(2) });
+  drawRev(curRev);
+  const sp = B.spectrum, L = B.light;
+  lineChart('c-spec', { title: 'Flash spectrum, 250–700 nm', xlabel: 'Wavelength [nm]', ylabel: 'Energy per nm (relative)',
+    series: [{ name: 'Model (free–free, time-integrated)', color: '--s1', pts: sp.map(p => [p[0], p[1]]) }, { name: 'Planck curve at ' + Math.round(L.Tfit).toLocaleString() + ' K', color: '--s2', pts: sp.map(p => [p[0], p[2]]), w: 1.5 }],
+    ymin: 0, ymax: 1.05, xtip: v => v.toFixed(0) + ' nm', ytip: v => v.toFixed(3) });
+  drawPc();
+}
+document.getElementById('spec-cap').textContent = 'The model’s spectrum peaks near 475 nm and falls toward the ultraviolet; its shape matches a Planck curve at ' + Math.round(B.light.Tfit).toLocaleString() + ' K. Measured single-bubble spectra rise into the ultraviolet down to water’s absorption edge near 200 nm, with Planck fits of order 10,000 K and above.';
+
+// measurement table
+const L = B.light;
+const meas = [
+  ['Flash width (FWHM)', fmt(L.FWHM_ps, 0) + ' ps', '60–250 ps', 'good', 'within range'],
+  ['Width, UV band (250–300 nm) / red band (600–700 nm)', fmt(L.uv_ps, 0) + ' / ' + fmt(L.red_ps, 0) + ' ps (' + (L.uv_ps / L.red_ps).toFixed(2) + ')', 'equal in red and UV', 'good', 'agrees'],
+  ['Photons per flash', L.photons.toExponential(1).replace('e+', '×10^'), '10⁵–10⁷', 'warn', '2–160× low'],
+  ['Spectral shape', 'peaks at 475 nm; Planck fit ' + Math.round(L.Tfit).toLocaleString() + ' K', 'rises into the UV; fits ≳ 10⁴ K', 'bad', 'too red'],
+  ['Peak gas temperature', fmt(B.Tmax, 0) + ' K (adiabatic)', '~10⁴ K from spectra', 'good', 'same order'],
+];
+const tb = document.querySelector('#tb-meas tbody');
+meas.forEach(r => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${r[0]}</td><td class="n">${r[1].replace('^', '<sup>').replace(/(<sup>\d+)/, '$1</sup>')}</td><td>${r[2]}</td><td><span class="chip ${r[3]}">${r[3] === 'good' ? '✓' : r[3] === 'warn' ? '≈' : '✗'} ${r[4]}</span></td>`; tb.appendChild(tr); });
+const tc = document.querySelector('#tb-chain tbody');
+[['Peak frequency', v => fmt(v[0] / 1e3, 3) + ' kHz'], ['Pressure per volt', v => fmt(v[1] / 1e3, 2) + ' kPa/V'], ['Generator EMF', v => fmt(v[2], 3) + ' V'], ['Source power', v => fmt(v[3] * 1e3, 2) + ' mW'], ['Into the liquid (mode)', v => fmt(v[4] * 1e3, 2) + ' mW'], ['Into the bubble', v => v[5] ? fmt(v[5] * 1e3, 3) + ' mW' : '—']]
+  .forEach(r => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${r[0]}</td><td class="n">${r[1](chain[0])}</td><td class="n">${r[1](chain[1])}</td>`; tc.appendChild(tr); });
+
+// reversal
+let curRev = 'lossless';
+const revNames = { lossless: 'no losses', viscous: 'viscosity only', radiation: 'sound radiation only', full: 'viscosity and sound radiation' };
+function drawRev(k) {
+  const R = D.reversal[k], span = D.reversal.span_ns / 1e3;
+  lineChart('c-rev', { title: 'Collapse forward, then reversed (' + revNames[k] + ')', xlabel: 'Time from R_max [µs]', ylabel: 'Radius [µm]',
+    series: [{ name: 'Forward', color: '--s1', pts: R.forward.map(p => [p[0] / 1e3, p[1]]) }, { name: 'Reversed, drawn on the forward clock', color: '--s2', pts: R.back.map(p => [span - p[0] / 1e3, p[1]]).reverse(), w: 1.5 }],
+    ymin: 0, xtip: v => v.toFixed(3) + ' µs', ytip: v => v.toFixed(3) + ' µm', h: 280 });
+  document.getElementById('rev-cap').textContent = 'With ' + revNames[k] + ' the reversed run ends ' + (R.dR < 1e-6 ? R.dR.toExponential(1) : (100 * R.dR).toFixed(1) + ' %') + ' away from the starting radius. ' +
+    (k === 'lossless' ? 'Without its losses the bubble is a conservative system and retraces its path, like the knot.' : 'The energy that left as heat or sound does not come back, so the reversed bubble cannot retrace its collapse. To reverse it, the outgoing sound pulse would have to converge on it again, as the incoming wave did for the knot.');
+}
+document.querySelectorAll('#rev-seg button').forEach(b => b.addEventListener('click', () => { document.querySelectorAll('#rev-seg button').forEach(x => x.setAttribute('aria-pressed', x === b)); curRev = b.dataset.k; drawRev(curRev); }));
+
+// P_c bars (diverging, zero baseline)
+function drawPc() {
+  const host = document.getElementById('c-pc'); host.innerHTML = '<h3>Degree of circular polarization, P<sub>c</sub></h3>';
+  const rows = H.runs.map(r => ({ name: r.name.replace(' (knotted_light)', '').replace('chiral dipole pair (p ∥ m, quadrature)', 'chiral dipole pair (p ∥ m)'), v: r.pc }));
+  const W = 900, rh = 30, m = { l: 230, r: 70, t: 8, b: 34 }, Hh = m.t + m.b + rh * rows.length;
+  const svg = el('svg', { viewBox: `0 0 ${W} ${Hh}`, role: 'img', 'aria-label': 'Bar chart of circular polarization per source' }, host);
+  const X = v => m.l + (v + 1) / 2 * (W - m.l - m.r);
+  const ax = el('g', { class: 'axis' }, svg);
+  [-1, -0.5, 0, 0.5, 1].forEach(v => { el('line', { x1: X(v), x2: X(v), y1: m.t, y2: Hh - m.b, class: 'gridl' }, ax); const t = el('text', { x: X(v), y: Hh - m.b + 18, 'text-anchor': 'middle' }, ax); t.textContent = v === 0 ? '0' : (v > 0 ? '+' : '−') + Math.abs(v); });
+  el('line', { x1: X(0), x2: X(0), y1: m.t, y2: Hh - m.b, stroke: css('--muted') }, svg);
+  const tip = document.createElement('div'); tip.className = 'tip'; tip.hidden = true; host.appendChild(tip);
+  rows.forEach((r, i) => {
+    const y = m.t + i * rh + rh / 2, x0 = X(0), x1 = X(r.v), w = Math.max(Math.abs(x1 - x0), 1.5);
+    const lt = el('text', { x: m.l - 10, y: y + 4, 'text-anchor': 'end', class: 'alab' }, svg); lt.textContent = r.name;
+    const g = el('g', {}, svg);
+    const bar = el('rect', { x: Math.min(x0, x1), y: y - 9, width: w, height: 18, rx: 4, fill: css(r.v >= 0 ? '--pos' : '--neg') }, g);
+    const vt = el('text', { x: Math.max(x0, x1) + 6, y: y + 4, class: 'alab', style: 'font-family:var(--mono);font-size:12px' }, g); vt.textContent = sgn(r.v);
+    const hit = el('rect', { x: m.l, y: y - rh / 2, width: W - m.l - m.r, height: rh, fill: 'transparent' }, g);
+    hit.addEventListener('pointermove', ev => { const hr = host.getBoundingClientRect(); tip.innerHTML = r.name + '<br>P<sub>c</sub> ' + sgn(r.v); tip.hidden = false; tip.style.left = Math.min(ev.clientX - hr.left + 12, hr.width - 220) + 'px'; tip.style.top = (ev.clientY - hr.top - 10) + 'px'; });
+    hit.addEventListener('pointerleave', () => tip.hidden = true);
+  });
+}
+
+// field slices
+(function slices() {
+  const host = document.getElementById('slices'), n = H.sliceN, half = H.halfLambda;
+  const ramp = t => { // sequential: surface → deep indigo (light) / dark → bright violet (dark)
+    const dark = matchMedia('(prefers-color-scheme: dark)').matches && document.documentElement.dataset.theme !== 'light' || document.documentElement.dataset.theme === 'dark';
+    const a = dark ? [12, 14, 22] : [250, 250, 252], b = dark ? [190, 180, 255] : [40, 30, 140];
+    const u = Math.pow(t, 0.8); return a.map((c, i) => Math.round(c + (b[i] - c) * u));
+  };
+  const add = (run, k, label) => {
+    const wrap = document.createElement('div'); wrap.className = 'slice';
+    const cv = document.createElement('canvas'); cv.width = n; cv.height = n; cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', label);
+    const ctx = cv.getContext('2d'), img = ctx.createImageData(n, n), q = run.snaps[k];
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const c = ramp(q[j * n + i] / 255), o = 4 * ((n - 1 - j) * n + i); img.data[o] = c[0]; img.data[o + 1] = c[1]; img.data[o + 2] = c[2]; img.data[o + 3] = 255; }
+    ctx.putImageData(img, 0, 0);
+    // overlay circles at higher resolution
+    const big = document.createElement('canvas'); big.width = big.height = 436; const bx = big.getContext('2d');
+    bx.imageSmoothingEnabled = true; bx.drawImage(cv, 0, 0, 436, 436);
+    bx.strokeStyle = 'rgba(235,104,52,.9)'; bx.lineWidth = 2; [H.core, H.probeR].forEach(r => { bx.beginPath(); bx.arc(218, 218, r / half * 218, 0, 2 * Math.PI); bx.stroke(); });
+    big.setAttribute('role', 'img'); big.setAttribute('aria-label', label);
+    wrap.appendChild(big); const cap = document.createElement('span'); cap.textContent = label; wrap.appendChild(cap); host.appendChild(wrap);
+  };
+  const hop = H.runs[0], th = H.runs[3];
+  hop.snaps.forEach((_, k) => add(hop, k, 'Hopfion, t = ' + hop.snapT[k].toFixed(1)));
+  th.snaps.forEach((_, k) => add(th, k, 'Thermal core, t = ' + th.snapT[k].toFixed(1)));
+})();
+
+// ---------- 3D ----------
+if (!window.THREE) { document.querySelectorAll('.theatre').forEach(t => { const p = document.createElement('p'); p.className = 'note'; p.textContent = 'The 3D scenes need the three.js library, which did not load.'; t.prepend(p); }); drawCharts(); return; }
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function makeScene(host, camZ, fov = 40) {
+  const r = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+  r.setPixelRatio(Math.min(devicePixelRatio, 2)); r.setClearColor(0x070910);
+  host.prepend(r.domElement);
+  const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(fov, 1, 0.01, 5000); cam.position.set(0, 0, camZ);
+  const root = new THREE.Group(); scene.add(root); root.rotation.set(0.5, -0.4, 0);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.45)); const dl = new THREE.DirectionalLight(0xffffff, 0.9); dl.position.set(3, 4, 5); scene.add(dl);
+  let drag = null;
+  host.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY }; host.setPointerCapture(e.pointerId); host.style.cursor = 'grabbing'; });
+  host.addEventListener('pointermove', e => { if (!drag) return; root.rotation.y += (e.clientX - drag.x) * 0.01; root.rotation.x += (e.clientY - drag.y) * 0.01; drag = { x: e.clientX, y: e.clientY }; });
+  const end = () => { drag = null; host.style.cursor = 'grab'; };
+  host.addEventListener('pointerup', end); host.addEventListener('pointercancel', end);
+  const resize = () => { const w = host.clientWidth, h = host.clientHeight; r.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); };
+  new ResizeObserver(resize).observe(host); resize();
+  return { r, scene, cam, root, render: () => r.render(scene, cam) };
+}
+function glowTexture() {
+  const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d');
+  const grd = g.createRadialGradient(64, 64, 0, 64, 64, 64); grd.addColorStop(0, 'rgba(255,255,255,1)'); grd.addColorStop(0.25, 'rgba(200,180,255,.8)'); grd.addColorStop(1, 'rgba(120,80,255,0)');
+  g.fillStyle = grd; g.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c);
+}
+
+// time warp: u ∈ [0,1) → s ∈ [−1, 1]; bubble t = t_min ± side·sinh(k|s|)/sinh(k); knot τ = 3s
+const T_us = B.T_us, tmin = B.tmin_us, K = 10;
+const bubbleT = s => tmin + Math.sign(s) * (s < 0 ? tmin : T_us - tmin) * Math.sinh(K * Math.abs(s)) / Math.sinh(K);
+const cyc = B.cycle, zoom = B.zoom;
+function interp(arr, x, col) { let lo = 0, hi = arr.length - 1; if (x <= arr[0][0]) return arr[0][col]; if (x >= arr[hi][0]) return arr[hi][col]; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (arr[m][0] < x) lo = m; else hi = m; } const w = (x - arr[lo][0]) / (arr[hi][0] - arr[lo][0]); return arr[lo][col] + w * (arr[hi][col] - arr[lo][col]); }
+function bubbleState(t) { // t in µs
+  const dns = (t - tmin) * 1e3;
+  if (Math.abs(dns) < 3.9) return { R: interp(zoom, dns, 1), T: interp(zoom, dns, 2), light: interp(zoom, dns, 4), dns };
+  return { R: interp(cyc, t, 1), T: interp(cyc, t, 2), light: 0, dns };
+}
+function tempColor(T) { // 300 K deep blue → 3,000 K orange → 15,000 K white-violet
+  const stops = [[300, [0.18, 0.32, 0.62]], [1000, [0.55, 0.25, 0.20]], [3000, [0.95, 0.45, 0.10]], [7000, [1.0, 0.85, 0.55]], [15000, [0.85, 0.82, 1.0]]];
+  const lt = Math.log(Math.max(300, T)); for (let i = 1; i < stops.length; i++) { const a = stops[i - 1], b = stops[i]; if (T <= b[0] || i === stops.length - 1) { const w = Math.min(1, (lt - Math.log(a[0])) / (Math.log(b[0]) - Math.log(a[0]))); return new THREE.Color(...a[1].map((c, j) => c + w * (b[1][j] - c))); } }
+}
+const lMax = Math.max(...zoom.map(p => p[4]));
+
+// bubble scene (units: µm)
+const SB = makeScene(document.getElementById('sc-bubble'), 120);
+const bub = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 48), new THREE.MeshPhongMaterial({ color: 0x9fb8ff, emissive: 0x000000, transparent: true, opacity: 0.55, shininess: 90, specular: 0xffffff }));
+SB.root.add(bub);
+const ring0 = new THREE.Mesh(new THREE.TorusGeometry(B.R0, 0.12, 8, 96), new THREE.MeshBasicMaterial({ color: 0x5a6280 })); SB.root.add(ring0);
+const ringMax = new THREE.Mesh(new THREE.TorusGeometry(B.Rmax, 0.15, 8, 160), new THREE.MeshBasicMaterial({ color: 0x3a4260 })); SB.root.add(ringMax);
+const shell = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32), new THREE.MeshBasicMaterial({ color: 0xeb6834, wireframe: true, transparent: true, opacity: 0 })); SB.root.add(shell);
+const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTexture(), color: 0xffffff, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })); SB.root.add(glow); glow.scale.set(0, 0, 1);
+const cLiq = 1.50152; // µm per ns
+let flashMem = 0;
+
+// knot scene (units: L0)
+const SK = makeScene(document.getElementById('sc-knot'), 13);
+const frames = D.knot.frames, nf = frames.length;
+const nestColors = [0x3987e5, 0xeb6834, 0x1baf7a];
+const tubes = frames[0].lines.map((_, i) => { const m = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshPhongMaterial({ color: nestColors[Math.floor(i / 4)], shininess: 40 })); SK.root.add(m); return m; });
+function knotAt(tau) {
+  const x = (tau + 3) / 6 * (nf - 1), i0 = Math.max(0, Math.min(nf - 2, Math.floor(x))), w = x - i0;
+  const A = frames[i0].lines, Bf = frames[i0 + 1].lines, sc = Math.sqrt(1 + tau * tau);
+  tubes.forEach((m, k) => {
+    const pts = A[k].map((p, j) => new THREE.Vector3(p[0] + w * (Bf[k][j][0] - p[0]), p[1] + w * (Bf[k][j][1] - p[1]), p[2] + w * (Bf[k][j][2] - p[2])));
+    m.geometry.dispose(); m.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, true), 160, 0.025 * sc, 6, true);
+  });
+  return sc;
+}
+
+// polarization globe
+const SG = makeScene(document.getElementById('sc-globe'), 3.2, 35);
+const ico = new THREE.IcosahedronGeometry(1, 5);
+const gpos = ico.attributes.position, colors = new Float32Array(gpos.count * 3); ico.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+const globe = new THREE.Mesh(ico, new THREE.MeshLambertMaterial({ vertexColors: true })); SG.root.add(globe);
+const axis = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 2.6, 8), new THREE.MeshBasicMaterial({ color: 0x8890b0 })); SG.root.add(axis); // z axis drawn along y of cylinder → rotate
+axis.rotation.x = Math.PI / 2;
+const probeVec = H.probes.map(p => [Math.sin(p[0]) * Math.cos(p[1]), Math.sin(p[0]) * Math.sin(p[1]), Math.cos(p[0])]);
+const nearest = []; for (let v = 0; v < gpos.count; v++) { const x = gpos.getX(v), y = gpos.getY(v), z = gpos.getZ(v); let best = -2, bi = 0; probeVec.forEach((q, i) => { const d = x * q[0] + y * q[1] + z * q[2]; if (d > best) { best = d; bi = i; } }); nearest.push(bi); }
+const POS = new THREE.Color(0x3987e5), NEG = new THREE.Color(0xeb6834), MID = new THREE.Color(0x3a3f48);
+function paintGlobe(i) {
+  const r = H.runs[i];
+  for (let v = 0; v < gpos.count; v++) { const p = nearest[v], val = r.local[p], wgt = Math.sqrt(r.weight[p]); const c = MID.clone().lerp(val >= 0 ? POS : NEG, Math.min(1, Math.abs(val))); const out = MID.clone().lerp(c, Math.min(1, 0.25 + wgt)); colors[3 * v] = out.r; colors[3 * v + 1] = out.g; colors[3 * v + 2] = out.b; }
+  ico.attributes.color.needsUpdate = true;
+  document.getElementById('g-name').textContent = r.name.replace(' (knotted_light)', '');
+  document.getElementById('g-pc').textContent = sgn(r.pc);
+}
+document.getElementById('g-scale').style.background = 'linear-gradient(90deg,#eb6834,#3a3f48,#3987e5)';
+const gseg = document.getElementById('globe-seg');
+[0, 1, 2, 3].forEach(i => { const b = document.createElement('button'); b.type = 'button'; b.textContent = ['Hopfion (knot)', 'Chiral dipole pair', 'Rotating dipole', 'Thermal core'][i]; b.setAttribute('aria-pressed', i === 0); b.addEventListener('click', () => { gseg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); paintGlobe(i); }); gseg.appendChild(b); });
+paintGlobe(0);
+
+// playback
+let u = 0.08, playing = !reduce, last = performance.now();
+const LOOP = 18; // seconds per loop at 1×
+const playBtn = document.getElementById('play'), scrub = document.getElementById('scrub'), speed = document.getElementById('speed');
+playBtn.textContent = playing ? 'Pause' : 'Play';
+playBtn.addEventListener('click', () => { playing = !playing; playBtn.textContent = playing ? 'Pause' : 'Play'; });
+scrub.addEventListener('input', () => { u = scrub.value / 1000; flashMem = 0; });
+const hT = document.getElementById('h-t'), hR = document.getElementById('h-r'), hTT = document.getElementById('h-T'), hKt = document.getElementById('h-kt'), hKs = document.getElementById('h-ks');
+function fmtDt(dns) { const a = Math.abs(dns); const s = dns < 0 ? '−' : '+'; return a < 1 ? s + (a * 1e3).toFixed(0) + ' ps' : a < 1000 ? s + a.toFixed(1) + ' ns' : s + (a / 1e3).toFixed(2) + ' µs'; }
+function frame(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  if (playing) { u = (u + dt * Number(speed.value) / LOOP) % 1; scrub.value = Math.round(u * 1000); }
+  const s = 2 * u - 1;
+  // bubble
+  const st = bubbleState(bubbleT(s));
+  bub.scale.setScalar(Math.max(st.R, 0.05));
+  const col = tempColor(st.T); bub.material.color.copy(col); bub.material.emissive.copy(col).multiplyScalar(Math.min(1, Math.max(0, Math.log10(st.T / 600)) / 1.4));
+  bub.material.opacity = 0.45 + 0.5 * Math.min(1, st.T / 15000);
+  flashMem = Math.max(flashMem * Math.exp(-dt * 3), st.light / lMax);
+  const gsz = 6 + 40 * flashMem; glow.scale.set(gsz * flashMem, gsz * flashMem, 1); glow.material.opacity = flashMem;
+  if (st.dns > 0 && st.dns < 90) { const rs = B.Rmin + cLiq * st.dns; shell.scale.setScalar(rs); shell.material.opacity = 0.55 * Math.min(1, 6 / Math.max(rs - B.Rmin, 6)) * (1 - st.dns / 90); } else shell.material.opacity = 0;
+  hT.textContent = fmtDt(st.dns); hR.textContent = st.R.toFixed(st.R < 2 ? 3 : 1) + ' µm'; hTT.textContent = Math.round(st.T).toLocaleString() + ' K';
+  // knot
+  const tau = 3 * s; const sc = knotAt(tau); hKt.textContent = (tau >= 0 ? '+' : '−') + Math.abs(tau).toFixed(2); hKs.textContent = sc.toFixed(2);
+  SB.render(); SK.render();
+  SG.root.rotation.y += playing ? dt * 0.25 : 0; SG.render();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+drawCharts();
+const mq = matchMedia('(prefers-color-scheme: dark)'); mq.addEventListener && mq.addEventListener('change', drawCharts);
+new MutationObserver(drawCharts).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+})();
+</script>
+</body>
+</html>
