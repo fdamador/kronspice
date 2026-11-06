@@ -310,7 +310,53 @@ as the confined atom and the 2p_z state (chapter 9, section 9.7). The
 painting and all three comparisons are in
 [doc/russell-octave-report.md](../doc/russell-octave-report.md).
 
-## 10.7 The bounds recorded so far
+## 10.7 Konstapel's toroidal coherence propulsion (H35)
+
+J. Konstapel (2025) proposes that heated fiber-optic toroidal coils,
+phase-locked to the Earth's field, invert a scalar "Sn field" and make a
+craft lighter. The paper gives no equation with a value for its coupling,
+so [toroidal_coherence](../examples/toroidal_coherence) computes the
+standard prediction for each of its three Tier 1 measurements, and the
+ordinary effects a bench must remove first.
+
+The predicted (3n ± 1) harmonics are what any balanced three-coil array
+radiates. With three coils at 120° in kronspice, each closed through an
+ordinary rectifying contact, multiples of 3 cancel to 10⁻¹⁰ by symmetry,
+3n + 1 rotates forward and 3n − 1 backward, and the ledger closes. The
+discrete infrared lines are a closed loop's longitudinal modes,
+c/(n_g·ℓ) = 20.5 MHz apart for 10 m of silica. On the balance, ordinary
+effects reach the claimed band of 500 mg to 50 g: air buoyancy lost round
+the hot coil gives 16.7 g, and a feed lead in the geomagnetic field
+1.3 g per metre. The paper's own figures fail on its arithmetic: 1 kN on
+1000 t gives 0.001 m/s², not 1 m/s². Its fifth part, Hall's reading of
+lensed galaxy images as total reflection at hydrogen clouds, turns light
+by at most 10⁻³ arcsec in a dense core, against 1–30 arcsec observed.
+That reflection would also be chromatic, so image positions that agree
+across bands rule it out. Status: *untested*. The decisive bench is a
+vacuum balance with a dummy coil at the same power.
+
+## 10.8 Barrett's oscillator-shuttle-circuits (H36)
+
+T. W. Barrett (1991; US 5,493,691) reads Tesla's coils, with energy
+shuttled among floating grounds, as nonlinear circuits beyond Kirchhoff
+that mix pump and signal into an idler, phase-conjugate it and carry
+quaternion (SU(2)) algebra. [barrett_osc](../examples/barrett_osc)
+builds his Figs. 2–5 from the drawings with declared values. Every
+circuit of Fig. 2 is linear: transient and AC agree, and no mixing
+product rises above round-off, however the grounds float. Replace a
+top-load with a varactor and the idler appears at fp − fs, obeying
+Manley–Rowe and phase-conjugating the signal, with the standard
+Es*·Ep scaling rather than the paper's |Es|²·Ep. The mixing comes from
+the nonlinear element, not the topology. Fig. 3 is a working frozen-wave
+pulse former (−6.7, +3.4, −1.4 kV lobes; ledger to 10⁻¹⁰ J). Fig. 4's
+"αβ ≠ βα" is two-port cascade algebra: ABCD matrices do not commute, a
+lossless S matrix is unitary, and cascades are associative, so they
+cannot carry the Cayley numbers Barrett also names. Status: *untested*
+for the claims beyond these (noise rejection, lower transmission loss),
+which the paper gives no measurement or equation for. Bench test: look
+for fp − fs in a Fig. 2 build with air-core coils.
+
+## 10.9 The bounds recorded so far
 
 | Entry | What was computed | Standard reading | Status |
 |---|---|---|---|
@@ -322,6 +368,8 @@ painting and all three comparisons are in
 | H21 (chapter 9) | g ≤ 1 for a mass ring; massless ring needs 43.6 c | Dirac + QED; ESR 28 GHz/T | bounded |
 | H23 (chapter 9) | light leaves the loop in under half a period | linear Maxwell | bounded |
 | H22, [quantumtricity](../examples/quantumtricity) | circuit theory is U(1) on Kron's network (KVL zero holonomy, KCL the Gauss generator, Yee grid = FDTD to 7e-13); SU(3) loops on the same graph compose with defect 0.75, every circuit quantity with 3e-16 | circuit electricity is the abelian classical limit; V, I, R quantized by e and h | bounded |
+| H35, [toroidal_coherence](../examples/toroidal_coherence) | 3n ± 1 harmonics from any balanced three-coil array; buoyancy 16.7 g and lead forces in the claimed 0.5–50 g band; Hall's reflection ≤ 10⁻³ arcsec against 1–30 observed | three-phase symmetry; loop modes c/(n_g·ℓ); E/c² makes the hot coil heavier | untested |
+| H36, [barrett_osc](../examples/barrett_osc) | Figs. 2–5 linear (no idler); a varactor gives the idler, Manley–Rowe and phase conjugation; order effects are ABCD cascades | parametric mixing; two-port matrix algebra | untested |
 
 In every case the engine found the energy, and in every case it was
 already on the books: shaft work in H15, the pump in H16, the loaded EMF
@@ -332,7 +380,7 @@ between SU(3) and U(1), with no circuit quantity on the non-abelian side. None o
 a statement of what the published equations or numbers contain, with the
 measurement that would change the status written next to it.
 
-## 10.8 What to keep
+## 10.10 What to keep
 
 - A register entry is a model, a standard twin, an evidence criterion and
   a status, and it stays after a null result with its bound.
@@ -352,6 +400,8 @@ go run ./examples/space_power_generator
 go run ./examples/bearing_motor
 go run ./examples/pais_cavity
 go run ./examples/quantumtricity
+go run ./examples/toroidal_coherence
+go run ./examples/barrett_osc
 go run ./cmd/kronspice examples/eckardt_homopolar/export/eckardt_homopolar_driven.cir
 go run ./cmd/kronspice examples/parametric_lcr/export/parametric_lcr_fig5_pumped_c.cir
 ```
@@ -382,6 +432,12 @@ go run ./cmd/kronspice examples/parametric_lcr/export/parametric_lcr_fig5_pumped
   Abbott 2005, Marinov 1989, McDonald 2020.
 - J. P. Roth, *Quart. Appl. Math.* 17 (1959), power invariance under
   tearing.
+- J. Konstapel, "Toroidal Coherence Engineering: From Hall's Photon
+  Theory to Practical Propulsion Systems," Leiden, 1 November 2025.
+  P. Touboul et al., *Phys. Rev. Lett.* 129, 121102 (2022); E. R. Peck,
+  S. Huang, *J. Opt. Soc. Am.* 67, 1550 (1977).
+- T. W. Barrett, *Ann. Fond. Louis de Broglie* 16, 23–41 (1991); U.S.
+  Patent 5,493,691 (1996).
 - [doc/pais-us10144532-comparison.md](../doc/pais-us10144532-comparison.md),
   [doc/tewari-references.md](../doc/tewari-references.md),
   [doc/kouril-vrba-verification.md](../doc/kouril-vrba-verification.md).
