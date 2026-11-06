@@ -1,0 +1,46 @@
+octave_magnet (H33): Walter Russell's "a bar magnet has four pairs of poles — not one pair"
+
+1. The bar as its equivalent current sheet (J = ∇×M, K = M×n̂)
+   alnico rod 12.7 mm × 76.2 mm, Br 1.25 T (M0 = Br/μ0 = 9.947e+05 A/m; demagnetization ignored, declared)
+   on-axis field, 2000 loops against the exact solenoid formula: worst difference 1.3e-06 of μ0M0
+   one loop off axis, elliptic formula against Biot–Savart (em.Loop, 2000 segments): B_ρ 2.160e-06, B_z 3.097e-07
+
+2. Poles = magnetic charge −∇·M
+   uniform bar (one pair): 2 charge sites:  -38.1 mm (-126 A·m)  +38.1 mm (+126 A·m)
+   four reversed segments (four pairs): 5 charge sites:  -38.1 mm (-126 A·m)  -19.1 mm (+252 A·m)  +0.0 mm (-252 A·m)  +19.1 mm (+252 A·m)  +38.1 mm (-126 A·m)
+   uniform: charge only on the two end faces: one pair. Four pairs need M to reverse three times inside:
+   then S N|N S|S N|N S gives the two ends plus three doubled 'consequent' poles — four dipoles end to end.
+
+3. The bench test: B_z along a line beside the bar (3 mm from the surface), and a search coil in kronspice
+   uniform bar (one pair)               sign changes of B_z: on the axis 0, beside the bar 2
+   four reversed segments (four pairs)  sign changes of B_z: on the axis 3, beside the bar 5
+   one sign change per charge site: one pair gives 2 beside the bar (and none on the axis); four pairs give 5 end to end
+   (8 if the four magnets are separated). Any count above 2 on an ordinary bar would support Russell's claim.
+   search coil (a ring round the bar, radius a + 3 mm), flux from kronspice ∫V dt against ΣM·I:
+     z =   0.0 mm: circuit 1.53867e-04 Wb, mutual inductances 1.53867e-04 Wb, 2πψ 1.53867e-04 Wb
+     z =  19.1 mm: circuit 1.49659e-04 Wb, mutual inductances 1.49659e-04 Wb, 2πψ 1.49659e-04 Wb
+     z =  38.1 mm: circuit 7.85866e-05 Wb, mutual inductances 7.85866e-05 Wb, 2πψ 7.85866e-05 Wb
+     z =  57.2 mm: circuit 7.28009e-06 Wb, mutual inductances 7.28009e-06 Wb, 2πψ 7.28009e-06 Wb
+   the three agree: kronspice's fluxmeter reads exactly the flux the field model gives. On the bench the same
+   instrument (or a Hall probe) is run along a real bar, with the bar's measured Br declared.
+
+5. The octave bar bent into a ring: 12 sections of 30°, each magnetized opposite to its neighbours
+   ring 50 mm across, 30 mm bore, 10 mm tall, Br 1.25 T (declared); each section uniformly magnetized
+   field from the surface charge σ = M·n̂ (outer and inner arcs, cut faces); twin: the volume as point dipoles M·dV
+   radial      charge vs dipole twin: worst 7.8e-05 of |B| at 6 points; net charge 4.8e-17 of Σ|Q|; ∇·B 1e-07, ∇×B 3e-07 (of |∇B|)
+   tangential  charge vs dipole twin: worst 7.9e-05 of |B| at 6 points; net charge 2.2e-17 of Σ|Q|; ∇·B 3e-07, ∇×B 1e-07 (of |∇B|)
+   B_r round the ring, 3 mm outside, mid-plane (the bench scan):
+     12 sections, radial, alternating (N S N S … outside)       12 sign changes, peak |B_r| 291 mT, N poles at 15° 75° 135° 195° 255° 315°
+     12 sections, along the ring, alternating (N|N, S|S joints) 12 sign changes, peak |B_r| 315 mT, N poles at 30° 90° 150° 210° 270° 330°
+     12 sections, radial, all outward (control)                  0 sign changes, peak |B_r| 223 mT, N poles at none (B_r > 0 all round)
+   both alternating rings have 12 poles round the outside (6 N, 6 S). Radial: at the section centres;
+   along the ring: at the joints, where like poles meet (consequent poles, as in the four-segment bar).
+   all outward: the outer face is all N and the bore all S, so B_r beside it never changes sign.
+   pickup coil (200 turns, 6 mm, 1.5 mm outside; R 8.26 Ω, L 246 µH, load 8.2 Ω), radial ring at 3000 rpm, in kronspice:
+     6 electrical cycles per revolution (300 Hz); open-circuit EMF 6.23 V peak; load 1.754 V rms, 375 mW
+     ledger over two revolutions: in 3.01119e-02 J (shaft, through the EMF) = heat 3.01119e-02 J + Δstored -1.5e-07 J (residual 5.8e-06)
+
+figures written to viz
+
+Standard prediction: a uniformly magnetized bar has one pair of poles; its field lines run end to end in one family.
+Russell's four pairs, as a field, is a chain of lenses along the axis, which needs three reversals of M inside the bar.

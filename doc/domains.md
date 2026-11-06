@@ -131,9 +131,12 @@ at a target pressure).
 
 ## Not done here
 
-- The bubble: Rayleigh–Plesset / Keller–Miksis dynamics driven by the
-  center pressure, collapse heating and light emission (removed from scope
-  for now; if needed, it enters as a cited equivalent-circuit model).
+- The bubble in the engine: Rayleigh–Plesset / Keller–Miksis dynamics,
+  collapse heating and light emission stay out of `fluid/` and `device/`.
+  The bubble enters as a cited equivalent-circuit model in
+  `examples/bubble_collapse` (inertance ρ/4πR ∥ radiation resistance
+  ρc/4πR², viscous resistance, gas compliance), coupled to the chain at
+  node p by its fundamental admittance.
 - Distributed acoustic fields (a resonator's higher modes, the transducer's
   position on the wall): one lumped mode per resonator node for now.
 - Thermal networks with temperature as the across variable.

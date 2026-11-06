@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="820" viewBox="0 0 960 820" font-family="system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="960" height="820" fill="#fcfcfb"/>
+<text x="24.0" y="30.0" text-anchor="start" fill="#0b0b0b" font-size="17" font-weight="600">Fig. 8 — High pressure, short waves: hydrogen compressed by a wall in Kron&#39;s network</text>
+<text x="24.0" y="52.0" text-anchor="start" fill="#52514e" font-size="13" font-weight="400">the network&#39;s outer short circuit moved in to radius r_c; Michels, de Boer &amp; Bijl (1937)</text>
+<line x1="138.8" y1="90.0" x2="138.8" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="138.8" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">2</text>
+<line x1="236.5" y1="90.0" x2="236.5" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="236.5" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">3</text>
+<line x1="334.1" y1="90.0" x2="334.1" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="334.1" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">4</text>
+<line x1="431.8" y1="90.0" x2="431.8" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="431.8" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">5</text>
+<line x1="529.4" y1="90.0" x2="529.4" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="529.4" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">6</text>
+<line x1="627.1" y1="90.0" x2="627.1" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="627.1" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">7</text>
+<line x1="724.7" y1="90.0" x2="724.7" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="724.7" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">8</text>
+<line x1="822.4" y1="90.0" x2="822.4" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="822.4" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">9</text>
+<line x1="920.0" y1="90.0" x2="920.0" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="920.0" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10</text>
+<line x1="90.0" y1="362.7" x2="920.0" y2="362.7" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="366.7" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">-0.4</text>
+<line x1="90.0" y1="308.2" x2="920.0" y2="308.2" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="312.2" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">0.0</text>
+<line x1="90.0" y1="253.6" x2="920.0" y2="253.6" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="257.6" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">0.4</text>
+<line x1="90.0" y1="199.1" x2="920.0" y2="199.1" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="203.1" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">0.8</text>
+<line x1="90.0" y1="144.5" x2="920.0" y2="144.5" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="148.5" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">1.2</text>
+<line x1="90.0" y1="90.0" x2="920.0" y2="90.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="94.0" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">1.6</text>
+<line x1="90.0" y1="390.0" x2="920.0" y2="390.0" stroke="#9a988f" stroke-width="1"/>
+<text x="505.0" y="432.0" text-anchor="middle" fill="#52514e" font-size="13" font-weight="400">wall radius r_c (a0)</text>
+<text x="32.0" y="240.0" text-anchor="middle" fill="#52514e" font-size="13" transform="rotate(-90 32.0 240.0)">energy (Ha)</text>
+<polyline fill="none" stroke="#9a988f" stroke-width="1" stroke-linejoin="round" points="90.0,308.2 920.0,308.2"/>
+<text x="910.2" y="302.2" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">zero: unbound above</text>
+<polyline fill="none" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round" points="90.0,248.6 99.8,271.2 109.5,289.2 119.3,303.7 129.1,315.6 138.8,325.2 148.6,333.2 158.4,339.8 168.1,345.3 177.9,350.0 187.6,353.9 197.4,357.1 207.2,359.9 216.9,362.3 226.7,364.3 236.5,366.0 246.2,367.5 256.0,368.7 265.8,369.8 275.5,370.7 285.3,371.5 295.1,372.2 304.8,372.8 314.6,373.3 324.4,373.7 334.1,374.1 343.9,374.4 353.6,374.7 363.4,374.9 373.2,375.1 382.9,375.3 392.7,375.5 402.5,375.6 412.2,375.7 422.0,375.8 431.8,375.9 441.5,375.9 451.3,376.0 461.1,376.1 470.8,376.1 480.6,376.1 490.4,376.2 500.1,376.2 509.9,376.2 519.6,376.2 529.4,376.3 539.2,376.3 548.9,376.3 558.7,376.3 568.5,376.3 578.2,376.3 588.0,376.3 597.8,376.3 607.5,376.3 617.3,376.3 627.1,376.3 636.8,376.3 646.6,376.4 656.4,376.4 666.1,376.4 675.9,376.4 685.6,376.4 695.4,376.4 705.2,376.4 714.9,376.4 724.7,376.4 734.5,376.4 744.2,376.4 754.0,376.4 763.8,376.4 773.5,376.4 783.3,376.4 793.1,376.4 802.8,376.4 812.6,376.4 822.4,376.4 832.1,376.4 841.9,376.4 851.6,376.4 861.4,376.4 871.2,376.4 880.9,376.4 890.7,376.4 900.5,376.4 910.2,376.4 920.0,376.4"/>
+<polyline fill="none" stroke="#eb6834" stroke-width="2" stroke-linejoin="round" points="90.0,90.0 99.8,90.0 109.5,90.0 119.3,90.0 129.1,90.0 138.8,90.0 148.6,90.0 158.4,90.0 168.1,90.0 177.9,90.0 187.6,90.0 197.4,90.0 207.2,102.5 216.9,122.7 226.7,140.6 236.5,156.6 246.2,170.9 256.0,183.7 265.8,195.3 275.5,205.7 285.3,215.2 295.1,223.7 304.8,231.5 314.6,238.5 324.4,245.0 334.1,250.9 343.9,256.3 353.6,261.2 363.4,265.7 373.2,269.9 382.9,273.7 392.7,277.3 402.5,280.5 412.2,283.6 422.0,286.3 431.8,288.9 441.5,291.3 451.3,293.5 461.1,295.6 470.8,297.5 480.6,299.3 490.4,300.9 500.1,302.4 509.9,303.9 519.6,305.2 529.4,306.4 539.2,307.6 548.9,308.7 558.7,309.7 568.5,310.6 578.2,311.5 588.0,312.4 597.8,313.1 607.5,313.9 617.3,314.5 627.1,315.2 636.8,315.8 646.6,316.3 656.4,316.9 666.1,317.3 675.9,317.8 685.6,318.2 695.4,318.7 705.2,319.0 714.9,319.4 724.7,319.7 734.5,320.1 744.2,320.4 754.0,320.6 763.8,320.9 773.5,321.2 783.3,321.4 793.1,321.6 802.8,321.8 812.6,322.0 822.4,322.2 832.1,322.4 841.9,322.5 851.6,322.7 861.4,322.8 871.2,323.0 880.9,323.1 890.7,323.2 900.5,323.4 910.2,323.5 920.0,323.6"/>
+<polyline fill="none" stroke="#1baf7a" stroke-width="2" stroke-linejoin="round" points="90.0,90.0 99.8,90.0 109.5,90.0 119.3,90.0 129.1,90.0 138.8,93.3 148.6,119.3 158.4,141.6 168.1,160.8 177.9,177.5 187.6,192.0 197.4,204.8 207.2,216.0 216.9,225.9 226.7,234.7 236.5,242.6 246.2,249.6 256.0,255.9 265.8,261.5 275.5,266.6 285.3,271.2 295.1,275.4 304.8,279.2 314.6,282.6 324.4,285.7 334.1,288.6 343.9,291.2 353.6,293.6 363.4,295.8 373.2,297.9 382.9,299.7 392.7,301.5 402.5,303.1 412.2,304.5 422.0,305.9 431.8,307.1 441.5,308.3 451.3,309.4 461.1,310.4 470.8,311.3 480.6,312.2 490.4,313.0 500.1,313.8 509.9,314.5 519.6,315.1 529.4,315.8 539.2,316.3 548.9,316.9 558.7,317.4 568.5,317.8 578.2,318.3 588.0,318.7 597.8,319.1 607.5,319.4 617.3,319.8 627.1,320.1 636.8,320.4 646.6,320.7 656.4,321.0 666.1,321.2 675.9,321.4 685.6,321.7 695.4,321.9 705.2,322.1 714.9,322.3 724.7,322.4 734.5,322.6 744.2,322.7 754.0,322.9 763.8,323.0 773.5,323.2 783.3,323.3 793.1,323.4 802.8,323.5 812.6,323.6 822.4,323.7 832.1,323.8 841.9,323.9 851.6,323.9 861.4,324.0 871.2,324.1 880.9,324.2 890.7,324.2 900.5,324.3 910.2,324.3 920.0,324.4"/>
+<text x="900.5" y="368.4" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="600">1s</text>
+<text x="441.5" y="283.3" text-anchor="start" fill="#0b0b0b" font-size="13" font-weight="600">2s</text>
+<text x="363.4" y="313.8" text-anchor="start" fill="#0b0b0b" font-size="13" font-weight="600">2p</text>
+<line x1="122.7" y1="90.0" x2="122.7" y2="390.0" stroke="#52514e" stroke-width="1" stroke-dasharray="4 4"/>
+<line x1="138.8" y1="90.0" x2="138.8" y2="390.0" stroke="#52514e" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="118.7" y="376.4" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">1.835: ionized</text>
+<text x="144.8" y="380.4" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">2.0: E_1s = −1/8 exactly</text>
+<rect x="90.0" y="444.0" width="14" height="4" rx="2" fill="#2a78d6"/>
+<text x="110.0" y="449.0" text-anchor="start" fill="#0b0b0b" font-size="13" font-weight="400">1s</text>
+<rect x="132.4" y="444.0" width="14" height="4" rx="2" fill="#eb6834"/>
+<text x="152.4" y="449.0" text-anchor="start" fill="#0b0b0b" font-size="13" font-weight="400">2s</text>
+<rect x="174.8" y="444.0" width="14" height="4" rx="2" fill="#1baf7a"/>
+<text x="194.8" y="449.0" text-anchor="start" fill="#0b0b0b" font-size="13" font-weight="400">2p</text>
+<line x1="90.0" y1="510.0" x2="90.0" y2="730.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="90.0" y="748.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10⁻³</text>
+<line x1="218.1" y1="510.0" x2="218.1" y2="730.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="218.1" y="748.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10⁻²</text>
+<line x1="346.3" y1="510.0" x2="346.3" y2="730.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="346.3" y="748.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10⁻¹</text>
+<line x1="474.4" y1="510.0" x2="474.4" y2="730.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="474.4" y="748.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10⁰</text>
+<line x1="602.6" y1="510.0" x2="602.6" y2="730.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="602.6" y="748.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10¹</text>
+<line x1="730.7" y1="510.0" x2="730.7" y2="730.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="730.7" y="748.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10²</text>
+<line x1="858.9" y1="510.0" x2="858.9" y2="730.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="858.9" y="748.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10³</text>
+<line x1="90.0" y1="730.0" x2="920.0" y2="730.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="734.0" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">0</text>
+<line x1="90.0" y1="696.2" x2="920.0" y2="696.2" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="700.2" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">20</text>
+<line x1="90.0" y1="662.3" x2="920.0" y2="662.3" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="666.3" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">40</text>
+<line x1="90.0" y1="628.5" x2="920.0" y2="628.5" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="632.5" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">60</text>
+<line x1="90.0" y1="594.6" x2="920.0" y2="594.6" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="598.6" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">80</text>
+<line x1="90.0" y1="560.8" x2="920.0" y2="560.8" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="564.8" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">100</text>
+<line x1="90.0" y1="526.9" x2="920.0" y2="526.9" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="530.9" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">120</text>
+<line x1="90.0" y1="730.0" x2="920.0" y2="730.0" stroke="#9a988f" stroke-width="1"/>
+<text x="505.0" y="772.0" text-anchor="middle" fill="#52514e" font-size="13" font-weight="400">pressure on the wall (GPa)</text>
+<text x="32.0" y="620.0" text-anchor="middle" fill="#52514e" font-size="13" transform="rotate(-90 32.0 620.0)">Lyman α (nm)</text>
+<polyline fill="none" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round" points="895.4,702.4 875.4,699.1 856.4,695.6 838.2,692.0 820.9,688.4 804.3,684.6 788.3,680.8 772.9,676.9 758.0,673.0 743.5,669.0 729.4,665.0 715.7,661.0 702.4,656.9 689.3,652.9 676.5,648.8 663.9,644.8 651.6,640.8 639.4,636.8 627.5,632.8 615.7,629.0 604.0,625.1 592.5,621.3 581.1,617.6 569.7,614.0 558.5,610.4 547.4,606.9 536.3,603.5 525.3,600.2 514.3,597.0 503.4,593.8 492.6,590.8 481.7,587.8 470.9,584.9 460.1,582.2 449.4,579.5 438.6,576.9 427.9,574.4 417.2,572.1 406.4,569.8 395.7,567.6 385.0,565.4 374.3,563.4 363.6,561.5 352.9,559.6 342.1,557.8 331.4,556.1 320.7,554.5 309.9,553.0 299.2,551.5 288.4,550.1 277.6,548.7 266.9,547.4 256.1,546.2 245.3,545.1 234.5,544.0 223.7,542.9 212.9,541.9 202.0,541.0 191.2,540.1 180.4,539.2 169.5,538.4 158.7,537.6 147.8,536.9 136.9,536.2 126.0,535.6 115.1,534.9 104.2,534.4 93.4,533.8"/>
+<line x1="802.6" y1="510.0" x2="802.6" y2="730.0" stroke="#0b0b0b" stroke-width="1.5" stroke-dasharray="4 4"/>
+<text x="796.6" y="524.0" text-anchor="end" fill="#0b0b0b" font-size="12" font-weight="400">Earth&#39;s centre, 364 GPa</text>
+<polyline fill="none" stroke="#9a988f" stroke-width="1" stroke-linejoin="round" points="90.0,524.3 920.0,524.3"/>
+<text x="100.1" y="540.3" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">free atom 121.57 nm</text>
+<text x="90.0" y="790.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">The atom&#39;s pressure on the wall is P = −dE_1s/dV. Squeezed, every level rises and every line shortens; the 2s = 2p of the free atom splits.</text>
+</svg>

@@ -1,0 +1,53 @@
+bubble_collapse: a sonoluminescing bubble on acoustic_drive's flask, against knotted_light
+argon bubble R0 = 4.5 µm in water at 300 K, Pa = 1.30 atm at 25.02 kHz (the matched flask's peak)
+  ρ = 996.556 kg/m³, c = 1501.52 m/s (IAPWS-95), μ = 853.8 µPa·s, σ = 71.69 mN/m (IAPWS), γ = 5/3, R0/h = 8.86
+
+Part 1: one acoustic cycle (the 6th from rest), equivalent circuit vs Keller–Miksis
+                                            circuit  Keller–Miksis
+  R_max [µm]                                  32.60          32.73
+  R_min [µm]                                  0.730          0.769
+  minimum at phase [cycles]                  0.5170         0.5181
+  max wall Mach |Ṙ|/c                         0.781          0.516
+  peak gas: 2.35e+09 Pa, 14985 K (adiabatic); R_max/R_min = 44.7
+  ledger over the cycle: in from the sound field 14.2923 nJ = Δstored -4.99483e-18 J + viscous 1.04039 nJ + radiated sound 13.2519 nJ; residual 6.2e-10 of in
+  collapse energy P0·V_max = 14.7069 nJ; 91 % of the radiated sound leaves within ±10 ns of the minimum
+  energy density: sound field 3.86 J/m³ → collapse energy in V_min 9.03e+09 J/m³, ×2.3e+09
+
+Part 2: the bubble as a load on the drive chain (fundamental admittance at node p)
+  Y₁ = 4.123e-14 +2.825e-14j m³/(Pa·s): ½·Re(Y₁)·Pa² = 357.66 µW, cycle work × f = 357.66 µW
+                                    no bubble  with bubble
+  peak [kHz]                           25.025       25.024
+  pressure per volt [kPa/V]             69.40        68.46
+  generator EMF for 1.3 atm [V]        1.8981       1.9240
+  source power                     26.1816 mW   26.5416 mW
+  into the liquid (mode)           6.95727 mW   6.95727 mW
+  into the bubble                           —    357.66 µW
+  kronspice ledger residual 0.0e+00 / 0.0e+00
+
+Part 3: reversibility. From R_max through the collapse and back out (2 × the fall time),
+  then the momentum flipped and the drive run backwards: does the bubble return?
+  viscous false radiation false  |ΔR|/R = 2.5e-12   |ΔΠ|/Π_max = 4.6e-13
+  viscous true  radiation false  |ΔR|/R = 6.5e-02   |ΔΠ|/Π_max = 1.3e-02
+  viscous false radiation true   |ΔR|/R = 9.0e-01   |ΔΠ|/Π_max = 1.8e-02
+  viscous true  radiation true   |ΔR|/R = 8.0e-01   |ΔΠ|/Π_max = 8.1e-03
+
+Part 4: the light (free–free emission from Saha-ionized argon, uniform core, optically thin)
+  energy per flash 12.7746 fJ (8.7e-07 of the collapse energy), peak 63.831 µW, ionization 5.8e-03 at the peak
+  flash FWHM 180 ps; about 6.2e+04 photons (energy / kT at the peak)
+  measured: 1e5–1e7 photons per flash (≈ 1e-12 J), widths 60–250 ps (Gompf et al. 1997)
+  spectrum (time-integrated energy per nm, relative):  250 nm 0.55  325 nm 0.81  400 nm 0.95  475 nm 1.00  550 nm 0.99  625 nm 0.95  700 nm 0.90
+  Planck fit of its shape (250–700 nm): 6489 K; FWHM through a UV band (250–300 nm) 164 ps, red band (600–700 nm) 176 ps
+  measured: a featureless continuum rising into the UV to water's edge near 200 nm, Planck fits of order 1e4 K,
+  and the same width in red and UV (Gompf et al. 1997)
+
+Part 5: helicity of the flash. Degree of circular polarization P_c = ΣV/ΣI over a probe sphere
+  hopfion (knotted_light)                    P_c = +0.9996 (exact field at the probes +0.9999); ledger residual 1.6e-13, 0.937 of the energy absorbed
+  chiral dipole pair (p ∥ m, quadrature)     P_c = +0.9797; ledger residual 5.7e-15, 0.992 of the energy absorbed
+  rotating electric dipole                   P_c = +0.0007; ledger residual 4.3e-15, 0.992 of the energy absorbed
+  thermal core, seed 1                       P_c = +0.0087; ledger residual 1.2e-15, 0.999 of the energy absorbed
+  thermal core, seed 2                       P_c = -0.0015; ledger residual 2.9e-15, 0.999 of the energy absorbed
+  thermal core, seed 3                       P_c = -0.0268; ledger residual 3.5e-14, 0.999 of the energy absorbed
+  thermal core, seed 4                       P_c = +0.0296; ledger residual 1.3e-14, 0.999 of the energy absorbed
+  thermal core, seed 5                       P_c = +0.0069; ledger residual 1.3e-14, 0.999 of the energy absorbed
+  thermal core, seed 6                       P_c = +0.0176; ledger residual 4.1e-15, 0.999 of the energy absorbed
+  thermal core: mean P_c +0.0058, rms 0.0184 over the seeds (independent radiators: ~1/√(2N) = 0.0408)

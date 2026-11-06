@@ -1,0 +1,84 @@
+hydrogen_poles (H34): Russell's "four pairs of poles — not one pair" read as hydrogen
+
+1. One hydrogen atom: the electron's orbital current + spin magnetization (+ the proton's spin dipole)
+   Pauli spinors |n l j m⟩ (Clebsch–Gordan), g_s = 2.002319; field from the exact Legendre-series Green's function
+   level               ∫|ψ|²    dipole μB     −g_j m_j octupole μB·a0²     even l      l = 5
+   1s½, m = +½      1.000000    -1.001160    -1.001160       0.000000    1.7e-12    8.1e-13
+   2p½, m = +½      1.000000    -0.332947    -0.332947       0.000000    4.4e-11    5.8e-10
+   2p3⁄2, m = +3⁄2  1.000000    -2.001160    -2.001160      18.020874    1.1e-10    6.3e-10
+   2p3⁄2, m = +½    1.000000    -0.667053    -0.667053     -54.062621    4.2e-10    8.7e-10
+   Wigner–Eckart: octupole(m = ½)/octupole(m = 3⁄2) = -3.000000 (theory −3: ⟨j m 3 0|j m⟩ ∝ m(5m² − 3j(j+1) + 1))
+   split by source (orbital current | spin magnetization), dipole and octupole:
+     1s½, m = +½      orbital -0.000000,  -0.000000 | spin -1.001160,  +0.000000
+     2p½, m = +½      orbital -0.666667,  -0.000000 | spin +0.333720,  +0.000000
+     2p3⁄2, m = +3⁄2  orbital -1.000000,  -0.000000 | spin -1.001160, +18.020874
+     2p3⁄2, m = +½    orbital -0.333333,  -0.000000 | spin -0.333720, -54.062621
+   the octupole comes entirely from the electron's spin magnetization (the l = 1 orbital current carries none); j = ½ levels
+   (1s, 2p½) have none in either part, as 2j ≥ 3 requires; even-l moments vanish by parity
+   proton spin dipole added: +1.5210e-03 μB (m_I = +½, along +z)
+   twin: series field against a direct sum of 1280000 current loops, 4 points outside the cloud: worst 2.4e-04 of |B|
+
+2. The pole count, read as a bench would: N and S zones of B_r on spheres round the atom
+   1s½, m = +½       2 zones 0.5–60.0 a0;
+   2p½, m = +½       2 zones 0.5–60.0 a0;
+   2p3⁄2, m = +3⁄2   2 zones 0.5–60.0 a0;  exterior octupole radius r_c = 4.25 a0
+   2p3⁄2, m = +½     4 zones 0.5–15.4 a0;  2 zones 15.7–60.0 a0;  exterior octupole radius r_c = 15.61 a0
+   two zones = one pair (dipole); four zones = the axial octupole's N S N S bands. Outside the cloud the octupole
+   leads out to r_c, beyond which the dipole's two zones take over (the octupole falls as 1/r⁵, the dipole as 1/r³).
+   for m = 3⁄2, r_c lies inside the electron cloud, where the field is not the exterior expansion: no four zones appear.
+   the bar's bench scan (examples/octave_magnet) on the atom: sign changes of B_z on a line beside it, z from −60 to 60 a0
+   1s½, m = +½       ρ =  2 a0: 2  ρ =  5 a0: 2  ρ = 10 a0: 2  ρ = 20 a0: 2
+   2p½, m = +½       ρ =  2 a0: 0  ρ =  5 a0: 2  ρ = 10 a0: 2  ρ = 20 a0: 2
+   2p3⁄2, m = +3⁄2   ρ =  2 a0: 0  ρ =  5 a0: 0  ρ = 10 a0: 2  ρ = 20 a0: 2
+   2p3⁄2, m = +½     ρ =  2 a0: 0  ρ =  5 a0: 4  ρ = 10 a0: 2  ρ = 20 a0: 2
+   a dipole gives 2 sign changes beside it (one pair, as for the bar); more mean more pole sites along the line
+
+3. Two atoms, H₂ (Heitler–London): four small magnets — two electron spins, two proton spins
+   singlet (spins opposite) binds: R_e 1.6425 a0 (0.8692 Å), D_e 3.1557 eV   [measured 1.4011 a0, 4.748 eV]
+   triplet (spins parallel) repels at every R: E − 2E_H = +10.099 eV at 1.4 a0, +4.189 eV at 2 a0, +0.2392 eV at 4 a0
+   at R = 1.4011 a0 (measured bond), spins quantized along the bond:
+   triplet spin field inside the cloud: corner grid h = 0.05 against h = 0.025, 6 points within 3 a0: worst 3.4e-04 of |B| (h = 0.1 against 0.05: 1.4e-03)
+   singlet electrons + para protons                     ∫ spin density 0.0000, moment +0.00000 μB, bound
+        no magnetic field at all: every spin expectation vanishes — no poles
+   singlet electrons + ortho protons                    ∫ spin density 0.0000, moment +0.00304 μB, bound
+        2 zones 0.20–0.29 a0; 4 zones 0.31–1.56 a0; 2 zones 1.62–20.00 a0;  B_z beside it (ρ = 2 a0): 2 sign changes
+   triplet electrons + para protons                     ∫ spin density 2.0001, moment -2.00232 μB, unbound (repulsive)
+        2 zones 0.20–20.00 a0;  B_z beside it (ρ = 2 a0): 2 sign changes
+   triplet electrons + ortho protons (all four aligned) ∫ spin density 2.0001, moment -1.99928 μB, unbound (repulsive)
+        2 zones 0.20–0.59 a0; 4 zones 0.61–0.77 a0; 2 zones 0.81–20.00 a0;  B_z beside it (ρ = 2 a0): 2 sign changes
+   the bound molecule (singlet) has no electron spin density anywhere, so its electrons give no poles; only the
+   protons' dipoles (1.52e-03 μB each, ortho) remain. All four magnets aligned needs the triplet, which does not bind.
+
+4. Spectral resonances found by kronspice, against measurement
+   Kron's 1945 radial network in kronspice (dual form, AC resonance by bisection), h = 0.1 and 0.05 a0, Richardson;
+   p networks carry the spin–orbit term (g_s − 1)(α²/2)⟨L·S⟩/r³; energies scaled by the reduced mass μ/m = 0.999456
+   level                     kronspice h    kronspice h/2       Richardson      exact AC solves
+   1s                      -0.4987562112    -0.4996878900    -0.4999984496  -0.500000      112
+   2p (no spin–orbit)      -0.1250260815    -0.1250065129    -0.1249999900  -0.125000      108
+   2p½                     -0.1250271946    -0.1250076252    -0.1250011021  -0.125000      108
+   2p3⁄2                   -0.1250255250    -0.1250059568    -0.1249994341  -0.125000      108
+   3d                      -0.0555565843    -0.0555558128    -0.0555555556  -0.055556      104
+   4f                      -0.0312501395    -0.0312500349    -0.0312500000  -0.031250      104
+   5g                      -0.0200000310    -0.0200000072    -0.0199999993  -0.020000      102
+   twin: kronspice resonance against the network matrix (Sturm), h/2: worst 4.7e-14 Ha
+   fine structure 2p3⁄2 − 2p½ from the two networks' resonances: h 10979.6 MHz, h/2 10971.6 MHz, Richardson 10968.9 MHz
+   (with the spin–orbit term off, 2p½ and 2p3⁄2 are one network and one resonance)
+   line                                            found         measured   difference  how
+   Lyman α (2p → 1s)                         121.5689 nm      121.5670 nm     -0.0016%  kronspice resonance
+   Balmer α, Hα (3d → 2p)                    656.4697 nm      656.4610 nm     -0.0013%  kronspice resonance
+   Paschen α (4f → 3d)                      1875.6274 nm     1875.6100 nm     -0.0009%  kronspice resonance
+   Brackett α (5g → 4f)                     4052.2813 nm     4052.2700 nm     -0.0003%  kronspice resonance
+   fine structure 2p3⁄2 − 2p½               10968.90 MHz     10969.10 MHz     -0.0018%  kronspice resonance
+   hyperfine 1s, 21 cm (F = 1 → 0)         1420.4855 MHz    1420.4058 MHz     +0.0056%  model (Fermi contact, ψ(0) of Part 1)
+   electron spin resonance of H, per tesla     28024.95 MHz     28024.45 MHz     +0.0018%  model (dipole of Part 1)
+   H₂ vibration as a kronspice LC circuit (masses = capacitors, Heitler–London spring k = 0.2759 Eh/a0² at 1.6425 a0 = inductor 1/k):
+     H₂  ω_e   3805.0 cm⁻¹ against measured  4401.21 (-13.5%)
+     HD  ω_e   3295.5 cm⁻¹ against measured  3813.15 (-13.6%)
+     D₂  ω_e   2691.2 cm⁻¹ against measured  3115.50 (-13.6%)
+     isotope ratios, which do not depend on the spring: HD/H₂ 0.8661 (measured 0.8664), D₂/H₂ 0.7073 (measured 0.7079)
+     rotation B = 1/(2μR²): 44.30 cm⁻¹ at the Heitler–London R_e, 60.89 at the measured R_e, against measured B_e 60.853
+
+figures and animations written to viz
+
+Standard prediction: ground-state hydrogen has one pair of poles (a dipole); four pairs (an octupole)
+first appear in the 2p3⁄2 level. In H₂ the bond pairs the electron spins, so only the protons' tiny dipoles remain.

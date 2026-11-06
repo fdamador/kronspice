@@ -66,6 +66,11 @@ type FDTDConfig struct {
 	// Material gives relative permittivity and conductivity [S/m] at a
 	// point; nil is vacuum. Permeability is μ₀ everywhere.
 	Material func(x, y, z float64) (epsR, sigma float64)
+	// Conductor, when set, marks perfect conductors inside the region: an
+	// E edge whose midpoint it reports true is held at zero, like the
+	// tangential edges on the walls (an inner conductor of a coaxial line,
+	// a strip, a post). Its cells carry no energy and no loss.
+	Conductor func(x, y, z float64) bool
 	// Ledger keeps the energy ledger (needs one more copy of B).
 	Ledger bool
 }
@@ -114,6 +119,7 @@ type eCoef struct {
 	ca, cb     float64
 	eps        float64 // ε [F/m]
 	rMat, rAbs float64 // loss rates σ/ε of material and absorber [1/s]
+	pec        bool    // held at zero (Conductor)
 }
 
 type bCoef struct{ da, db, rAbs float64 }
@@ -133,6 +139,7 @@ type FDTD struct {
 	eTab   []eCoef
 	bTab   []bCoef
 	src    []EdgeSource
+	srcAt  map[[2]int]int // (component, edge index) → position in src
 	msrc   []FaceSource
 	mPrev  []float64 // each face source's density in the previous step
 	ledger bool
@@ -252,6 +259,14 @@ func NewFDTD(cfg FDTDConfig) (*FDTD, error) {
 	if _, err := addE(1, 0, 0); err != nil {
 		return nil, err
 	}
+	pecID := uint8(0)
+	if cfg.Conductor != nil {
+		if len(f.eTab) == 256 {
+			return nil, fmt.Errorf("%w: more than 256 distinct material/absorber cells", ErrFDTDConfig)
+		}
+		f.eTab = append(f.eTab, eCoef{eps: Eps0, pec: true})
+		pecID = uint8(len(f.eTab) - 1)
+	}
 	for c := 0; c < 3; c++ {
 		for k := 0; k < f.N[2]; k++ {
 			for j := 0; j < f.N[1]; j++ {
@@ -269,6 +284,14 @@ func NewFDTD(cfg FDTDConfig) (*FDTD, error) {
 					id, err := addE(epsR, sigma, rate(pe))
 					if err != nil {
 						return nil, err
+					}
+					if cfg.Conductor != nil {
+						x := f.Origin[0] + pe[0]*f.D[0]
+						y := f.Origin[1] + pe[1]*f.D[1]
+						z := f.Origin[2] + pe[2]*f.D[2]
+						if cfg.Conductor(x, y, z) {
+							id = pecID
+						}
 					}
 					f.eIdx[c][n] = id
 					pb := [3]float64{float64(i) + 0.5, float64(j) + 0.5, float64(k) + 0.5}
@@ -312,7 +335,8 @@ func (f *FDTD) bPos(c, i, j, k int) (x, y, z float64) {
 }
 
 // eFree reports whether E component c at node (i, j, k) is updated (not
-// tangential to a conducting wall and inside the array).
+// tangential to a conducting wall, not in a Conductor, and inside the
+// array).
 func (f *FDTD) eFree(c, i, j, k int) bool {
 	ijk := [3]int{i, j, k}
 	for a := 0; a < 3; a++ {
@@ -324,7 +348,7 @@ func (f *FDTD) eFree(c, i, j, k int) bool {
 			return false
 		}
 	}
-	return true
+	return !f.eTab[f.eIdx[c][f.index(i, j, k)]].pec
 }
 
 // SetE samples E [V/m] at the edge positions (time Time()); edges on the
@@ -402,11 +426,24 @@ func (f *FDTD) SetEFromPotential(C func(x, y, z float64) [3]float64) {
 	f.start = false
 }
 
-// AddSource adds an impressed edge current.
+// AddSource adds an impressed edge current. A second source on an edge
+// that already has one is added to it (the currents sum), so the step and
+// its ledger see one impressed current per edge: booking two separately
+// would take the second's starting field after the first had changed it.
 func (f *FDTD) AddSource(s EdgeSource) error {
 	if s.Comp < 0 || s.Comp > 2 || s.Current == nil || !f.eFree(s.Comp, s.I, s.J, s.K) {
 		return fmt.Errorf("%w: component %d at (%d, %d, %d)", ErrFDTDSource, s.Comp, s.I, s.J, s.K)
 	}
+	if f.srcAt == nil {
+		f.srcAt = map[[2]int]int{}
+	}
+	key := [2]int{s.Comp, f.index(s.I, s.J, s.K)}
+	if q, ok := f.srcAt[key]; ok {
+		a, b := f.src[q].Current, s.Current
+		f.src[q].Current = func(t float64) float64 { return a(t) + b(t) }
+		return nil
+	}
+	f.srcAt[key] = len(f.src)
 	f.src = append(f.src, s)
 	return nil
 }

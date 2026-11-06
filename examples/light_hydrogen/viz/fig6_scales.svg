@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="380" viewBox="0 0 960 380" font-family="system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="960" height="380" fill="#fcfcfb"/>
+<text x="24.0" y="30.0" text-anchor="start" fill="#0b0b0b" font-size="17" font-weight="600">Fig. 6 — Sizes: both rings are far smaller than the atom</text>
+<text x="24.0" y="52.0" text-anchor="start" fill="#52514e" font-size="13" font-weight="400">one logarithmic axis</text>
+<line x1="360.0" y1="80.0" x2="360.0" y2="290.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="360.0" y="308.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10⁻³</text>
+<line x1="420.0" y1="80.0" x2="420.0" y2="290.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="420.0" y="308.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10⁻²</text>
+<line x1="480.0" y1="80.0" x2="480.0" y2="290.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="480.0" y="308.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10⁻¹</text>
+<line x1="540.0" y1="80.0" x2="540.0" y2="290.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="540.0" y="308.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10⁰</text>
+<line x1="600.0" y1="80.0" x2="600.0" y2="290.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="600.0" y="308.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10¹</text>
+<line x1="660.0" y1="80.0" x2="660.0" y2="290.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="660.0" y="308.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10²</text>
+<line x1="720.0" y1="80.0" x2="720.0" y2="290.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="720.0" y="308.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10³</text>
+<line x1="780.0" y1="80.0" x2="780.0" y2="290.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="780.0" y="308.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10⁴</text>
+<line x1="840.0" y1="80.0" x2="840.0" y2="290.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="840.0" y="308.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10⁵</text>
+<line x1="900.0" y1="80.0" x2="900.0" y2="290.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="900.0" y="308.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10⁶</text>
+<line x1="300.0" y1="290.0" x2="900.0" y2="290.0" stroke="#9a988f" stroke-width="1"/>
+<text x="600.0" y="332.0" text-anchor="middle" fill="#52514e" font-size="13" font-weight="400">size (fm)</text>
+<text x="286.0" y="99.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">electron size bound (g − 2)</text>
+<circle cx="360.0" cy="95.0" r="6" fill="#0b0b0b" stroke="#fcfcfb" stroke-width="2"/>
+<text x="372.0" y="99.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">0.001 fm</text>
+<text x="286.0" y="129.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">proton light ring (H31)</text>
+<circle cx="499.4" cy="125.0" r="6" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="511.4" y="129.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">0.21 fm</text>
+<text x="286.0" y="159.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">quark rings, rms (H31)</text>
+<circle cx="529.9" cy="155.0" r="6" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="541.9" y="159.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">0.678 fm</text>
+<text x="286.0" y="189.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">proton, measured charge radius</text>
+<circle cx="535.5" cy="185.0" r="6" fill="#0b0b0b" stroke="#fcfcfb" stroke-width="2"/>
+<text x="547.5" y="189.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">0.841 fm</text>
+<text x="286.0" y="219.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">knot scale ℓ (H29)</text>
+<circle cx="672.4" cy="215.0" r="6" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="684.4" y="219.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">161 fm</text>
+<text x="286.0" y="249.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">electron ring λ_C/4π (H23)</text>
+<circle cx="677.1" cy="245.0" r="6" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="689.1" y="249.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">193 fm</text>
+<text x="286.0" y="279.0" text-anchor="end" fill="#0b0b0b" font-size="13" font-weight="400">Bohr radius a0</text>
+<circle cx="823.4" cy="275.0" r="6" fill="#0b0b0b" stroke="#fcfcfb" stroke-width="2"/>
+<text x="811.4" y="279.0" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">5.29e+04 fm</text>
+<text x="40.0" y="360.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">The electron ring is 0.0036 a0 and the proton ring 4×10⁻⁶ a0: at the atom&#39;s scale both are points, so the atom is the Coulomb problem.</text>
+</svg>

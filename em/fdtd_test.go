@@ -217,6 +217,55 @@ func TestFDTDMagneticSourceLedger(t *testing.T) {
 	t.Logf("work %.4g J = field %.4g + heat %.4g + absorbed %.4g (residual %.2g)", l.SourceWork, l.W-l.W0, l.MaterialLoss, l.Absorbed, l.Residual())
 }
 
+// Two sources on one edge act as their sum: the field and the ledger equal
+// a run with the summed current on that edge, and the ledger closes.
+func TestFDTDSharedEdgeSources(t *testing.T) {
+	n, dx := 20, 0.005
+	run := func(split bool) (*FDTD, error) {
+		f, err := NewFDTD(FDTDConfig{N: [3]int{n, n, n}, D: [3]float64{dx, dx, dx}, Ledger: true, Absorber: 4})
+		if err != nil {
+			return nil, err
+		}
+		a := func(t float64) float64 { return math.Exp(-math.Pow((t-1.5e-10)/4e-11, 2)) }
+		b := func(t float64) float64 { return 0.7 * math.Sin(2e10*t) * math.Exp(-math.Pow((t-2e-10)/6e-11, 2)) }
+		srcs := []EdgeSource{{2, 10, 10, 10, func(t float64) float64 { return a(t) + b(t) }}}
+		if split {
+			srcs = []EdgeSource{{2, 10, 10, 10, a}, {2, 10, 10, 10, b}}
+		}
+		for _, s := range srcs {
+			if err := f.AddSource(s); err != nil {
+				return nil, err
+			}
+		}
+		for f.Steps < 400 {
+			f.Step()
+		}
+		return f, nil
+	}
+	one, err := run(false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	two, err := run(true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	l := two.Ledger()
+	if r := math.Abs(l.Residual()) / math.Abs(l.SourceWork); r > 1e-10 {
+		t.Errorf("ledger residual %.3g of source work %.3g J", l.Residual(), l.SourceWork)
+	}
+	if d := math.Abs(l.SourceWork-one.Ledger().SourceWork) / math.Abs(l.SourceWork); d > 1e-12 {
+		t.Errorf("source work %.6g J split, %.6g J summed", l.SourceWork, one.Ledger().SourceWork)
+	}
+	for c := 0; c < 3; c++ {
+		for i := range one.E[c] {
+			if one.E[c][i] != two.E[c][i] {
+				t.Fatalf("E differs at component %d, index %d", c, i)
+			}
+		}
+	}
+}
+
 // A short current element (Hertzian dipole) in an absorbing box radiates
 // Larmor's power ω⁴p²/(12πε0c³), p = I0·dz/ω; the absorbed power is the
 // radiated power and the ledger closes.
@@ -280,4 +329,52 @@ func TestFDTDFlyingDoughnut(t *testing.T) {
 		t.Errorf("div B %.3g", r.DivB)
 	}
 	t.Logf("flying doughnut: L2 error %.3g after %.3g ns, div B %.2g, energy %.4g→%.4g J (absorbed %.2g)", r.RelError, r.Duration*1e9, r.DivB, r.EnergyStart, r.EnergyEnd, r.Absorbed)
+}
+
+// A perfect Conductor inside the region (an inner conductor post): its
+// edges stay exactly zero while a pulse rings round it, a source on one
+// of them is refused, div B stays at round-off and the ledger closes.
+func TestFDTDConductor(t *testing.T) {
+	n := 14
+	dx := 0.005
+	in := func(x, y, z float64) bool {
+		const tol = 1e-9
+		return x > 5*dx-tol && x < 8*dx+tol && y > 5*dx-tol && y < 8*dx+tol
+	}
+	f, err := NewFDTD(FDTDConfig{N: [3]int{n, n, n}, D: [3]float64{dx, dx, dx}, Ledger: true, Conductor: in})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if f.AddSource(EdgeSource{2, 6, 6, 4, func(float64) float64 { return 1 }}) == nil {
+		t.Error("source inside the conductor accepted")
+	}
+	src := EdgeSource{0, 9, 6, 6, func(t float64) float64 { return math.Exp(-math.Pow((t-1e-10)/3e-11, 2)) }}
+	if err := f.AddSource(src); err != nil {
+		t.Fatal(err)
+	}
+	held, peak := 0.0, 0.0
+	for f.Steps < 800 {
+		f.Step()
+		f.each(func(c, i, j, k, idx int) {
+			x, y, z := f.ePos(c, i, j, k)
+			if in(x, y, z) {
+				held = math.Max(held, math.Abs(f.E[c][idx]))
+			} else {
+				peak = math.Max(peak, math.Abs(f.E[c][idx]))
+			}
+		})
+	}
+	if held != 0 || peak == 0 {
+		t.Errorf("conductor edges reached %.3g V/m (field elsewhere %.3g)", held, peak)
+	}
+	worst, scale := f.DivB()
+	if worst > 1e-12*scale {
+		t.Errorf("div B %.3g against scale %.3g", worst, scale)
+	}
+	l := f.Ledger()
+	if r := math.Abs(l.Residual()) / math.Abs(l.SourceWork); r > 1e-10 {
+		t.Errorf("ledger residual %.3g of source work %.3g J", l.Residual(), l.SourceWork)
+	}
+	t.Logf("conductor edges %g V/m (field up to %.3g); div B %.2g of scale; ledger residual %.2g of the source work",
+		held, peak, worst/scale, l.Residual()/l.SourceWork)
 }
