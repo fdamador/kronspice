@@ -95,7 +95,14 @@ type MaxwellNetwork struct {
 	Eps   float64 // permittivity [F/m]
 	Mu    float64 // permeability [H/m]
 	Sigma float64 // conductivity [S/m]
-	Ties  TieRule
+	// EpsAxis and MuAxis, when non-zero, make the medium anisotropic with
+	// its principal axes on the grid's: the capacitance of a link along
+	// axis a is scaled by EpsAxis[a], the inductance of a face with normal
+	// a by MuAxis[a] (ε_aa = Eps·EpsAxis[a], μ_aa = Mu·MuAxis[a]). Zero
+	// means 1. The Euler–Heisenberg vacuum about a magnetic background
+	// along an axis is such a medium (em.EHLinearize).
+	EpsAxis, MuAxis [3]float64
+	Ties            TieRule
 	// Ideal is the winding inductance of the ideal transformers in units
 	// of the quarter inductance (default 1e7): Kron's L = M = ∞ as a limit.
 	// The departure from Yee falls as 1/Ideal, but the attachment points of
@@ -168,14 +175,48 @@ func (m *MaxwellNetwork) Faces(p int) bool {
 }
 
 // Constants returns the capacitance of every link and the full inductance
-// of every face (each quarter inductor is a quarter of it).
-func (m *MaxwellNetwork) Constants() (c, l []float64) { return m.Grid.Constitutive(m.Eps, m.Mu) }
+// of every face (each quarter inductor is a quarter of it), with the
+// anisotropy factors applied.
+func (m *MaxwellNetwork) Constants() (c, l []float64) {
+	c, l = m.Grid.Constitutive(m.Eps, m.Mu)
+	for k := range c {
+		c[k] *= axisFactor(m.EpsAxis, m.Grid.Axis(k))
+	}
+	for p := range l {
+		l[p] *= axisFactor(m.MuAxis, m.FaceNormal(p))
+	}
+	return c, l
+}
+
+// FaceNormal is the axis of face p's normal (its circulation runs +a, +b
+// with a = normal+1, b = normal+2, cyclic).
+func (m *MaxwellNetwork) FaceNormal(p int) int {
+	return (m.Grid.Axis(m.Grid.Plaquettes[p][0].Link) + 2) % 3
+}
+
+func axisFactor(f [3]float64, a int) float64 {
+	if f[a] == 0 {
+		return 1
+	}
+	return f[a]
+}
+
+// conductance is σ·(dual face)/(edge) of link k, from its capacitance
+// C = ε_aa·(dual face)/(edge).
+func (m *MaxwellNetwork) conductance(k int, capv []float64) float64 {
+	return m.Sigma * capv[k] / (m.Eps * axisFactor(m.EpsAxis, m.Grid.Axis(k)))
+}
 
 // Build writes the network into a builder.
 func (m *MaxwellNetwork) Build(b *circuit.Builder) error {
 	g := m.Grid
 	if g == nil || !(m.Eps > 0 && m.Mu > 0) || m.Sigma < 0 || math.IsNaN(m.Eps+m.Mu+m.Sigma) {
 		return fmt.Errorf("%w: Maxwell network ε %g μ %g σ %g", ErrPolyhedron, m.Eps, m.Mu, m.Sigma)
+	}
+	for a := 0; a < 3; a++ {
+		if !(m.EpsAxis[a] >= 0 && m.MuAxis[a] >= 0) {
+			return fmt.Errorf("%w: anisotropy ε %v μ %v", ErrPolyhedron, m.EpsAxis, m.MuAxis)
+		}
 	}
 	if m.Ties != ChainTies && m.Ties != KronTies {
 		return fmt.Errorf("%w: tie rule %d", ErrPolyhedron, m.Ties)
@@ -213,7 +254,7 @@ func (m *MaxwellNetwork) Build(b *circuit.Builder) error {
 		}
 		b.Capacitor(m.Branch(k), a, z, capv[k])
 		if m.Sigma > 0 {
-			b.Resistor(fmt.Sprintf("G%d", k), a, z, m.Eps/(m.Sigma*capv[k]))
+			b.Resistor(fmt.Sprintf("G%d", k), a, z, 1/m.conductance(k, capv))
 		}
 	}
 	// Large meshes.
@@ -347,7 +388,7 @@ func (m *MaxwellNetwork) MaxwellYee(omega float64, j []float64) (v, cur []comple
 	}
 	for k := 0; k < nl; k++ {
 		if i := idx[k]; i >= 0 {
-			a[i][i] += complex(m.Sigma*capv[k]/m.Eps, omega*capv[k])
+			a[i][i] += complex(m.conductance(k, capv), omega*capv[k])
 			a[i][n] = complex(-j[k], 0)
 		}
 	}

@@ -165,3 +165,33 @@ func TestImplosionThroughSurface(t *testing.T) {
 	t.Logf("in %.4f out %.4f leak %.2g; t = 0: %.4f vs %.4f, linking %.4f (gap %.3f); residual %.1e",
 		end.In, end.Out, end.Leak, peak.InsideFDTD, peak.InsideExact, peak.Link, peak.Gap, r.Residual)
 }
+
+// H30 Part 3: the Euler–Heisenberg vacuum returns none of an explosion
+// and reflects almost nothing of a wave crossing the strongest field it
+// allows.
+func TestVacuumInward(t *testing.T) {
+	v, err := RunVacuum()
+	if err != nil {
+		t.Fatal(err)
+	}
+	// The nonlinear share of the field energy is ≈ 6a (u = ε₀E²/2 + 3ξE⁴).
+	if r := v.Nonlinear / (6 * v.A); math.Abs(r-1) > 1e-2 {
+		t.Errorf("nonlinear energy share %.4g, 6a = %.4g", v.Nonlinear, 6*v.A)
+	}
+	// The halves did act on each other while crossing …
+	if !(v.Altered > 1e-14) {
+		t.Errorf("no nonlinear interaction while the halves crossed (%.3g)", v.Altered)
+	}
+	// … but nothing comes back between them: round-off, below even the
+	// linear lattice's dispersion ripple.
+	if v.Returned > 1e-24 || v.Returned > v.ReturnedLn {
+		t.Errorf("nonlinear energy back at the centre %.3g (linear lattice ripple %.3g)", v.Returned, v.ReturnedLn)
+	}
+	// The strongest counter-propagating field turns round less than the
+	// Fresnel bound for its index step.
+	if !(v.Reflected < v.Fresnel) {
+		t.Errorf("reflected %.3g, Fresnel bound %.3g", v.Reflected, v.Fresnel)
+	}
+	t.Logf("a %.3g; returned %.2g (linear lattice %.2g); altered %.2g; reflected %.2g (Fresnel %.2g); nonlinear share %.3g",
+		v.A, v.Returned, v.ReturnedLn, v.Altered, v.Reflected, v.Fresnel, v.Nonlinear)
+}

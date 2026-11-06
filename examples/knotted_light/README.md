@@ -173,6 +173,39 @@ a vacuum or ether that is itself nonlinear (Born–Infeld 1934;
 Euler–Heisenberg 1936, the measured QED vacuum), which could also hold the
 knot in place (H29 step 2).
 
+**Part 3: the measured QED vacuum as the source (`vacuum.go`).** The one
+nonlinear vacuum with experimental support is Euler–Heisenberg's
+(light-by-light scattering: ATLAS, *Nature Phys.* 13, 852, 2017; CMS,
+*Phys. Lett. B* 797, 134826, 2019). In it waves act on one another only
+where they cross, through E² − c²B² and E·B; a lone plane wave has both
+zero and never acts on itself. Both measurements run on Kron's plane-wave
+network with the Euler–Heisenberg vacuum as its nonlinear primitive
+(`kron.EHLine`, validated on light-by-light phase shifts to 0.4 %), each
+beside Maxwell's linear vacuum, at 0.08–0.09 of the Schwinger field
+(1.3×10¹⁸ V/m), the top of the range the theory's weak-field form covers:
+
+| Measurement | Euler–Heisenberg vacuum | Needed for a knot rebuilt every period |
+|---|---|---|
+| **A.** A compressed field at rest explodes into two halves; nonlinear energy back between them after they separate | 6×10⁻²⁸ of the explosion (round-off; the linear lattice's own ripple there is 3×10⁻¹⁷) | 1 |
+| Nonlinear part of the field after the halves crossed (phase shifts, all outgoing) | 3×10⁻¹³ | — |
+| **B.** A probe crossing a sharp counter-propagating field of 0.08 E_s; energy turned round | 2.4×10⁻¹⁷ (Fresnel bound for its index step 16a: 1.7×10⁻¹²) | 1 |
+| Nonlinear share of the field energy at the peak, the most the vacuum could redirect | 1.3×10⁻⁶ (≈ 6a) | 1 |
+
+- **Nothing comes back.** The halves interact while they cross, but what
+  the vacuum gives them is a phase shift that travels outward with them;
+  once apart, each is a plane wave the vacuum no longer touches.
+- **In three dimensions** the knot's expanding shell is locally a plane
+  wave within a few L0, so the same holds; whatever the vacuum could ever
+  turn round is bounded by the nonlinear part of the field energy, about
+  10⁻⁶ of the knot at the edge of the theory's range, against the whole
+  knot per period the pulsing knot needs.
+
+So the measured QED vacuum is not the source of the inward wave: H30's
+pulsing knot still needs it supplied from outside, and this route is
+bounded at ≲ 10⁻⁶ of a knot per period (computed in 1-D: below 10⁻¹⁶).
+The other declared media (the Wheeler–Feynman absorber, the zero-point
+field, Born–Infeld) are untested.
+
 `viz/h30_cycle.png` plots both parts: energy within 2 L0 (solver and
 exact) and the surface's cumulative work in and out.
 
@@ -197,6 +230,7 @@ lines for the pictures and for an interactive viewer.
 | `TestKnotInSolver` | coarse grid: energy spreads as the exact solution says; helicity kept as exact; curl A = B; ledger | 0.02; 0.02; 1e-12; 1e-10 |
 | `TestKnotEnergy` | the knot's energy density at t = 0 is spherically symmetric; radial total = 3-D sum | 1e-12; 2e-3 |
 | `TestImplosionThroughSurface` | H30, coarse grid: ≥ 0.9 of a knot enters through the Huygens surface, the centre reaches the exact energy, linking 1 at t = 0, in = out, ledger | 0.05; 0.02; 0.05; 1e-10 |
+| `TestVacuumInward` | H30 Part 3: in the Euler–Heisenberg vacuum the halves of an explosion interact while crossing but return nothing between them (below the linear lattice's own ripple), a sharp counter-propagating field reflects less than its Fresnel bound, the nonlinear energy share is 6a | 1e-24; Fresnel; 1 % |
 | `em.TestFDTDMagneticSourceLedger` | the solver's magnetic face sources: ledger closes with them, sources in the absorber refused | 1e-10 |
 
 This example has no circuit, so it has no `export_test.go`.
@@ -206,6 +240,7 @@ This example has no circuit, so it has no `export_test.go`.
 | File | What it holds |
 |---|---|
 | `cycle.go` | H30: the Huygens surface (edge and face sources from the declared incoming train), part 1 and part 2 runs |
+| `vacuum.go` | H30 Part 3: the Euler–Heisenberg vacuum (`kron.EHLine`) as the source of the inward wave — explosion and reflection, beside the linear vacuum |
 | `viz/render_h30.py` | `viz/h30_cycle.png` from `run_output.txt` |
 | `main.go` | the hopfion (Bateman form, helicity sign check), the vector-potential and helicity bookkeeping beside `em/fdtd.go`, field-line tracing and the Gauss linking integral, the run and report |
 | `main_test.go` | the tests above |
