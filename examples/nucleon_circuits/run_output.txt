@@ -1,0 +1,47 @@
+nucleon_circuits (H31): the proton and the neutron as circuits of light
+A light ring: energy mc² as one wavelength round a ring of radius ħ/mc; charge q carried at c gives
+current qc/2πR and moment qħ/2m (the Dirac moment). Rings are kronspice inductors with mutual coupling.
+
+1. The proton as one light ring
+   radius ħ/(m_p c) = 0.2103 fm (measured charge radius 0.84075 fm: 4.0× larger)
+   current 3.635e+04 A; moment 1.0000 μN (kronspice currents; measured 2.7928 μN: 2.79× larger)
+   magnetic self-energy ½LI² 1.1143 MeV (ledger 1.1143 MeV, residual 0.0e+00)
+   a ring carrying +e at c with the measured moment needs radius 0.5874 fm, i.e. a light ring of 335.96 MeV
+   (= m_p c²/2.7928, about a third of the proton: one ring cannot be the whole proton)
+
+2. The neutron as the light rings of its decay products: proton + electron + antineutrino
+   charge: +e − e + 0 = 0 ✓    spin: three spin-½ rings can make ½ ✓ (Rutherford's 1920 p + e could not)
+   mass: m_n − (m_p + m_e) = +0.7823 MeV: the neutron holds more than its parts, so it can decay ✓
+   moment with each ring at its own size (proton as measured, electron ring 386.2 fm): -1835.5 μN (measured -1.9130: 959× too large)
+   electron ring that would give the measured moment (beside a proton ring with +2.7928 μN): radius 0.9897 fm
+     kronspice: currents +1.302e+04 A, -7724 A; moment -1.9130 μN; magnetic energy 0.1300 MeV (analytic 0.1300, residual 0.0e+00)
+     but light on a ring that small carries 199.4 MeV, against 1.293 MeV available (m_n − m_p): 154× too much
+     Coulomb attraction of the two rings: -1.617 MeV (and their own Coulomb energies +1.724 MeV): far too weak to bind it
+   the antineutrino ring (H28, an E ring) is neutral: no current, no moment, energy < 0.45 eV — it changes none of this
+
+3. Standard counterpart as circuits: three quark light rings (uud, udd), spin-weighted (SU(6))
+   one free number: the quark ring's energy, fixed by the proton's moment: m_q c² = 335.96 MeV, radius 0.5874 fm
+   proton moment  +2.7928 μN (fitted)       measured +2.7928
+   neutron moment -1.8619 μN (predicted)    measured -1.9130  (-2.7 %)
+   ratio μn/μp    -0.6667 (= −2/3)          measured -0.6850
+   three rings' light energy 1007.9 MeV against 938.3 (p) / 939.6 (n): 7.4 % high; the binding is not in the model
+   electromagnetic energy (rings spaced 0.587 fm, kronspice magnetic + Coulomb): p 1.7075 MeV, n 0.6547 MeV
+     → electromagnetism alone makes the neutron 1.053 MeV lighter than the proton (lattice QED part, Borsanyi et al. 2015: -1.00 MeV)
+     the spacing is a declared choice, not fitted; m_n − m_p from electromagnetism at other spacings:  0.5R: -1.285 MeV;  2.0R: -0.844 MeV;  4.0R: -0.688 MeV;
+     the measured +1.293 MeV needs the d ring heavier than the u ring (lattice: +2.52 MeV from m_d > m_u); ledger residuals 0.0e+00, 0.0e+00
+
+4. The knot picture: Skyrme's model, proton and neutron = one knot in two spin states
+   (Adkins, Nappi & Witten, Nucl. Phys. B 228, 552, 1983; quoted, two constants fitted to the N and Δ masses)
+   quantity                   knot (ANW)   measured
+   proton moment (μN)          +1.87        +2.79
+   neutron moment (μN)         −1.31        −1.91
+   |μp/μn|                      1.43         1.46
+   isoscalar radius (fm)        0.59         0.72
+   g_A                          0.61         1.23
+   the knot gets the neutron's negative moment and the ratio right with no charged parts at all;
+   the sizes run 30 % low. Our ether knot (H29) is Faddeev's two-component cousin; the nucleon is Skyrme's
+
+5. Neutron decay, n → p + e + ν̄
+   energy budget: 939.5654 − 938.2721 − 0.5110 = 0.7823 MeV shared by the electron and the antineutrino
+   lifetime: light rings carry no weak coupling, so the light model gives none; standard model
+   τ = 4908.6 s/(V_ud²(1 + 3λ²)) = 880.5 s (V_ud 0.97373, λ 1.2754) against measured 878.4 s

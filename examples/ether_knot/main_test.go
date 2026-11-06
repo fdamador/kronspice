@@ -144,3 +144,38 @@ func TestEtherHoldsKnot(t *testing.T) {
 	t.Logf("both: E %.3f E2/E4 %.4f core %.3f; magnetic only rms %.3f → %.3f; stiffness only core %.3f → %.3f",
 		e2+e4, e2/e4, core, r0, r1, c0, c1)
 }
+
+// Vibrations, coarse grid: the two exact symmetries (sliding along z,
+// turning the field about ẑ) cost no energy (ω² ≈ 0 against the squashing
+// tone's ω² ≈ 1.9), and a squashing push rings at ω ≈ 1.4 c/ℓ (the run's
+// grid and box study: 1.36–1.42, Q 6–7), measured here from the
+// zero-crossings of the knot's motion between t = 2 and 14 ℓ/c (box 10 ℓ,
+// h = 0.15: the first echo from the wall is back after about 14 ℓ/c).
+func TestVibrations(t *testing.T) {
+	if testing.Short() {
+		t.Skip("relaxation and ringing")
+	}
+	a := NewAxi(10, 10, 0.15, 1, 1, 1)
+	a.Relax(80000, 0.05, 1e-9, 0, nil)
+	o := a.Operators(1e-5)
+	slide, turn := a.ZeroModes(o)
+	if math.Abs(slide) > 0.02 || math.Abs(turn) > 0.02 {
+		t.Errorf("zero modes ω² %.3g, %.3g", slide, turn)
+	}
+	ts, ov := a.Ring(o, a.Strikes()["squashing"], 16, 0.04)
+	var cross []float64
+	for k := 1; k < len(ts); k++ {
+		if ts[k] > 2 && ts[k] < 14 && (ov[k-1] < 0) != (ov[k] < 0) {
+			f := ov[k-1] / (ov[k-1] - ov[k])
+			cross = append(cross, ts[k-1]+f*(ts[k]-ts[k-1]))
+		}
+	}
+	if len(cross) < 4 {
+		t.Fatalf("only %d zero crossings", len(cross))
+	}
+	w := math.Pi * float64(len(cross)-1) / (cross[len(cross)-1] - cross[0])
+	if math.Abs(w-1.45) > 0.15 { // coarse grid reads high: 1.42 at h = 0.15 in a 16 ℓ box, 1.39 at h = 0.1
+		t.Errorf("squashing tone ω = %.3f c/ℓ, want ≈ 1.4", w)
+	}
+	t.Logf("zero modes ω² %.2e, %.2e; squashing ω %.3f from %d crossings", slide, turn, w, len(cross))
+}
