@@ -158,6 +158,44 @@ func TestMaxwellNetworkIsYee(t *testing.T) {
 	t.Logf("leaky windings (k = 1 − 1e-8, leakage off the arcs): circuit − Yee %.2g (E·Δ), %.2g (H·Δ)", dvl, dil)
 }
 
+// maxwellPole finds the resonance near f0 from |V| on a probe link, which
+// peaks at the pole: narrowing sweeps of 21 points from ±5 %, each round
+// five times finer, then the vertex of the V-shaped 1/|V| (|V| ≈
+// A/|ω − ω0| near a nearly lossless pole) from a line fitted on each side.
+func maxwellPole(t *testing.T, m *MaxwellNetwork, c *circuit.Circuit, probe int, f0 float64, rounds int) float64 {
+	t.Helper()
+	lo, hi := 0.95*f0, 1.05*f0
+	var fr float64
+	for round := 0; round < rounds; round++ {
+		r, err := analysis.AC(c, analysis.ACSpec{Variation: "lin", Points: 21, FStart: lo, FStop: hi}, analysis.Options{SkipEnergyCheck: true})
+		if err != nil {
+			t.Fatal(err)
+		}
+		fs := r.Freq
+		inv := make([]float64, len(fs))
+		best := 0
+		for i := range fs {
+			inv[i] = 1 / cmplx.Abs(linkVoltage(t, m, r, probe, i))
+			if inv[i] < inv[best] {
+				best = i
+			}
+		}
+		if best < 2 || best > len(fs)-3 {
+			t.Fatalf("no peak inside [%g, %g]", lo, hi)
+		}
+		// The pole lies between fs[best−1] and fs[best+1]; 1/|V| falls
+		// linearly to it from each side, with slopes that differ when other
+		// modes add a background. Intersect the line through the two
+		// samples left of the pole with the one through the two right of it.
+		sl := (inv[best-1] - inv[best-2]) / (fs[best-1] - fs[best-2])
+		sr := (inv[best+2] - inv[best+1]) / (fs[best+2] - fs[best+1])
+		fr = (inv[best+1] - inv[best-1] + sl*fs[best-1] - sr*fs[best+1]) / (sl - sr)
+		step := fs[1] - fs[0]
+		lo, hi = fs[best]-2*step, fs[best]+2*step
+	}
+	return fr
+}
+
 // TM110 resonance of the network, Kron's arrangement: the circuit's pole
 // is the lattice's own (Yee spatial dispersion), its continuum error is
 // that dispersion's, and em.FDTD on the same grid rings at the same ω
@@ -172,37 +210,7 @@ func TestMaxwellNetworkCavity(t *testing.T) {
 	wl := c0Test * math.Hypot(2/dx*math.Sin(math.Pi*dx/(2*a)), 2/dx*math.Sin(math.Pi*dx/(2*b)))
 	wc := c0Test * math.Pi * math.Hypot(1/a, 1/b)
 
-	// |V| on a probe link peaks at the pole: narrowing sweeps, then the
-	// vertex of the V-shaped 1/|V| (|V| ≈ A/|ω − ω0| near a nearly
-	// lossless pole).
-	probe := g.Link(2, 3, 3, 2)
-	lo, hi := 0.95*wl/(2*math.Pi), 1.05*wl/(2*math.Pi)
-	var fr float64
-	for round := 0; round < 4; round++ {
-		r, err := analysis.AC(c, analysis.ACSpec{Variation: "lin", Points: 21, FStart: lo, FStop: hi}, analysis.Options{SkipEnergyCheck: true})
-		if err != nil {
-			t.Fatal(err)
-		}
-		fs := r.Freq
-		inv := make([]float64, len(fs))
-		best := 0
-		for i := range fs {
-			inv[i] = 1 / cmplx.Abs(linkVoltage(t, m, r, probe, i))
-			if inv[i] < inv[best] {
-				best = i
-			}
-		}
-		if best == 0 || best == len(fs)-1 {
-			t.Fatalf("no peak inside [%g, %g]", lo, hi)
-		}
-		// 1/|V| = s·|f − f0| with fl < f0 < fh: yl + yh = s·(fh − fl),
-		// f0 = fl + yl/s.
-		fl, fh := fs[best-1], fs[best+1]
-		s := (inv[best-1] + inv[best+1]) / (fh - fl)
-		fr = fl + inv[best-1]/s
-		step := fs[1] - fs[0]
-		lo, hi = fs[best]-2*step, fs[best]+2*step
-	}
+	fr := maxwellPole(t, m, c, g.Link(2, 3, 3, 2), wl/(2*math.Pi), 4)
 	w := 2 * math.Pi * fr
 	if e := math.Abs(w-wl) / wl; e > 1e-6 {
 		t.Errorf("TM110: circuit ω %.9g, lattice %.9g (%.2g)", w, wl, e)
