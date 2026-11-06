@@ -255,7 +255,46 @@ a multipactor pump in a resonator and a resonant ground charge pump, each
 with its ledger naming the source of every joule; those belong to chapter
 6's family of gap devices and are summarised in the example's README.
 
-## 9.7 What to keep
+## 9.7 Hydrogen from the light models (H32)
+
+The bench's last step puts the light electron in an atom.
+[light_hydrogen](../examples/light_hydrogen) binds H23's toroidal photon to
+the proton of [nucleon_circuits](../examples/nucleon_circuits) (H31): a
+light ring, three quark rings, or Skyrme's knot. It takes the knot of
+[knotted_light](../examples/knotted_light) and
+[ether_knot](../examples/ether_knot) (H29) as what would hold the
+electron's light. Both rings are far smaller than the atom (193 fm and
+0.21 fm against 52,918 fm), so at the atom's scale they are point charges,
+and the bound state is Kron's 1945 Schrödinger network. A radial ladder
+gives −Z²/2 and −Z²/8 Ha to 10⁻⁸, and its kronspice twin agrees with it
+to 8×10⁻¹⁵.
+
+The 21 cm line is built as a circuit too. The electron's spin cloud is a
+magnetization, and so a set of coaxial current loops round the proton
+ring. Their mutual-inductance energy is Fermi's contact energy to
+1.3×10⁻⁵, and with the measured electron and proton it gives
+1420.50 MHz against the measured 1420.41.
+
+| Electron + proton | Net charge | Lyman-α | 21 cm line | 1S–2S size shift |
+|---|---|---|---|---|
+| toroidal photon + light ring | +0.090 e | 146.7 nm | 349 MHz | −0.93 MHz |
+| charge set to e + light ring | 0 | 121.568 nm | 509 MHz | −0.91 MHz |
+| charge set to e + quark rings | 0 | 121.568 nm | 1420.5 MHz | −0.34 MHz |
+| Measured | < 10⁻²¹ e | 121.567 nm | 1420.41 MHz | known to 10 Hz |
+
+The same network answers two readings of Walter Russell's octave painting.
+Moving its outer short circuit inward compresses the atom: every line
+shortens, and Lyman α falls from 121.6 nm to 26.8 nm at a 2 a₀ wall
+(375 GPa). That is "high pressure, short waves". Adding the centrifugal
+term gives the 2p_z state, whose two lobes meet at a plane, as his two
+spheres do (chapter 10, section 10.6).
+
+The paper's charge of 0.910 e leaves the atom charged and moves every line
+by Z². With the charge set to e, the levels are Bohr's, and the rest tests
+the proton's moment and size. The knot sized to the electron rings at
+1.74 MeV, so it predicts an excited electron that no experiment has seen.
+
+## 9.8 What to keep
 
 - The bench is fixed before any model is run: the measured values and the
   Dirac prediction appear beside every result, and the Zeeman test comes
@@ -275,7 +314,8 @@ go run ./examples/vortex_ring
 go run ./examples/space_vortex
 go run ./examples/kron_electron          # -png viz/ring_field.png, -gif viz/ring_motion.gif
 go run ./examples/photon_electron        # about ten minutes
-go test ./examples/kelvin_ring ./examples/vortex_ring ./examples/space_vortex ./examples/kron_electron ./examples/photon_electron
+go run ./examples/light_hydrogen         # about two seconds
+go test ./examples/kelvin_ring ./examples/vortex_ring ./examples/space_vortex ./examples/kron_electron ./examples/photon_electron ./examples/light_hydrogen
 ```
 
 ## Sources
@@ -300,5 +340,10 @@ go test ./examples/kelvin_ring ./examples/vortex_ring ./examples/space_vortex ./
 - J. C. Maxwell, *Treatise*, Vol. II, Arts. 701 and 706; P. G. Saffman,
   *Vortex Dynamics*, 1992, §10.2; R. A. Nelson, M. G. Olsson, *Am. J.
   Phys.* 54, 112 (1986).
+- G. Kron, "Electric circuit models of the Schrödinger equation," *Phys.
+  Rev.* 67, 39 (1945); E. Fermi, *Z. Phys.* 60, 320 (1930); C. G. Parthey
+  et al., *Phys. Rev. Lett.* 107, 203001 (2011); H. Hellwig et al., *IEEE
+  Trans. Instrum. Meas.* 19, 200 (1970); G. Bressi et al., *Phys. Rev. A*
+  83, 052101 (2011) for hydrogen (section 9.7).
 - [doc/kelvin-references.md](../doc/kelvin-references.md),
   [doc/tewari-references.md](../doc/tewari-references.md).

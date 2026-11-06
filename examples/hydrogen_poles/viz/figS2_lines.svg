@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="520" viewBox="0 0 1000 520" font-family="system-ui, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="1000" height="520" fill="#fcfcfb"/>
+<text x="24.0" y="30.0" text-anchor="start" fill="#0b0b0b" font-size="17" font-weight="600">Fig. S2 — Hydrogen&#39;s lines found by kronspice and the model, against measurement</text>
+<text x="24.0" y="52.0" text-anchor="start" fill="#52514e" font-size="13" font-weight="400">difference from the measured value in parts per million, placed by frequency; the bands show where each line is observed</text>
+<rect x="90.0" y="90.0" width="373.8" height="300.0" fill="#e4e3df" fill-opacity="0.6"/>
+<text x="276.9" y="106.0" text-anchor="middle" fill="#52514e" font-size="11" font-weight="400">radio / microwave</text>
+<rect x="463.8" y="90.0" width="335.9" height="300.0" fill="#fcfcfb" fill-opacity="0.6"/>
+<text x="631.8" y="106.0" text-anchor="middle" fill="#52514e" font-size="11" font-weight="400">infrared</text>
+<rect x="799.7" y="90.0" width="31.8" height="300.0" fill="#e4e3df" fill-opacity="0.6"/>
+<text x="815.6" y="106.0" text-anchor="middle" fill="#52514e" font-size="11" font-weight="400">visible</text>
+<rect x="831.5" y="90.0" width="118.5" height="300.0" fill="#fcfcfb" fill-opacity="0.6"/>
+<text x="890.7" y="106.0" text-anchor="middle" fill="#52514e" font-size="11" font-weight="400">ultraviolet</text>
+<line x1="90.0" y1="90.0" x2="90.0" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="90.0" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10⁸ Hz</text>
+<line x1="197.5" y1="90.0" x2="197.5" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="197.5" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10⁹ Hz</text>
+<line x1="305.0" y1="90.0" x2="305.0" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="305.0" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10¹⁰ Hz</text>
+<line x1="412.5" y1="90.0" x2="412.5" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="412.5" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10¹¹ Hz</text>
+<line x1="520.0" y1="90.0" x2="520.0" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="520.0" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10¹² Hz</text>
+<line x1="627.5" y1="90.0" x2="627.5" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="627.5" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10¹³ Hz</text>
+<line x1="735.0" y1="90.0" x2="735.0" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="735.0" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10¹⁴ Hz</text>
+<line x1="842.5" y1="90.0" x2="842.5" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="842.5" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10¹⁵ Hz</text>
+<line x1="950.0" y1="90.0" x2="950.0" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="950.0" y="408.0" text-anchor="middle" fill="#52514e" font-size="12" font-weight="400">10¹⁶ Hz</text>
+<line x1="90.0" y1="390.0" x2="950.0" y2="390.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="394.0" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">-40</text>
+<line x1="90.0" y1="340.0" x2="950.0" y2="340.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="344.0" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">-20</text>
+<line x1="90.0" y1="290.0" x2="950.0" y2="290.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="294.0" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">0</text>
+<line x1="90.0" y1="240.0" x2="950.0" y2="240.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="244.0" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">20</text>
+<line x1="90.0" y1="190.0" x2="950.0" y2="190.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="194.0" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">40</text>
+<line x1="90.0" y1="140.0" x2="950.0" y2="140.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="144.0" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">60</text>
+<line x1="90.0" y1="90.0" x2="950.0" y2="90.0" stroke="#e4e3df" stroke-width="1"/>
+<text x="82.0" y="94.0" text-anchor="end" fill="#52514e" font-size="12" font-weight="400">80</text>
+<line x1="90.0" y1="390.0" x2="950.0" y2="390.0" stroke="#9a988f" stroke-width="1"/>
+<text x="520.0" y="432.0" text-anchor="middle" fill="#52514e" font-size="13" font-weight="400">frequency (log scale)</text>
+<text x="32.0" y="240.0" text-anchor="middle" fill="#52514e" font-size="13" transform="rotate(-90 32.0 240.0)">found − measured (ppm)</text>
+<polyline fill="none" stroke="#52514e" stroke-width="1" stroke-linejoin="round" points="90.0,290.0 950.0,290.0"/>
+<circle cx="884.6" cy="330.0" r="6.0" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="884.6" y="318.0" text-anchor="middle" fill="#0b0b0b" font-size="12" font-weight="500">Lyα</text>
+<circle cx="805.9" cy="323.1" r="6.0" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="805.9" y="343.1" text-anchor="middle" fill="#0b0b0b" font-size="12" font-weight="500">Hα</text>
+<circle cx="756.9" cy="313.3" r="6.0" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="756.9" y="301.3" text-anchor="middle" fill="#0b0b0b" font-size="12" font-weight="500">Paα</text>
+<circle cx="720.9" cy="296.9" r="6.0" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="720.9" y="316.9" text-anchor="middle" fill="#0b0b0b" font-size="12" font-weight="500">Brα</text>
+<circle cx="309.3" cy="335.9" r="6.0" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="309.3" y="323.9" text-anchor="middle" fill="#0b0b0b" font-size="12" font-weight="500">2p fine structure</text>
+<circle cx="213.9" cy="149.7" r="6.0" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="213.9" y="169.7" text-anchor="middle" fill="#0b0b0b" font-size="12" font-weight="500">21 cm</text>
+<circle cx="353.1" cy="245.7" r="6.0" fill="#eb6834" stroke="#fcfcfb" stroke-width="2"/>
+<text x="353.1" y="233.7" text-anchor="middle" fill="#0b0b0b" font-size="12" font-weight="500">ESR (1 T)</text>
+<rect x="90.0" y="456.0" width="14" height="4" rx="2" fill="#2a78d6"/>
+<text x="110.0" y="461.0" text-anchor="start" fill="#0b0b0b" font-size="13" font-weight="400">kronspice circuit resonance</text>
+<rect x="312.4" y="456.0" width="14" height="4" rx="2" fill="#eb6834"/>
+<text x="332.4" y="461.0" text-anchor="start" fill="#0b0b0b" font-size="13" font-weight="400">this example&#39;s model (Part 1)</text>
+<text x="90.0" y="488.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">All within 60 ppm. The remainders are physics the models leave out: the Dirac level shifts and the Lamb shift for the optical lines; Breit, recoil</text>
+<text x="90.0" y="506.0" text-anchor="start" fill="#52514e" font-size="12" font-weight="400">and proton-structure terms for 21 cm; the bound-state g-factor correction (−α²/3) for ESR. The ESR point is the frequency per tesla, plotted at 1 T.</text>
+</svg>

@@ -137,9 +137,27 @@ P²/(2·R_par) to 1e-9, that the residual is below 1e-9, that matching puts
 the peak back at f0 within 0.1 %, and that the exported chain torn
 automatically at `LMATCH` into two pieces agrees with MNA to 5e-12. The
 flask Q, the coupling area and the transducer values are declared
-assumptions, to be replaced by a hydrophone calibration of a real flask;
-the bubble itself is out of scope, and the chain ends at the pressure a
-bubble would be driven by.
+assumptions, to be replaced by a hydrophone calibration of a real flask.
+
+The bubble the chain drives is
+[bubble_collapse](../examples/bubble_collapse), and it is a circuit in the
+same acoustic domain. The liquid around it is an inertance ρ/4πR in
+parallel with the pulsating sphere's radiation resistance ρc/4πR², the
+wall's viscosity a resistance, and the argon a nonlinear compliance with a
+hard core. Because the inertance depends on the volume, the circuit's own
+charge, its equation carries Kron's Christoffel term ½M′UU_M. Without the
+losses it is the Rayleigh–Plesset equation, and Keller–Miksis runs beside
+it as the twin. At 1.3 atm the 4.5 µm argon bubble swells to 32.6 µm and
+collapses to 0.73 µm. Per cycle it takes 14.3 nJ from the sound field and
+returns 13.3 nJ as a sound pulse, 91 % of it within ±10 ns of the
+minimum, and 1.0 nJ as viscous heat; the ledger residual is 6×10⁻¹⁰. Put
+back on node p as its fundamental admittance, it draws 0.36 mW, 5 % of
+what the flask's own losses take, and raises the generator drive from
+1.898 V to 1.924 V. The same example compares the collapse with the
+knotted light of Chapter 9: lossless, the collapse retraces itself when
+reversed, like the knot; the radiated sound makes it irreversible; and in
+the field solver its thermal flash shows no net circular polarization,
+where the knot shows +0.9996.
 
 ## 7.3 Water's bonds as a circuit
 

@@ -262,7 +262,55 @@ drops around the loaded loop, or a torque transducer on the shaft, or
 insulated bearings. Status: *untested*; the claim rests on an unmeasured
 loaded EMF.
 
-## 10.6 The bounds recorded so far
+## 10.6 Russell's octave bar magnet (H33)
+
+Walter Russell painted the bar magnet as two spheres of lens-shaped rings
+strung on its axis, and wrote beneath it that "a bar magnet has four
+pairs of poles — not one pair".
+[octave_magnet](../examples/octave_magnet) builds the standard field
+exactly. A magnetized rod is a sheet of current on its side
+(J = ∇×M), its poles are its magnetic charge −∇·M, and its field lines
+are the contours of the flux function ρA_φ. The sheet matches the exact
+solenoid formula to 1.3×10⁻⁶, and a search coil modelled in kronspice
+reads the field model's flux to six digits.
+
+The two readings separate cleanly. A uniform bar carries charge only on
+its two end faces, so its outside lines run end to end in one family.
+Four pairs of poles need the magnetization to reverse three times inside
+the bar; its lines then bow from pole to pole along the axis, the chain
+of lenses Russell drew. The bench test is a Hall probe run beside a real
+bar: B_z changes sign twice for one pair, and five or more times for
+four. Until that scan is made the entry stays *untested*.
+
+The same example closes the bar into a ring of twelve sections, each
+magnetized opposite to its neighbours: either radially (N S N S … round the
+outside) or along the ring, so that like poles meet at every joint as in
+the four-segment bar. Both give twelve poles round the outside, at the
+section centres or at the joints, and a crown of twelve field arches
+between them. A ring magnetized outward all round gives none. A pickup
+coil modelled in kronspice sees six cycles per revolution, and its ledger
+closes.
+
+Read as hydrogen, Russell's words become entry H34,
+[hydrogen_poles](../examples/hydrogen_poles). Poles come in powers of two:
+one pair is a dipole, four pairs an octupole. An atom has no magnetic
+quadrupole, and a 2^k-pole needs angular momentum j ≥ k/2, so ground-state
+hydrogen has exactly one pair. The computed field confirms it, with the
+dipole equal to the Landé value and the octupoles in the Wigner–Eckart
+ratio. Four pairs first appear in the excited 2p3⁄2 level, whose spin
+magnetization makes four N S N S zones round the atom out to 15.6 Bohr
+radii. Read as two atoms, the painting's spheres are H₂ with its four small
+magnets. The Heitler–London bond forms only with the electron spins
+opposite, so those two magnets cancel, and what is left are the protons'
+dipoles, 658 times weaker.
+
+The same painting's "high pressure, short waves" and its two spheres
+meeting at a plane hold in [light_hydrogen](../examples/light_hydrogen)
+as the confined atom and the 2p_z state (chapter 9, section 9.7). The
+painting and all three comparisons are in
+[doc/russell-octave-report.md](../doc/russell-octave-report.md).
+
+## 10.7 The bounds recorded so far
 
 | Entry | What was computed | Standard reading | Status |
 |---|---|---|---|
@@ -284,7 +332,7 @@ between SU(3) and U(1), with no circuit quantity on the non-abelian side. None o
 a statement of what the published equations or numbers contain, with the
 measurement that would change the status written next to it.
 
-## 10.7 What to keep
+## 10.8 What to keep
 
 - A register entry is a model, a standard twin, an evidence criterion and
   a status, and it stays after a null result with its bound.
