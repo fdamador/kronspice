@@ -31,7 +31,7 @@ added, it gets a row in `examples/README.md` and a place in a chapter.
 | 7 | [Networks beyond circuits](07-networks-beyond-circuits.md) | acoustic_drive, water_vibration, dna_vibration, kron_schrodinger | written |
 | 8 | [Craft and space](08-craft-and-space.md) | tether, coiled_tether, ring_towers, double_hull, machine_spacetime, earth_machine | written |
 | 9 | [The electron test bench](09-the-electron-test-bench.md) | kelvin_ring, vortex_ring, space_vortex, kron_electron, photon_electron, light_hydrogen | written |
-| 10 | [Hypotheses under test](10-hypotheses-under-test.md) | eckardt_homopolar, parametric_lcr, pais_cavity, space_power_generator, octave_magnet | written |
+| 10 | [Hypotheses under test](10-hypotheses-under-test.md) | eckardt_homopolar, parametric_lcr, pais_cavity, space_power_generator, octave_magnet, toroidal_coherence, barrett_osc | written |
 
 ## The shape of a chapter
 
