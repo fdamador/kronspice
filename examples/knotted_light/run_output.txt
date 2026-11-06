@@ -14,7 +14,7 @@ Solver helicity at t = 0 / exact: 0.9921
       3.00 |            0.0186 / 0.0200 |   0.0003 |      3.159 |    0.9935 / 0.9933 |    2.0e-14 | +1.0000 (true) / +3.3650 (false)
       4.00 |            0.0012 / 0.0012 |   0.0007 |      4.117 |    0.9873 / 0.9824 |    2.9e-14 | +1.0000 (true) / +3.9961 (false)
 
-Ledger residual -4.8e-13 of the starting energy; max |div B| 5.2e-15 (relative)
+Ledger residual 4.6e-14 of the starting energy; max |div B| 5.2e-15 (relative)
 
 Standard prediction: linking conserved (topology carried by Maxwell's equations), energy not held:
 the knot expands at c while staying linked. Holding it needs a nonlinear term (Skyrme; Faddeev–Niemi;
@@ -70,8 +70,18 @@ Part 2: a pulsing knot — knots tightest at t = 0, 8, 16 L0/c, all fed in from 
         19 |        0.0182 / 0.0179 |         0.9909 |   1.6068 / 1.5939 |          1.1e-02 |       0.015 | —
         20 |        0.0012 / 0.0012 |         0.9891 |   1.6068 / 1.5957 |          1.1e-02 |       0.005 | —
 Net work of the surface over the middle cycle (t = 4 … 12): +0.0046 knot energies (in = out)
-Ledger residual -1.5e-12 of one knot's energy
+Ledger residual -3.7e-13 of one knot's energy
 
 Standard prediction: Maxwell's equations are time-symmetric, so the contraction is the expansion run
 backwards; a knot rebuilt every period needs an incoming wave supplied from outside at one knot's
 energy per period (power U·c/(8 L0) here). The run shows the bookkeeping, not a source for that wave.
+
+Part 3: the Euler–Heisenberg vacuum (QED, measured) as the source of the inward wave
+Kron's plane-wave network with the Euler–Heisenberg vacuum as its nonlinear primitive (kron.EHLine), at 0.09 E_s
+  a = (α/90π)(E/E_s)² = 2.09e-07; nonlinear share of the field energy at the peak 1.25e-06 (≈ 6a)
+  A. explosion: nonlinear energy back between the separated halves 6.1e-28 of the explosion (linear vacuum, lattice only: 3.4e-17);
+     the whole nonlinear part of the field 3.1e-13 (phase shifts the halves gave each other while crossing)
+  B. a probe crossing a counter-propagating field of 0.08 E_s (a = 1.65e-07): 2.4e-17 of it turned round (Fresnel bound (8a)² = 1.7e-12)
+  Needed for a knot rebuilt every period: 1 (one knot's energy inward per period).
+  So the measured QED vacuum returns none of the explosion that can be told from zero, and could turn
+  round at most ~6a ≈ 1e-6 of it even in principle: it is not the source of the inward wave.

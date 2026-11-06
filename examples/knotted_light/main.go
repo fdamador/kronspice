@@ -533,6 +533,7 @@ func reportH30() {
 	fmt.Println("\nStandard prediction: Maxwell's equations are time-symmetric, so the contraction is the expansion run")
 	fmt.Println("backwards; a knot rebuilt every period needs an incoming wave supplied from outside at one knot's")
 	fmt.Println("energy per period (power U·c/(8 L0) here). The run shows the bookkeeping, not a source for that wave.")
+	reportVacuum()
 }
 
 func printCycle(r CycleResult) {
