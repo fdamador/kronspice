@@ -1,0 +1,22 @@
+
+Stacked base pairs (A-form step of the RNA duplex 1EKA, backbone absent, methyl caps; AMBER OL3, gas phase)
+  AU   1 pair(s),  33 atoms,  93 vibrations; rise  Å (start ), twist ° (start ); 11 modes below 200 cm⁻¹, 0 of them rigid pair motions
+  AU2  2 pair(s),  66 atoms, 192 vibrations; rise 5.83 Å (start 4.10), twist 33.11° (start 34.50); 28 modes below 200 cm⁻¹, 4 of them rigid pair motions
+  AU3  3 pair(s),  99 atoms, 291 vibrations; rise 4.60 4.73 Å (start 4.04 4.03), twist -16.51 46.02° (start 33.41 32.84); 43 modes below 200 cm⁻¹, 9 of them rigid pair motions
+  AU4  4 pair(s), 132 atoms, 390 vibrations; rise 4.56 4.78 4.56 Å (start 3.88 4.08 3.88), twist -17.49 43.69 -17.49° (start 30.95 33.61 30.17); 59 modes below 200 cm⁻¹, 12 of them rigid pair motions
+  GC   1 pair(s),  35 atoms,  99 vibrations; rise  Å (start ), twist ° (start ); 11 modes below 200 cm⁻¹, 0 of them rigid pair motions
+  GC2  2 pair(s),  70 atoms, 204 vibrations; rise 3.19 Å (start 4.73), twist 77.18° (start 35.00); 28 modes below 200 cm⁻¹, 6 of them rigid pair motions
+  GC3  3 pair(s), 105 atoms, 309 vibrations; rise 2.52 3.91 Å (start 4.68 3.54), twist 67.22 16.19° (start 34.26 33.13); 45 modes below 200 cm⁻¹, 7 of them rigid pair motions
+  GC4  4 pair(s), 140 atoms, 414 vibrations; rise 2.97 3.59 1.38 Å (start 4.46 3.60 4.47), twist 56.02 -3.13 54.97° (start 31.23 34.15 30.39); 60 modes below 200 cm⁻¹, 13 of them rigid pair motions
+  polyA2 2 pair(s),  66 atoms, 192 vibrations; rise 5.83 Å (start 4.10), twist 33.11° (start 34.50); 28 modes below 200 cm⁻¹, 4 of them rigid pair motions
+  polyA3 3 pair(s),  99 atoms, 291 vibrations; rise 4.58 6.09 Å (start 4.04 4.04), twist -17.03 23.22° (start 33.44 32.92); 44 modes below 200 cm⁻¹, 9 of them rigid pair motions
+  polyA4 4 pair(s), 132 atoms, 390 vibrations; rise 5.31 4.85 6.19 Å (start 3.87 4.09 3.87), twist 35.96 -32.68 25.35° (start 30.93 33.65 30.21); 60 modes below 200 cm⁻¹, 14 of them rigid pair motions
+  ApU  2 pair(s),  66 atoms, 192 vibrations; rise 4.74 Å (start 4.09), twist 48.71° (start 34.33); 28 modes below 200 cm⁻¹, 5 of them rigid pair motions
+  GU   1 pair(s),  34 atoms,  96 vibrations; rise  Å (start ), twist ° (start ); 12 modes below 200 cm⁻¹, 0 of them rigid pair motions
+  GU2  2 pair(s),  68 atoms, 198 vibrations; rise 3.23 Å (start 4.42), twist 93.09° (start 50.72); 28 modes below 200 cm⁻¹, 3 of them rigid pair motions
+  checks (2-pair stacks): modal spectrum against the direct solve and against kronspice's AC analysis of the circuit
+    AU2 at 200.0 and 1849.4 cm⁻¹: modal vs direct 9.0e-06, modal vs circuit 9.0e-06 (relative)
+    GC2 at 33.8 and 827.7 cm⁻¹: modal vs direct 2.2e-06, modal vs circuit 2.2e-06 (relative)
+    polyA2 at 200.0 and 1849.4 cm⁻¹: modal vs direct 9.0e-06, modal vs circuit 9.0e-06 (relative)
+    ApU at 195.9 and 3362.8 cm⁻¹: modal vs direct 1.2e-05, modal vs circuit 1.2e-05 (relative)
+    GU2 at 93.1 and 3362.2 cm⁻¹: modal vs direct 1.2e-05, modal vs circuit 1.2e-05 (relative)
