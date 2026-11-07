@@ -1,0 +1,8 @@
+pair,donor,hydrogen,acceptor,h_acceptor_A,donor_acceptor_A,angle_deg
+AU,A:N6,A:H61,U:O4,1.870,2.885,178.6
+AU,U:N3,U:H3,A:N1,1.911,2.918,175.4
+GC,G:N1,G:H1,C:N3,1.919,2.924,174.0
+GC,G:N2,G:H21,C:O2,1.810,2.828,176.9
+GC,C:N4,C:H41,G:O6,1.830,2.849,179.8
+GU,G:N1,G:H1,U:O2,1.798,2.802,178.1
+GU,U:N3,U:H3,G:O6,1.883,2.886,170.0

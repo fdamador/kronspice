@@ -297,6 +297,22 @@ for four. As a side note, `sound/` holds the spectra rendered as audio at
 3 Hz per cm⁻¹, loudness by the square root of the IR intensity, which is
 a way of hearing that G·C is the stiffer link.
 
+[rna_vibration](../examples/rna_vibration) repeats every one of these
+experiments for RNA: 9-methyladenine, 1-methyluracil, 9-methylguanine and
+1-methylcytosine, the A·U and G·C pairs and RNA's own wobble pair G·U,
+cut from the NMR structure of the duplex r(GAGUGCUC)₂ (PDB 1EKA, which
+carries its hydrogens) and minimized in the AMBER RNA force field OL3.
+The bases come out as they did for DNA, with N–H stretches 3 to 6 % below
+the data, and uracil's N3–H stretch 3.4 % below its argon-matrix value;
+the C4=O stretch is spread over several ring modes and has no clean line.
+The wobble pair keeps exactly its two hydrogen bonds, G N1–H···O2 U and
+U N3–H···O6 G, and its stiffest pairing mode, at 131 cm⁻¹, sits beside
+A·U's 134 cm⁻¹ and below G·C's 152 cm⁻¹: two hydrogen bonds, and about
+the strength of A·U. Its stacks of two to four pairs repeat one real
+A-form step of the duplex, GA/UC, since 1EKA has no AA/UU or CG step to
+cut; they split lines into bands as the DNA stacks do, and the lowest
+mode falls from 12.5 cm⁻¹ for one A·U pair to 6.4 cm⁻¹ for four.
+
 ## 7.5 Kron's Schrödinger network
 
 In 1945 Kron showed that the Schrödinger equation is a ladder network:
@@ -392,6 +408,7 @@ go run ./examples/acoustic_drive
 go run ./cmd/kronspice -json examples/water_vibration/netlists/h2o.cir
 go run ./examples/water_vibration
 go run ./examples/dna_vibration -stacks=false
+go run ./examples/rna_vibration -stacks=false
 go run ./cmd/kronspice -json examples/kron_schrodinger/netlists/h2plus_coarse.cir
 go run ./examples/kron_schrodinger
 ```

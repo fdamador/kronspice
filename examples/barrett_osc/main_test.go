@@ -7,6 +7,9 @@ import (
 	"math"
 	"math/cmplx"
 	"testing"
+
+	"github.com/fdamador/kronspice/analysis"
+	"github.com/fdamador/kronspice/circuit"
 )
 
 // Fig. 2: coils and capacitors with floating terminals are a linear
@@ -129,11 +132,105 @@ func TestFig5(t *testing.T) {
 	}
 }
 
-func TestMainRuns(t *testing.T) {
-	if testing.Short() {
-		t.Skip("full run")
-	}
-	if err := run(); err != nil {
+// Fig. 2G bench: air-core pancakes (ordinary or bifilar) make no mixing
+// product; an unbiased Metglas core makes odd orders, a biased one the
+// three-wave idler too; Manley–Rowe holds for the core's flux curve.
+// (A coarser step than the printed run: these are yes/no checks.)
+func TestBench(t *testing.T) {
+	b := DefaultBench()
+	b.Points = 20000
+	cs, err := benchCases(b, []int{1, 2, 3}) // bifilar air; Metglas; Metglas + bias
+	if err != nil {
 		t.Fatal(err)
+	}
+	if c := cs[0]; c.Idler > 1e-12 || c.IM3 > 1e-12 {
+		t.Errorf("%s: idler %.2g, 2fp−fs %.2g", c.Name, c.Idler, c.IM3)
+	}
+	if c := cs[1]; c.IM3 < 1e-4 || c.Idler > 1e-2*c.IM3 {
+		t.Errorf("unbiased Metglas: 2fp−fs %.2g, fp−fs %.2g", c.IM3, c.Idler)
+	}
+	if c := cs[2]; c.Idler < 1e-4 {
+		t.Errorf("biased Metglas: idler %.2g", c.Idler)
+	}
+	for _, c := range cs[1:] {
+		if math.Abs(c.MR1) > 2e-2 || math.Abs(c.MR2) > 2e-2 || c.Run.Ledger > 1e-2 {
+			t.Errorf("%s: Manley–Rowe %.2g %.2g, ledger %.2g", c.Name, c.MR1, c.MR2, c.Run.Ledger)
+		}
+	}
+}
+
+// The Tesla-coil solver against kronspice: the coil with the gap held
+// closed (a 0.2 Ω resistor) ringing from a charged Cp.
+func TestTeslaTwin(t *testing.T) {
+	tc := NewTeslaCoil(false)
+	lp := tc.Lp()
+	const dt, steps = 2e-9, 15000
+	n := newTC()
+	n.C("CP", "hv", "0", tc.Cp, tc.Vdc)
+	n.R("RG", "hv", "pa", 0.2)
+	l1 := n.L("LP", "pa", "pb", lp)
+	n.R("RP", "pb", "0", 0.05)
+	l2 := n.L("LS", "0", "sm", tc.Ls)
+	n.R("RSEC", "sm", "top", tc.Rsec)
+	n.C("CSELF", "0", "top", tc.Cself+tc.Ctop, 0)
+	n.Couple(l1, l2, tc.K)
+	if err := n.Prepare(); err != nil {
+		t.Fatal(err)
+	}
+	var mine []float64
+	for k := 0; k < steps; k++ {
+		if err := n.Step(dt); err != nil {
+			t.Fatal(err)
+		}
+		mine = append(mine, n.Volt("top"))
+	}
+	b := circuit.NewBuilder("tesla twin")
+	b.CapacitorIC("CP", "hv", "0", tc.Cp, tc.Vdc)
+	b.Resistor("RG", "hv", "pa", 0.2)
+	b.Inductor("LP", "pa", "pb", lp)
+	b.Resistor("RP", "pb", "0", 0.05)
+	b.Inductor("LS", "0", "sm", tc.Ls)
+	b.Resistor("RSEC", "sm", "top", tc.Rsec)
+	b.Capacitor("CSELF", "0", "top", tc.Cself+tc.Ctop)
+	b.Mutual("K1", "LP", "LS", tc.K)
+	c, err := b.Build()
+	if err != nil {
+		t.Fatal(err)
+	}
+	wf, err := analysis.Tran(c, analysis.TranSpec{Step: dt, Stop: dt * steps, MaxStep: dt, UIC: true}, analysis.TranOptions{MaxSteps: 1_000_000})
+	if err != nil {
+		t.Fatal(err)
+	}
+	v, _ := wf.NodeVoltage("top")
+	ref := resample(wf.Time, v, dt, dt, steps)
+	var peak, diff float64
+	for j := range ref {
+		peak = math.Max(peak, math.Abs(ref[j]))
+		diff = math.Max(diff, math.Abs(ref[j]-mine[j]))
+	}
+	if diff > 1e-3*peak {
+		t.Errorf("top-load voltage: max difference %.3g V of peak %.3g V", diff, peak)
+	}
+	if math.Abs(n.Residual()) > 1e-9*n.stored0 {
+		t.Errorf("ledger residual %.2g J of %.3g J", n.Residual(), n.stored0)
+	}
+}
+
+// Spark-gap Tesla coil: the timed gap puts sidebands on the signal at
+// fs ± k·1 kHz, for both windings; the ledger closes.
+func TestTeslaMixing(t *testing.T) {
+	for _, bif := range []bool{false, true} {
+		r, err := RunTesla(bif, true)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, k := range []int{-1, 1} {
+			if a := 2 * cmplx.Abs(r.MixLines[k]); a < 1e-3*r.SigLine {
+				t.Errorf("bifilar=%v: sideband %+d at %.2g V of signal %.2g V", bif, k, a, r.SigLine)
+			}
+		}
+		if math.Abs(r.Both.Residual) > 1e-4*r.Both.Supplied {
+			t.Errorf("bifilar=%v: ledger %.2g of %.3g J", bif, r.Both.Residual, r.Both.Supplied)
+		}
 	}
 }

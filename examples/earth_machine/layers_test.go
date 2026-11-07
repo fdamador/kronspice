@@ -121,3 +121,34 @@ func TestCavityLossyFit(t *testing.T) {
 		}
 	}
 }
+
+// Layer 7: with a linear ionosphere the two transmitters only add; with
+// electron heating the third-order products appear far above the linear
+// floor, and the ledger closes in both.
+func TestNonlinearIonosphere(t *testing.T) {
+	p := DefaultNLIonosphere()
+	d, err := p.DriveFor(0.5)
+	if err != nil {
+		t.Fatal(err)
+	}
+	p.Drive, p.Linear = d, true
+	lin, err := p.Run()
+	if err != nil {
+		t.Fatal(err)
+	}
+	p.Linear = false
+	nl, err := p.Run()
+	if err != nil {
+		t.Fatal(err)
+	}
+	pr := p.Products()
+	for _, k := range []string{"2f1-f2", "2f2-f1"} {
+		a, b := absBin(nl.Lines, pr[k]), absBin(lin.Lines, pr[k])
+		if a < 100*b || a < 1e-3*absBin(nl.Lines, pr["f2"]) {
+			t.Errorf("%s: nonlinear %.3g V, linear %.3g V", k, a, b)
+		}
+	}
+	if lin.Ledger > 1e-4 || nl.Ledger > 1e-4 {
+		t.Errorf("ledger %.2g, %.2g", lin.Ledger, nl.Ledger)
+	}
+}

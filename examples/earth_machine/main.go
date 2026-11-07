@@ -320,7 +320,8 @@ func main() {
 	tEnd := flag.Float64("t", 1000, "run length (dimensionless time)")
 	dt := flag.Float64("dt", 0.01, "time step")
 	csv := flag.String("csv", "", "write the co-rotating circuit trace to this CSV")
-	layer := flag.Int("layer", 0, "run one part only (1 geodynamo, 2 atmospheric circuit, 3 cavity, 4 layer-1 studies, 5 the layers linked, 6 stacked design); 0 runs all")
+	layer := flag.Int("layer", 0, "run one part only (1 geodynamo, 2 atmospheric circuit, 3 cavity, 4 layer-1 studies, 5 the layers linked, 6 stacked design, 7 nonlinear ionosphere); 0 runs all")
+	nlData := flag.String("nldata", "", "layer 7: also write its waveforms and spectra (CSV) to this directory")
 	data := flag.String("data", "", "write the figure data (CSV) to this directory and exit")
 	flag.Parse()
 	if *data != "" {
@@ -353,6 +354,11 @@ func main() {
 	if *layer == 0 || *layer == 6 {
 		if err := runStacked(); err != nil {
 			log.Fatalf("stacked: %v", err)
+		}
+	}
+	if *layer == 0 || *layer == 7 {
+		if err := runNonlinearIonosphere(*nlData); err != nil {
+			log.Fatalf("nonlinear ionosphere: %v", err)
 		}
 	}
 	if *layer == 0 || *layer == 4 {

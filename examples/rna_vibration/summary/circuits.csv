@@ -1,0 +1,8 @@
+molecule,name,atoms,vibrations,springs,couplings_inside_bases,pairing_couplings,size_A,d_over_lambda,thermal_release_W,lowest_cm-1,highest_cm-1
+A,"9-methyladenine",18,48,49,2916,0,7.42,0.00025,2.519e-20,47.6,3367.0
+U,"1-methyluracil",15,39,39,2025,0,6.01,0.000199,1.24e-20,52.1,3312.7
+G,"9-methylguanine",19,51,52,3249,0,7.47,0.000251,2.973e-20,31.1,3363.3
+C,"1-methylcytosine",16,42,41,2304,0,6.64,0.000224,2.522e-20,45.4,3365.6
+AU,"9-methyladenine:1-methyluracil Watson-Crick pair",33,93,88,4941,5157,12.64,0.000425,3.602e-20,12.5,3365.4
+GC,"9-methylguanine:1-methylcytosine Watson-Crick pair",35,99,93,5553,5787,12.49,0.000421,5.162e-20,17.9,3369.9
+GU,"9-methylguanine:1-methyluracil wobble pair",34,96,91,5274,5436,12.80,0.000431,4.127e-20,12.4,3363.1

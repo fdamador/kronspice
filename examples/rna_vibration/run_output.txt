@@ -1,0 +1,73 @@
+RNA bases, Watson–Crick pairs and the G·U wobble pair as circuits — infrared absorption and release
+Force field: AMBER RNA OL3 (Cornell et al. base terms), methyl caps at the glycosidic N; harmonic, gas phase.
+Starting structure: PDB 1EKA, NMR duplex r(GAGUGCUC)2 with hydrogens (Chen et al., Biochemistry 39, 8970, 2000); A·U = A2·U7, G·C = G1·C8, G·U = G5·U4; minimized here.
+
+A (9-methyladenine): 18 atoms, 48 vibrations 48–3367 cm⁻¹, RMS gradient 3.8e-13 kcal/mol/Å
+  circuit examples/rna_vibration/netlists/a.cir: 49 bond/angle springs, 2916 coupling sources inside the bases, 0 base-pairing sources, 0 entries < 1e-9 dropped (largest 0.0e+00 mdyn/Å)
+  lumped check: size 7.4 Å against the shortest infrared wavelength 29700 Å: d/λ = 2.5e-04 (λ/10 rule: lumped)
+  strongest absorption = strongest release lines (cm⁻¹): 589 (torsion/out-of-plane/nonbonded 100%; 134 km/mol, A = 6 s⁻¹); 670 (torsion/out-of-plane/nonbonded 100%; 159 km/mol, A = 9 s⁻¹); 862 (torsion/out-of-plane/nonbonded 100%; 175 km/mol, A = 16 s⁻¹); 1750 (A H61–N6–H62 bend 26%, A C5–C4 stretch 19%; 151 km/mol, A = 58 s⁻¹); 1846 (A C5–C4 stretch 20%; 168 km/mol, A = 72 s⁻¹); 3247 (A N6–H62 stretch 52%, A N6–H61 stretch 47%; 108 km/mol, A = 142 s⁻¹); 3367 (A N6–H61 stretch 52%, A N6–H62 stretch 47%; 316 km/mol, A = 449 s⁻¹)
+  thermal infrared release at 300 K: 2.52e-20 W per molecule
+
+U (1-methyluracil): 15 atoms, 39 vibrations 52–3313 cm⁻¹, RMS gradient 1.6e-13 kcal/mol/Å
+  circuit examples/rna_vibration/netlists/u.cir: 39 bond/angle springs, 2025 coupling sources inside the bases, 0 base-pairing sources, 0 entries < 1e-9 dropped (largest 0.0e+00 mdyn/Å)
+  lumped check: size 6.0 Å against the shortest infrared wavelength 30187 Å: d/λ = 2.0e-04 (λ/10 rule: lumped)
+  strongest absorption = strongest release lines (cm⁻¹): 918 (torsion/out-of-plane/nonbonded 94%; 115 km/mol, A = 12 s⁻¹); 1789 (U C2–O2 stretch 20%, U H3–N3–C2 bend 16%; 102 km/mol, A = 41 s⁻¹); 3313 (U N3–H3 stretch 99%; 107 km/mol, A = 147 s⁻¹)
+  thermal infrared release at 300 K: 1.24e-20 W per molecule
+
+G (9-methylguanine): 19 atoms, 51 vibrations 31–3363 cm⁻¹, RMS gradient 5.0e-12 kcal/mol/Å
+  circuit examples/rna_vibration/netlists/g.cir: 52 bond/angle springs, 3249 coupling sources inside the bases, 0 base-pairing sources, 0 entries < 1e-9 dropped (largest 0.0e+00 mdyn/Å)
+  lumped check: size 7.5 Å against the shortest infrared wavelength 29733 Å: d/λ = 2.5e-04 (λ/10 rule: lumped)
+  strongest absorption = strongest release lines (cm⁻¹): 716 (torsion/out-of-plane/nonbonded 100%; 562 km/mol, A = 36 s⁻¹); 1791 (G C8–N7 stretch 16%; 127 km/mol, A = 51 s⁻¹); 1806 (G H21–N2–H22 bend 19%; 195 km/mol, A = 80 s⁻¹); 1868 (G C5–C4 stretch 22%; 110 km/mol, A = 48 s⁻¹); 3244 (G N2–H21 stretch 56%, G N2–H22 stretch 42%; 108 km/mol, A = 142 s⁻¹); 3308 (G N1–H1 stretch 97%; 121 km/mol, A = 165 s⁻¹); 3363 (G N2–H22 stretch 55%, G N2–H21 stretch 44%; 382 km/mol, A = 541 s⁻¹)
+  thermal infrared release at 300 K: 2.97e-20 W per molecule
+
+C (1-methylcytosine): 16 atoms, 42 vibrations 45–3366 cm⁻¹, RMS gradient 2.1e-13 kcal/mol/Å
+  circuit examples/rna_vibration/netlists/c.cir: 41 bond/angle springs, 2304 coupling sources inside the bases, 0 base-pairing sources, 0 entries < 1e-9 dropped (largest 0.0e+00 mdyn/Å)
+  lumped check: size 6.6 Å against the shortest infrared wavelength 29713 Å: d/λ = 2.2e-04 (λ/10 rule: lumped)
+  strongest absorption = strongest release lines (cm⁻¹): 672 (torsion/out-of-plane/nonbonded 100%; 183 km/mol, A = 10 s⁻¹); 807 (torsion/out-of-plane/nonbonded 98%; 201 km/mol, A = 16 s⁻¹); 918 (torsion/out-of-plane/nonbonded 97%; 146 km/mol, A = 15 s⁻¹); 1529 (delocalized; 125 km/mol, A = 37 s⁻¹); 1756 (C H41–N4–H42 bend 17%; 155 km/mol, A = 60 s⁻¹); 1787 (C H41–N4–H42 bend 28%; 264 km/mol, A = 105 s⁻¹); 1876 (C C6–C5 stretch 31%; 107 km/mol, A = 47 s⁻¹); 3245 (C N4–H42 stretch 55%, C N4–H41 stretch 44%; 116 km/mol, A = 152 s⁻¹); 3366 (C N4–H41 stretch 55%, C N4–H42 stretch 45%; 341 km/mol, A = 483 s⁻¹)
+  thermal infrared release at 300 K: 2.52e-20 W per molecule
+
+AU (9-methyladenine:1-methyluracil Watson-Crick pair): 33 atoms, 93 vibrations 12–3365 cm⁻¹, RMS gradient 7.5e-13 kcal/mol/Å
+  circuit examples/rna_vibration/netlists/au.cir: 88 bond/angle springs, 4941 coupling sources inside the bases, 5157 base-pairing sources, 3006 entries < 1e-9 dropped (largest 6.3e-14 mdyn/Å)
+  lumped check: size 12.6 Å against the shortest infrared wavelength 29714 Å: d/λ = 4.3e-04 (λ/10 rule: lumped)
+  strongest absorption = strongest release lines (cm⁻¹): 594 (torsion/out-of-plane/nonbonded 97%; 118 km/mol, A = 5 s⁻¹); 806 (torsion/out-of-plane/nonbonded 94%; 137 km/mol, A = 11 s⁻¹); 871 (torsion/out-of-plane/nonbonded 97%; 279 km/mol, A = 26 s⁻¹); 919 (torsion/out-of-plane/nonbonded 97%; 170 km/mol, A = 18 s⁻¹); 1761 (A C5–C4 stretch 15%; 134 km/mol, A = 52 s⁻¹); 1795 (delocalized; 153 km/mol, A = 62 s⁻¹); 1850 (A C5–C4 stretch 19%; 195 km/mol, A = 84 s⁻¹); 3249 (A N6–H62 stretch 52%, A N6–H61 stretch 47%; 108 km/mol, A = 143 s⁻¹); 3339 (U N3–H3 stretch 97%; 110 km/mol, A = 154 s⁻¹); 3365 (A N6–H61 stretch 52%, A N6–H62 stretch 47%; 311 km/mol, A = 441 s⁻¹)
+  thermal infrared release at 300 K: 3.60e-20 W per molecule
+
+GC (9-methylguanine:1-methylcytosine Watson-Crick pair): 35 atoms, 99 vibrations 18–3370 cm⁻¹, RMS gradient 4.7e-11 kcal/mol/Å
+  circuit examples/rna_vibration/netlists/gc.cir: 93 bond/angle springs, 5553 coupling sources inside the bases, 5787 base-pairing sources, 3842 entries < 1e-9 dropped (largest 1.3e-13 mdyn/Å)
+  lumped check: size 12.5 Å against the shortest infrared wavelength 29675 Å: d/λ = 4.2e-04 (λ/10 rule: lumped)
+  strongest absorption = strongest release lines (cm⁻¹): 836 (torsion/out-of-plane/nonbonded 96%; 194 km/mol, A = 17 s⁻¹); 875 (torsion/out-of-plane/nonbonded 90%; 563 km/mol, A = 54 s⁻¹); 922 (torsion/out-of-plane/nonbonded 97%; 305 km/mol, A = 32 s⁻¹); 1529 (delocalized; 125 km/mol, A = 36 s⁻¹); 1764 (C C5–C4 stretch 15%; 109 km/mol, A = 42 s⁻¹); 1802 (C H41–N4–H42 bend 38%; 299 km/mol, A = 121 s⁻¹); 1818 (G H21–N2–H22 bend 35%; 238 km/mol, A = 98 s⁻¹); 1878 (C C6–C5 stretch 27%; 179 km/mol, A = 79 s⁻¹); 3252 (G N2–H22 stretch 45%, G N2–H21 stretch 42%; 186 km/mol, A = 246 s⁻¹); 3330 (G N1–H1 stretch 95%; 101 km/mol, A = 141 s⁻¹); 3367 (C N4–H41 stretch 56%, C N4–H42 stretch 40%; 452 km/mol, A = 641 s⁻¹); 3370 (G N2–H21 stretch 50%, G N2–H22 stretch 45%; 278 km/mol, A = 395 s⁻¹)
+  thermal infrared release at 300 K: 5.16e-20 W per molecule
+
+GU (9-methylguanine:1-methyluracil wobble pair): 34 atoms, 96 vibrations 12–3363 cm⁻¹, RMS gradient 7.0e-10 kcal/mol/Å
+  circuit examples/rna_vibration/netlists/gu.cir: 91 bond/angle springs, 5274 coupling sources inside the bases, 5436 base-pairing sources, 3636 entries < 1e-9 dropped (largest 9.3e-14 mdyn/Å)
+  lumped check: size 12.8 Å against the shortest infrared wavelength 29734 Å: d/λ = 4.3e-04 (λ/10 rule: lumped)
+  strongest absorption = strongest release lines (cm⁻¹): 684 (torsion/out-of-plane/nonbonded 99%; 140 km/mol, A = 8 s⁻¹); 751 (torsion/out-of-plane/nonbonded 89%; 252 km/mol, A = 18 s⁻¹); 814 (torsion/out-of-plane/nonbonded 95%; 136 km/mol, A = 11 s⁻¹); 855 (torsion/out-of-plane/nonbonded 98%; 155 km/mol, A = 14 s⁻¹); 919 (torsion/out-of-plane/nonbonded 97%; 152 km/mol, A = 16 s⁻¹); 1791 (G C8–N7 stretch 15%; 144 km/mol, A = 58 s⁻¹); 1807 (G H21–N2–H22 bend 19%; 194 km/mol, A = 79 s⁻¹); 1873 (G C5–C4 stretch 19%; 114 km/mol, A = 50 s⁻¹); 3241 (G N2–H21 stretch 56%, G N2–H22 stretch 43%; 110 km/mol, A = 144 s⁻¹); 3363 (G N2–H22 stretch 52%, G N2–H21 stretch 44%; 422 km/mol, A = 597 s⁻¹)
+  thermal infrared release at 300 K: 4.13e-20 W per molecule
+
+Base pairing
+9-methyladenine:1-methyluracil Watson-Crick pair:
+  H-bond A:N6–A:H61···U:O4: H···A 1.87 Å, D···A 2.89 Å, angle 179°
+  H-bond U:N3–U:H3···A:N1: H···A 1.91 Å, D···A 2.92 Å, angle 175°
+  modes living in the pairing (≥ 25% of their energy in the inter-base forces): 28 (45% in the H-bonds; torsion/out-of-plane/nonbonded 55%, base pairing (H-bonds) 45%); 45 (45% in the H-bonds; torsion/out-of-plane/nonbonded 50%, base pairing (H-bonds) 45%); 53 (30% in the H-bonds; base pairing (H-bonds) 30%, U C2–N1–CM bend 16%); 56 (51% in the H-bonds; base pairing (H-bonds) 51%); 72 (83% in the H-bonds; base pairing (H-bonds) 83%); 134 (84% in the H-bonds; base pairing (H-bonds) 84%)
+  shifts on pairing (model, harmonic):
+    A N6–H61 stretch    3367.0 →  3365.4 cm⁻¹ (-1.6)
+    U N3–H3 stretch     3312.7 →  3339.0 cm⁻¹ (+26.3)
+
+9-methylguanine:1-methylcytosine Watson-Crick pair:
+  H-bond G:N1–G:H1···C:N3: H···A 1.92 Å, D···A 2.92 Å, angle 174°
+  H-bond G:N2–G:H21···C:O2: H···A 1.81 Å, D···A 2.83 Å, angle 177°
+  H-bond C:N4–C:H41···G:O6: H···A 1.83 Å, D···A 2.85 Å, angle 180°
+  modes living in the pairing (≥ 25% of their energy in the inter-base forces): 61 (30% in the H-bonds; torsion/out-of-plane/nonbonded 69%, base pairing (H-bonds) 30%); 62 (78% in the H-bonds; base pairing (H-bonds) 78%); 115 (64% in the H-bonds; base pairing (H-bonds) 64%); 152 (80% in the H-bonds; base pairing (H-bonds) 80%)
+  shifts on pairing (model, harmonic):
+    G N1–H1 stretch     3308.3 →  3330.0 cm⁻¹ (+21.8)
+    G N2–H21 stretch    3244.0 →  3369.9 cm⁻¹ (+125.9)
+    C N4–H41 stretch    3365.6 →  3367.5 cm⁻¹ (+1.9)
+
+9-methylguanine:1-methyluracil wobble pair:
+  H-bond G:N1–G:H1···U:O2: H···A 1.80 Å, D···A 2.80 Å, angle 178°
+  H-bond U:N3–U:H3···G:O6: H···A 1.88 Å, D···A 2.89 Å, angle 170°
+  modes living in the pairing (≥ 25% of their energy in the inter-base forces): 21 (41% in the H-bonds; torsion/out-of-plane/nonbonded 58%, base pairing (H-bonds) 41%); 43 (69% in the H-bonds; base pairing (H-bonds) 69%); 52 (59% in the H-bonds; base pairing (H-bonds) 59%); 55 (51% in the H-bonds; base pairing (H-bonds) 51%, torsion/out-of-plane/nonbonded 18%); 68 (81% in the H-bonds; base pairing (H-bonds) 81%); 131 (79% in the H-bonds; base pairing (H-bonds) 79%)
+  shifts on pairing (model, harmonic):
+    G N1–H1 stretch     3308.3 →  3338.6 cm⁻¹ (+30.4)
+    U N3–H3 stretch     3312.7 →  3315.8 cm⁻¹ (+3.1)
+

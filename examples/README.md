@@ -91,8 +91,10 @@ the rest through `go run ./examples/<name>`, and all have
 | [ring_towers](ring_towers) | Towers on the Earth–ionosphere ring as an LC ladder: traveling, standing and cancelling waves, synchronized pairs, DC bias. | §3e | run |
 | [earth_machine](earth_machine) | The Earth as three Kron networks: Rikitake two-disk geodynamo (field reversals), the global atmospheric circuit as leaky shells (250 kV, 1 kA, Earth's charge), the Earth–ionosphere cavity as a line in colatitude (Schumann modes vs Legendre and measurement, two-height ionosphere); then one network for circuit and cavity, the dynamo's cosmic-ray shielding, paper107 drive studies. | §3a, §3f | run |
 | [double_hull](double_hull) | A craft's double wall as a ring waveguide: gap voltage per section, DC bias, vacuum multipactor and Kilpatrick checks, GA for a target voltage. | §3i | run |
+| [magnetostrictive_transformer](magnetostrictive_transformer) | A transformer on a Terfenol-D or Galfenol core (rod, ring, helical spring) with two ultrasonic transducers and a DC bias: drive × sound products on the secondary, the swap test, small-signal reciprocity. | H37 | run |
+| [al_cell_pump](al_cell_pump) | The negative Cockcroft–Walton ground pump with aluminium–water valve stacks as rectifiers, evolved (NSGA-II) for catalytic efficiency: power into the load over power from the source, against the e·|V| floor per electron; plate stacks and one-tank concentric pipes (parallel bus bars, graded series, seals). | H38 | run |
 | [pais_cavity](pais_cavity) | Pais US 10,144,532 B2 annular cavity as a ring line by Happ two-level diakoptics; the patent's figures against physical limits. | H18 | run |
-| [barrett_osc](barrett_osc) | Barrett 1991 Tesla oscillator-shuttle-circuits (US 5,493,691), Figs. 2–5 from the drawings: the OSCs are linear (no idler); a varactor store gives the idler, Manley–Rowe and phase conjugation; spark-gap frozen-wave pulse; the coil networks as two-port matrices. | H36 | run |
+| [barrett_osc](barrett_osc) | Barrett 1991 Tesla oscillator-shuttle-circuits (US 5,493,691), Figs. 2–5 from the drawings: the OSCs are linear (no idler); a varactor store gives the idler, Manley–Rowe and phase conjugation; spark-gap frozen-wave pulse; the coil networks as two-port matrices; bench with bifilar pancakes and a Metglas core; a spark-gap Tesla coil (ordinary vs bifilar secondary) mixing a top-load signal. | H36 | run |
 | [toroidal_coherence](toroidal_coherence) | Konstapel 2025 toroidal coherence propulsion: the Tier 1 bench against the standard prediction — three coils at 120° radiate 3n ± 1 by symmetry, fiber-loop lines, balance budget, the paper's figures recomputed; Hall's FTIR lensing of galaxy images against observed lens angles. | H35 | run |
 
 ## Chemistry
@@ -103,6 +105,7 @@ the rest through `go run ./examples/<name>`, and all have
 | [kron_schrodinger](kron_schrodinger) | Kron's 1945 Schrödinger network on the (ρ, z) plane: H atom and the H₂⁺ bond; LC-circuit twin in kronspice AC. | §3a.1 | run |
 | [kron_polyhedron](kron_polyhedron) | Kron's field network and 1962 polyhedron against his printed numbers: 1945 cavity, waveguide, Tables I–VI; frames as integer vectors recovered by the GA; the oscillatory frame in closed form. | §3a.1, H20 | run |
 | [dna_vibration](dna_vibration) | The four DNA bases and the Watson–Crick pairs as circuits (AMBER OL15): absorption, pairing modes, stacks, sound renderings. | doc/chemistry-plan.md | run |
+| [rna_vibration](rna_vibration) | The RNA twin of dna_vibration (AMBER OL3, NMR duplex 1EKA): the four bases, A·U, G·C and the G·U wobble pair as circuits; absorption, pairing modes, A-form stacks, sound renderings. | doc/chemistry-plan.md | run |
 
 ## Common conventions
 
