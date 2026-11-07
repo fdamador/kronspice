@@ -18,7 +18,7 @@ Machine: A Kron-Network Approach" (Claude Docs, link in CLAUDE.md).
 
 ```
 go run ./examples/earth_machine                 # everything (several minutes)
-go run ./examples/earth_machine -layer N        # 1 geodynamo, 2 global circuit, 3 cavity, 4 layer-1 studies, 5 the links, 6 stacked
+go run ./examples/earth_machine -layer N        # 1 geodynamo, 2 global circuit, 3 cavity, 4 layer-1 studies, 5 the links, 6 stacked, 7 nonlinear ionosphere
 go run ./examples/earth_machine -data viz/data  # figure data (CSV), then: python viz/plot_layers.py
 go test ./examples/earth_machine
 ```
@@ -31,6 +31,7 @@ go test ./examples/earth_machine
 | `cavity.go`, `cavity2.go` | layer 3 and the frequency-dependent (two-height) ionosphere |
 | `coupled.go` | the links: one network for layers 2 and 3, dynamo → conductivity, one ledger |
 | `stacked.go` | the stacked design: couplings from the geometry, coil-inductor circuit, gap and torque studies |
+| `ionosphere_nl.go` | layer 7: a nonlinear (electron-heated) ionosphere in the cavity, two transmitters, mixing products; figure `viz/ionosphere_nl.png` |
 | `figdata.go`, `viz/plot_layers.py` | figure data and figures 4–8 (300 dpi) |
 | `viz/plot_fluid.py`, `viz/plot_stacked.py` | Fig. 9 (the machine as two eddies) and Fig. 10 (the stacked design) |
 
@@ -290,3 +291,39 @@ reason.)
 ![Stacked design](viz/fig10_stacked.png)
 
 The fluid view of the side-by-side machine: [viz/fig9_fluid_machine.png](viz/fig9_fluid_machine.png).
+
+## Layer 7 — a nonlinear ionosphere (`ionosphere_nl.go`)
+
+![nonlinear ionosphere](viz/ionosphere_nl.png)
+
+**The model.** The cavity of layer 3 (fitted to mode 1, Q 5) with its
+ionospheric loss made field-dependent by electron heating:
+G(E) = G0/(1 + (E/Ep)²). In the collision-dominated steady state
+Te/T = 1 + (E/Ep)² with ν ∝ Te (A. V. Gurevich, *Nonlinear Phenomena in
+the Ionosphere*, 1978). This is the mechanism behind the Luxembourg effect
+(Tellegen, *Nature* 131, 840, 1933) and HF heating experiments.
+- **Heating field:** Ep = √(3kTmδ(ω²+ν²))/e ≈ 0.02 V/m for the night-time
+  D region (T 200 K, δ 1e-3, ν 1e6 s⁻¹; declared).
+- **Field at a band:** taken as the cavity's vertical field V/h_e, an upper
+  bound on what reaches the plasma. So Vh = Ep·h_e ≈ 1 kV.
+- **Drive:** two transmitters at the source band, at 7.8 and 14.3 Hz (the
+  measured modes 1 and 2), received 30° away.
+
+| source peak / Vh | drive | station f1, f2 | 2f1−f2 (1.3 Hz) | 2f2−f1 (20.8 Hz) | linear cavity at those lines |
+|---|---|---|---|---|---|
+| 0.01 | 1 A | 2.9 V | 7e-6 V | 2e-5 V | 1e-6, 8e-6 V |
+| 0.1 | 10 A | 29 V | 3.6 mV | 3.2 mV | 4e-4, 3e-4 V |
+| 0.5 | 49 A | 150 V | 0.48 V | 0.40 V | 1e-3, 9e-4 V |
+
+With a linear ionosphere the two signals simply add. With heating, the
+third-order (four-wave) products appear, and 2f2 − f1 = 20.8 Hz falls on the
+measured third Schumann frequency. The 7.8 Hz line also changes (+3 % at
+0.5 Vh) through the shared loss. Its sign follows from taking the loss
+∝ σ(E), which is an assumption of this shunt model.
+
+The ledger closes to 3e-5 in both runs.
+
+**The scale.** Vh corresponds to about 20 mV/m over the whole cavity
+height. Natural Schumann fields are far smaller, and real ELF transmitters
+stay in the linear regime. At ELF the cavity is linear in practice; heating
+the ionosphere takes HF power (HAARP, EISCAT).

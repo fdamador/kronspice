@@ -356,7 +356,42 @@ for the claims beyond these (noise rejection, lower transmission loss),
 which the paper gives no measurement or equation for. Bench test: look
 for fp − fs in a Fig. 2 build with air-core coils.
 
-## 10.9 The bounds recorded so far
+## 10.9 The magnetostrictive transformer with two transducers (H37)
+
+The proposal follows Barrett: give the transformer a core whose strain is
+coupled to its flux (Terfenol-D or Galfenol, as a rod, a ring or a helical
+spring), put an ultrasonic transducer at each end, and look for the drive
+and the sound mixing, with the swap test (drive the secondary, watch the
+primary) as the sign of the nonlinearity.
+[magnetostrictive_transformer](../examples/magnetostrictive_transformer)
+builds it from one energy potential for B and stress, with declared Etrema
+material values, and computes the standard prediction. The core does mix:
+products of drive and sound (fa ± fe, fb ± fe) reach 2.9 mA on the
+secondary of the Terfenol ring and vanish without sound, while sound ×
+sound is 100× weaker. At small drive the transformer is reciprocal to
+2×10⁻¹⁰; at full drive the products are not (×0.56 for the Galfenol ring,
+×0.75 for the rod when swapped). In a ring only the breathing mode reaches
+uniform windings, and the helix's spring shape does not amplify the
+strain. Status: *bounded*: the mixing is ordinary magnetoelastic
+nonlinearity, of a computed size.
+
+## 10.10 The aluminium-cell ground pump (H38)
+
+The negative ground pump of photon_electron is rebuilt with
+aluminium–water valve cells (the Pollak and Nodon electrolytic rectifier
+of sparkgap_diode) as its rectifiers, and a genetic search designs it for
+"catalytic efficiency": pumping electrons from ground at an energy per
+electron as close to e·|V| as possible. [al_cell_pump](../examples/al_cell_pump)
+treats e·|V| as a floor that no circuit goes under, and the ledger checks
+it. The baseline loses 98–99 % of its drive in the tank coil (η 0.0006
+with silicon diodes, 0.00002 with aluminium cells). Evolution reaches
+η 0.857 at −321 V (1.66×10¹⁶ electrons per joule against the ideal
+1.94×10¹⁶), and a single aluminium rod in an iron cup reaches 0.869 at
+−197 V. The oxide film's capacitance is the cell's main cost, silicon is
+still better by 0.01–0.09, and the oxide is too linear (κ = 2 %) for
+parametric pumping. Status: *bounded*: nothing goes under e·|V|.
+
+## 10.11 The bounds recorded so far
 
 | Entry | What was computed | Standard reading | Status |
 |---|---|---|---|
@@ -370,6 +405,8 @@ for fp − fs in a Fig. 2 build with air-core coils.
 | H22, [quantumtricity](../examples/quantumtricity) | circuit theory is U(1) on Kron's network (KVL zero holonomy, KCL the Gauss generator, Yee grid = FDTD to 7e-13); SU(3) loops on the same graph compose with defect 0.75, every circuit quantity with 3e-16 | circuit electricity is the abelian classical limit; V, I, R quantized by e and h | bounded |
 | H35, [toroidal_coherence](../examples/toroidal_coherence) | 3n ± 1 harmonics from any balanced three-coil array; buoyancy 16.7 g and lead forces in the claimed 0.5–50 g band; Hall's reflection ≤ 10⁻³ arcsec against 1–30 observed | three-phase symmetry; loop modes c/(n_g·ℓ); E/c² makes the hot coil heavier | untested |
 | H36, [barrett_osc](../examples/barrett_osc) | Figs. 2–5 linear (no idler); a varactor gives the idler, Manley–Rowe and phase conjugation; order effects are ABCD cascades | parametric mixing; two-port matrix algebra | untested |
+| H37, [magnetostrictive_transformer](../examples/magnetostrictive_transformer) | drive × sound products up to 2.9 mA, sound × sound 100× weaker; reciprocal to 2e-10 at small drive, not at full drive | magnetoelastic nonlinearity of the core | bounded |
+| H38, [al_cell_pump](../examples/al_cell_pump) | evolved η 0.857 at −321 V (0.869 for one rod in an iron cup); coil and oxide film the losses; Si still better | e·|V| per electron is the floor | bounded |
 
 In every case the engine found the energy, and in every case it was
 already on the books: shaft work in H15, the pump in H16, the loaded EMF
@@ -380,7 +417,7 @@ between SU(3) and U(1), with no circuit quantity on the non-abelian side. None o
 a statement of what the published equations or numbers contain, with the
 measurement that would change the status written next to it.
 
-## 10.10 What to keep
+## 10.12 What to keep
 
 - A register entry is a model, a standard twin, an evidence criterion and
   a status, and it stays after a null result with its bound.
@@ -402,6 +439,8 @@ go run ./examples/pais_cavity
 go run ./examples/quantumtricity
 go run ./examples/toroidal_coherence
 go run ./examples/barrett_osc
+go run ./examples/magnetostrictive_transformer
+go run ./examples/al_cell_pump -study pipes
 go run ./cmd/kronspice examples/eckardt_homopolar/export/eckardt_homopolar_driven.cir
 go run ./cmd/kronspice examples/parametric_lcr/export/parametric_lcr_fig5_pumped_c.cir
 ```
@@ -438,6 +477,12 @@ go run ./cmd/kronspice examples/parametric_lcr/export/parametric_lcr_fig5_pumped
   S. Huang, *J. Opt. Soc. Am.* 67, 1550 (1977).
 - T. W. Barrett, *Ann. Fond. Louis de Broglie* 16, 23–41 (1991); U.S.
   Patent 5,493,691 (1996).
+- Etrema Products, Terfenol-D and Galfenol data sheets (material values
+  declared in [magnetostrictive_transformer](../examples/magnetostrictive_transformer)).
+- *Encyclopaedia Britannica*, 11th ed. (1911), "Transformers" (the Pollak
+  and Nodon aluminium rectifier); A. Güntherschulze and H. Betz, the
+  high-field ionic conduction law of anodic oxides (leakage in
+  [al_cell_pump](../examples/al_cell_pump)).
 - [doc/pais-us10144532-comparison.md](../doc/pais-us10144532-comparison.md),
   [doc/tewari-references.md](../doc/tewari-references.md),
   [doc/kouril-vrba-verification.md](../doc/kouril-vrba-verification.md).

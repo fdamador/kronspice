@@ -1,0 +1,23 @@
+H37 — magnetostrictive transformer with two ultrasonic transducers (Terfenol-D, Galfenol; rod, ring, helix)
+  materials (declared, at the bias Hb = 0.66 a):
+    Terfenol-D             d = 13.3 nm/A, μr =   7.1, k = 0.77, E = 30 GPa, c = 1801 m/s, Q = 10, bias 57 kA/m
+    Terfenol-D composite   d =  5.4 nm/A, μr =   3.7, k = 0.31, E = 15 GPa, c = 1698 m/s, Q = 15, bias 66 kA/m
+    Galfenol (Fe81Ga19)    d = 20.9 nm/A, μr =  87.1, k = 0.49, E = 60 GPa, c = 2774 m/s, Q = 100, bias 6 kA/m
+  coils 200 and 400 turns wound along the core; primary port 2 Ω, secondary (load) 20 Ω; drive 20 V at 5 kHz;
+  two transducers of 5 N each at the core's coupled modes
+
+  forward (drive the primary, watch the secondary): load current lines [mA]
+  core                         tones fa, fb [kHz]   H peak/a   fe       fa       fb      | fa±fe          fb±fe          fa+fb    fb−fa   | ledger
+  Terfenol-D rod                18.0,  54.0         0.07    1397.810   3.1619   1.7808 | 2.2e-01 3.4e-02  7.8e-02 5.7e-02  2.1e-03 1.4e-03 | 1e-03
+  Terfenol-D ring               14.3,  19.6         0.11    1199.246   6.9186  13.6145 | 7.7e-01 2.1e-01  2.9e+00 1.2e-01  1.7e-02 5.1e-03 | 1e-02
+  Galfenol (Fe81Ga19) ring      22.1,  30.2         0.18    1334.504   3.4827   1.9444 | 5.6e-01 1.2e-01  1.5e-01 2.2e+00  4.1e-03 2.2e-03 | 5e-03
+  Terfenol-D composite helix    20.9,  39.9         0.02     13.139   0.7920   0.7493 | 2.8e-04 1.7e-04  4.6e-04 3.6e-04  3.4e-07 1.1e-07 | 8e-05
+  Galfenol (Fe81Ga19) helix     21.0,  40.8         0.17    271.884  20.0115   4.3118 | 1.7e+00 1.3e+00  4.4e-01 4.1e-01  5.3e-03 3.0e-03 | 2e-03
+
+  swap test: drive the secondary (same source in series with the 20 Ω side), watch the primary
+  core                         reciprocity (small drive)   fe fwd → rev [mA]     products fa±fe, fb±fe summed: fwd → rev [mA]
+  Terfenol-D rod               3.8e-12                    1397.810 → 1397.814     3.88e-01 → 2.90e-01
+  Terfenol-D ring              4.8e-12                    1199.246 → 1199.771     4.01e+00 → 4.06e+00
+  Galfenol (Fe81Ga19) ring     1.2e-13                    1334.504 → 1334.521     3.04e+00 → 1.71e+00
+  Terfenol-D composite helix   2.0e-11                     13.139 →  13.138     1.27e-03 → 1.27e-03
+  Galfenol (Fe81Ga19) helix    2.1e-10                    271.884 → 268.662     3.79e+00 → 3.95e+00

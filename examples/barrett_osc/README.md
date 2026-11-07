@@ -12,7 +12,10 @@ of quaternions (SU(2)) and higher Cayley–Dickson numbers. Register entry
 H36 (CLAUDE.md §1).
 
 ```
-go run ./examples/barrett_osc
+go run ./examples/barrett_osc                  # about 1.5 minutes
+go run ./examples/barrett_osc -data DIR        # also the figure data (CSV)
+python3 examples/barrett_osc/viz/plot_bench.py DIR viz/bench.png
+python3 examples/barrett_osc/viz/plot_tesla.py DIR viz/tesla_coil.png
 go test ./examples/barrett_osc
 ```
 
@@ -122,7 +125,112 @@ what the Fig. 2A varactor shows. x1, x3 and Eq. 24 also write β·t. β is
 a propagation constant (rad/m, the paper's own wave equation), so β·t is
 not a phase; the travelling-wave phase is β·z.
 
+## Bench version of Fig. 2G: Tesla bifilar pancakes, and a Metglas core
+
+![bench](viz/bench.png)
+
+The pump coil α and the shuttle coil β are the flat Archimedean spirals of
+[pulsed_bifilar](../pulsed_bifilar) (214 turns of 0.5 mm copper, 127 m).
+Its 20-section distributed model gives the same L = 6.84 mH for both
+windings, but a self-capacitance of 6.5 pF ordinary (first resonance
+757 kHz) against 3.03 nF bifilar (34.9 kHz), 470× more. Each coil is that
+lumped equivalent: L, its wire resistance (10.9 Ω), and the
+self-capacitance across it. A bifilar pancake is a capacitor above 35 kHz,
+so the bench runs below that: pump 10 kHz (30 V), signal 6.3 kHz (1 V)
+into the shuttle's 10 nF store, idler 3.7 kHz.
+
+The pancakes are coupled k = 0.6 in air (declared), and modelled as a
+transformer: each winding's leakage, a shared magnetizing inductance, and
+an ideal 1:1 transformer built from a VCVS and a CCCS, which keeps the
+windings isolated. A Metglas 2605SA1 backing (declared) multiplies the
+magnetizing inductance by 4 and saturates it from 20 mA, with a core-loss
+resistance (Q 50). The ribbon's magnetoelastic resonance (k_me 0.3,
+mechanical Q 300, 0.54 m long for 3.7 kHz at 4 km/s) is a parallel tank in
+series with it, the standard equivalent of a magnetostrictive resonator.
+
+| Case | load at fp | fs | idler fp−fs | 2fp−fs | Manley–Rowe | ledger |
+|---|---|---|---|---|---|---|
+| ordinary pancakes, air | 2.99 V | 11.8 mV | 8e-16 V | 6e-16 V | — | 3e-9 |
+| bifilar pancakes, air | 2.57 V | 12.2 mV | 7e-15 V | 1e-14 V | — | 5e-9 |
+| bifilar, Metglas | 0.46 V | 15.7 mV | 1.4e-7 V | 2.5 mV | 2e-3, 2e-5 | 5e-4 |
+| bifilar, Metglas, DC bias 13 mA | 0.60 V | 15.9 mV | 1.09 mV | 1.8 mV | 1e-4, 1e-4 | 2e-4 |
+| bifilar, Metglas, bias, ribbon at 3.7 kHz | 0.66 V | 15.4 mV | 0.029 mV | 1.8 mV | 1e-4, 2e-4 | 3e-4 |
+
+- **Air core:** pancakes, ordinary or bifilar, are linear and make no
+  idler. The bifilar winding changes the lines through its self-capacitance,
+  but adds no new frequency.
+- **Unbiased Metglas:** the core is symmetric, so it makes only odd orders.
+  The strongest product is the four-wave line 2fp − fs.
+- **Biased Metglas:** a DC bias makes the even orders too, including the
+  three-wave idler fp − fs.
+- **Manley–Rowe** holds for the core's flux curve.
+- **Ribbon tuned to the idler:** it cuts the idler 38×. A
+  magnetostrictive resonance is an impedance peak of the core branch, so it
+  acts as a trap at that frequency; to help the idler, tune the ribbon
+  elsewhere.
+
+In the figure, the middle panel subtracts the pump with its harmonics and
+the signal, leaving only pump × signal: a few mV with the biased core, and
+round-off with air. The Metglas spectrum's ~1e-6 V floor is numerical,
+from the core curve's piecewise-linear table.
+
+## A spark-gap Tesla coil with Barrett's floating terminal
+
+![tesla coil](viz/tesla_coil.png)
+
+**The coil.**
+- **Secondary:** the 400-turn solenoid of
+  [pulsed_bifilar](../pulsed_bifilar), L = 4.85 mH for both windings.
+  Self-capacitance is 3.84 pF ordinary (1.167 MHz) and 3.01 nF bifilar
+  (41.6 kHz), with a 15 pF top-load. It rings at 526 kHz (ordinary) or
+  41.5 kHz (bifilar).
+- **Primary (declared):** 10 kV DC through 10 kΩ charges 20 nF. A rotary
+  spark gap fires 1000 times a second onto a primary tuned to each
+  secondary, with k = 0.15.
+- **Signal:** 1 V from 50 Ω enters in series with the top-load's
+  capacitance, the Thevenin form of a small antenna. It runs at 0.9 of the
+  secondary's frequency, placed between the spark's 1 kHz lines.
+
+**The solver.** `kronspice` has no spark gap and its examples' gap solver
+uses backward Euler, which would damp a high-Q ring-down. So `tcsim.go`
+steps this circuit by the trapezoidal rule, with coupled inductors and the
+gap model of `gap.go`. It starts from a consistent state and keeps a
+mid-step energy ledger that closes to round-off (5e-10 J of 43 J).
+`TestTeslaTwin` checks it against kronspice with the gap held closed: the
+top-load voltage agrees within 0.1 %, and the ledger to 1e-9.
+
+**Separating the multiplication.** The spark runs are made with the signal
+at phase 0 and at π. Half their difference keeps only what is linear in the
+signal, and subtracting the signal-alone run leaves what the switching does
+to the signal.
+
+| | ordinary solenoid | bifilar solenoid |
+|---|---|---|
+| top-load peak with sparks | 289 kV | 22 kV |
+| signal alone at the top-load | 3.4 V | 22 mV |
+| sparks × signal, rms | 1.02 V (0.43 × signal) | 10 mV (0.66 × signal) |
+| sidebands fs ± k·1 kHz | ≈ 0.2–0.3 V each, flat over ±12 kHz | grow towards the coil's 41.5 kHz resonance |
+| ledger residual | 5e-10 J of 43 J | 6e-11 J of 50 J |
+
+The gap switches the coil on and off 1000 times a second, and that
+multiplies the weak signal at the top-load: sidebands every 1 kHz. This is
+real mixing, made by a time-varying element, of the kind Barrett's own
+Tesla coils would have shown.
+
+The rotary gap here is a timed switch: 0.2 Ω for a 100 µs dwell per
+firing, opening at the next current zero. That makes the coil a linear,
+periodically switched circuit. The full arc model (strikes at thresholds,
+re-strikes while the channel is hot) behaves differently. There, the 1 V
+signal flips individual re-strikes in a 289 kV ring-down, and the runs
+diverge, by 4.7 kV rms between the two signal phases. That is the coil's
+sensitivity to any small disturbance. A real gap's random jitter
+(nanoseconds to microseconds) swamps it, so it is not usable mixing.
+
 ## Verdict
+
+The verdict below is for Figs. 2–5 as drawn. The bench and Tesla-coil
+sections above add the nonlinear parts a real build has: a Metglas core,
+and the spark gap.
 
 - The circuits as drawn are linear and obey Kirchhoff's laws (kronspice
   is built on them, and transient, AC and the energy ledger agree).

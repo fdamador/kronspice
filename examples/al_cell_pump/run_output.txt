@@ -1,0 +1,232 @@
+H38 — aluminium-cell ground pump, evolved for catalytic efficiency
+  catalytic efficiency η = power into the load ÷ power from the source, in steady state: lifting an
+  electron through |V| costs e·|V| whatever the circuit, so η = 1 means nothing more is spent
+
+  baseline (photon_electron's ground pump: 10 V at 100 kHz, 1 µF tank, 3 stages, 10 MΩ load; coil Q 50)
+                                         bank       load       input    η       where the input goes
+  silicon diodes                        -2953 V     0.295 mA  1.55e+03 W   0.0006 | coil  98.9 %  forward   0.0 %  leakage   0.0 %  rest   1.0 %
+  aluminium stacks (2 × 1 × 1000 mm²)     -194 V    0.0194 mA       210 W   0.0000 | coil  98.0 %  forward   0.0 %  leakage   0.0 %  rest   2.0 %
+  the 1 µF tank circulates hundreds of amps to hold its swing: almost all the drive heats the coil;
+  with aluminium stacks at 100 kHz each oxide film (0.0501 µF) all but shorts its rectifier
+  (the high-frequency failure the 1911 Britannica notes).
+
+  evolving (NSGA-II, 40 × 25, seed 1): 11 genes — drive frequency and amplitude, tank capacitor, stages,
+  ladder capacitors, load, and the stacks' cells in series, plates in parallel, plate area, gap, forming voltage
+    generation 0: front 1 designs, failed 25, timed out 0
+    generation 1: front 2 designs, failed 5, timed out 0
+    generation 2: front 5 designs, failed 0, timed out 0
+    generation 3: front 6 designs, failed 0, timed out 0
+    generation 4: front 9 designs, failed 0, timed out 0
+    generation 5: front 15 designs, failed 0, timed out 0
+    generation 6: front 13 designs, failed 0, timed out 0
+    generation 7: front 15 designs, failed 0, timed out 0
+    generation 8: front 21 designs, failed 0, timed out 0
+    generation 9: front 24 designs, failed 0, timed out 0
+    generation 10: front 31 designs, failed 0, timed out 0
+    generation 11: front 26 designs, failed 0, timed out 0
+    generation 12: front 30 designs, failed 0, timed out 0
+    generation 13: front 39 designs, failed 0, timed out 0
+    generation 14: front 39 designs, failed 0, timed out 0
+    generation 15: front 40 designs, failed 0, timed out 0
+    generation 16: front 40 designs, failed 0, timed out 0
+    generation 17: front 39 designs, failed 0, timed out 0
+    generation 18: front 39 designs, failed 0, timed out 0
+    generation 19: front 39 designs, failed 0, timed out 0
+    generation 20: front 39 designs, failed 0, timed out 0
+    generation 21: front 38 designs, failed 0, timed out 0
+    generation 22: front 38 designs, failed 0, timed out 0
+    generation 23: front 38 designs, failed 0, timed out 0
+    generation 24: front 38 designs, failed 0, timed out 0
+    generation 24: front 38 designs, failed 0, timed out 0
+  Pareto designs (38), by efficiency; each re-measured with silicon diodes and with the 2 % varactor film:
+     η      bank V   load mA   input W  | drive         tank     stages ladder   load    | stack                                          | η Si    η κ=2%
+   0.857     -321      7.78      2.92 |   471 Hz 50.0 V 2.52e-07 F  1  8.34e-07 F 4.13e+04 Ω | 1 cells × 6 plates of 13.2 mm², gap 7.9 mm, 545 V | 0.883   0.850
+   0.816     -357      35.7      15.6 |  3365 Hz 46.5 V 1.6e-07 F  1  4.09e-07 F   1e+04 Ω | 5 cells × 3 plates of 25.4 mm², gap 1.0 mm, 695 V | 0.874   0.814
+   0.813     -463      46.3      26.4 |  4497 Hz 46.9 V 1.65e-07 F  1  4.26e-07 F   1e+04 Ω | 3 cells × 3 plates of 27.6 mm², gap 2.0 mm, 698 V | 0.852   0.809
+   0.797     -483      41.9      25.4 |  2519 Hz 50.0 V 2.37e-07 F  1  6.18e-07 F 1.15e+04 Ω | 7 cells × 4 plates of 19.1 mm², gap 1.0 mm, 700 V | 0.858   0.794
+   0.789     -610      16.1      12.4 |   821 Hz 47.0 V 5.82e-07 F  2  6.65e-07 F 3.79e+04 Ω | 5 cells × 4 plates of 59.8 mm², gap 1.3 mm, 629 V | 0.854   0.786
+   0.787     -503      50.3      32.2 |  4810 Hz 46.9 V 1.7e-07 F  1  4.68e-07 F   1e+04 Ω | 6 cells × 4 plates of 38.4 mm², gap 1.6 mm, 700 V | 0.843   0.785
+   0.781     -546      54.6      38.2 |  2197 Hz 46.8 V 7.02e-07 F  2  6.78e-07 F   1e+04 Ω | 5 cells × 4 plates of 36.1 mm², gap 1.0 mm, 698 V | 0.849   0.778
+   0.781     -739      21.7      20.6 |  1374 Hz 50.0 V 4.33e-07 F  2  5.6e-07 F 3.4e+04 Ω | 6 cells × 4 plates of 20.7 mm², gap 3.3 mm, 670 V | 0.854   0.777
+   0.765     -834      11.9        13 |   827 Hz 43.1 V 4.73e-07 F  2  4.75e-07 F 6.98e+04 Ω | 6 cells × 3 plates of 20.8 mm², gap 3.6 mm, 676 V | 0.826   0.760
+   0.751    -1113      12.1      17.9 |   728 Hz 50.0 V 4.89e-07 F  2  4.94e-07 F 9.22e+04 Ω | 8 cells × 5 plates of 26.6 mm², gap 4.3 mm, 677 V | 0.811   0.747
+   0.748     -647      24.7      21.4 |   553 Hz 50.0 V 6.58e-07 F  1  5.88e-07 F 2.62e+04 Ω | 10 cells × 5 plates of 20 mm², gap 1.9 mm, 685 V | 0.808   0.746
+   0.747     -906      14.2      17.3 |   939 Hz 50.0 V 4.27e-07 F  2  4.64e-07 F 6.37e+04 Ω | 10 cells × 5 plates of 22.4 mm², gap 3.9 mm, 683 V | 0.834   0.744
+   0.741     -777      77.7      81.5 |  4810 Hz 46.9 V 2.81e-07 F  1  4.68e-07 F   1e+04 Ω | 6 cells × 4 plates of 38.4 mm², gap 1.6 mm, 700 V | 0.783   0.737
+   0.730    -1327        21      38.3 |   800 Hz 50.0 V 7.77e-07 F  2  4.83e-07 F 6.31e+04 Ω | 7 cells × 3 plates of 25.7 mm², gap 2.9 mm, 678 V | 0.777   0.724
+   0.709    -1295      22.7      41.4 |   797 Hz 50.0 V 8.29e-07 F  2  4.44e-07 F 5.71e+04 Ω | 9 cells × 2 plates of 25 mm², gap 2.8 mm, 680 V | 0.769   0.705
+   0.693    -1806      21.2      55.4 |   820 Hz 50.0 V 8.47e-07 F  2  4.27e-07 F 8.5e+04 Ω | 4 cells × 4 plates of 25 mm², gap 2.8 mm, 680 V | 0.723   0.684
+   0.690    -1514      23.6      51.8 |   778 Hz 50.0 V 9.14e-07 F  2  4.52e-07 F 6.42e+04 Ω | 10 cells × 2 plates of 25.1 mm², gap 3.0 mm, 680 V | 0.748   0.685
+   0.656    -1795      95.7       262 |  1979 Hz 50.0 V 1.56e-06 F  2  6.27e-07 F 1.87e+04 Ω | 6 cells × 5 plates of 42.8 mm², gap 10.1 mm, 700 V | 0.709   0.651
+   0.627    -1608       130       334 |  4433 Hz 43.6 V 1.13e-06 F  2  4.47e-07 F 1.24e+04 Ω | 7 cells × 7 plates of 38.4 mm², gap 10.7 mm, 651 V | 0.702   0.620
+   0.621    -2379      30.5       117 |   948 Hz 48.8 V 1.16e-06 F  2  4.62e-07 F 7.81e+04 Ω | 10 cells × 4 plates of 24.6 mm², gap 3.7 mm, 679 V | 0.659   0.610
+   0.606    -2266       125       469 |  2591 Hz 49.6 V 1.7e-06 F  2  6.87e-07 F 1.81e+04 Ω | 6 cells × 11 plates of 15.3 mm², gap 15.0 mm, 700 V | 0.672   0.593
+   0.595    -2579      29.1       126 |  1026 Hz 48.2 V 1.1e-06 F  2  3.52e-07 F 8.86e+04 Ω | 5 cells × 4 plates of 24.3 mm², gap 1.6 mm, 632 V | 0.625   0.584
+   0.572    -2506       211       926 |  3712 Hz 49.4 V 2.1e-06 F  2  5.48e-07 F 1.19e+04 Ω | 6 cells × 7 plates of 26.5 mm², gap 7.2 mm, 700 V | 0.619   0.561
+   0.548    -2913       255  1.35e+03 |  4383 Hz 48.5 V 2.34e-06 F  2  5.52e-07 F 1.14e+04 Ω | 6 cells × 8 plates of 17.2 mm², gap 2.2 mm, 700 V | 0.576   0.537
+   0.528    -3485      27.2       179 |   919 Hz 50.0 V 1.25e-06 F  2  3.71e-07 F 1.28e+05 Ω | 10 cells × 5 plates of 15.2 mm², gap 3.0 mm, 700 V | 0.554   0.518
+   0.505    -3372      68.7       459 |  1311 Hz 48.6 V 2.9e-06 F  3  4.93e-07 F 4.91e+04 Ω | 7 cells × 10 plates of 24 mm², gap 3.1 mm, 693 V | 0.544   0.495
+   0.464    -3207       246   1.7e+03 |  3809 Hz 49.5 V 2.77e-06 F  2  4.9e-07 F 1.3e+04 Ω | 6 cells × 6 plates of 19.4 mm², gap 13.5 mm, 647 V | 0.529   0.453
+   0.435    -3128       307  2.21e+03 |  4003 Hz 50.0 V 3.26e-06 F  2  4.63e-07 F 1.02e+04 Ω | 6 cells × 5 plates of 19.2 mm², gap 13.1 mm, 639 V | 0.510   0.425
+   0.405    -4801      10.5       125 |   289 Hz 50.0 V 2.04e-06 F  2  3.9e-07 F 4.56e+05 Ω | 6 cells × 5 plates of 16.7 mm², gap 2.7 mm, 700 V | 0.422   0.394
+   0.379    -5101      9.77       131 |   289 Hz 50.0 V 2.04e-06 F  2  3.9e-07 F 5.22e+05 Ω | 6 cells × 5 plates of 16.7 mm², gap 2.7 mm, 700 V | 0.395   0.372
+   0.367    -5047      60.1       827 |  1260 Hz 48.4 V 3.06e-06 F  2  5.17e-07 F 8.39e+04 Ω | 5 cells × 5 plates of 17.8 mm², gap 2.3 mm, 700 V | 0.382   0.361
+   0.320    -5682      76.8  1.37e+03 |  1153 Hz 45.5 V 6.2e-06 F  3  4.83e-07 F 7.4e+04 Ω | 5 cells × 8 plates of 14.7 mm², gap 20.0 mm, 700 V | 0.343   0.311
+   0.279    -5723      45.1       925 |   345 Hz 50.0 V  1e-05 F  2  7.55e-07 F 1.27e+05 Ω | 7 cells × 5 plates of 14.8 mm², gap 14.1 mm, 700 V | 0.291   0.269
+   0.275    -7009      89.4  2.28e+03 |  1428 Hz 47.9 V 6.77e-06 F  3  4.88e-07 F 7.84e+04 Ω | 5 cells × 9 plates of 16.8 mm², gap 2.0 mm, 700 V | 0.297   0.268
+   0.230    -5866       417  1.06e+04 |  7537 Hz 50.0 V  5e-06 F  2  4.46e-07 F 1.41e+04 Ω | 6 cells × 4 plates of 41.3 mm², gap 15.5 mm, 683 V | 0.271   0.223
+   0.186    -5464       546  1.61e+04 |  5380 Hz 50.0 V  1e-05 F  2  3.55e-07 F   1e+04 Ω | 8 cells × 10 plates of 21.6 mm², gap 13.4 mm, 640 V | 0.211   0.179
+   0.150   -10199       140   9.5e+03 |  4720 Hz 50.0 V 6.27e-06 F  3  3.4e-07 F 7.28e+04 Ω | 7 cells × 8 plates of 15.8 mm², gap 4.2 mm, 700 V | 0.164   0.146
+   0.144    -7240       263  1.32e+04 |  6547 Hz 50.0 V 6.18e-06 F  2  4.74e-07 F 2.75e+04 Ω | 8 cells × 4 plates of 22.4 mm², gap 7.9 mm, 648 V | 0.165   0.139
+
+  the most efficient design, where its input goes:
+  evolved                                -321 V      7.78 mA      2.92 W   0.8568 | coil  12.8 %  forward   1.4 %  leakage   0.0 %  rest   0.1 %
+    1 cells × 6 plates of 13.2 mm², gap 7.9 mm, formed at 545 V: holds 545 V, forward 2.0 V + 9.96 Ω, film 0.00875 µF; tank swing 179 V, largest reverse 60 % of the oxide's
+    electrons delivered per joule: 1.66e+16 (the ideal for -321 V is 1.94e+16)
+    floor from the electrolysis onset alone: each electron crosses 2n = 2 stacks of 1 cells, 4 V of
+    2.0 V each, so η ≤ |V|/(|V| + 4 V) = 0.988
+
+  the parametric route (pumping the tank at 2f through the oxide film's C(v)):
+    a capacitance swinging by m = ΔC/C at 2f grows oscillation at f only if m > 2/Q (Mathieu threshold);
+    the film's κ = 2 % gives m ≤ 2 % even swung to its forming voltage, so it needs Q > 100; the
+    coil's Q of 50 needs m > 4 %: the oxide is too linear to pump parametrically (a varactor diode,
+    whose C changes several-fold, could)
+
+H38b — one tank per rectifier: concentric pipes
+  rod at the centre, pipes around it, the tank wall outside; each annulus of water is one cell.
+  parallel: pipes alternate aluminium and iron, all aluminium on one bus bar and all iron on the other —
+            every annulus is the same valve between the buses; ends need no seals (neighbouring annuli
+            sit at the same voltage); the tank holds one forming voltage
+  series:   clad pipes (aluminium outside, iron inside) carry the current across every annulus in turn;
+            the tank holds N forming voltages, but each pipe's ends must be sealed (water around an end
+            shorts a cell); evolved with perfect seals, then swept. Plain, the inner annulus (least
+            aluminium, least film) takes most of the reverse voltage; graded, the outer pipes' aluminium
+            is masked to give every annulus the same area, and they share it equally
+
+  evolving (NSGA-II, 40 × 25, seed 1): drive, tank, stages, ladder, load, and the tank's wiring, annuli,
+  rod radius, water gap, wetted length, forming voltage (pipe walls 1.5 mm)
+    generation 0: front 1 designs, failed 27, timed out 0
+    generation 1: front 3 designs, failed 9, timed out 0
+    generation 2: front 4 designs, failed 0, timed out 0
+    generation 3: front 3 designs, failed 0, timed out 0
+    generation 4: front 5 designs, failed 0, timed out 0
+    generation 5: front 7 designs, failed 0, timed out 0
+    generation 6: front 11 designs, failed 0, timed out 0
+    generation 7: front 15 designs, failed 0, timed out 0
+    generation 8: front 14 designs, failed 0, timed out 0
+    generation 9: front 23 designs, failed 0, timed out 0
+    generation 10: front 26 designs, failed 0, timed out 0
+    generation 11: front 25 designs, failed 0, timed out 0
+    generation 12: front 31 designs, failed 0, timed out 0
+    generation 13: front 35 designs, failed 0, timed out 0
+    generation 14: front 38 designs, failed 0, timed out 0
+    generation 15: front 33 designs, failed 0, timed out 0
+    generation 16: front 31 designs, failed 0, timed out 0
+    generation 17: front 33 designs, failed 0, timed out 0
+    generation 18: front 36 designs, failed 0, timed out 0
+    generation 19: front 35 designs, failed 0, timed out 0
+    generation 20: front 37 designs, failed 0, timed out 0
+    generation 21: front 38 designs, failed 0, timed out 0
+    generation 22: front 37 designs, failed 0, timed out 0
+    generation 23: front 35 designs, failed 0, timed out 0
+    generation 24: front 37 designs, failed 0, timed out 0
+    generation 24: front 37 designs, failed 0, timed out 0
+  Pareto designs (37), by efficiency:
+     η      bank V   load mA   input W  | drive          stages | tank (one per rectifier)                                              | worst oxide
+   0.869     -197      4.04     0.916 |    90 Hz 48.4 V  2   | single cell, 1 annuli, rod 1.94 mm, gap 1.6 mm, 5 mm long, tank Ø7 mm, 414 V |  28 %
+   0.856     -282      6.65      2.19 |   154 Hz 49.1 V  2   | graded series, 2 annuli, rod 1.83 mm, gap 2.9 mm, 5.12 mm long, tank Ø18 mm, 229 V |  35 %
+   0.845     -490      10.5      6.11 |   142 Hz 50.0 V  2   | graded series, 2 annuli, rod 15.7 mm, gap 1.4 mm, 5.01 mm long, tank Ø40 mm, 499 V |  27 %
+   0.832     -513      7.25      4.47 |   157 Hz 47.0 V  2   | graded series, 2 annuli, rod 6.68 mm, gap 3.0 mm, 5.54 mm long, tank Ø28 mm, 498 V |  29 %
+   0.827     -741      10.2      9.17 |    95 Hz 47.8 V  2   | single cell, 1 annuli, rod 1 mm, gap 2.4 mm, 5.93 mm long, tank Ø7 mm, 664 V |  63 %
+   0.808     -393      22.9      11.2 |   210 Hz 47.1 V  2   | graded series, 3 annuli, rod 1.45 mm, gap 2.8 mm, 11.5 mm long, tank Ø26 mm, 455 V |  18 %
+   0.801     -959      30.7      36.8 |   266 Hz 50.0 V  2   | graded series, 2 annuli, rod 1.17 mm, gap 1.1 mm, 5.03 mm long, tank Ø10 mm, 387 V |  69 %
+   0.773    -1124      33.1      48.2 |   368 Hz 46.3 V  2   | series, 2 annuli, rod 4.26 mm, gap 1.0 mm, 5 mm long, tank Ø16 mm, 700 V |  54 %
+   0.750    -1176      15.1      23.7 |   164 Hz 47.9 V  2   | graded series, 2 annuli, rod 1.41 mm, gap 3.0 mm, 9.37 mm long, tank Ø18 mm, 375 V |  89 %
+   0.749    -1350      11.6      20.8 |   235 Hz 50.0 V  2   | graded series, 3 annuli, rod 4.08 mm, gap 1.0 mm, 7.04 mm long, tank Ø20 mm, 531 V |  46 %
+   0.738    -1125      20.5      31.2 |   281 Hz 49.4 V  2   | graded series, 3 annuli, rod 3.65 mm, gap 1.0 mm, 5 mm long, tank Ø19 mm, 286 V |  76 %
+   0.733    -1600        13      28.5 |   144 Hz 47.8 V  2   | series, 3 annuli, rod 1.73 mm, gap 1.0 mm, 5 mm long, tank Ø15 mm, 700 V |  74 %
+   0.730     -809      80.9      89.7 |   413 Hz 43.7 V  2   | graded series, 8 annuli, rod 2.08 mm, gap 1.0 mm, 5.67 mm long, tank Ø42 mm, 456 V |  13 %
+   0.727    -1273      29.3      51.4 |   255 Hz 50.0 V  2   | graded series, 2 annuli, rod 6.03 mm, gap 4.5 mm, 5 mm long, tank Ø33 mm, 589 V |  63 %
+   0.673    -1417      16.2      34.1 |   111 Hz 50.0 V  2   | graded series, 2 annuli, rod 15.9 mm, gap 1.4 mm, 6.2 mm long, tank Ø40 mm, 655 V |  64 %
+   0.668    -1787      7.52      20.1 |    85 Hz 42.5 V  2   | graded series, 3 annuli, rod 1.29 mm, gap 2.7 mm, 9.32 mm long, tank Ø25 mm, 447 V |  73 %
+   0.663    -1429      16.3      35.2 |   115 Hz 50.0 V  2   | graded series, 2 annuli, rod 15.9 mm, gap 1.4 mm, 7.44 mm long, tank Ø40 mm, 655 V |  64 %
+   0.641     -907      90.7       129 |   480 Hz 50.0 V  2   | graded series, 6 annuli, rod 6.24 mm, gap 1.1 mm, 5.04 mm long, tank Ø41 mm, 700 V |  15 %
+   0.606    -2506      12.8        53 |   180 Hz 47.5 V  3   | graded series, 8 annuli, rod 1.17 mm, gap 1.1 mm, 6.66 mm long, tank Ø42 mm, 566 V |  24 %
+   0.587    -2856      16.6      80.6 |   234 Hz 50.0 V  2   | graded series, 10 annuli, rod 5.79 mm, gap 1.0 mm, 6.92 mm long, tank Ø59 mm, 700 V |  22 %
+   0.570    -2207      62.3       241 |   654 Hz 41.8 V  2   | graded series, 6 annuli, rod 1 mm, gap 1.9 mm, 11.2 mm long, tank Ø40 mm, 233 V |  88 %
+   0.562    -1317       107       252 |   625 Hz 43.0 V  2   | graded series, 6 annuli, rod 8.35 mm, gap 2.1 mm, 5.2 mm long, tank Ø57 mm, 289 V |  50 %
+   0.548    -3292      69.8       419 |   379 Hz 49.3 V  2   | graded series, 8 annuli, rod 1.83 mm, gap 1.7 mm, 11.1 mm long, tank Ø52 mm, 447 V |  49 %
+   0.521    -2199      71.3       301 |   330 Hz 46.7 V  2   | graded series, 10 annuli, rod 3.76 mm, gap 1.9 mm, 5 mm long, tank Ø73 mm, 530 V |  25 %
+   0.494    -1683       154       525 |   570 Hz 43.9 V  2   | graded series, 10 annuli, rod 4.05 mm, gap 1.4 mm, 5 mm long, tank Ø64 mm, 556 V |  20 %
+   0.419    -4289      29.4       300 |   147 Hz 50.0 V  2   | graded series, 10 annuli, rod 1.49 mm, gap 1.1 mm, 5 mm long, tank Ø52 mm, 549 V |  43 %
+   0.413    -3405      29.7       245 |   156 Hz 44.7 V  2   | graded series, 10 annuli, rod 1.08 mm, gap 4.0 mm, 5.02 mm long, tank Ø109 mm, 444 V |  43 %
+   0.405    -4825      19.2       228 |   158 Hz 48.2 V  4   | graded series, 5 annuli, rod 8.95 mm, gap 2.7 mm, 9.85 mm long, tank Ø57 mm, 700 V |  52 %
+   0.376    -4433      28.2       333 |   158 Hz 49.0 V  2   | graded series, 9 annuli, rod 3.49 mm, gap 1.3 mm, 7.96 mm long, tank Ø54 mm, 700 V |  39 %
+   0.365    -5520      12.3       186 |   138 Hz 41.9 V  3   | graded series, 6 annuli, rod 1 mm, gap 1.1 mm, 14 mm long, tank Ø30 mm, 584 V |  61 %
+   0.336    -5528      26.6       438 |   225 Hz 49.5 V  2   | graded series, 7 annuli, rod 5.24 mm, gap 1.7 mm, 5 mm long, tank Ø52 mm, 700 V |  59 %
+   0.295    -5732      25.1       488 |   255 Hz 47.5 V  2   | graded series, 10 annuli, rod 5.13 mm, gap 1.9 mm, 5 mm long, tank Ø75 mm, 507 V |  59 %
+   0.284    -5767      29.6       600 |   234 Hz 50.0 V  2   | graded series, 7 annuli, rod 9.37 mm, gap 1.2 mm, 6.64 mm long, tank Ø53 mm, 700 V |  63 %
+   0.211    -6003      51.3  1.46e+03 |   666 Hz 42.8 V  2   | graded series, 8 annuli, rod 2.97 mm, gap 1.0 mm, 7.51 mm long, tank Ø43 mm, 438 V |  89 %
+   0.124    -6463      1.95       101 |   113 Hz 40.7 V  2   | graded series, 10 annuli, rod 1.4 mm, gap 1.4 mm, 11.1 mm long, tank Ø58 mm, 551 V |  61 %
+   0.084    -6807      1.56       127 |   114 Hz 45.8 V  2   | graded series, 9 annuli, rod 4.39 mm, gap 1.1 mm, 17.5 mm long, tank Ø53 mm, 549 V |  73 %
+   0.012    -7195     0.652       389 |   123 Hz 48.1 V  2   | graded series, 10 annuli, rod 8.21 mm, gap 1.1 mm, 22.2 mm long, tank Ø66 mm, 549 V |  72 %
+  on the front: 2 single-cell tanks (one annulus: the wiring makes no difference), 0 parallel, 2 series
+
+  most efficient single cell tank:
+  evolved                                -197 V      4.04 mA     0.916 W   0.8687 | coil   9.4 %  forward   3.6 %  leakage   0.0 %  rest   0.1 %
+    single cell, 1 annuli, rod 1.94 mm, gap 1.6 mm, 5 mm long, tank Ø7 mm, formed at 414 V: holds 414 V, aluminium 61.1 mm², water 1.93 Ω, film 0.00888 µF
+    4 tanks (2 per stage); tank swing 75 V; 2.75e+16 electrons per joule (ideal 3.17e+16)
+  most efficient graded series tank:
+  evolved                                -282 V      6.65 mA      2.19 W   0.8556 | coil   8.9 %  forward   5.4 %  leakage   0.0 %  rest   0.2 %
+    graded series, 2 annuli, rod 1.83 mm, gap 2.9 mm, 5.12 mm long, tank Ø18 mm, formed at 229 V: holds 458 V, aluminium 118 mm², water 7.01 Ω, film 0.00773 µF
+    4 tanks (2 per stage); tank swing 94 V; 1.89e+16 electrons per joule (ideal 2.21e+16)
+    largest reverse on each annulus, inner to outer, % of its forming voltage: 35 35
+
+  parallel annuli for current: the most efficient single cell rewired as a parallel tank of N annuli
+  (same rod, gap, length and forming voltage), at its own load and at a tenth and a hundredth of it
+      load      N   tank Ø     aluminium      η      bank V   load mA   forward  coil
+    4.87e+04 Ω  1      7 mm      61.1 mm²   0.869     -197      4.04     3.6 %   9.4 %
+    4.87e+04 Ω  2     13 mm       271 mm²   0.854     -183      3.76     3.8 %  10.7 %
+    4.87e+04 Ω  4     26 mm       934 mm²   0.803     -143      2.94     4.5 %  15.2 %
+    4.87e+04 Ω  6     38 mm  1.99e+03 mm²   0.715     -102      2.09     5.6 %  22.9 %
+    4.87e+03 Ω  1      7 mm      61.1 mm²   0.583      -23      4.76    19.9 %  21.7 %
+    4.87e+03 Ω  2     13 mm       271 mm²   0.579      -23      4.69    19.8 %  22.2 %
+    4.87e+03 Ω  4     26 mm       934 mm²   0.562      -22      4.46    20.0 %  23.7 %
+    4.87e+03 Ω  6     38 mm  1.99e+03 mm²   0.534      -20      4.13    20.5 %  26.1 %
+         487 Ω  1      7 mm      61.1 mm²   0.329       -4      7.42    43.0 %  23.9 %
+         487 Ω  2     13 mm       271 mm²   0.331       -4      7.39    42.7 %  24.2 %
+         487 Ω  4     26 mm       934 mm²   0.327       -4      7.25    42.5 %  24.7 %
+         487 Ω  6     38 mm  1.99e+03 mm²   0.321       -3      7.03    42.4 %  25.4 %
+
+  the most efficient series tank's annuli take 35 % each: 0.69 forming voltages in all, so one annulus
+  could hold it alone: its seals do not matter (a leak shorting the outer annuli even saves their forward drops)
+
+  seals on the most efficient series tank that needs its annuli (graded series, 2 annuli, rod 1.17 mm, gap 1.1 mm, 5.03 mm long, tank Ø10 mm, 387 V;
+  η 0.801 at -959 V with perfect seals, 1.38 forming voltages across it): leak resistance between
+  neighbouring annuli, and the water film it means under a 5 mm-wide bottom seal around a 4 mm pipe
+        Rseal       film         η      bank V   seal loss   worst oxide
+            1 Ω     0.021 m    0.567     -698     0.1 %      100 %
+         3.16 Ω   0.00664 m    0.567     -700     0.4 %      100 %
+           10 Ω    0.0021 m    0.568     -703     0.7 %      100 %
+         31.6 Ω  0.000664 m    0.573     -709     0.6 %      100 %
+          100 Ω   0.00021 m    0.584     -722     0.8 %      100 %
+          316 Ω  6.64e-05 m    0.605     -746     1.2 %      100 %
+        1e+03 Ω   2.1e-05 m    0.637     -780     1.5 %      100 %
+     3.16e+03 Ω  6.64e-06 m    0.679     -825     1.6 %      100 %
+        1e+04 Ω   2.1e-06 m    0.727     -876     1.3 %       99 %
+     3.16e+04 Ω  6.64e-07 m    0.769     -922     1.0 %       99 %
+        1e+05 Ω   2.1e-07 m    0.792     -947     0.7 %       99 %
+     3.16e+05 Ω  6.64e-08 m    0.797     -954     0.5 %       87 %
+        1e+06 Ω   2.1e-08 m    0.799     -957     0.2 %       75 %
+     3.16e+06 Ω  6.64e-09 m    0.800     -958     0.1 %       71 %
+        1e+07 Ω   2.1e-09 m    0.801     -959     0.0 %       70 %
+     3.16e+07 Ω  6.64e-10 m    0.801     -959     0.0 %       69 %
+        1e+08 Ω   2.1e-10 m    0.801     -959     0.0 %       69 %
+     3.16e+08 Ω  6.64e-11 m    0.801     -959     0.0 %       69 %
+        1e+09 Ω   2.1e-11 m    0.801     -959     0.0 %       69 %
+     3.16e+09 Ω  6.64e-12 m    0.801     -959     0.0 %       69 %
+        1e+10 Ω   2.1e-12 m    0.801     -959     0.0 %       69 %
+    to keep 99 % of the sealed η: Rseal ≥ 3.16e+05 Ω (film ≤ 6.6e-08 m); 90 %: ≥ 3.16e+05 Ω (film ≤ 6.6e-08 m)
+    pipes merely standing on the floor (0.5 mm clearance under a 1.5 mm wall): Rseal ≈ 12.6 Ω, η 0.569, worst oxide 100 %
+    the seal must be bonded (epoxy, potting): a gasket's wet film is microns thick
+

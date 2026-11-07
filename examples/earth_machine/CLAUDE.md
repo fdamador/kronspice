@@ -49,6 +49,9 @@ Fig. 8 = `fig8_layers_linked.png` (Figs. 0–3 match).
 - `cavity2.go` — two-height ionosphere: complex heights, complex mode solver,
   Nelder–Mead fit, ladder rebuilt per frequency (series R+L, shunt G+C).
 - `coupled.go` — the links (Unified network, ElectricHeight, shielding chain).
+- `ionosphere_nl.go` — layer 7: nonlinear (electron-heated) ionosphere, G(E) = G0/(1+(E/Ep)²),
+  two transmitters at 7.8 and 14.3 Hz, four-wave products (2f2 − f1 = 20.8 Hz = mode 3);
+  `-layer 7 -nldata DIR`, figure `viz/plot_ionosphere_nl.py`. <- DONE
 - `stacked.go` — stacked design: StackedCouplings(gap) from em.MutualCircles /
   em.Nagaoka (homopolar geometry in disk radii), stackedCircuit (coils as
   inductors + Mutual, 1 nH sense windings along the loops, G01 = −M,

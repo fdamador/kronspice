@@ -1,0 +1,101 @@
+Fig. 2 — the oscillator-shuttle-circuits A–G as drawn (coils, top-loads, load; no nonlinear part)
+  pump 1000 kHz 10 V, signal 630 kHz 1 V at the floating terminal; α 10 µH, β 30 µH, γ 5 µH,
+  coil ESR 2 Ω, load 50 Ω, A's store 1 nF, top-load 10 pF, F's capacitor 1 nF, coupling k 0.3 (declared)
+        load |I(fp)|   load |I(fs)|   tran vs AC (fp, fs)   largest mixing product   ledger
+  A   5.870e-02 A   2.384e-06 A    9.8e-05   1.2e-05      9.7e-15 at (+3,+0)    7e-08
+  B   6.209e-02 A   1.041e-03 A    5.5e-05   1.7e-05      5.9e-15 at (-1,+3)    1e-08
+  C   5.865e-02 A   4.951e-06 A    1.3e-04   2.2e-05      6.9e-15 at (+3,+3)    1e-08
+  D   5.832e-02 A   1.450e-05 A    7.9e-05   4.3e-05      1.1e-14 at (+2,+3)    1e-08
+  E   5.461e-02 A   1.457e-06 A    1.4e-04   2.1e-05      3.0e-15 at (+3,-1)    7e-09
+  F   3.508e-02 A   1.541e-06 A    1.9e-04   4.3e-05      1.0e-14 at (+2,+0)    1e-07
+  G   5.853e-02 A   9.894e-06 A    6.8e-05   4.8e-05      9.8e-15 at (+3,+1)    1e-08
+  every circuit gives the pump and signal lines that AC analysis gives for each source alone
+  (superposition) and no mixing product above round-off: coils and capacitors, however their
+  grounds float, make a linear network, and a linear network makes no idler. Bench test: drive
+  the pump, feed a signal to G2, and look for fp − fs in the load; the standard prediction is only
+  what the parts' own nonlinearity gives (ferrite cores, ceramic dielectrics; air-core coils and
+  film or vacuum capacitors give least).
+
+Fig. 2A with a varactor as the terminal store (χ⁽²⁾ element: q = Ct·(v + v²/2·20 V)), pump 2 V, signal 0.2 V
+  at the varactor terminal (the shuttle's transmitting end): idler fp − fs = 370 kHz at 4.063e-05 of the pump line
+  Manley–Rowe sums into the varactor (relative, harmonics to 4th): 4.0e-07, 4.8e-07
+  idler ∝ Vs^1.010 · Vp^1.027 (standard χ⁽²⁾: Es*·Ep, exponents 1 and 1; the paper's Eq. 24 / patent
+  Eq. 15: |Es|²·Ep, exponent 2 in the signal)
+  signal phase +60° → idler phase -62.71° (conjugate: −60°): the phase conjugation the patent claims
+  comes from the nonlinear element, as in any parametric mixer, and obeys Manley–Rowe.
+
+Fig. 3 — three charged capacitors (−, +, −) switched in turn by spark gaps through L into G
+  10 kV on 1 nF each, L 1 µH, G 50 Ω, 10 mm air gaps (breakdown 35.5 kV), triggers at 0/100/200 ns
+  load-voltage lobes in order [kV]: -6.71 +3.42 -1.37
+  strikes per gap: [49 3 1]
+  ledger: stored 150.00 mJ = load 66.27 mJ + gaps 76.49 mJ + left 3.802 mJ + solver damping 3.442 mJ (residual 1.0e-10 J)
+  standard prediction: the drawn − + − pulse is what sequentially switched charged capacitors give
+  (a lumped frozen-wave generator, the impulse source of later ultrawideband radar); the load gets
+  less than the ½CV² stored: when a gap fires, the next capacitor shares charge with the one before
+  it with no inductance between them, and that loss goes to the arcs (why the + and second − lobes
+  are smaller; transmission-line segments in place of capacitors avoid it).
+
+Fig. 4 — the coil networks A (quaternion), B (Cayley), C (sedenion-like)
+  α…ψ = 10…70 µH, 1 pF per node, 10 pF per open terminal, 5 MHz (declared)
+  one-terminal networks, driven at their terminal against G1:
+    A      Y/(jωCterm) = 1.209029-1.60e-08i   largest coil current 1.73e-01 of the terminal current
+    B(i)   Y/(jωCterm) = 1.360694-5.44e-08i   largest coil current 2.65e-01 of the terminal current
+    C(i)   Y/(jωCterm) = 1.619236-1.80e-07i   largest coil current 3.82e-01 of the terminal current
+    with no capacitance at the inner nodes every coil current is 0: a network with one terminal
+    is only its terminal's capacitance; the coils, and so the α, β, γ 'products', act only through
+    stray capacitance (or as antennas in an outside field).
+  two-port networks B(ii) = X, C(ii) = Y, B(ii) with values reversed = Z (ports T2 → T1):
+    cascade XY in kronspice vs ABCD(X)·ABCD(Y)        1.9e-16
+    XY vs YX (order matters: 'αβ ≠ βα')               0.406
+    XYZ vs (XY)Z and X(YZ) (associative)              1.1e-10
+    |det ABCD − 1| (reciprocal: invertible, no zero divisors) 1.1e-16
+    S†S − I (lossless: S unitary, an element of U(2))  1.8e-06
+  order dependence is real and is ordinary two-port theory: cascades multiply as 2×2 matrices,
+  which do not commute. They do associate, and a reciprocal network's matrix has determinant 1,
+  so cascades can carry neither the Cayley numbers' non-associativity nor the zero divisors of
+  the box J. (Box H's '(αβ)γ ≠ γ(αβ)' is a commutator, not an associator.)
+
+Fig. 5 — pump and signal mapped onto a quaternion 'idler' x = x0 + x1 i + x2 j + x3 k
+  each component's line at fp − fs: 4.1e-17 4.1e-17 7.2e-17 7.2e-17 (relative): a sum of the pump and the
+  signal holds no idler; one at fp − fs needs a product, i.e. a nonlinear element (Fig. 2A varactor).
+  x1 and x3 (and Eq. 24) use β·t: β is a propagation constant [rad/m], so β·t is not a phase;
+  the travelling-wave phase is β·z. The Fig. 2A run gives idler ∝ Es*·Ep, not Eq. 24's |Es|²·Ep.
+
+Fig. 2G bench with Tesla bifilar pancakes and a Metglas core (pancakes from examples/pulsed_bifilar)
+  each pancake L 6.84 mH, 10.9 Ω; self-capacitance ordinary 6.5 pF (f1 757 kHz), bifilar 3.03 nF (f1 34.9 kHz)
+  pump 10 kHz 30 V, signal 6.3 kHz 1 V (50 Ω each), idler 3.7 kHz; coupling k 0.6; store 10 nF; load 50 Ω
+  Metglas (declared): magnetizing ×4, saturating from 20 mA, core Q 50; ribbon k_me 0.3, Q 300, 0.54 m long for 3.7 kHz
+                                         load at fp     fs         idler fp−fs   2fp−fs     Manley–Rowe   ledger
+  ordinary pancakes, air                    2.989 V   1.18e-02   8.41e-16 V    5.78e-16       —   3e-09
+  bifilar pancakes, air                     2.571 V   1.22e-02   6.91e-15 V    1.01e-14       —   5e-09
+  bifilar, Metglas core                     0.461 V   1.57e-02   1.41e-07 V    2.49e-03   2e-03 -2e-05   5e-04
+  bifilar, Metglas, DC bias                 0.595 V   1.59e-02   1.09e-03 V    1.81e-03   1e-04 -1e-04   2e-04
+  bifilar, Metglas, bias, ribbon 3.7 kHz    0.656 V   1.54e-02   2.88e-05 V    1.84e-03   1e-04 -2e-04   3e-04
+  air-core pancakes, ordinary or bifilar, are linear: no idler (the bifilar winding changes the
+  self-capacitance 470×, so the lines differ, but adds no new frequency). An unbiased Metglas core
+  is symmetric and makes only odd orders (the four-wave line 2fp − fs); a DC bias makes the even
+  orders, the three-wave idler fp − fs. Manley–Rowe holds for the core's flux curve. A ribbon tuned
+  to the idler cuts the idler at the load (here 38×): a magnetostrictive resonance is an impedance
+  peak of the core branch, a trap at that frequency; to help the idler, tune it elsewhere.
+
+Spark-gap Tesla coil, top-load = Barrett's floating terminal receiving a weak signal
+  (secondary from examples/pulsed_bifilar: 400 turns, L 4.85 mH; 15 pF top-load; 10 kV, 20 nF, rotary gap 1000/s, k 0.15)
+  rotary gap as a timed switch (0.2 Ω for 100 µs per firing): a linear, periodically switched coil
+  ordinary solenoid: self-C 3.84 pF, rings at 526.4 kHz, primary Lp 4.6 µH; signal 473.5 kHz
+    top-load peak with sparks 289 kV; signal alone at the top 3.38 V
+    sparks × signal (coherent part − signal alone): rms 1.02 V = 0.43 × the signal's own rms at the top
+    sidebands fs + k·1 kHz [V], k = −3…3: 2.16e-01 2.45e-01 2.68e-01 2.85e-01 2.92e-01 2.91e-01 2.80e-01
+    ledger residual -4.7e-10 J of 43.1 J supplied; gap heat 7.77 J; firings 13 in 13 ms
+  Tesla bifilar solenoid: self-C 3.01e+03 pF, rings at 41.5 kHz, primary Lp 735.1 µH; signal 37.5 kHz
+    top-load peak with sparks 22 kV; signal alone at the top 0.022 V
+    sparks × signal (coherent part − signal alone): rms 0.0103 V = 0.66 × the signal's own rms at the top
+    sidebands fs + k·1 kHz [V], k = −3…3: 3.22e-04 4.13e-04 5.29e-04 6.86e-04 9.20e-04 1.34e-03 2.50e-03
+    ledger residual 6.2e-11 J of 49.5 J supplied; gap heat 0.276 J; firings 20 in 20 ms
+  the gap switches the coil 1000 times a second, so the weak signal at the top-load comes out
+  multiplied by the switching: sidebands at fs ± k·1 kHz. This is real mixing, made by the gap (a
+  time-varying element), of the kind Barrett's Tesla experiments would have seen.
+  with the arc model (strikes at thresholds, re-strikes while the channel is hot), ordinary secondary:
+    phase-flip difference rms 4.67e+03 V (1957× the signal at the top); 1020 strikes in 13 ms: the 1 V signal
+    flips individual re-strikes in a ring-down of hundreds of kV, so the runs diverge. That is the
+    coil's sensitivity to any small disturbance; a real gap's random jitter (ns–µs) swamps it, so it
+    is not usable mixing.
