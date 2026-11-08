@@ -391,7 +391,32 @@ with silicon diodes, 0.00002 with aluminium cells). Evolution reaches
 still better by 0.01–0.09, and the oxide is too linear (κ = 2 %) for
 parametric pumping. Status: *bounded*: nothing goes under e·|V|.
 
-## 10.11 The bounds recorded so far
+## 10.11 The Rodin coil in quadrature (H43)
+
+The Rodin coil winds its wire over a torus and through the hole, advancing
+150° per pass between 12 poles: 1→6→11→4→9→2→7→12→5→10→3→8→1, a {12/5}
+star from above and a torus-knot path of the (5, 12) class, five times
+round the axis and twelve times through the hole. Claims of a "vortex"
+field that accumulates energy, and of over-unity, come only from
+promotional sources. [rodin_resonance](../examples/rodin_resonance) builds
+the coil characterized by Ramírez Galindo et al. (*Rev. Mex. Fís.* 70,
+030901, 2024) as a counter-wound pair; one fitted turn count (12 circuits
+per winding) reproduces their centre field at 1.60 and 1.25 A within their
+own spread. A sine on one winding and a cosine on the other turn the field
+vector at each point (ellipticity about 0.1), but the field pattern stands
+still round the axis; the mutual inductance passes 0.44–0.45 W from one source
+to the other, ω·M·I_A·I_B·sin φ to four figures. Energy accumulates only by
+resonance, to the Q-limited level (Q 76.4 against ω0L/R = 77.3), and a
+resonant pair locks its currents in phase. Near 2 MHz the winding is a line
+laid on a knot; closed in series on itself it is photon_electron's crossed
+ring (H23), with 720° modes for the (5, 12) and the (2, 1) path alike.
+Output coils evolved together with the drive frequency become a
+transformer secondary: one coaxial coil at 4.1 kHz, or two coils under the
+aperture at 29 kHz, charge a capacitor bank through Schottky bridges with
+18–32 % of the source energy, and the ledger closes to the integration
+error. Status: *bounded*: a coupled-inductor pair, output ≤ input.
+
+## 10.12 The bounds recorded so far
 
 | Entry | What was computed | Standard reading | Status |
 |---|---|---|---|
@@ -407,6 +432,7 @@ parametric pumping. Status: *bounded*: nothing goes under e·|V|.
 | H36, [barrett_osc](../examples/barrett_osc) | Figs. 2–5 linear (no idler); a varactor gives the idler, Manley–Rowe and phase conjugation; order effects are ABCD cascades | parametric mixing; two-port matrix algebra | untested |
 | H37, [magnetostrictive_transformer](../examples/magnetostrictive_transformer) | drive × sound products up to 2.9 mA, sound × sound 100× weaker; reciprocal to 2e-10 at small drive, not at full drive | magnetoelastic nonlinearity of the core | bounded |
 | H38, [al_cell_pump](../examples/al_cell_pump) | evolved η 0.857 at −321 V (0.869 for one rod in an iron cup); coil and oxide film the losses; Si still better | e·|V| per electron is the floor | bounded |
+| H43, [rodin_resonance](../examples/rodin_resonance) | sin/cos drive turns the field vector, the pattern stands still; 0.44–0.45 W passed between the sources through M; Q-limited build-up; output coils charge a bank with 18–32 % of the input | coupled inductors / transformer; near 2 MHz a line on a (5, 12) knot | bounded |
 
 In every case the engine found the energy, and in every case it was
 already on the books: shaft work in H15, the pump in H16, the loaded EMF
@@ -417,7 +443,7 @@ between SU(3) and U(1), with no circuit quantity on the non-abelian side. None o
 a statement of what the published equations or numbers contain, with the
 measurement that would change the status written next to it.
 
-## 10.12 What to keep
+## 10.13 What to keep
 
 - A register entry is a model, a standard twin, an evidence criterion and
   a status, and it stays after a null result with its bound.

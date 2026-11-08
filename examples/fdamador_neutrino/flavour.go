@@ -65,6 +65,10 @@ type FRing struct {
 	// across every section, from node pair j to node pair j+1: the ring's
 	// rotation in its own frame (Part 7, spin.go). Zero in Parts 1–6.
 	Gyro float64
+	// NodeC, when set, adds capacitance from node pair j to ground (both
+	// wires, beside Cg): a shunt defect (Part 8, triplet.go). Nil in
+	// Parts 1–7.
+	NodeC map[int]float64
 }
 
 // FPort is a differential port at node Node: a source of 2·v_inc behind R
@@ -170,8 +174,8 @@ func (r FRing) Build(cs []Comp) (*circuit.Circuit, error) {
 		b.Resistor("RGA"+s(j), "ga"+s(j), "0", r.Rg)
 		b.InductorIC("LGB"+s(j), "b"+s(j), "gb"+s(j), r.Lg, -g[j]/2)
 		b.Resistor("RGB"+s(j), "gb"+s(j), "0", r.Rg)
-		b.CapacitorIC("CGA"+s(j), "a"+s(j), "0", r.Cg, va(j))
-		b.CapacitorIC("CGB"+s(j), "b"+s(j), "0", r.Cg, vb(j))
+		b.CapacitorIC("CGA"+s(j), "a"+s(j), "0", r.Cg+r.NodeC[j], va(j))
+		b.CapacitorIC("CGB"+s(j), "b"+s(j), "0", r.Cg+r.NodeC[j], vb(j))
 		if r.Gyro != 0 {
 			b.Gyrator("YR"+s(j), "a"+s(j), "b"+s(j), na, nb, r.Gyro)
 		}
@@ -461,7 +465,7 @@ func (r FRing) Modes() (omega []float64, vec [][]float64) {
 		if r.Crossed && j == n-1 {
 			sign = 1
 		}
-		m[j][j] += c + r.Cg
+		m[j][j] += c + r.Cg + r.NodeC[j]
 		m[k][k] += c
 		m[j][k] += sign * c
 		m[k][j] += sign * c

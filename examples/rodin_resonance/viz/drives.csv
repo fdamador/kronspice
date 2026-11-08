@@ -1,0 +1,7 @@
+case,f,sense,IA_re,IA_im,IB_re,IB_im
+A only,1000,1,-0.7644284,-0.988833,0,0
+B only,1000,1,0,0,-0.7178546,-0.8539395
+"A + B in phase, toroidal sense",1000,1,-0.7723382,-0.7414723,-0.7342331,-0.6060644
+"A + B in phase, dipole sense",1000,-1,-0.6188563,-1.292186,0.5807512,1.156779
+"A + B quadrature (sin/cos), toroidal sense",1000,1,-0.9709542,-1.09357,0.80468,-0.3821353
+"A + B quadrature (sin/cos), dipole sense",1000,-1,-0.4202399,-0.9400886,-0.9581617,0.9328498

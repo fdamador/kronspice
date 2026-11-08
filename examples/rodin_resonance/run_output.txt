@@ -1,0 +1,240 @@
+Part 1 — the Rodin coil: geometry and validation
+  former (Ramírez Galindo et al. 2024): outer diameter 9.95 cm, aperture 2.90 cm; torus R0 = 3.2125 cm, a = 1.7625 cm
+  path: 12 poles 30° apart, 5 poles (150°) per pass: 1→6→11→4→9→2→7→12→5→10→3→8→1; one circuit goes 5 times round the axis and 12 times through the hole
+  one circuit of A: 1.6007 m of wire; of B (mirror path, one bundle out): 1.8529 m
+  circuits per winding fitted to the measured centre field (A and B in series, dipole sense):
+    Nc =  8: 1.7684 mT/A
+    Nc =  9: 1.9521 mT/A
+    Nc = 10: 2.1273 mT/A
+    Nc = 11: 2.2995 mT/A
+    Nc = 12: 2.4672 mT/A  ← least squares
+    Nc = 13: 2.6250 mT/A
+    Nc = 14: 2.7811 mT/A
+  wire 0.6 mm copper, 12 circuits per winding in a round bundle of radius 1.242 mm; A to B bundle pitch 2.584 mm
+  centre field, Biot–Savart (em.SegmentB) against Table II [mT]:
+     I [A]     theory        FEM   measured    kronspice    vs measured      vs theory
+      1.60       3.90       4.08       4.13        3.948          -4.4%           1.2%
+      1.25       3.01       3.00       3.05        3.084           1.1%           2.5%
+      0.60       1.30       1.10       1.16        1.480          27.6%          13.9%
+    (Biot–Savart is linear in I; the paper's own numbers are not: measured 2.58, 2.44, 1.93 mT/A at 1.60, 1.25, 0.60 A)
+  segment method on a 5 cm ring of 0.3 mm wire: 3.42106e-07 H against Kirchhoff's μ0R(ln(8R/r) − 7/4) = 3.42147e-07 H (-1.2e-04)
+  inductances: L_A = 263.44 µH, L_B = 310.53 µH, M = +111.97 µH (path-sense currents), k = +0.3915
+    in the dipole sense (B reversed) M = -111.97 µH; series inductance toroidal 797.91 µH, dipole 350.03 µH
+  wire resistance (DC): A 1.1414 Ω (19.209 m), B 1.3212 Ω (22.235 m)
+  reciprocity: M_AB = 111.9694754 µH, M_BA = 111.9694754 µH (relative difference 2.4e-16)
+  flux check, 1 cm circle in the aperture: Neumann 516.388 nH, ∫B·dS of A's field 516.443 nH (1.1e-04)
+  flux check, circle round the tube at 15°: Neumann -1090.02 nH, ∫B·dS -1123.68 nH (3.1e-02)
+  energy check, (2, 1) knot, one circuit at 1 A, outside a 2.5 mm tube: ½L_ext·I² = 125.7 nJ, ∫B²/2μ0 dV = 125.02 nJ (-0.54 %, grid 0.75 mm)
+  energy check, Rodin path, one circuit at 1 A, outside a 2.5 mm tube: ½L_ext·I² = 743.79 nJ, ∫B²/2μ0 dV = 695.14 nJ (-6.54 %, grid 0.75 mm)
+    (the Rodin path crosses itself on the torus surface: the tubes overlap at the crossings, so the grid misses part of their volume)
+
+Part 2 — sine on A, cosine on B: the field they make, and the power they pass
+  lumped two-winding circuit in kronspice (valid far below the first self-resonance, Part 2b): sources 3.383 V peak at 1000 Hz through 1 Ω,
+  chosen so that A alone carries 1.25 A peak (a current of the paper's Table II)
+  case                                           |IA| A   |IB| A     P_A W     P_B W      A→B W ωMI_AI_Bsinφ   Wm min µJ   Wm max µJ    ledger
+  A only                                         1.2499   0.0000    1.6728   -0.0000    +0.0000    +0.0000       0.022       205.8   8.9e-07
+  B only                                         0.0000   1.1156   -0.0000    1.4446    +0.0000    +0.0000     0.02572       193.2   9.0e-07
+  A + B in phase, toroidal sense                 1.0706   0.9521    1.2544    1.0253    -0.0270    -0.0268      0.2613       405.3   8.6e-07
+  A + B in phase, dipole sense                   1.4327   1.2944    2.1860    1.9569    +0.0126    +0.0122     0.06849       322.9   7.5e-07
+  A + B quadrature (sin/cos), toroidal sense     1.4624   0.8908    1.8500    1.3613    +0.4401    +0.4401       104.3         260   7.7e-07
+  A + B quadrature (sin/cos), dipole sense       1.0297   1.3373    1.5904    1.6209    -0.4546    -0.4548       117.1       247.2   5.2e-07
+  ledger column: integration mismatch / energy in (sources in = copper + source resistors + Δ stored); per-source books over the last cycle:
+    A only                                       sources 1.6728 W = copper 0.8916 W + source resistors 0.7812 W (difference -5.5e-07 W)
+    B only                                       sources 1.4446 W = copper 0.8223 W + source resistors 0.6224 W (difference -5.3e-07 W)
+    A + B in phase, toroidal sense               sources 2.2797 W = copper 1.2531 W + source resistors 1.0265 W (difference -1.0e-06 W)
+    A + B in phase, dipole sense                 sources 4.1430 W = copper 2.2786 W + source resistors 1.8644 W (difference -7.0e-07 W)
+    A + B quadrature (sin/cos), toroidal sense   sources 3.2113 W = copper 1.7450 W + source resistors 1.4663 W (difference 5.9e-06 W)
+    A + B quadrature (sin/cos), dipole sense     sources 3.2113 W = copper 1.7867 W + source resistors 1.4245 W (difference 1.6e-05 W)
+  field (|B| peak over a cycle, rms, ellipticity = minor/major axis of the ellipse B(t) traces; 0 = it only swings, 1 = it turns at constant size):
+    A only
+      centre (0, 0, 0)                       peak  1.9339 mT, rms  1.3675 mT, ellipticity 0.000
+      in the tube at a pole (R0, 0°)         peak  1.1292 mT, rms  0.7985 mT, ellipticity 0.000
+      in the tube between poles (R0, 15°)    peak  1.1128 mT, rms  0.7869 mT, ellipticity 0.000
+      on the axis 3 cm up                    peak  0.4904 mT, rms  0.3468 mT, ellipticity 0.000
+      plane xy (±7 cm, wires ±3 mm excluded): largest peak 2.2098 mT at (7.0, 14.0, 0.0) mm; mean ⟨B²⟩/2μ0 0.1137 J/m³; ⟨B²⟩-weighted ellipticity 0.000
+      plane xz (±7 cm, wires ±3 mm excluded): largest peak 2.1852 mT at (-10.5, 0.0, 3.5) mm; mean ⟨B²⟩/2μ0 0.06669 J/m³; ⟨B²⟩-weighted ellipticity 0.000
+      12-fold pattern of |B|² round the ring ρ = R0, z = 0: net phase advance over one cycle -7.9e-14° (travel -6.6e-15°), min/max amplitude 1.3e-05
+    B only
+      centre (0, 0, 0)                       peak  1.0263 mT, rms  0.7257 mT, ellipticity 0.000
+      in the tube at a pole (R0, 0°)         peak  1.0076 mT, rms  0.7125 mT, ellipticity 0.000
+      in the tube between poles (R0, 15°)    peak  0.9995 mT, rms  0.7067 mT, ellipticity 0.000
+      on the axis 3 cm up                    peak  0.5688 mT, rms  0.4022 mT, ellipticity 0.000
+      plane xy (±7 cm, wires ±3 mm excluded): largest peak 2.0435 mT at (-12.3, 12.3, 0.0) mm; mean ⟨B²⟩/2μ0 0.08382 J/m³; ⟨B²⟩-weighted ellipticity 0.000
+      plane xz (±7 cm, wires ±3 mm excluded): largest peak 1.9149 mT at (15.8, 0.0, 8.8) mm; mean ⟨B²⟩/2μ0 0.05338 J/m³; ⟨B²⟩-weighted ellipticity 0.000
+      12-fold pattern of |B|² round the ring ρ = R0, z = 0: net phase advance over one cycle 7.5e-14° (travel 6.3e-15°), min/max amplitude 0.000438
+    A + B in phase, toroidal sense
+      centre (0, 0, 0)                       peak  0.7860 mT, rms  0.5558 mT, ellipticity 0.000
+      in the tube at a pole (R0, 0°)         peak  1.8229 mT, rms  1.2890 mT, ellipticity 0.002
+      in the tube between poles (R0, 15°)    peak  1.8023 mT, rms  1.2744 mT, ellipticity 0.002
+      on the axis 3 cm up                    peak  0.0736 mT, rms  0.0520 mT, ellipticity 0.000
+      plane xy (±7 cm, wires ±3 mm excluded): largest peak 3.5089 mT at (12.3, 12.3, 0.0) mm; mean ⟨B²⟩/2μ0 0.2606 J/m³; ⟨B²⟩-weighted ellipticity 0.003
+      plane xz (±7 cm, wires ±3 mm excluded): largest peak 3.2838 mT at (15.8, 0.0, 0.0) mm; mean ⟨B²⟩/2μ0 0.08905 J/m³; ⟨B²⟩-weighted ellipticity 0.007
+      12-fold pattern of |B|² round the ring ρ = R0, z = 0: net phase advance over one cycle -1.3e-13° (travel -1.1e-14°), min/max amplitude 0.000227
+    A + B in phase, dipole sense
+      centre (0, 0, 0)                       peak  3.4075 mT, rms  2.4095 mT, ellipticity 0.000
+      in the tube at a pole (R0, 0°)         peak  0.1892 mT, rms  0.1343 mT, ellipticity 0.090
+      in the tube between poles (R0, 15°)    peak  0.1762 mT, rms  0.1252 mT, ellipticity 0.096
+      on the axis 3 cm up                    peak  1.2220 mT, rms  0.8641 mT, ellipticity 0.000
+      plane xy (±7 cm, wires ±3 mm excluded): largest peak 3.4925 mT at (-7.0, -7.0, 0.0) mm; mean ⟨B²⟩/2μ0 0.05043 J/m³; ⟨B²⟩-weighted ellipticity 0.008
+      plane xz (±7 cm, wires ±3 mm excluded): largest peak 3.6579 mT at (10.5, 0.0, 12.3) mm; mean ⟨B²⟩/2μ0 0.1572 J/m³; ⟨B²⟩-weighted ellipticity 0.002
+      12-fold pattern of |B|² round the ring ρ = R0, z = 0: net phase advance over one cycle 3.2e-14° (travel 2.7e-15°), min/max amplitude 0.000142
+    A + B quadrature (sin/cos), toroidal sense
+      centre (0, 0, 0)                       peak  2.6128 mT, rms  1.8475 mT, ellipticity 0.000
+      in the tube at a pole (R0, 0°)         peak  1.3403 mT, rms  0.9497 mT, ellipticity 0.065
+      in the tube between poles (R0, 15°)    peak  1.3226 mT, rms  0.9370 mT, ellipticity 0.062
+      on the axis 3 cm up                    peak  0.8252 mT, rms  0.5835 mT, ellipticity 0.000
+      plane xy (±7 cm, wires ±3 mm excluded): largest peak 2.8371 mT at (-7.0, -7.0, 0.0) mm; mean ⟨B²⟩/2μ0 0.1676 J/m³; ⟨B²⟩-weighted ellipticity 0.090
+      plane xz (±7 cm, wires ±3 mm excluded): largest peak 2.8258 mT at (-10.5, 0.0, 3.5) mm; mean ⟨B²⟩/2μ0 0.1249 J/m³; ⟨B²⟩-weighted ellipticity 0.094
+      12-fold pattern of |B|² round the ring ρ = R0, z = 0: net phase advance over one cycle -1.2e-13° (travel -1e-14°), min/max amplitude 0.000939
+    A + B quadrature (sin/cos), dipole sense
+      centre (0, 0, 0)                       peak  2.3243 mT, rms  1.6435 mT, ellipticity 0.000
+      in the tube at a pole (R0, 0°)         peak  1.2433 mT, rms  0.8818 mT, ellipticity 0.078
+      in the tube between poles (R0, 15°)    peak  1.2311 mT, rms  0.8729 mT, ellipticity 0.074
+      on the axis 3 cm up                    peak  0.9044 mT, rms  0.6395 mT, ellipticity 0.000
+      plane xy (±7 cm, wires ±3 mm excluded): largest peak 2.4479 mT at (-12.3, 12.3, 0.0) mm; mean ⟨B²⟩/2μ0 0.1434 J/m³; ⟨B²⟩-weighted ellipticity 0.108
+      plane xz (±7 cm, wires ±3 mm excluded): largest peak 2.7285 mT at (10.5, 0.0, 12.3) mm; mean ⟨B²⟩/2μ0 0.1214 J/m³; ⟨B²⟩-weighted ellipticity 0.098
+      12-fold pattern of |B|² round the ring ρ = R0, z = 0: net phase advance over one cycle -3e-13° (travel -2.5e-14°), min/max amplitude 0.000999
+  the quadrature pair: the toroidal and the dipole parts of the field are a quarter cycle apart, so the field vector turns at each point
+  (ellipticity > 0) while the pattern itself stands still round the axis (12-fold symmetric at every instant: zero net advance).
+
+  resonance at f0 = 100 kHz: series capacitors tuned to each winding's own L (C_A = 9.615 nF, C_B = 8.157 nF); sources 2.677 V peak (1.25 A in A alone when tuned)
+  case                                        |IA| A    |IB| A   φB−φA °  Wm mean µJ     P_in W      τ µs    Q=πf0τ   Q=ω0L/R     ledger
+  A only, tuned                               1.2480    0.0000       NaN       102.6     1.6686       243      76.4      77.3    4.4e-05
+  A only, not tuned                           0.0162    0.0000       NaN      0.0172     0.0003       NaN       NaN       NaN   -1.1e-08
+  quadrature, toroidal sense, tuned           0.0392    0.0368     -90.2      0.2065     0.0032        10      3.14       NaN    2.5e-06
+  quadrature, dipole sense, tuned             0.0367    0.0391      90.2      0.2075     0.0032        10      3.14       NaN    2.6e-06
+  quadrature, toroidal sense, not tuned       0.0204    0.0175     132.8     0.03753     0.0008       NaN       NaN       NaN    4.4e-07
+  in phase, toroidal, tuned to L + M          1.1957    1.1958      -0.1       285.2     3.1930       354       111       NaN    6.7e-05
+  quadrature, toroidal, tuned to L + M        0.8594    0.8327      -0.2       142.5     1.5969       356       112       NaN    6.2e-05
+  τ: time for the current amplitude (√ of the cycle-maximum magnetic energy) to reach 1 − 1/e of its final value; a series
+  tank switched on at resonance grows as 1 − e^(−t/τ) with τ = 2L/R, so Q = π·f0·τ. The build-up is the resonance alone: the stored energy rises to
+  the level where the loss per cycle equals what the sources put in; the untuned windings at the same voltage hold far less.
+
+Part 2b — the winding as a line on a knot: self-resonances and the 720° modes
+  sectional model: one section per pass of every circuit (12·Nc per winding), inductance matrix from the geometry, declared
+  capacitances (wire to wire in a bundle 188.1 pF/m, A–B contact ×0.1, 5.54 pF to the surroundings in all); lossless eigenmodes
+  Rodin (5, 12) winding, 12 circuits per winding: 19.209 m of wire per winding, L_A = 263.4 µH, k = +0.391
+    winding A open:          [1.966 MHz 13.66 MHz 13.92 MHz 14.27 MHz 14.67 MHz 15.23 MHz]
+    series, toroidal sense:  [0.5314 MHz 1.266 MHz 9.046 MHz 10.6 MHz 11.53 MHz 12.16 MHz]
+    series, dipole sense:    [0.7052 MHz 1.578 MHz 7.945 MHz 10.35 MHz 11.41 MHz 12.09 MHz]
+    plain ring:              [9.534 MHz (-1.00) 9.814 MHz (-1.00) 11.67 MHz (-1.00) 11.98 MHz (-0.79) 12.82 MHz (-0.17) 12.96 MHz (+0.99)]
+    crossed ring:            [1.27 MHz (-1.00) 6.258 MHz (-1.00) 10.6 MHz (-0.88) 11.17 MHz (-0.91) 12.16 MHz (-0.63) 12.51 MHz (+0.47)]
+  (2, 1) torus knot winding, 12 circuits per winding: 5.091 m of wire per winding, L_A = 49.24 µH, k = -0.322
+    winding A open:          [8.039 MHz 50.51 MHz 52.23 MHz 53.62 MHz 55.22 MHz 57.32 MHz]
+    series, toroidal sense:  [3.578 MHz 4.091 MHz 36.22 MHz 43.47 MHz 47.77 MHz 50.74 MHz]
+    series, dipole sense:    [2.279 MHz 10.34 MHz 31.92 MHz 42.32 MHz 47.27 MHz 50.61 MHz]
+    plain ring:              [38.85 MHz (-1.00) 40 MHz (-1.00) 48.73 MHz (-1.00) 50.11 MHz (-0.98) 51.25 MHz (+1.00) 51.99 MHz (+1.00)]
+    crossed ring:            [4.144 MHz (-1.00) 25.2 MHz (-1.00) 43.56 MHz (-1.00) 46.14 MHz (-1.00) 51.08 MHz (-0.99) 51.24 MHz (+1.00)]
+  (parity: correlation of the node voltages along A with those along B; for the crossed ring −1 means the wave comes back
+  inverted after one trip through one winding, so it needs two trips (720°) to come back the same way up, as on
+  photon_electron's crossed ring line; for the plain rings it says whether the two closed windings swing together or opposite)
+
+Part 3 — groups of output coils round the toroid, the drive frequency evolved with them
+  drive: sine on A, cosine on B, 3.383 V peak each through 1 Ω; groups tuned to the drive frequency by series capacitors
+  maps, 90 frequencies × 180 angles, for a reference coil of 20 turns at each angle θ:
+    (a) its open-circuit EMF, from the full sectional net (12 sections per circuit); exact, since an open coil draws no current;
+    (b) the power into its load when tuned and loaded by R_L = its wire resistance, the coil in the network (it loads the drive),
+        on the reduced net (2 sections per circuit) that the genetic search and the kronspice transient use
+  reference coil "tube": radius 25.7 mm, β = 0°, at ρ = 32.1 mm, z = 0.0 mm (clearance beyond the required 2 mm: 0.99 mm)
+    toroidal sense: largest EMF 16.11 V at f = 2.119e+07 Hz, θ = 150°; largest load power 0.03586 W at f = 5683 Hz, θ = 30° (sources give 0.4246 W there: 0.084)
+      f =      1000 Hz: EMF over θ 0.2142 … 0.2232 V (max/min 1.04), strongest angular harmonic m = 12 (0.02 of the mean); load power 0.02004 … 0.02169 W
+      f = 1.014e+04 Hz: EMF over θ 0.2879 … 0.301 V (max/min 1.05), strongest angular harmonic m = 12 (0.022 of the mean); load power 0.03184 … 0.03393 W
+      f = 1.028e+05 Hz: EMF over θ 0.291 … 0.3049 V (max/min 1.05), strongest angular harmonic m = 12 (0.023 of the mean); load power 0.002691 … 0.002916 W
+      f = 1.043e+06 Hz: EMF over θ 0.2904 … 0.3076 V (max/min 1.06), strongest angular harmonic m = 12 (0.023 of the mean); load power 5.461e-05 … 6.06e-05 W
+      f = 1.861e+06 Hz: EMF over θ 0.2896 … 0.3168 V (max/min 1.09), strongest angular harmonic m = 12 (0.024 of the mean); load power 2.279e-05 … 2.591e-05 W
+      f = 5.279e+06 Hz: EMF over θ 0.2875 … 1.188 V (max/min 4.13), strongest angular harmonic m = 1 (0.34 of the mean); load power 4.706e-06 … 3.155e-05 W
+      f = 1.058e+07 Hz: EMF over θ 0.2781 … 0.7283 V (max/min 2.62), strongest angular harmonic m = 1 (0.2 of the mean); load power 1.532e-06 … 7.601e-06 W
+      f = 1.888e+07 Hz: EMF over θ 0.05587 … 1.477 V (max/min 26.4), strongest angular harmonic m = 5 (0.55 of the mean); load power 5.619e-07 … 0.0004468 W
+    dipole sense: largest EMF 16.07 V at f = 2.119e+07 Hz, θ = 150°; largest load power 0.03851 W at f = 4508 Hz, θ = 210° (sources give 0.6018 W there: 0.064)
+      f =      1000 Hz: EMF over θ 0.2208 … 0.2323 V (max/min 1.05), strongest angular harmonic m = 12 (0.025 of the mean); load power 0.02129 … 0.02348 W
+      f = 1.014e+04 Hz: EMF over θ 0.2922 … 0.3069 V (max/min 1.05), strongest angular harmonic m = 12 (0.024 of the mean); load power 0.03279 … 0.03528 W
+      f = 1.028e+05 Hz: EMF over θ 0.2913 … 0.3056 V (max/min 1.05), strongest angular harmonic m = 12 (0.023 of the mean); load power 0.002701 … 0.002926 W
+      f = 1.043e+06 Hz: EMF over θ 0.2812 … 0.3214 V (max/min 1.14), strongest angular harmonic m = 12 (0.023 of the mean); load power 5.169e-05 … 6.299e-05 W
+      f = 1.861e+06 Hz: EMF over θ 0.2509 … 0.3592 V (max/min 1.43), strongest angular harmonic m = 2 (0.07 of the mean); load power 1.866e-05 … 2.946e-05 W
+      f = 5.279e+06 Hz: EMF over θ 0.01245 … 1.393 V (max/min 112), strongest angular harmonic m = 5 (0.56 of the mean); load power 1.1e-08 … 4.857e-05 W
+      f = 1.058e+07 Hz: EMF over θ 0.02521 … 0.8787 V (max/min 34.9), strongest angular harmonic m = 2 (0.54 of the mean); load power 1.878e-08 … 1.123e-05 W
+      f = 1.888e+07 Hz: EMF over θ 0.2653 … 1.328 V (max/min 5.01), strongest angular harmonic m = 1 (0.33 of the mean); load power 3.192e-07 … 0.0004531 W
+  reference coil "top": radius 10.0 mm, β = 90°, at ρ = 32.1 mm, z = 26.7 mm (clearance beyond the required 2 mm: 2.05 mm)
+    toroidal sense: largest EMF 2.448 V at f = 2.119e+07 Hz, θ = 180°; largest load power 0.03318 W at f = 1.888e+07 Hz, θ = 120° (sources give 0.1073 W there: 0.309)
+      f =      1000 Hz: EMF over θ 0.005831 … 0.005927 V (max/min 1.02), strongest angular harmonic m = 12 (0.0074 of the mean); load power 3.953e-05 … 4.084e-05 W
+      f = 1.014e+04 Hz: EMF over θ 0.01285 … 0.01335 V (max/min 1.04), strongest angular harmonic m = 12 (0.019 of the mean); load power 0.0001918 … 0.0002071 W
+      f = 1.028e+05 Hz: EMF over θ 0.01306 … 0.01366 V (max/min 1.05), strongest angular harmonic m = 12 (0.022 of the mean); load power 0.0001981 … 0.0002167 W
+      f = 1.043e+06 Hz: EMF over θ 0.0118 … 0.01586 V (max/min 1.34), strongest angular harmonic m = 5 (0.071 of the mean); load power 7.601e-05 … 0.0001405 W
+      f = 1.861e+06 Hz: EMF over θ 0.008473 … 0.0213 V (max/min 2.51), strongest angular harmonic m = 5 (0.24 of the mean); load power 2.165e-05 … 0.0001725 W
+      f = 5.279e+06 Hz: EMF over θ 0.001636 … 0.1734 V (max/min 106), strongest angular harmonic m = 2 (0.5 of the mean); load power 6.752e-07 … 0.005072 W
+      f = 1.058e+07 Hz: EMF over θ 0.003637 … 0.09912 V (max/min 27.3), strongest angular harmonic m = 2 (0.61 of the mean); load power 2.519e-06 … 0.001711 W
+      f = 1.888e+07 Hz: EMF over θ 0.002866 … 0.1859 V (max/min 64.9), strongest angular harmonic m = 7 (0.42 of the mean); load power 8.361e-06 … 0.03318 W
+    dipole sense: largest EMF 2.447 V at f = 2.119e+07 Hz, θ = 180°; largest load power 0.0331 W at f = 1.888e+07 Hz, θ = 120° (sources give 0.1062 W there: 0.312)
+      f =      1000 Hz: EMF over θ 0.005661 … 0.006069 V (max/min 1.07), strongest angular harmonic m = 12 (0.035 of the mean); load power 3.726e-05 … 4.281e-05 W
+      f = 1.014e+04 Hz: EMF over θ 0.01278 … 0.0134 V (max/min 1.05), strongest angular harmonic m = 12 (0.024 of the mean); load power 0.0001897 … 0.0002088 W
+      f = 1.028e+05 Hz: EMF over θ 0.01306 … 0.01365 V (max/min 1.04), strongest angular harmonic m = 12 (0.022 of the mean); load power 0.0001983 … 0.0002164 W
+      f = 1.043e+06 Hz: EMF over θ 0.01298 … 0.01394 V (max/min 1.07), strongest angular harmonic m = 12 (0.022 of the mean); load power 0.0001005 … 0.0001136 W
+      f = 1.861e+06 Hz: EMF over θ 0.01294 … 0.01599 V (max/min 1.24), strongest angular harmonic m = 3 (0.034 of the mean); load power 7.505e-05 … 0.0001021 W
+      f = 5.279e+06 Hz: EMF over θ 0.01283 … 0.1606 V (max/min 12.5), strongest angular harmonic m = 7 (0.36 of the mean); load power 4.424e-05 … 0.004212 W
+      f = 1.058e+07 Hz: EMF over θ 0.009346 … 0.08467 V (max/min 9.06), strongest angular harmonic m = 7 (0.34 of the mean); load power 2.848e-05 … 0.001391 W
+      f = 1.888e+07 Hz: EMF over θ 0.002887 … 0.1646 V (max/min 57), strongest angular harmonic m = 7 (0.45 of the mean); load power 1.497e-05 … 0.0331 W
+  (first self-resonance of one winding, its far end open: 1.966 MHz; below it every pass carries the same current and the pattern
+  repeats every 30° (harmonics m = 12, 24 …); above it the current changes along the wire, and since the wire goes
+  round the axis 5 times per circuit and 150° per pass, the field round the toroid takes the harmonics of that standing wave)
+
+  model for the searches: the sectional net with 2 sections per circuit (48 + the groups ≤ 64 windings, which the kronspice N element holds)
+
+  genetic search, free search (evo, seed 43, 64 × 50): genes | f [Hz] ∈ [1000, 3e+07] | groups ∈ [1, 8] | θ0 (log10 x · 360°) ∈ [1, 10] | Δθ (log10 x · 360°/groups) ∈ [1, 10] | β (log10 x · 90°) ∈ [1, 10] | ρ (log10 x · 9 cm) ∈ [1, 10] | z (−7 cm + log10 x · 14 cm) ∈ [1, 10] | coil radius [m] ∈ [0.003, 0.06] | turns ∈ [1, 200] | combine (1 separate, 2 series, 3 parallel) ∈ [1, 3] | R_L [Ω] ∈ [0.1, 10000] | sense (1 toroidal, 2 dipole) ∈ [1, 2]
+  fitness P_load × bridge factor: best of generation 0 1.664e-07 W; evolved after 3102 evaluations 0.181 W (P_load 0.2522 W, bridge factor 0.717)
+  winner: f = 4134 Hz, sense dipole, 1 group(s) from θ0 = 332.8° every 11.4°, coil radius 53.3 mm, 200 turns, β = 90.0°, at ρ = 0.3 mm, z = 14.4 mm, parallel (one bridge), R_L = 21.9 Ω
+    coil L = 7677 µH, R = 5.733 Ω at f, tuning C = 193.1 nF; clearance 0.82 mm
+    AC books: sources 0.4708 + 0.2793 W = load 0.2522 W + copper 0.307 W + source resistors 0.1909 W (difference 9.4e-16 W)
+    group current phases [°]: [177.0]; load voltage amplitudes [V]: [3.322]
+    reaction on the drives: without the groups the sources give 0.5877 + 0.03219 W (|I| 0.5131, 0.5396 A); with them 0.4708 + 0.2793 W (|I| 0.355, 0.5057 A)
+    efficiency at AC (load / sources) 0.3363
+    discretization check: the same layout on  4 sections per circuit gives 0.2522 W (ok)
+    discretization check: the same layout on  6 sections per circuit gives 0.2522 W (ok)
+    discretization check: the same layout on 12 sections per circuit gives 0.2522 W (ok)
+    combined separate (one bridge per group): 0.2522 W (efficiency 0.3363, bridge factor 0.717)
+    combined series (one bridge):             0.2522 W (efficiency 0.3363, bridge factor 0.717)
+    combined parallel (one bridge):           0.2522 W (efficiency 0.3363, bridge factor 0.717)
+    the same layout at other drive frequencies (groups retuned), P_load [W]: 1e+03 Hz: 0.0889; 2e+03 Hz: 0.194; 4e+03 Hz: 0.252; 1e+04 Hz: 0.17; 3e+04 Hz: 0.0355; 1e+05 Hz: 0.00354; 1e+06 Hz: infeasible; 5e+06 Hz: infeasible;
+
+  kronspice transient of the winner: 400 cycles (96.77 ms) at 60 steps per cycle (group loaded Q 7.22, drive L/R 0.123 ms),
+  Schottky bridges (is 3e-06 A, n 1.05, rs 0.03 Ω), bank 2200 µF sized to fill within the run (AC load voltage 3.322 V peak); 98 s
+    bank: 3.367 V, 1.247e+04 µJ at the end (96.77 ms)
+      at 14.8 ms: 1.097 V, 1325 µJ
+      at 29.2 ms: 1.917 V, 4042 µJ
+      at 49.5 ms: 2.662 V, 7793 µJ
+      at 96.8 ms: 3.367 V, 1.247e+04 µJ
+    energy from the sources: A 4.704e+04 µJ, B 2.365e+04 µJ (total 7.069e+04 µJ)
+    split: bank 1.247e+04 µJ (17.64 %), copper 3.187e+04 µJ (45.08 %), source resistors 2.047e+04 µJ (28.96 %), diodes 4573 µJ (6.47 %), bleeders and joints 0.00215 µJ, left in coils and capacitors 1278 µJ
+    charging efficiency (bank energy / source energy) 0.1764; books: sources − (bank + copper + source R + diodes + bleed + stored) = 35.6 µJ; ledger integration mismatch 35.8 µJ (4.0e-04 of the energy in), largest point residual 0.0e+00
+    radiation: each coil a magnetic dipole, R_rad = 20π²N²(ka)⁴ Ω = 3.59e-15 Ω against its wire 5.73 Ω (not modelled)
+    external channels other than electrical and thermal (neutrino among them) carry nothing in these runs: every joule is booked against the two drive sources
+
+  genetic search, distributed groups (at least 2 coils, radius ≤ 20 mm) (evo, seed 44, 64 × 50): genes | f [Hz] ∈ [1000, 3e+07] | groups ∈ [2, 8] | θ0 (log10 x · 360°) ∈ [1, 10] | Δθ (log10 x · 360°/groups) ∈ [1, 10] | β (log10 x · 90°) ∈ [1, 10] | ρ (log10 x · 9 cm) ∈ [1, 10] | z (−7 cm + log10 x · 14 cm) ∈ [1, 10] | coil radius [m] ∈ [0.003, 0.02] | turns ∈ [1, 200] | combine (1 separate, 2 series, 3 parallel) ∈ [1, 3] | R_L [Ω] ∈ [0.1, 10000] | sense (1 toroidal, 2 dipole) ∈ [1, 2]
+  fitness P_load × bridge factor: best of generation 0 1.265e-07 W; evolved after 3102 evaluations 0.1172 W (P_load 0.2018 W, bridge factor 0.580)
+  winner: f = 2.938e+04 Hz, sense dipole, 2 group(s) from θ0 = 79.7° every 171.4°, coil radius 20.0 mm, 200 turns, β = 50.1°, at ρ = 8.2 mm, z = -34.8 mm, series (one bridge), R_L = 9.13 Ω
+    coil L = 1894 µH, R = 2.15 Ω at f, tuning C = 15.5 nF; clearance 0.76 mm
+    AC books: sources 0.2061 + 0.1462 W = load 0.2018 W + copper 0.126 W + source resistors 0.02447 W (difference 4.6e-13 W)
+    group current phases [°]: [138.3 138.3]; load voltage amplitudes [V]: [1.92]
+    reaction on the drives: without the groups the sources give 0.058 + -0.04325 W (|I| 0.08595, 0.07669 A); with them 0.2061 + 0.1462 W (|I| 0.1268, 0.1813 A)
+    efficiency at AC (load / sources) 0.5730
+    discretization check: the same layout on  4 sections per circuit gives 0.2018 W (ok)
+    discretization check: the same layout on  6 sections per circuit gives 0.2018 W (ok)
+    discretization check: the same layout on 12 sections per circuit gives 0.2018 W (ok)
+    combined separate (one bridge per group): 0.1598 W (efficiency 0.7037, bridge factor 0.446)
+    combined series (one bridge):             0.2018 W (efficiency 0.5730, bridge factor 0.580)
+    combined parallel (one bridge):           0.1053 W (efficiency 0.7710, bridge factor 0.487)
+    the same layout at other drive frequencies (groups retuned), P_load [W]: 1e+03 Hz: 0.0531; 2e+03 Hz: 0.12; 4e+03 Hz: 0.175; 1e+04 Hz: 0.198; 3e+04 Hz: 0.202; 1e+05 Hz: 0.202; 1e+06 Hz: infeasible; 5e+06 Hz: infeasible;
+
+  kronspice transient of the winner: 400 cycles (13.62 ms) at 60 steps per cycle (group loaded Q 52.1, drive L/R 0.123 ms),
+  Schottky bridges (is 3e-06 A, n 1.05, rs 0.03 Ω), bank 680 µF sized to fill within the run (AC load voltage 1.92 V peak); 108 s
+    bank: 1.86 V, 1176 µJ at the end (13.62 ms)
+      at 1.8 ms: 0.311 V, 32.89 µJ
+      at 4.1 ms: 0.9056 V, 278.9 µJ
+      at 7.39 ms: 1.47 V, 735 µJ
+      at 13.6 ms: 1.86 V, 1176 µJ
+    energy from the sources: A 2393 µJ, B 1266 µJ (total 3658 µJ)
+    split: bank 1176 µJ (32.14 %), copper 1272 µJ (34.76 %), source resistors 296.2 µJ (8.10 %), diodes 792.1 µJ (21.65 %), bleeders and joints 0.000209 µJ, left in coils and capacitors 117.8 µJ
+    charging efficiency (bank energy / source energy) 0.3214; books: sources − (bank + copper + source R + diodes + bleed + stored) = 4.95 µJ; ledger integration mismatch 4.97 µJ (1.1e-03 of the energy in), largest point residual 1.1e-11
+    radiation: each coil a magnetic dipole, R_rad = 20π²N²(ka)⁴ Ω = 1.82e-13 Ω against its wire 2.15 Ω (not modelled)
+    external channels other than electrical and thermal (neutrino among them) carry nothing in these runs: every joule is booked against the two drive sources
+
+(run time 673 s)
