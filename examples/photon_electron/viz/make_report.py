@@ -230,6 +230,38 @@ def build(out):
         "power-distribution structure (a large multi-gap cavity rather than a divider), which is not modelled. The "
         "electrons come from the copper; every watt comes from the magnetron.")
 
+    r.page_break()
+    r.h1("The circuit mirror of the fdamador neutrino")
+    r.p("The fdamador neutrino (H28, examples/fdamador_neutrino) is this example's field turned inside out: E is the "
+        "ring and B circles it. In circuit form it is a series RLC loop: E round the ring is the capacitor, B through "
+        "the hole the inductor, radiation a series resistor. Exchanging E and B is circuit duality (voltage and "
+        "current, L and C, series and parallel exchange, and R becomes R0<super>2</super>/R), so the photon "
+        "electron's mirror is a <b>parallel RLC tank</b>: B round the ring (toroidal flux) is the inductor, E through "
+        "the hole the capacitor, radiation a shunt resistor.")
+    r.table([
+        ["element", "neutrino: series loop", "electron mirror: parallel tank"],
+        ["inductor", "L = 21.56 nH (B through the hole)", "L = 21.56 nH (B round the ring)"],
+        ["capacitor", "C = 0.2767 pF (E round the ring)", "C = 0.2767 pF (E through the hole)"],
+        ["radiation", "R<sub>rad</sub> = 6.862 Ω in series", "R<sub>p</sub> = R0<super>2</super>/R<sub>rad</sub> "
+                      "= 11.36 kΩ in shunt"],
+        ["dielectric loss", "R<sub>d</sub> = 27.9 mΩ in series", "R0<super>2</super>/R<sub>d</sub> = 2.79 MΩ in shunt"],
+        ["resonance, Q", "f0 = 2.0606 GHz, Q = 40.51", "f0 = 2.0606 GHz, Q = 40.51 (equal to 10<super>−12</super>)"],
+    ], [0.2, 0.38, 0.42])
+    r.p("The scale is R0 = √(L/C) = 279.1 Ω of the neutrino's bench loop (a = 10 mm, εr = 100; values from "
+        "fdamador_neutrino's run_output.txt), which keeps L, C, f0 and Q. In the series loop every element carries "
+        "the same current; in the tank every element sees the same voltage.")
+    r.figure(os.path.join(HERE, "circuit.png"),
+             "Figure 5. The fdamador neutrino's series RLC loop, the duality, and the photon electron's parallel RLC "
+             "mirror, with values (viz/plot_circuit.py). An animation of one cycle, the light travelling along the "
+             "(2, 1) path beside the mirror tank's energy moving between C and L, is viz/cycle.gif.")
+    r.p("What the mirror is and is not. It is exact circuit algebra between the two <b>models</b>, not a statement "
+        "about the measured electron or neutrino. The real dielectric torus is not dual (εr = 100, μr = 1): its "
+        "B-ring mode rings at 4.82 GHz with Q 112 in the field solver (fdamador_neutrino Part 7b, grid r/2), not at "
+        "the E-ring's 2.06 GHz. The H23 electron itself is a travelling wave on a ring line, with E and B rising and "
+        "falling together (Part 2), whereas in the tank they alternate; a lumped tank stands for one of its modes at "
+        "a time, and under linear Maxwell its light leaves within a quarter to half a period (Part 3). Neither "
+        "circuit has mass or the weak interaction, and neither derives spin ½.")
+
     r.h1("Ledger and validation")
     r.table([
         ["test", "checks"],

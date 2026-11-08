@@ -91,7 +91,7 @@ func (r FRing) cmatQ() (cm, q [][]float64) {
 		if r.Crossed && j == n-1 {
 			s = -1
 		}
-		cm[j][j] += c + r.Cg
+		cm[j][j] += c + r.Cg + r.NodeC[j]
 		cm[m][m] += c
 		cm[j][m] -= s * c
 		cm[m][j] -= s * c

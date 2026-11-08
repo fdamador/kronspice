@@ -9,21 +9,30 @@ Maxwell's equations, builds it as kronspice circuits, and puts it on a
 neutrino test bench next to the measured values and the standard
 prediction. Parts 5 and 6 implode and explode it (H30) and test the
 user's reading of the three neutrino flavours as three wave types (H39);
-Part 7 spins it (H40).
+Part 7 spins it (H40); Part 8 reads the flavours as its three spin states
+m = +1, 0, −1 (H41); Part 9 asks how two of them interact (H42): two rings
+and chains of rings as coupled resonators.
 
 ```
-go run ./examples/fdamador_neutrino                                     # Parts 1–4, 5a, 6, 7a: about 6 minutes
-go run ./examples/fdamador_neutrino -field                              # also Part 5b, the field solver on grids r/2 and r/3: about 13 minutes (r/2 2 min, r/3 8 min)
+go run ./examples/fdamador_neutrino                                     # Parts 1–4, 5a, 6, 7a, 8a–c, 8e: about 10 minutes
+go run ./examples/fdamador_neutrino -field                              # also Part 5b, the field solver on grids r/2 and r/3: about 13 minutes (r/2 2 min, r/3 8 min), plus 7b on r/2 and 8d on r/2, r/3
 go run ./examples/fdamador_neutrino -field -viz examples/fdamador_neutrino/viz # and the chart and sound data
 python3 examples/fdamador_neutrino/viz/render.py                       # resonance.png and the .wav files
 python3 examples/fdamador_neutrino/viz/render_part56.py                # implosion.png and flavours.png
 python3 examples/fdamador_neutrino/viz/render_part7.py                 # spin.png (Part 7)
+python3 examples/fdamador_neutrino/viz/render_part8.py                 # triplet.png (Part 8)
+python3 examples/fdamador_neutrino/viz/plot_triplet.py                 # structure_m+1.png, structure_m0.png, structure_m-1.png
+go run ./examples/fdamador_neutrino -only 9 -field -viz examples/fdamador_neutrino/viz   # Part 9 with the 9c field runs: about 65 minutes
+python3 examples/fdamador_neutrino/viz/render_part9.py                 # pair.png (Part 9)
+python3 examples/fdamador_neutrino/viz/plot_pair_structure.py          # structure_pair.png
+python3 examples/fdamador_neutrino/viz/plot_pair_cycle.py              # pair_cycle.gif
 go test ./examples/fdamador_neutrino                                   # about 9 minutes; -short skips the long runs (15 s)
 KRONSPICE_EXPORT=1 go test ./examples/fdamador_neutrino -run TestExport # netlists, KiCad schematics, results sheets
 ```
 
 `run_output.txt` is the output of the `-field` run; Part 7 was appended from
-`-only 7 -field -spincells 2,3`.
+`-only 7 -field -spincells 2,3`, Part 8 from `-only 8 -field` (grids r/2, r/3), Part 9
+from `-only 9 -field` (grids r/2, r/3; the field rows read back with `-pairfieldcsv`).
 
 ## What the inversion is, from Maxwell alone
 
@@ -832,7 +841,550 @@ field solves are staircased (tube radius 2–3 cells, fourfold lattice
 symmetry). The helicity's potentials come from filtered phasors. J_z is
 given in both Abraham and Minkowski forms without settling between them.
 
+## 8. The flavours as three spin states (H41)
+
+The user's hypothesis (2026-11-07): the three flavours are three spin states
+of the ring at detection, "turning one way with full magnetic field, not
+turning (no magnetic field), turning the other way with full magnetic field".
+And if the whole unit also turns because of outside conditions, the Coriolis
+and centrifugal terms add energy that could account for some of the mass.
+
+Testable form: the flavours are the azimuthal states **m = +1, 0, −1** of the
+ring, a spin-1-like triplet. They are labelled by the angular momentum J_z
+about the axis, which a free ring conserves. The instantaneous B cannot label
+them: it passes through zero twice a period in every standing pattern.
+
+- On the ring line of Parts 6 and 7, m = ±1 are the CW and CCW harmonic-1
+  waves z_j ∝ e^{∓iκ₁j}, and m = 0 is the uniform state z_j ∝ 1.
+- In the field solver, m = 0 is the E-ring (TE01δ) and m = ±1 are Part 7b's
+  turning patterns (cos φ ± i sin φ)/√2.
+
+The angular momentum is J = Σ m·U_m/ω_m, the generator of rotations: turning
+by α moves harmonic m's phase by m·α.
+
+```
+go run ./examples/fdamador_neutrino -only 8                              # 8a–8c, 8e: about 4 minutes
+go run ./examples/fdamador_neutrino -only 8 -field -viz examples/fdamador_neutrino/viz   # with 8d on grids r/2 and r/3: about 10 minutes
+python3 examples/fdamador_neutrino/viz/render_part8.py                  # viz/triplet.png
+python3 examples/fdamador_neutrino/viz/plot_triplet.py                  # viz/structure_m+1.png, structure_m0.png, structure_m-1.png
+```
+
+`-tripletcells` sets the 8d grids (default `2,3`).
+
+### 8a. Independence
+
+The Gram matrices ⟨a|b⟩ of the unit patterns on the 24-section ring line give:
+
+| Set | Gram eigenvalues | Dimensions |
+|---|---|---|
+| triplet m = +1, 0, −1 | 1, 1, 1 (off-diagonal ≤ 1.5×10⁻¹⁶) | 3 |
+| Part 6's types C, S, D | 0, 1, 2 (\|⟨C\|S⟩\| = \|⟨C\|D⟩\| = 0.7071) | 2: C = (S + iD)/√2 |
+
+The triplet differs because m = 0 is another harmonic, not a superposition of
+the ±1 waves. In kronspice each state left alone on the perfect ring keeps
+its own pattern to 10⁻¹⁰ over 50 periods, with J·ω₁/U = +1, 0, −1 at the start
+and the end (ledger 1×10⁻⁴).
+
+The frequencies differ. On the ring line m = ±1 are degenerate at 19.14 MHz.
+m = 0 sits at 1/√(L_g·C_g) = 159.15 MHz, 8.3× higher: the uniform state does
+not load the series capacitors, so only the 1 pF stray sets it. In the field
+solver (r/3), m = 0 is at 2.0571 GHz and m = ±1 at 4.4354 GHz, a ratio of
+2.156 (r/2: 2.113). Their Gram matrix is the identity there too
+(off-diagonal ≤ 2.3×10⁻¹⁴). As mass ratios this is m(±1)/m(0) = 2.16, with
+the ±1 pair exactly degenerate; 8e uses this pattern.
+
+### 8b. Mixing
+
+**Series defects cannot mix m = 0.** The uniform pattern is an exact
+eigenvector of the capacitance matrix for any series defects (Cmat·1 = C_g·1).
+With Part 6's two defects one mode is the uniform pattern to 1.7×10⁻¹¹ (the
+eigen-solver's resolution). Coupling m = 0 needs the shunt capacitance from
+node to ground to vary round the ring (`FRing.NodeC`, nil in Parts 1–7):
+
+ΔC_j = C·(M1·cos κ₁j + M2·cos(2κ₁j + 2ψ)).
+
+The m = 1 deformation (an off-centre ring) couples 0 to ±1. The m = 2
+deformation (an elliptical ring turned by ψ) couples +1 to −1. The knobs are
+M1, M2, ψ and the stray C_g, which maps the capacitance spectrum onto ω. Each
+of the six assignments of m = +1, 0, −1 to e, μ, τ is searched (Nelder–Mead
+from 420 starts each). The cost is the squared deviation, in measured σ
+(NuFIT 6.0, NO), of the three angles and of Δm²31/Δm²21 in ω² (mass²). The
+leak is the largest share of a mass state outside the triplet.
+
+| Search | e, μ, τ | θ₁₂ | θ₂₃ | θ₁₃ | Δm²31/Δm²21 | δ_CP | leak | cost |
+|---|---|---|---|---|---|---|---|---|
+| reciprocal, free | 0, +1, −1 | 33.68° | 45.00° | 8.56° | 33.55 | 90.0° | 0.48 | 3.57 |
+| reciprocal, leak ≤ 10 % (best) | +1, −1, 0 | 44.25° | 9.25° | 9.13° | 33.55 | 0° | 0.003 | 1,674 |
+| reciprocal, leak ≤ 10 %, e = 0 | 0, ±1 | | | | | | | 5,234 |
+| rotating (ν = 5.19×10⁻³), free | 0, +1, −1 | 33.65° | 43.37° | 8.56° | 33.55 | 272.1° | 0.53 | 0.008 (5.35 with δ_CP) |
+| measured (NuFIT 6.0, NO) | | 33.68 ± 0.72 | 43.3 ± 0.9 | 8.56 ± 0.11 | 33.55 | 212 (+26/−41) | | |
+
+Best costs per assignment, reciprocal and free: e = ±1 gives 1,674 or 1,974;
+e = 0 gives 3.568, which is exactly the θ₂₃ term.
+
+What this shows:
+
+- **Symmetry fixes two values.** Without rotation the ring is reciprocal.
+  Every mode is real, so its m = +1 and m = −1 projections are complex
+  conjugates. With e = m = 0 this is μ–τ reflection symmetry, U_τi = U*_μi
+  (Harrison & Scott, *Phys. Lett. B* 547, 219, 2002). It forces θ₂₃ = 45° and
+  δ_CP = 90° or 270° whatever the knobs (\|U_μi\| − \|U_τi\| = 0 to round-off).
+  Measured θ₂₃ is 43.3 ± 0.9°, so 45° sits at 1.9σ. Measured δ_CP is 212°:
+  270° is 2.2σ above it and 90° is 3.0σ below.
+- **Only e = 0 can hold θ₁₃ small.** Any other assignment gives
+  \|U_e i\| = \|U_μ i\| or \|U_e i\| = \|U_τ i\| for every i.
+- **The rest is a fit.** Four continuous knobs meet three free targets
+  (θ₁₂, θ₁₃, ratio).
+- **The fit empties the triplet.** It needs deformations of half the series
+  capacitance (M1 = 0.50, M2 = 0.70). Then 48 % of a mass state lies outside
+  the triplet, in m = ±2 and above. On the ring line the m = ±2 states are only
+  about four times farther from m = 0 than m = ±1 (dispersion sin²(κ/2)).
+  A deformation strong enough to bring m = 0 next to a ±1 combination, which
+  θ₁₂ needs with a close pair, also pulls in ±2. With the leak held at 10 %
+  or less, the e = 0 assignment reaches only cost 5,234.
+- **kronspice agrees with the exact expansion.** The reciprocal fit was run
+  in kronspice from e (u uniform, g = 0) for 199 periods (one slow beat). It
+  follows the exact expansion over all 24 modes to 9.7×10⁻⁵, with ledger
+  8.9×10⁻⁷. The m = 0 share swings between 0.000 and 1.000. The 3×3 formula
+  is off by 0.98 because it leaves out the 48 % leak.
+- **Rotation moves θ₂₃ but not δ_CP.** With Part 7's gyrators (ν on the κ₁
+  pair, started from the reciprocal fit with eight ν), rotation breaks μ–τ
+  symmetry and moves θ₂₃ to 43.37°. δ_CP stays near −90° (272°). Five knobs
+  meet five targets. ν = 5.19×10⁻³ is a rim speed of 7.8×10⁵ m/s on the bench
+  ring with v_g = c, 414× the T1000G burst speed.
+
+### 8c. Angular-momentum ledger
+
+Start +1 (CW) alone on the ring, with one defect δ = 0.1 on section 0, and run
+half a beat: full conversion to −1. J of the field is read from the run. The
+torque the defect exerts on the field is computed independently as −∂H/∂α,
+where H = Σ q_j²/c_j with the section charges turned by α against the defect
+(trigonometric interpolation round the ring). Only the defect section
+contributes. This is the generalized force of Landau & Lifshitz, *Mechanics*
+§9, the same as Kron's torque ½iᵀ(∂L/∂θ)i.
+
+| Quantity | Value |
+|---|---|
+| J·ω₁/U₀ at the start | +1.00000 |
+| J·ω₁/U₀ at full conversion | −0.99295 |
+| ΔJ | −1.99295 |
+| ∫ torque dt | −1.99440 |
+| largest \|ΔJ(t) − ∫τ dt\| over the run | 8.8×10⁻³ (the 0.7 % shunt loss meanwhile) |
+| beat | 71,454 Hz |
+| ledger | 2.3×10⁻⁵ |
+| no defect, 200 periods: largest \|J·ω₁/U − 1\| | 3.5×10⁻¹¹ |
+
+The two units of J (2ħ per quantum) go to the defect. Being fixed, the defect
+takes the angular momentum and no energy (torque × its angular velocity = 0).
+
+**A free ring in vacuum has nothing to push against.** Rotation symmetry makes
+J_z exactly conserved, so +1 → −1 (2ħ) and +1 → 0 (ħ) are forbidden unless
+something outside takes the difference. Measured neutrino oscillation keeps
+the helicity, −½ for every flavour, in vacuum, with no partner to recoil.
+
+**Standard prediction.** Flavour oscillation is interference of mass states
+with the same spin. It exchanges no angular momentum.
+
+### 8d. The states in the field solver: moments
+
+This is the torus of 5b and 7b in `em/fdtd.go`. The modes are found and
+filtered as in 7b, and each state's phasor is normalized to a time-averaged
+energy Ū = 1 J. Then, from the phasors alone:
+
+- J_z (Abraham, Minkowski) and U_E, U_B over a period;
+- the magnetic dipole m̂ = ½Σ r × Ĵ dV, where Ĵ = iω(ε − ε0)Ê is the
+  polarization current (the torus has no other current);
+- the electric dipole p̂ = Σ(ε − ε0)Ê dV.
+
+Moments are amplitudes with one quantum ħω stored:
+
+| Grid | State | J_zω/Ū Abraham | J_zω/Ū Minkowski | U_B/Ū over a period | \|m_z\| | \|m_⊥\| | \|p\|·c |
+|---|---|---|---|---|---|---|---|
+| r/2 | m = +1 | +0.0111 | +1.882 | 0.500–0.500 | ~10⁻⁴ μB (round-off) | ~10⁻⁴ μB | 2.89×10¹⁰ μB, constant size, turning |
+| r/2 | m = 0 | 0 | 0 | 0.018–0.997 | 3.46×10¹¹ μB, through zero | ~10⁻⁶ μB | ~10⁻⁴ μB |
+| r/2 | m = −1 | −0.0111 | −1.882 | 0.500–0.500 | ~10⁻⁴ μB | ~10⁻⁴ μB | 2.89×10¹⁰ μB, turning the other way |
+| r/3 | m = +1 | +0.0230 | +0.785 | 0.500–0.500 | ~10⁻⁵ μB | ~10⁻⁵ μB | 7.35×10¹⁰ μB |
+| r/3 | m = 0 | 0 | 0 | 0.020–0.984 | 3.51×10¹¹ μB | ~10⁻⁶ μB | ~10⁻⁵ μB |
+| r/3 | m = −1 | −0.0230 | −0.785 | 0.500–0.500 | ~10⁻⁴ μB | ~10⁻⁵ μB | 7.35×10¹⁰ μB |
+
+Which travelling combination carries J_z > 0 depends on the filter's phase on
+each grid, so the label follows the computed sign. The Minkowski values are
+Part 7b's: the lattice m = 1 mode is not a pure order.
+
+**Twin.** The lumped E-ring of Part 1 holding one quantum (½LI₀² = ħω₀,
+moment I₀·πa²) gives 3.81×10¹¹ μB. The field's m = 0 axial moment is 0.907 of
+that on r/2 and 0.920 on r/3. Per quantum the moment scales with a at fixed
+shape and εr. Part 2's lumped value for the neutrino-sized ring, 0.073 μB,
+times this ratio is 0.067 μB for m = 0. That ring's εr differs, so this is a
+scale, not a result.
+
+What this shows:
+
+- **No static moment.** Every state's moment averages to zero over a period.
+  A single-frequency linear field has no rectified current, so Borexino's
+  static bound (< 2.8×10⁻¹¹ μB) is met trivially.
+- **The turning states have B but no magnetic moment.** They keep a constant
+  magnetic energy, U_B = Ū/2 at every instant, so B never vanishes as a whole.
+  But they carry no magnetic dipole. What turns with them is an electric
+  dipole of constant size.
+- **The m = 0 state has the magnetic moment.** It lies along the axis. This
+  state is not without B: its B and its moment pass through zero twice a
+  period, and half the energy is magnetic on average.
+- **Against the description.** "Full magnetic field" fits the turning states
+  only as constant magnetic energy, and "no magnetic field" fits m = 0 only at
+  two instants a period.
+
+**Standard prediction.** The Dirac-neutrino moment is 3eG_F m_ν/(8√2π²) ≈
+3×10⁻²⁰ μB·(m/0.1 eV), and it is static.
+
+### 8e. Outside rotation of the whole unit
+
+In the lab, a state of order m in a ring turning at Ω has E = E′ + Ω·J_z
+(Landau & Lifshitz, *Mechanics* §39). Per quantum:
+
+- **Coriolis** (first order): m·ħΩ, i.e. mΩ/ω of the energy. m = 0 gets none.
+- **Centrifugal** (second order): ½IΩ², where the field's moment of inertia
+  is I = (ħω/c²)⟨ρ²⟩. From the field solver ⟨ρ²⟩/a² is 1.143 (±1) and
+  1.150 (0).
+
+The target is 0.1 eV (declared; KATRIN m < 0.45 eV). The burst limit is
+1,881 m/s.
+
+| Ring | m | ħω | Ω for Coriolis = 0.1 eV | its rim speed | Ω/ω | rim speed for centrifugal = 0.1 eV | Coriolis at burst | centrifugal at burst |
+|---|---|---|---|---|---|---|---|---|
+| bench (a = 10 mm, εr = 100) | ±1 | 1.83×10⁻⁵ eV | 1.52×10¹⁴ rad/s | 1.52×10¹² m/s | 5.4×10³ | 2.9×10¹⁰ m/s | 1.2×10⁻¹⁰ eV | 4×10⁻¹⁶ eV |
+| bench | 0 | 8.51×10⁻⁶ eV | — | — | — | 4.3×10¹⁰ m/s | 0 | 2×10⁻¹⁶ eV |
+| Part 2 (a = 1.46×10⁻¹² m) | ±1 | 0.1 eV | 1.52×10¹⁴ rad/s | 222 m/s | 1 | 4.0×10⁸ m/s | 0.85 eV (first order invalid, Ω/ω ≈ 8) | 2×10⁻¹² eV |
+| Part 2 | 0 | 0.1 eV | — | — | — | 4.0×10⁸ m/s | 0 | 2×10⁻¹² eV |
+
+What this shows:
+
+- **Coriolis.** Ω = 0.1 eV/ħ = 1.52×10¹⁴ rad/s for every ring size. On the
+  bench ring that is 1.2×10⁴ times its own ω, a rim speed of 5,100c. On the
+  Part 2 ring it equals its own ω₀, because ħω₀ = 0.1 eV by construction. Its
+  rim moves at only 222 m/s, below the burst speed, but Ω/ω = 1 lies outside
+  the first-order form. That ring is also 36× smaller than a hydrogen atom: no
+  material ring of that size exists to turn, and any material ring carries a
+  rest mass far above 0.1 eV.
+- **Centrifugal.** ½IΩ² = ½ħω·(⟨ρ²⟩/a²)(v/c)², under ½ħω·1.15 for any rim
+  speed below c. It cannot supply a mass the field does not already have.
+- **Mass pattern.** E(±1) = ħ(ω₁ ± Ω) and E(0) = ħω₀: the ±1 pair splits
+  symmetrically and m = 0 stays. With the field solver's 2.057 and 4.435 GHz,
+  the measured Δm²31/Δm²21 = 33.55 needs Ω/ω₁ = 5.76×10⁻³. The close pair is
+  then the turning pair, heavier than m = 0 by 2.156. That is an inverted
+  ordering; NuFIT 6.0 favours the normal one. Scaled so that Δm²31 =
+  2.513×10⁻³ eV², m(0) = 0.026 eV and m(±1) ≈ 0.057 eV. At εr = 100 the rim
+  speed is the same for every size: 1.61×10⁶ m/s, 854× the burst speed.
+- **Ledger.** The rotation's energy (Ω·J_z of the wave, plus ½I_matΩ² of any
+  material ring) is work done by the outside agent that turns the unit. It is
+  a declared mechanical input column, never inflow from nowhere. At constant
+  Ω the Coriolis terms do no work (Part 7a: the gyrators' net work is 6×10⁻¹⁹
+  of the stored energy).
+- **Rest mass.** A ring turning about its own centre has p = 0, so its
+  invariant mass Mc² = √(E² − p²c²) = E includes the rotation energy, as a
+  spinning flywheel weighs more by E_rot/c². It is not intrinsic: it is set by
+  Ω, energy put in from outside, and held only while J is held.
+
+**Standard prediction.** Neutrino masses are not explained by the Standard
+Model; Dirac masses through the Higgs, or a seesaw with heavy partners, are
+the leading proposals. No rotation of the neutrino enters.
+
+### Status (H41): bounded
+
+| Claim | Result | Measured / standard |
+|---|---|---|
+| Three flavours = three spin states | The triplet m = +1, 0, −1 is three-dimensional (Part 6's types were two), J_z = +ħ, 0, −ħ per quantum. | Flavour is fixed by the charged lepton of the weak interaction. |
+| "Full magnetic field" / "no magnetic field" | The turning states keep U_B = Ū/2 but have no magnetic dipole, only a turning electric dipole. m = 0 has the axial moment, and its B passes through zero twice a period. | No static moment in any state (bound < 2.8×10⁻¹¹ μB). |
+| Oscillation between them | Needs a torque from a structure (shunt deformation; a defect absorbs the 2ħ). A free ring conserves J_z. | Oscillation in vacuum keeps helicity −½. |
+| Mixing angles | With e = 0, reciprocity forces θ₂₃ = 45° and δ_CP = ±90° (μ–τ symmetry). θ₁₂, θ₁₃ and the ratio fit only with deformations that put 48 % of each mass state outside the triplet. Rotation (414× burst speed) moves θ₂₃ to 43.4° and keeps δ_CP ≈ 272°. | θ₂₃ 43.3 ± 0.9°, δ_CP 212° (+26/−41) |
+| Spin ½ | No: whole units ±ħ, 0. The sign of J_z separates the turning senses, the way helicity separates neutrino from antineutrino, not flavours. | ½; every flavour left-handed |
+| Mass from outside rotation | Coriolis mħΩ (none for m = 0), centrifugal < ½ħω·1.15. The measured splitting ratio needs 854× the burst speed and gives an inverted ordering. All of it is work by the outside agent, frame energy. | m < 0.45 eV; origin open (Higgs, seesaw) |
+
+**Limits.**
+
+- The ring-line triplet's m = 0 frequency is set by a modelling stray (1 pF);
+  the field solver gives the physical ratio 2.16.
+- Mixing uses Euclidean projections and Part 7's angle conventions; the
+  Löwdin U printed in `run_output.txt` differs from the projected angles when
+  the leak is large.
+- Field solves are staircased (fourfold lattice symmetry; the m = 1 mode is
+  not a pure order).
+- The torque ledger is on the ring line, not in the field solver.
+- 8e uses first-order Coriolis and the field's moment of inertia, with no
+  model of the material that turns.
+
+## 9. Two neutrinos (H42)
+
+The user's question (2026-11-07): *how would two neutrinos interact with each
+other?* In the model of this example the answer is a question about two
+identical rings: two bench E-rings (TE01δ, Part 1) a distance d apart, and
+chains of them. Only identical rings are paired.
+
+The rings carry no charge, so their whole coupling is the vector potential
+of one ring's displacement current acting round the other (E = −jωA, no
+scalar potential). For two thin loops with uniform current the mutual
+impedance is the retarded Neumann integral
+
+    Z12 = jω (μ0/4π) ∮∮ dl1·dl2 e^{−jkR}/R = R_m + jω(M + ΔM)
+
+(R. W. P. King, *The Theory of Linear Antennas*, 1956, ch. III). It splits
+into three parts:
+
+- the **static mutual inductance** M: coaxial rings (axes shared, d along
+  the axis) by Maxwell's elliptic formula (`em.MutualCircles`), side-by-side
+  coplanar rings by the Neumann integral of two polygons (`em.Neumann`,
+  128- and 256-gons extrapolated);
+- the **retardation correction** ΔM, the cos(kR) − 1 part of the kernel;
+- the **mutual radiation resistance** R_m, the sin(kR) part. For far rings it
+  becomes the dipole–dipole collective decay rate (R. H. Lehmberg, *Phys.
+  Rev. A* 2, 883, 1970): coaxial R_m/R11 = 3(sin x/x³ − cos x/x²), side by
+  side (3/2)(sin x/x + cos x/x² − sin x/x³), x = kd. The run prints this
+  form beside the exact value; they agree from d ≈ 3a outward.
+
+The same kernel gives each ring's own R11 and ΔL. For one loop it is the
+exact radiation resistance of a uniform-current loop, η0(π/2)·ka·∫₀^{2ka}
+J2(y) dy (Balanis eq. 5-63; tested). One kernel for both matters, because
+subradiance is the small difference R11 − R_m, about R11·(kd)²/10 for a
+close coaxial pair. That is smaller than the (ka)²/5 by which the exact R11
+differs from Part 1's small-loop formula. So Part 9's single ring is Part 1's
+with its first retardation terms: **f0 = 1.9981 GHz, Q = 48.93** (R11 =
+6.61 Ω, ΔL/L = 0.067), against Part 1's 2.0606 GHz and Q 40.52. Every pair
+and chain below is compared with this ring.
+
+Each mode is solved at its own frequency. The matrices are frozen at a
+frequency, the quadratic eigenproblem s²L + sR + 1/C = 0 is solved (Rayleigh
+root plus inverse iteration), the frequency is updated, and this repeats to
+1e-12. In kronspice each ring is a loop C–L–R11–R_d with a 0 V sense source.
+K elements carry M. H elements (V = R_m·I_j) carry the mutual radiation
+resistance, and their power is the interference term of the radiated power,
+booked as model-supplied. kronspice takes only 0 < k ≤ 1, so a negative M is
+built with a helper inductor wound backwards in the second ring, coupled at
+k = ½ and taken off that ring's main inductor. It needs a 100 MΩ shunt so
+that the UIC start is not two current sources in series; a 10 kΩ shunt cost
+the N = 16 chain a third of its Q.
+
+```
+go run ./examples/fdamador_neutrino -only 9                              # 9a–9e: about 15 s
+go run ./examples/fdamador_neutrino -only 9 -field -viz examples/fdamador_neutrino/viz   # with the 9c field runs (r/2, r/3): about 65 minutes
+python3 examples/fdamador_neutrino/viz/render_part9.py                  # viz/pair.png
+python3 examples/fdamador_neutrino/viz/plot_pair_structure.py           # viz/structure_pair.png
+python3 examples/fdamador_neutrino/viz/plot_pair_cycle.py               # viz/pair_cycle.gif
+```
+
+`-paircells` sets the 9c grids (default `2,3`). The first grid runs every
+configuration; the others run the single ring and d = a.
+
+### 9a. Coupled loops
+
+| geometry | d/a | k = M/L | R_m/R11 (dipole) | f_in GHz | Q_in (kronspice) | f_anti GHz | Q_anti (kronspice) | Q_rad,anti |
+|---|---|---|---|---|---|---|---|---|
+| coaxial | 0.5 (touching) | +0.538 | 0.9953 (0.9953) | 1.6306 | 66.91 (66.94) | 2.9044 | 716.4 (716.6) | 835 |
+| coaxial | 0.75 | +0.363 | 0.9894 (0.9895) | 1.7283 | 50.31 (50.33) | 2.4845 | 944 (944.2) | 1094 |
+| coaxial | 1 | +0.257 | 0.9813 (0.9815) | 1.7957 | 41.8 (41.82) | 2.3056 | 916.8 (917.1) | 1036 |
+| coaxial | 2 | +0.086 | 0.9266 (0.9274) | 1.9225 | 30.62 (30.64) | 2.0854 | 502.5 (502.6) | 530 |
+| coaxial | 5 | +0.007 | 0.6012 (0.6050) | 1.9908 | 30.73 (30.74) | 2.0052 | 125.3 (125.3) | 127 |
+| coaxial | 10 | −0.004 | 0.0210 (0.0273) | 2.0014 | 46.53 | 1.9948 | 51.67 | 52 |
+| side by side | 2.5 (gap 0.5a) | −0.041 | 0.7816 (0.7810) | 2.0378 | 24.91 (24.91) | 1.9606 | 264.7 (262.7) | 271 |
+| side by side | 5 | −0.013 | 0.2769 (0.2753) | 2.0096 | 36.52 | 1.9870 | 73.3 | 74 |
+| side by side | 10 | −0.001 | −0.3334 (−0.3344) | 2.0000 | 72.96 | 1.9961 | 36.9 | 37 |
+
+"In phase" means the currents go round the same way (I2 = I1), "antiphase"
+the opposite way. For coaxial rings M > 0, so the in-phase mode (L + M) lies
+below f0 and the antiphase mode (L − M) above it. Side by side M < 0 and the
+order turns over. At kd ≈ 3–4 the side-by-side R_m changes sign, and the
+"in-phase" mode becomes the darker one, as for dipoles. Every kronspice mode
+run agrees with the matrix to ≤ 0.8 % (most to 3e-4). The ledger residual is
+0, the energy books close to ≤ 4.8e-3 of the start (trapezoidal, T/200), and
+the total radiated power Iᵀ·R_rad·I never goes negative.
+
+**Beats.** Ring 0 starts alone (capacitor charged) with ring 1 at rest. At
+d = a the energy passes to ring 1 (98.7 % at 1.81 periods) and back. The
+carrier-averaged E0 − E1 crosses zero at a spacing that gives Δf =
+535.08 MHz, against 534.86 MHz for the circuit as integrated (matrices
+frozen at the mean frequency; +4e-4). The self-consistent modes are
+509.97 MHz apart, the difference being the dispersion of ΔL and ΔM. At
+d = 2a: 171.86 against 171.55 MHz. The beat does not last: the in-phase
+half radiates (Q 41.8) and the antiphase half stays (Q 917). After 60 periods
+39 % of the energy is left at d = a, and 100.00 % of it is in the antiphase
+pattern. Two rings that meet with one excited end as a dark pair.
+
+### 9b. Force
+
+The time-averaged force is F = ⟨I1·I2⟩·∂(M + ΔM)/∂d, by the energy method at
+constant currents. The induction field is the rings' whole electric near
+field, so there is no separate electric term. For a mode the force is
+±(U/2(L ± M))·∂M/∂d. kronspice gives ⟨I1I2⟩/⟨U⟩ over 3 periods of each mode
+run. Units are U/a, with + meaning repulsion:
+
+| geometry | d/a | in phase (kronspice) | antiphase (kronspice) | random phases, 1st period | random, after 30 periods |
+|---|---|---|---|---|---|
+| coaxial | 0.75 | −0.196 (−0.198) | +0.420 (+0.423) | +0.017 ± 0.038 | +0.400 ± 0.064 |
+| coaxial | 1 | −0.133 (−0.134) | +0.227 (+0.229) | +0.000 ± 0.023 | +0.225 ± 0.037 |
+| coaxial | 2 | −0.036 (−0.037) | +0.044 (+0.045) | −0.004 ± 0.005 | +0.044 ± 0.007 |
+| coaxial | 3 | −0.0136 | +0.0149 | −0.002 ± 0.002 | +0.015 ± 0.002 |
+| side by side | 2.5 | +0.037 | −0.035 | +0.005 ± 0.005 | −0.034 ± 0.006 |
+| side by side | 4 | +0.0013 | −0.0013 | +0.0002 ± 0.0002 | −0.0012 ± 0.0002 |
+
+- **Coaxial:** in phase attracts (parallel currents), antiphase repels.
+- **Side by side:** the signs swap, because M < 0.
+- **Random relative phases** (32 pairs, seeded): there is no mean force at
+  the start. But the pairs do not stay incoherent: the bright half radiates
+  and what is left after 30 periods is the dark mode. That mode repels, at
+  0.99 of the coherent antiphase value (d = a).
+
+Standard counterpart: optical binding (Burns, Fournier & Golovchenko,
+*PRL* 63, 1233, 1989). Neutral classical resonators exert time-averaged
+forces only through correlated phases.
+
+### 9c. Subradiance
+
+| d/a (coaxial) | kd at f_anti | 10/(kd)² | Q_rad,anti / Q_rad,single | f_anti/f0 |
+|---|---|---|---|---|
+| 0.5 | 0.304 | 108 | 17.0 | 1.454 |
+| 0.75 | 0.391 | 65.6 | **22.3** | 1.243 |
+| 1 | 0.483 | 42.8 | 21.1 | 1.154 |
+| 1.5 | 0.676 | 21.9 | 15.3 | 1.076 |
+| 2 | 0.874 | 13.1 | 10.8 | 1.044 |
+| 3 | 1.279 | 6.11 | 5.87 | 1.018 |
+
+- **Gain.** The antiphase pair keeps its energy longest at **d ≈ 0.75a**:
+  Q_rad 1094, 22× the single ring. With tan δ = 1e-4 it is Q 944 (×19.3).
+- **Scaling.** Far out the gain follows 10/(kd)².
+- **Close rings.** Closer in the rings couple strongly (k = 0.54 at contact,
+  d = 2r). The antiphase mode moves up to 1.45 f0, R11 ∝ ω⁴ grows faster
+  than the cancellation improves, and the dielectric caps Q at ~1/tan δ.
+- **In phase.** The pair is superradiant: Q 41.8 at d = a against 48.9.
+
+**Field solver.** The check uses the tori of Part 5b (εr = 100, lossless,
+staircased) on a common axis in `em/fdtd.go`. Each torus starts with Part
+5b's D_φ bump times its weight, with B = 0. The z mirror keeps an in-phase
+start in the even modes and an antiphase start in the odd ones. The mode's f
+and Q come from the demodulated E_φ probe at (a, 0, z0) after 4 periods,
+taking the strongest peak in 1–4.5 GHz, so that a slower higher mode is
+filtered out. The absorber starts 6a from the axis and from the outermost
+ring. Every field ledger closes to ≤ 1.2e-13.
+
+| configuration | grid | f GHz (circuit) | Q field | Q_rad circuit | field ÷ one ring | circuit ÷ one ring |
+|---|---|---|---|---|---|---|
+| one ring | r/2 | 2.0927 (1.9981) | 55.28 | 49.15 | 1 | 1 |
+| in phase d = 0.75a | r/2 | 1.8285 (1.7283) | 54.65 | 50.49 | 0.99 | 1.03 |
+| antiphase d = 0.75a | r/2 | 2.5395 (2.4845) | 1450 | 1094 | **26.2** | 22.3 |
+| in phase d = a | r/2 | 1.8937 (1.7957) | 46.13 | 41.93 | 0.83 | 0.85 |
+| antiphase d = a | r/2 | 2.3849 (2.3056) | 1278 | 1036 | **23.1** | 21.1 |
+| in phase d = 1.5a | r/2 | 1.9730 (1.8781) | 37.41 | 33.94 | 0.68 | 0.69 |
+| antiphase d = 1.5a | r/2 | 2.2418 (2.1501) | 870 | 753 | 15.7 | 15.3 |
+| in phase d = 2a | r/2 | 2.0157 (1.9225) | 33.53 | 30.70 | 0.61 | 0.62 |
+| antiphase d = 2a | r/2 | 2.1801 (2.0854) | 599 | 530 | 10.8 | 10.8 |
+| one ring, absorber at 8a | r/2 | 2.0918 | 46.81 | 49.15 | 1 | 1 |
+| antiphase d = a, absorber at 8a | r/2 | 2.3846 | 1038 | 1036 | 22.2 | 21.1 |
+| chain N = 4, band edge, d = a | r/2 | 2.5302 (2.4646) | 3317 | 2655 | **60.0** | 54.0 |
+| one ring | r/3 | 2.0499 | 57.32 | 49.15 | 1 | 1 |
+| in phase d = a | r/3 | 1.8491 | 47.98 | 41.93 | 0.84 | 0.85 |
+| antiphase d = a | r/3 | 2.3466 | 1268 | 1036 | **22.1** | 21.1 |
+
+The field solver confirms the circuit's subradiance. At d = a the antiphase
+pair keeps its energy 22–23× longer than one ring on every grid and box
+(circuit 21.1). The ratios against distance follow the circuit within
+3 % at d ≥ 1.5a. The four-ring band-edge chain gains ×60 (circuit ×54).
+Field frequencies lie 2.5–5 % above the lumped ones, as Part 5b found for
+one ring.
+
+**One ring's own Q is not converged.** With the absorber at 3a (Part 5b) it
+is 41.7. At 6a it is 55.3 (r/2) and 57.3 (r/3), and at 8a it is 46.8. At
+ka ≈ 0.4 the absorber sits in the ring's reactive near field and returns a
+little of what it takes, so the absolute field Q is uncertain by about
+±10 %, Part 5b's value included. The pair-to-single ratio in the same box
+does not move.
+
+The runs take 1 h 4 min (15 runs, 1.6–4.7 million nodes). `run_output.txt`
+holds the report printed again from the run's `p9_field.csv` with
+`-pairfieldcsv`; `viz/p9_fieldamp.csv` keeps the demodulated amplitudes of
+every run.
+
+### 9d. Chains
+
+N coaxial rings a apart. The darkest mode is the band-edge mode: neighbours
+opposite under a smooth sine envelope, net moment 0. The brightest mode is
+all rings in phase. kronspice starts the darkest mode alone without
+dielectric loss and runs it for 200 periods at T/100.
+
+| N | bright f GHz, Q | dark f GHz | dark Q (tan δ 1e-4) | dark Q_rad (exact) | kronspice Q_rad |
+|---|---|---|---|---|---|
+| 1 | 1.9981, 48.9 | — | 48.9 | 49.15 | 49.2 |
+| 2 | 1.7957, 41.8 | 2.3056 | 917 | 1036 | 1037 |
+| 4 | 1.6525, 33.0 | 2.4646 | 1924 | 2655 | 2658 |
+| 8 | 1.5694, 23.4 | 2.5238 | 4234 | 11 603 | 11 586 |
+| 16 | 1.5314, 16.7 | 2.5417 | 6137 | 92 640 | 92 726 |
+| 32 | 1.5203, 14.0 | 2.5466 | 6484 | 6.73×10⁵ | — |
+| 64 | 1.5177, 13.3 | 2.5479 | 6532 | 5.29×10⁶ | — |
+
+- **Scaling.** Q_rad ∝ N^2.92 over N = 16–64. The gain compounds as a power
+  of N, not exponentially. That is the known N⁻³ law for the darkest modes of
+  finite sub-wavelength arrays (A. Asenjo-Garcia et al., *Phys. Rev. X* 7,
+  031024, 2017).
+- **Loss.** With tan δ = 1e-4 the chain saturates near Q 6500.
+- **What Part 2 needs.** Q = 8.05×10¹⁸ for SN1987A's proper time, a
+  suppression of 6.1×10⁻¹⁸ of the single ring's radiation. At this scaling
+  (28.4·N^2.92) that takes **N ≈ 9.6×10⁵ rings** locked in one band-edge
+  mode: a chain 9.6 km long, with losses below 1e-19.
+- **Rings in vacuum** (εr = 1) get no subradiance at all. Each is
+  electrically large at its own frequency (ka ≈ 4, Part 2), so neighbours sit
+  at kd > 1 and the cancellation is gone.
+- **Standard prediction:** subradiance is limited by size and disorder, and a
+  neutrino is one particle, not a phase-locked chain.
+
+### 9e. Against measurement
+
+The test takes two model rings at the Part 2 neutrino scale: 0.1 eV, a/r = 4,
+a = 1.46×10⁻¹² m, ka = 7.4×10⁻⁷, and the effective εr = 3.4×10¹³ that holds
+the ring for SN1987A's proper time.
+
+| Quantity | Model rings | Neutrinos (standard, measured) |
+|---|---|---|
+| Interaction energy, coaxial at d = 2a | each mode moves by ½ħω0·k = 3.3×10⁻³ eV (k = 0.066); side by side, gap 0.5a: 2.4×10⁻³ eV | Z exchange, a Yukawa of range ħ/M_Z c = 2.16×10⁻¹⁸ m: at 2a it carries e^{−1.35×10⁶}. Even the contact term √2·G_F(ħc)³ spread over one ring's volume is 3.3×10⁻⁸ eV, 10⁵× smaller |
+| Cross-section | two rings passing at c: transfer phase φ(b) = π·ka·a²/(4Λb²); φ(a) = 3.4×10⁻⁷; σ = ∫φ²2πb db (b ≥ a) = **7.7×10⁻³³ cm²** | G_F²s/π ≈ **6.7×10⁻⁴² cm²** for two 10 MeV neutrinos head on (order of magnitude; never measured): the model is 1.1×10⁹× larger |
+| Force | ~0.1–0.4 U/a for correlated phases | none measured; the weak force has no long-range part |
+| Subradiance | an antiphase pair at 2a radiates 1/524 of one ring: a touching antiphase pair would need εr ≈ 9.7×10⁷ instead of 3.4×10¹³ | — |
+| Statistics | classical: two in-phase rings add, no exclusion | fermions: Pauli exclusion, Tremaine–Gunn bound (*PRL* 42, 407, 1979) |
+| Collective effects | coherent pairs and chains through EM coupling | supernova flavour conversion from forward νν scattering, potential √2·G_F·n_ν (Pantaleone, *Phys. Lett. B* 287, 128, 1992); thermal decoupling at ~1 s, N_eff = 2.99 ± 0.17 (Planck 2018) |
+
+Two model neutrinos would interact far more strongly than measured
+neutrinos are allowed to. They would stay in thermal contact in the early
+universe long after the observed decoupling, and a coherent pair would
+attract or repel. The model has no weak (neutral-current) coupling, as in
+Parts 2–8.
+
+### Status (H42): bounded
+
+| Claim | Result | Measured / standard |
+|---|---|---|
+| Two neutrinos interact | As two coupled resonators: splitting k·f0 (25 % of f0 at d = a), beats at Δf (kronspice = circuit to 4e-4), complete energy exchange | Only Z exchange, contact range 2×10⁻¹⁸ m; never measured |
+| Force | Only for correlated phases. Coaxial: in phase attracts, antiphase repels; side by side the opposite. Random pairs relax into the dark (repelling) mode | No long-range νν force |
+| Subradiance helps confinement | Antiphase pair ×22 (circuit), ×22–23 at d = a, ×26 at 0.75a (field); chain ∝ N^2.9 | — |
+| Enough for Part 2 | ~10⁶ phase-locked rings in a lossless chain at the bench scale; nothing in vacuum (εr = 1) | One particle |
+| Interaction strength | Cross-section 10⁹× the weak value; interaction energy 10⁵× even a smeared contact term | Weak only |
+
+**Limits.**
+
+- The rings are filament loops with uniform current for the coupling, with
+  Part 1's thick-ring self-inductance.
+- The kernel is the uniform-current loop's: higher azimuthal currents and
+  the dielectric's own fields are not in the circuit. The field solver is
+  the check.
+- R and M are frozen at one frequency per run. Beats use the mean frequency
+  (the 5 % dispersion shift is shown).
+- Chains are coaxial only. Side-by-side arrays and disorder are not modelled.
+- 9e's cross-section is first-order (impact parameter b ≥ a, point dipoles,
+  passage at c) and ignores relativistic corrections. The comparison is
+  order-of-magnitude, as stated.
+
 ## Chart and sound
+
+`viz/cycle.gif` (`python3 viz/plot_cycle.py`): one cycle of the bench ring
+(f0 = 2.0606 GHz), slowed about 6×10⁹× to a 3 s loop: E round the ring and B
+through the hole a quarter period apart, the energy passing from electric to
+magnetic and back; the decay (14 % of the energy per cycle at Q = 40.5) is left
+out. Same geometry and B lines as `viz/structure.png`.
 
 `viz/resonance.png`: (1) the E-ring's resonance at εr 30–1000, narrowing
 as Q rises; (2) Q against εr, formula and kronspice, on the εr^1.5 line;
@@ -885,6 +1437,45 @@ P(μ→e) in kronspice at δ_CP ≈ 211° and their difference with and without
 rotation; 7b — J_z·ω/U of the spinning fields (Minkowski, with Abraham
 dotted) and the helicity's swings as the E- and B-rings beat.
 
+`viz/triplet.png` (Part 8, from `render_part8.py`): the Gram eigenvalues of
+the triplet against Part 6's types; the triplet's levels under an outside
+rotation with the Ω that gives the measured splitting ratio; the reciprocal
+fit in kronspice against the exact mode expansion; J of the field and
+J(0) + ∫torque dt through +1 → −1; the energy an outside rotation adds per
+quantum against rim speed (Coriolis and centrifugal, bench and Part 2
+rings); the dipoles of each state in the field solver.
+
+`viz/structure_m+1.png`, `structure_m0.png`, `structure_m-1.png`
+(`plot_triplet.py`), in the layout of `structure.png` but drawn from the
+field solver's fields (r/3, the filtered phasors of 8d at t = T/8): (a) E on
+the ring and B beside the tube in 3-D with the turning sense; (b) the z = 0
+plane, E arrows and B_z contours; (c) two periods: electric and magnetic
+energy, J_z, and the dipole the state carries.
+
+`viz/pair.png` (Part 9, from `render_part9.py`) has six panels:
+
+1. mode frequencies of a pair against distance, coaxial and side by side;
+2. the beats at d = a, as the energy in each ring and in both;
+3. the force against distance (analytic curves, kronspice dots, random
+   phases at the start and after 30 periods);
+4. Q of both modes against distance, circuit, kronspice and field solver;
+5. chains: the darkest and brightest Q against N, with the N^2.92 fit
+   extended to the Q Part 2 needs;
+6. the N = 16 chain's band-edge and in-phase patterns.
+
+`viz/structure_pair.png` (`plot_pair_structure.py`) is in the style of
+`structure.png`: two coaxial rings at d = a with the B lines of (a) the
+in-phase mode (closing round both rings) and (b) the antiphase mode (each
+ring's lines closing on themselves). Panel (c) is the far-field pattern of
+one ring, the in-phase pair and the antiphase pair (a quadrupole, 0.046 of
+one ring's power for the same currents).
+
+`viz/pair_cycle.gif` (`plot_pair_cycle.py`, in the style of `cycle.gif`)
+shows one beat at d = a, slowed to about 5 s. Ring 0 starts with the
+energy, which passes to ring 1 and back. The frames show E at the tubes, the
+B lines of both rings together, and the energy per ring. The decay is left
+out.
+
 ## Tests
 
 | Test | Checks | Held to |
@@ -912,6 +1503,20 @@ dotted) and the helicity's swings as the E- and B-rings beat.
 | `TestHelicityNorm` | h·ω/u = ±1 for circular light, 0 for linear, at every instant | 1e-12 |
 | `TestFieldIntegrals` | grid J_z of E ∝ (x, y, 0), B ∝ ẑ against the closed form −ε0E0B0·16b⁵/3L; Minkowski path; ∫E·B = 0 | 0.3(dx/b)²; 1e-12 |
 | `TestSpinFieldCoarse` | 7b on r/2, short runs: m = 1 orthogonal to itself turned 90°, −1 at 180°; travelling ± are mirror images with net Minkowski J_z > 0.5, Abraham of the same sign; E + B (m = 0) J_z ≈ 0, helicity sign flips with the phase; field ledgers | 0.01; 1e-9; 0.02; 1e-10 |
+| `TestTripletIndependent` | 8a: triplet Gram = identity, types' eigenvalues 0, 1, 2; each state persists with J·ω/U = +1, 0, −1; ledger | 1e-12; 1e-9, 1e-6; 1e-3 |
+| `TestSeriesDefectsLeaveUniform` | series defects leave the uniform state an exact mode | 1e-9 (eigen-solver resolution) |
+| `TestMuTauSymmetry` | reciprocal ring, e = 0: \|U_μi\| = \|U_τi\|, θ₂₃ = 45°, δ_CP = 90° or 270°; rotation breaks it | 1e-12, 1e-9, 1e-6 |
+| `TestTorqueLedger` | 8c: ΔJ = −2 for +1 → −1; ΔJ = ∫(−∂H/∂α) dt; free ring keeps J; ledger | 0.02; 0.01; 1e-6; 1e-3 |
+| `TestTripletRunTwin` | 8b in kronspice: follows the exact mode expansion; m = 0 empties; ledger | 2e-3; 1e-3 |
+| `TestOutsideRotation` | 8e: Ω_cor = ω₀ on the Part 2 ring; none for m = 0; centrifugal 0.1 eV needs v ≥ c; `RatioOmega` gives the asked ratio | 1e-9; 1e-6 |
+| `TestTripletFieldCoarse` | 8d on r/2, short windows: Gram = identity; ±1 equal and opposite J_z, constant U_B, no magnetic dipole, turning p; E-ring axial moment = lumped (0.8–1.05), through zero | 1e-6; 1e-9; 0.01 |
+| `TestRetardedSelfIsBalanis` | 9: the kernel's self term = the exact uniform-loop radiation resistance η0(π/2)ka∫J2 (Balanis 5-63), ka 0.05–2 | 1e-6 |
+| `TestMutualRadiationDipoleLimit` | exact R_m/R11 → Lehmberg's dipole form at d = 3a, 5a, coaxial and side by side | 1 % |
+| `TestStaticMutual` | side-by-side static M (extrapolated `em.Neumann` polygons) = trapezoidal double integral | 1e-6 |
+| `TestPairModesKronspice` | pair modes = closed form (1, ±1); kronspice ring-down Q of each, coaxial and side by side (helper inductors for M < 0); books, radiated power ≥ 0, ledger; antiphase subradiant | 1/(4Q²), 1e-3; 1 %; 1e-3; 1e-6 |
+| `TestPairBeats` | beat splitting from the zero crossings = the circuit's; transfer ≥ 0.9 | 5e-3 |
+| `TestPairForceSigns` | coaxial in phase attracts, antiphase repels; kronspice ⟨I1I2⟩ = analytic | 2 % |
+| `TestChainDarkMode` | the darkest mode's Q grows with N (2, 4, 8) with net moment 0; kronspice N = 8 = matrix | 1e-9; 1 % |
 | `TestExport` | E-ring and both ring lines exported (torn-solution tolerance 1e-6 for the E-ring, from 1 GΩ bleeders beside 0.29 Ω) | |
 
 ## Files
@@ -933,6 +1538,16 @@ dotted) and the helicity's swings as the E- and B-rings beat.
 | `part7.go` | the report for Part 7 |
 | `viz7.go`, `viz/render_part7.py` | `-viz` data for Part 7; `viz/spin.png` |
 | `part7_test.go` | the Part 7 tests above |
+| `triplet.go` | Part 8a–c, e: the triplet on the ring line (Gram, persistence, J), shunt deformations (`FRing.NodeC`) and the triplet cluster (`TripletMix`, `FitTriplet`, `RunTriplet`), the torque ledger (`Torque`), outside rotation (`OutsideRotation`, `RatioOmega`) |
+| `tripletfield.go` | Part 8d: the triplet in `em/fdtd.go` from the 7b modes; overlaps, J_z, U_E, U_B, magnetic and electric dipoles over a period, ⟨ρ²⟩; field sampling for the figures |
+| `part8.go` | the report for Part 8 |
+| `viz8.go`, `viz/render_part8.py`, `viz/plot_triplet.py` | `-viz` data for Part 8; `viz/triplet.png` and the three structure figures |
+| `part8_test.go` | the Part 8 tests above |
+| `pair.go` | Part 9: `Array` (N rings coaxial or side by side), the retarded Neumann kernel (`retarded`: R11, ΔL, R_m, ΔM), static M (`StaticM`), the dipole form (`DipoleZ12`), self-consistent modes (`SolveMode`, `PairModes`, `ChainModes`), the kronspice array (K, helper inductors for M < 0, H elements for R_m) and its runs (`Run`, `RunMode`, `RunBeats`, `Force`) |
+| `pairfield.go` | Part 9c: `PairField` — N tori on a common axis in `em/fdtd.go`, weighted D_φ start, demodulated-probe f and Q, field ledger |
+| `part9.go` | the report for Part 9, the field jobs and test 9e (`nuPair`) |
+| `viz9.go`, `viz/render_part9.py`, `viz/plot_pair_structure.py`, `viz/plot_pair_cycle.py` | `-viz` data for Part 9; `viz/pair.png`, `viz/structure_pair.png`, `viz/pair_cycle.gif` |
+| `part9_test.go` | the Part 9 tests above |
 | `export_test.go` | netlists, KiCad schematics and results sheets in `export/` |
 | `ramp_check.txt` | the ramp-length independence check, raw rows |
 | `run_output.txt` | the run above |
@@ -953,4 +1568,11 @@ dotted) and the helicity's swings as the E- and B-rings beat.
 - A. Taflove, S. C. Hagness, *Computational Electrodynamics*, 3rd ed., Artech 2005, ch. 5 — the total-field/scattered-field (Huygens) surface of Part 5b.
 - I. Esteban, M. C. Gonzalez-Garcia, M. Maltoni, I. Martinez-Soler, J. P. Pinheiro, T. Schwetz, "NuFit-6.0: updated global analysis of three-flavor neutrino oscillations," *JHEP* 12 (2024) 216, arXiv:2410.05380 — the measured angles, splittings and δ_CP of Part 6 (Table 1, normal ordering with SK-atm).
 - L. Wolfenstein, *Phys. Rev. D* 17, 2369 (1978); S. P. Mikheyev, A. Yu. Smirnov, *Sov. J. Nucl. Phys.* 42, 913 (1985) — matter (MSW) effects, which the ring has no counterpart of.
+- P. F. Harrison, W. G. Scott, "μ–τ reflection symmetry in lepton mixing and neutrino oscillations," *Phys. Lett. B* 547, 219 (2002) — θ₂₃ = 45° and δ_CP = ±90° from U_τi = U*_μi (Part 8b).
+- L. D. Landau, E. M. Lifshitz, *Mechanics*, 3rd ed., §9 (angular momentum as the generator of rotations) and §39 (E = E′ + Ω·M in a rotating frame) — Part 8c, 8e.
 - B. W. Lee, R. E. Shrock, *Phys. Rev. D* 16, 1444 (1977); K. Fujikawa, R. E. Shrock, *PRL* 45, 963 (1980) — the standard Dirac-neutrino moment 3eG_F m_ν/(8√2π²).
+- R. W. P. King, *The Theory of Linear Antennas*, Harvard 1956, ch. III — mutual impedance of thin loops; C. A. Balanis, *Antenna Theory*, 3rd ed., eq. 5-63 — radiation resistance of a uniform-current loop of any size.
+- R. H. Lehmberg, *Phys. Rev. A* 2, 883 (1970); Z. Ficek, R. Tanaś, *Phys. Rep.* 372, 369 (2002) — collective decay of two dipoles; R. H. Dicke, *Phys. Rev.* 93, 99 (1954) — super- and subradiance.
+- A. Asenjo-Garcia, M. Moreno-Cardoner, A. Albrecht, H. J. Kimble, D. E. Chang, *Phys. Rev. X* 7, 031024 (2017) — subradiant modes of finite arrays, Γ ∝ N⁻³.
+- M. M. Burns, J.-M. Fournier, J. A. Golovchenko, *PRL* 63, 1233 (1989) — optical binding.
+- J. Pantaleone, *Phys. Lett. B* 287, 128 (1992) — neutrino–neutrino forward scattering in dense media; S. Tremaine, J. E. Gunn, *PRL* 42, 407 (1979); Planck Collaboration, *A&A* 641, A6 (2020) — N_eff.

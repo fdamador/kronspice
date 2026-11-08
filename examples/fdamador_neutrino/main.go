@@ -454,10 +454,25 @@ func main() {
 	viz := flag.String("viz", "", "also write the data for viz/render.py (chart and sound) and viz/render_part56.py to this directory")
 	field := flag.Bool("field", false, "also run Part 5b, the field-solver implosion (about 10 minutes for the default grids r/2, r/3)")
 	fieldCells := flag.String("fieldcells", "2,3", "Part 5b grids, in cells per tube radius")
-	only := flag.String("only", "", "run only this part (\"7\": Part 7, with 7b when -field is set)")
+	only := flag.String("only", "", "run only this part (\"7\": Part 7, with 7b when -field is set; \"8\": Part 8, with 8d when -field is set; \"9\": Part 9, with the 9c field runs when -field is set)")
 	spinCells := flag.String("spincells", "2", "Part 7b grids, in cells per tube radius")
+	tripletCells := flag.String("tripletcells", "2,3", "Part 8d grids, in cells per tube radius")
 	cpAll := flag.Bool("cpall", false, "Part 7a: search every defect section pair for the CP phase (about 5 minutes) instead of Part 6's pair")
+	pairCells := flag.String("paircells", "2,3", "Part 9c grids, in cells per tube radius (the first grid runs every configuration, the others the single ring and d = a)")
+	pairCSV := flag.String("pairfieldcsv", "", "Part 9c: with -field, read the field rows from this p9_field.csv (written by an earlier -field -viz run) instead of running them")
 	flag.Parse()
+	if *only == "9" {
+		if err := runPart9(*field, parseCells(*pairCells), *viz, *pairCSV); err != nil {
+			fmt.Println("   Part 9 error:", err)
+		}
+		return
+	}
+	if *only == "8" {
+		if err := runPart8(*field, parseCells(*tripletCells), *viz); err != nil {
+			fmt.Println("   Part 8 error:", err)
+		}
+		return
+	}
 	if *only == "7" {
 		if err := runPart7(*field, *spinCells, *cpAll, *viz); err != nil {
 			fmt.Println("   Part 7 error:", err)
@@ -622,6 +637,24 @@ func main() {
 	if err := runPart7(*field, *spinCells, *cpAll, *viz); err != nil {
 		fmt.Println("   Part 7 error:", err)
 	}
+	if err := runPart8(*field, parseCells(*tripletCells), *viz); err != nil {
+		fmt.Println("   Part 8 error:", err)
+	}
+	if err := runPart9(*field, parseCells(*pairCells), *viz, *pairCSV); err != nil {
+		fmt.Println("   Part 9 error:", err)
+	}
+}
+
+// parseCells reads a comma-separated list of grid resolutions (bad
+// entries are skipped).
+func parseCells(s string) []float64 {
+	var out []float64
+	for _, f := range strings.Split(s, ",") {
+		if c, err := strconv.ParseFloat(strings.TrimSpace(f), 64); err == nil && c > 0 {
+			out = append(out, c)
+		}
+	}
+	return out
 }
 
 // runPart7 is Part 7 (H40): 7a always, 7b with -field, then 7c.

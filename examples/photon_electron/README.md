@@ -222,6 +222,39 @@ divider), which is not modelled. The searches were still improving when
 they stopped, so these are lower bounds. The electrons come from the
 copper; every watt comes from the magnetron.
 
+## The circuit mirror of the fdamador neutrino
+
+The fdamador neutrino ([../fdamador_neutrino](../fdamador_neutrino), H28)
+is this example's field turned inside out. In circuit form it is a series
+RLC loop: E round the ring is the capacitor, B through the hole the
+inductor, radiation a series resistor. Exchanging E and B is circuit
+duality (voltage ↔ current, L ↔ C, series ↔ parallel, R ↔ R0²/R), so the
+photon electron's mirror is a **parallel RLC tank**: B round the ring
+(toroidal flux) is the inductor, E through the hole the capacitor, and
+radiation a shunt resistor. With R0 = √(L/C) = 279.1 Ω of the neutrino's
+bench loop the dual keeps L = 21.56 nH, C = 0.2767 pF, f0 = 2.0606 GHz and
+Q = 40.51; R_rad = 6.862 Ω becomes R_p = 11.36 kΩ and the dielectric loss
+27.9 mΩ becomes 2.79 MΩ (`viz/plot_circuit.py` checks that the two Q agree
+to 10⁻¹²).
+
+What the mirror is and is not: it is exact circuit algebra between the two
+**models**, not a statement about the measured electron or neutrino. The
+real dielectric torus is not dual (εr = 100, μr = 1): its B-ring mode rings
+at 4.82 GHz with Q 112 in the field solver (fdamador_neutrino Part 7b,
+grid r/2), not at the E-ring's 2.06 GHz. The H23 electron itself is a
+travelling wave on a ring line, with E and B in phase (§2), and a lumped
+tank stands for one of its modes at a time; under linear Maxwell its light
+leaves within a quarter to half a period (§3). Neither circuit has mass or
+the weak interaction, and neither derives spin ½.
+
+- `viz/circuit.png`: the neutrino's series loop, the duality, and the
+  electron's parallel tank, with values.
+- `viz/cycle.gif` (`python3 viz/plot_cycle.py`): one period of the light
+  (1.24×10²⁰ Hz, slowed about 4×10²⁰× to a 3 s loop): the wave travelling
+  along the (2, 1) path, the field along both trips (the value after 360° is
+  always minus the value at the start), and the mirror tank's energy moving
+  between C and L. Companion of `../fdamador_neutrino/viz/cycle.gif`.
+
 ## Tests
 
 | Test | Checks |
