@@ -81,6 +81,7 @@ import (
 	"math/cmplx"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/fdamador/kronspice/analysis"
 	"github.com/fdamador/kronspice/circuit"
@@ -450,8 +451,19 @@ func (d DualRing) Modes(n int, fStart, fStop float64) ([]float64, float64, error
 }
 
 func main() {
-	viz := flag.String("viz", "", "also write the data for viz/render.py (chart and sound) to this directory")
+	viz := flag.String("viz", "", "also write the data for viz/render.py (chart and sound) and viz/render_part56.py to this directory")
+	field := flag.Bool("field", false, "also run Part 5b, the field-solver implosion (about 10 minutes for the default grids r/2, r/3)")
+	fieldCells := flag.String("fieldcells", "2,3", "Part 5b grids, in cells per tube radius")
+	only := flag.String("only", "", "run only this part (\"7\": Part 7, with 7b when -field is set)")
+	spinCells := flag.String("spincells", "2", "Part 7b grids, in cells per tube radius")
+	cpAll := flag.Bool("cpall", false, "Part 7a: search every defect section pair for the CP phase (about 5 minutes) instead of Part 6's pair")
 	flag.Parse()
+	if *only == "7" {
+		if err := runPart7(*field, *spinCells, *cpAll, *viz); err != nil {
+			fmt.Println("   Part 7 error:", err)
+		}
+		return
+	}
 	if *viz != "" {
 		if err := writeViz(*viz); err != nil {
 			log.Fatal(err)
@@ -570,4 +582,77 @@ func main() {
 		b.VacuumQ/b.QNeeded, b.VacuumQ, b.QNeeded)
 	fmt.Println("   the classic measurement of inhibited emission found ~20× (Hulet, Hilfer & Kleppner, PRL 55, 2137, 1985), and a")
 	fmt.Println("   free neutrino has no walls. Standard prediction: the vacuum is the ground state; net exchange with it is zero.")
+
+	// Parts 5 and 6.
+	p5a, err := reportPart5a()
+	if err != nil {
+		fmt.Println("   Part 5a error:", err)
+		return
+	}
+	var p5b []FieldResult
+	if *field {
+		var cells []float64
+		for _, f := range strings.Split(*fieldCells, ",") {
+			c, err := strconv.ParseFloat(strings.TrimSpace(f), 64)
+			if err != nil || c <= 0 {
+				fmt.Println("   bad -fieldcells:", f)
+				return
+			}
+			cells = append(cells, c)
+		}
+		p5b, err = reportPart5b(cells)
+		if err != nil {
+			fmt.Println("   Part 5b error:", err)
+			return
+		}
+	} else {
+		fmt.Println("\n5b. Field solver: run with -field (about 10 minutes); see run_output.txt for the recorded run.")
+	}
+	p6, err := reportPart6()
+	if err != nil {
+		fmt.Println("   Part 6 error:", err)
+		return
+	}
+	if *viz != "" {
+		if err := writeViz56(*viz, p5a, p5b, p6); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("\nviz data for Parts 5 and 6 written to", *viz, "— run python3 viz/render_part56.py")
+	}
+	if err := runPart7(*field, *spinCells, *cpAll, *viz); err != nil {
+		fmt.Println("   Part 7 error:", err)
+	}
+}
+
+// runPart7 is Part 7 (H40): 7a always, 7b with -field, then 7c.
+func runPart7(field bool, spinCells string, cpAll bool, viz string) error {
+	p7a, err := reportPart7a(cpAll)
+	if err != nil {
+		return err
+	}
+	var p7b []Part7b
+	if field {
+		var cells []float64
+		for _, f := range strings.Split(spinCells, ",") {
+			c, err := strconv.ParseFloat(strings.TrimSpace(f), 64)
+			if err != nil || c <= 0 {
+				return fmt.Errorf("bad -spincells: %q", f)
+			}
+			cells = append(cells, c)
+		}
+		p7b, err = reportPart7b(cells)
+		if err != nil {
+			return err
+		}
+	} else {
+		fmt.Println("7b. Field solver: run with -field; see run_output.txt for the recorded run.")
+	}
+	reportMass7(p7a, p7b)
+	if viz != "" {
+		if err := writeViz7(viz, p7a, p7b); err != nil {
+			return err
+		}
+		fmt.Println("\nviz data for Part 7 written to", viz, "— run python3 viz/render_part7.py")
+	}
+	return nil
 }
