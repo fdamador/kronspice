@@ -61,6 +61,10 @@ type FRing struct {
 	Crossed bool
 	Def     map[int]float64 // section → δ (both wires)
 	Ports   []FPort
+	// Gyro, when non-zero, puts a gyrator of transconductance Gyro [S]
+	// across every section, from node pair j to node pair j+1: the ring's
+	// rotation in its own frame (Part 7, spin.go). Zero in Parts 1–6.
+	Gyro float64
 }
 
 // FPort is a differential port at node Node: a source of 2·v_inc behind R
@@ -168,6 +172,9 @@ func (r FRing) Build(cs []Comp) (*circuit.Circuit, error) {
 		b.Resistor("RGB"+s(j), "gb"+s(j), "0", r.Rg)
 		b.CapacitorIC("CGA"+s(j), "a"+s(j), "0", r.Cg, va(j))
 		b.CapacitorIC("CGB"+s(j), "b"+s(j), "0", r.Cg, vb(j))
+		if r.Gyro != 0 {
+			b.Gyrator("YR"+s(j), "a"+s(j), "b"+s(j), na, nb, r.Gyro)
+		}
 	}
 	for _, p := range r.Ports {
 		x := "x" + s(p.Node)

@@ -8,19 +8,22 @@ structure is the neutrino. This example analyzes the inversion with
 Maxwell's equations, builds it as kronspice circuits, and puts it on a
 neutrino test bench next to the measured values and the standard
 prediction. Parts 5 and 6 implode and explode it (H30) and test the
-user's reading of the three neutrino flavours as three wave types (H39).
+user's reading of the three neutrino flavours as three wave types (H39);
+Part 7 spins it (H40).
 
 ```
-go run ./examples/fdamador_neutrino                                     # Parts 1–4, 5a, 6: about 4 minutes
+go run ./examples/fdamador_neutrino                                     # Parts 1–4, 5a, 6, 7a: about 6 minutes
 go run ./examples/fdamador_neutrino -field                              # also Part 5b, the field solver on grids r/2 and r/3: about 13 minutes (r/2 2 min, r/3 8 min)
 go run ./examples/fdamador_neutrino -field -viz examples/fdamador_neutrino/viz # and the chart and sound data
 python3 examples/fdamador_neutrino/viz/render.py                       # resonance.png and the .wav files
 python3 examples/fdamador_neutrino/viz/render_part56.py                # implosion.png and flavours.png
-go test ./examples/fdamador_neutrino                                   # about 3 minutes; -short skips the long runs
+python3 examples/fdamador_neutrino/viz/render_part7.py                 # spin.png (Part 7)
+go test ./examples/fdamador_neutrino                                   # about 9 minutes; -short skips the long runs (15 s)
 KRONSPICE_EXPORT=1 go test ./examples/fdamador_neutrino -run TestExport # netlists, KiCad schematics, results sheets
 ```
 
-`run_output.txt` is the output of the `-field` run.
+`run_output.txt` is the output of the `-field` run; Part 7 was appended from
+`-only 7 -field -spincells 2,3`.
 
 ## What the inversion is, from Maxwell alone
 
@@ -520,6 +523,315 @@ if the port couples to it, and turn a travelling wave into a standing one
 otherwise. Nothing in the ring supplies flavour, mass, weak interaction or
 CP violation.
 
+## 7. A spinning ring (H40)
+
+The user's question (2026-11-07): "If the torus spins about its axis and
+spins around the E axis (the ring), would this also add to the missing
+information of neutrino data?" After Parts 1–6 the missing pieces are mass,
+the weak interaction, a CP phase (the reciprocal ring gives only a real
+mixing matrix, δ_CP = 0 or 180°), left-handed helicity, three generations
+and confinement.
+
+"Spinning" has two readings, kept apart:
+
+- **7a, a material ring that turns.** The moving medium makes the ring
+  non-reciprocal: the co- and counter-rotating waves split (Sagnac).
+- **7b, a field that spins.** In vacuum a field "spins" only by carrying
+  circulating energy flow, E×H. Spin about the axis needs B round the ring
+  beside the E-ring (H23's B-ring with H28's E-ring) or a pattern that turns;
+  spin "around the ring" is poloidal circulation, the twist of H23's (2, 1)
+  path.
+
+```
+go run ./examples/fdamador_neutrino -only 7                  # Part 7a alone: about 1.5 minutes
+go run ./examples/fdamador_neutrino -only 7 -field -spincells 2,3 -viz examples/fdamador_neutrino/viz   # with 7b on grids r/2 and r/3: about 27 minutes (r/2 6, r/3 20); the chart uses the finest grid
+python3 examples/fdamador_neutrino/viz/render_part7.py      # viz/spin.png
+```
+
+### 7a. Rotation on the ring line
+
+A ring turning at Ω delays the co-rotating wave by Δt = 4AΩ/c² per turn.
+For a co-moving medium, Fresnel drag makes this delay the same in any medium
+(Sagnac, *C. R. Acad. Sci.* 157, 708, 1913; Post, *Rev. Mod. Phys.* 39, 475,
+1967). A resonance therefore splits by
+
+Δω/ω = Δt/T_round trip = 2aΩ·v_g/c²,
+
+which is `spacetime.SagnacSplitting` × v_g/c (the ring-laser value for
+v_g = c). In the ring's own frame this is a gyroscopic (Coriolis) term,
+antisymmetric and workless: Landau & Lifshitz, *Mechanics* §39, the same
+structure as Kron's speed tensor G. In kronspice it is a gyrator across every
+section of the CL ring line of Part 6:
+
+Cmat·du/dt = −g + 2·Gy·Q·u, Qᵀ = −Q.
+
+On a uniform ring the CW and CCW waves then satisfy c_κω² ± 4·Gy·sin κ·ω −
+1/Lg = 0. They split by exactly 4·Gy·sin κ/c_κ. The gyrator transconductance
+Gy is set from the non-reciprocity ν = Δω/ω wanted on a pair. The complex
+modes are solved exactly, from −A² for the real antisymmetric generator ẏ =
+A·y.
+
+**Test 1, the splitting** (harmonic 1, ν = 0.01, started standing, 120
+periods, 60 steps a period; Δω = ω_CW − ω_CCW in rad/s):
+
+| Ring | Gy | Δω exact (quadratic) | complex modes | 4Gy sin κ/c_κ | exact at the trapezoidal frequencies | kronspice | S → D amplitude | ledger |
+|---|---|---|---|---|---|---|---|---|
+| plain | 8.032×10⁻⁵ S | 1.20257×10⁶ | 1.20257×10⁶ | 1.20257×10⁶ | 1.19928×10⁶ | 1.19927×10⁶ | 0.99999 | 9.3×10⁻⁵ |
+| crossed | 8.151×10⁻⁵ S | 2.34984×10⁶ | 2.34984×10⁶ | 2.34984×10⁶ | 2.34341×10⁶ | 2.3434×10⁶ | 0.99999 | 1.0×10⁻⁴ |
+
+kronspice measures the splitting at its own trapezoidal frequencies, ω →
+(2/h)·atan(ωh/2), to within 3.8×10⁻⁶. Rotation alone turns the standing
+wave S into D and back with amplitude 1: the pattern turns. Each gyrator passes
+up to 3.2×10⁻³ ω·W (plain ring) from section to section and absorbs 5×10⁻¹⁹
+ω·W. The net work of all of them over the run is 6.4×10⁻¹⁹ of the stored
+energy. So at constant Ω the rotation does no work on the waves, and its
+mechanical ledger column is zero. The rim-speed conversion matches
+`spacetime.SagnacSplitting`·v_g/c to 3.5×10⁻¹⁶.
+
+**Test 2, defect and rotation together.** A defect δ = 0.1 on section 0 and
+a rotation that splits the pair by the same amount (71,454.2 Hz each). The
+combined splitting is 100,862 Hz from the exact modes, against
+√(Δd² + Δr²) = 101,052 Hz. Started CW, kronspice gives sin²2θ = 0.5030
+(θ = 22.59°) against the predicted Δd²/(Δd² + Δr²) = 0.5000 (22.50°), with
+ledger 7.6×10⁻⁵. Part 6 found θ = 45° in the CW/CCW basis for every
+reciprocal defect. Rotation gives any θ, because the modes become elliptical:
+complex mixtures of CW and CCW.
+
+**Test 3, the CP phase.** This is Part 6's three-state cluster: defects 0.2064
+on section 2 and 0.1628 on section 23; e, μ, τ = f1, f2, f3. Rotation is
+added with ν on the uniform pair at κ = 11π/12. J = Im(U_e1 U_μ2 U*_e2 U*_μ1)
+is the Jarlskog invariant (Jarlskog, *PRL* 55, 1039, 1985), taken from the
+unitary matrix closest to the projected U (Löwdin). Reversing the rotation
+gives 360° − δ_CP.
+
+| ν | δ_CP | J | J/J_max | θ₁₂ | θ₂₃ | θ₁₃ | Δ31/Δ21 | cost |
+|---|---|---|---|---|---|---|---|---|
+| 0 | 180.0° | 0 | 0 | 33.66° | 42.28° | 8.56° | 33.570 | 1.285 |
+| −1×10⁻⁵ | 180.6° | −0.00036 | −0.0098 | 33.66° | 42.28° | 8.56° | 33.568 | 1.285 |
+| −1×10⁻⁴ | 185.6° | −0.00359 | −0.0973 | 33.72° | 42.28° | 8.56° | 33.402 | 1.314 |
+| −3×10⁻⁴ | 196.2° | −0.01037 | −0.2792 | 34.17° | 42.28° | 8.57° | 32.144 | 4.341 |
+| −1×10⁻³ | 221.5° | −0.02555 | −0.6631 | 37.17° | 42.29° | 8.60° | 23.645 | 198.2 |
+| −3×10⁻³ | 236.5° | −0.03426 | −0.8342 | 41.95° | 42.40° | 8.92° | 10.356 | 2,098 |
+| +1×10⁻³ | 138.5° | +0.02555 | +0.6631 | 37.17° | 42.29° | 8.60° | 23.645 | 198.2 |
+
+(Beyond ν ≈ 5×10⁻³ the cluster's modes re-order and the mass labels change;
+at −0.01 the run reads 40.5°.) The rotation that makes the phase also
+splits the close pair, which spoils θ₁₂ and the splitting ratio. Refitting
+the two defect sizes and ν on Part 6's sections gives:
+
+| Fit | δ (sections 2, 23) | ν | δ_CP | J | θ₁₂ | θ₂₃ | θ₁₃ | Δ31/Δ21 | cost |
+|---|---|---|---|---|---|---|---|---|---|
+| δ_CP free within NuFIT's band | 0.2063, 0.1629 | −1.404×10⁻⁴ | 187.9° | −0.00503 | 33.67° | 42.28° | 8.54° | 33.41 | 1.33 |
+| δ_CP pinned at 212° | 0.2040, 0.1651 | −5.567×10⁻⁴ | 210.9° | −0.01815 | 33.75° | 42.29° | 8.21° | 31.37 | 17.7 |
+| measured (NuFIT 6.0, NO) | | | 212° (+26/−41) | | 33.68 ± 0.72 | 43.3 ± 0.9 | 8.56 ± 0.11 | 33.55 | |
+
+So a phase inside the measured 1σ band (188°) costs nothing in the angles.
+The central 212° cannot be reached with θ₁₃ (3.2σ low) and the ratio
+(−6.5 %) held at once. A search over every section pair (`-cpall`, 5.4
+minutes, run once) found only the mirror pair (1, 22) at the same cost. At
+the pinned point:
+
+```
+|U|∠arg U  (rows e, μ, τ; columns ν1, ν2, ν3)
+0.8168∠+158.4°  0.5553∠+121.2°  0.1563∠ +90.5°
+0.3384∠+116.5°  0.6568∠ −90.3°  0.6739∠ +87.2°
+0.4672∠+130.2°  0.5102∠ −96.6°  0.7221∠ −92.7°
+```
+
+**T violation in kronspice.** At the pinned point, separate runs were started
+in e and in μ, 1,313 periods each (one slow beat). They follow the exact
+complex mode expansion to 2.1×10⁻⁵ and 2.3×10⁻⁵ (ledgers 2.5×10⁻⁴). The
+largest |P(e→μ)(t) − P(μ→e)(t)| is 0.1730 (exact expansion 0.1731). With the
+rotation off and the same defects it is 0.0130 (0.0130 exact): that
+difference is the readout's, since the flavour projections are not exact
+energy projections, and the 3×3 formula is off by 0.397 for the same 8.6 %
+leak as Part 6. **So the rotating ring does violate T, and so CP.**
+
+**What the rotation needs** (bench ring a = 10 mm; aΩ = ν·c²/2v_g). The
+burst limit is the T1000G carbon-fibre hoop, 1,881 m/s
+(`spacetime.BurstSpeed`). It is the strongest material in the package; a
+ceramic ring bursts far lower.
+
+| Case | Guide (v_g) | ν | rim speed aΩ | (v/c)² | × burst speed | ½v² per kg |
+|---|---|---|---|---|---|---|
+| δ_CP 188° (fit) | c (most favourable) | 1.40×10⁻⁴ | 2.11×10⁴ m/s | 4.9×10⁻⁹ | 11.2 | 2.2×10⁸ J |
+| δ_CP 188° (fit) | c/10 (εr = 100 ring) | 1.40×10⁻⁴ | 2.11×10⁵ m/s | 4.9×10⁻⁷ | 112 | 2.2×10¹⁰ J |
+| δ_CP 188° (fit) | the circuit line's own wave (2,750 m/s) | 1.40×10⁻⁴ | 2.3×10⁹ m/s | ≥ c: impossible | — | — |
+| δ_CP 211° (pinned) | c | 5.57×10⁻⁴ | 8.34×10⁴ m/s | 7.8×10⁻⁸ | 44.4 | 3.5×10⁹ J |
+| δ_CP 211° (pinned) | c/10 | 5.57×10⁻⁴ | 8.34×10⁵ m/s | 7.8×10⁻⁶ | 444 | 3.5×10¹¹ J |
+| δ_CP 211° (pinned) | circuit line | 5.57×10⁻⁴ | 9.1×10⁹ m/s | ≥ c: impossible | — | — |
+
+At the burst speed, with the most favourable guide, the reachable ν is
+1.25×10⁻⁵: 44× below the 212° point. δ_CP there is 0.80° from 180°. **The
+rotation the CP phase needs is unphysical for any real ring:** 11 to 444
+times the burst speed of the strongest fibre, and faster than light for the
+slow wave the circuit line carries. Energy: the gyrators do no net work at
+constant Ω. The ring's kinetic energy (½v² per kilogram) and the extra ΩJ_z
+of a co-rotating wave seen from the lab are both paid by whatever turns the
+ring. Nothing enters from the rotation itself.
+
+**Standard prediction.** Rotation-induced non-reciprocity is ordinary Sagnac
+physics (ring-laser gyroscopes). In the Standard Model, CP violation in
+neutrino mixing is a complex phase of the weak-interaction (PMNS) matrix,
+not rotation.
+
+### 7b. The spinning field
+
+This is the torus of Part 5b in `em/fdtd.go` (εr = 100, lossless, staircased,
+absorber from 3a, diagnostics inside the ±2a box). Each mode is made as in
+5b: a start field excites it, a probe run finds its frequency (the spectral
+peak), and a second run's Fourier transform at that frequency is the mode's
+field. The modes are:
+
+- **E-ring**: TE01δ, E round the ring, m = 0 (H28).
+- **B-ring**: B round the ring, E poloidal, m = 0 (the dual pattern; H23's
+  ring-current picture in the same torus).
+- **m = 1**: the lowest odd mode the start field D_φ ∝ cos φ excites. Its
+  sin φ partner is the same field turned 90° on the grid, which is exact
+  because the grid and the staircased torus share that symmetry. "Travelling"
+  is cos φ ± i·sin φ: a pattern that turns.
+
+Quantities:
+
+- Angular momentum J_z = ε0∫ρ(E×B)_φ dV in the Abraham (vacuum) form asked
+  for, and ∫ρ(D×B)_φ dV in the Minkowski form beside it. Inside a medium the
+  two differ; the Abraham–Minkowski question is not settled here.
+- A pseudoscalar χ = c·ε0·∫E·B dV / U.
+- Helicity h = (1/2c)∫(A·B/μ0 − C·D/ε0) dV, with A and C carried beside the
+  solver (Cameron, Barnett & Yao, *New J. Phys.* 14, 053050, 2012). It is
+  normalized so that h·ω/U = ±1 for circular light in vacuum (tested); inside
+  εr = 100 the same definition gives up to (1 + n²)/2n = 5.05.
+
+For modes of azimuthal order m_k, J_z = Σ m_k U_k/ω_k. So J_z·ω/U is an
+energy-weighted mean of whole numbers, and **½ per quantum is never a
+property of one coherent classical mode**, only of a mixture.
+
+Grid r/2 (dx = 1.25 mm, 389,017 nodes, 364 s for nine ring-downs of 20
+periods). Modes: E-ring 2.1008 GHz, B-ring 4.8245 GHz, m = 1 4.4396 GHz
+(97.1 % of its energy in the torus; overlap with itself turned 90° 0.0000,
+turned 180° −1.0000).
+
+| Field | J_z·ω/U Abraham: start [range] | Minkowski: start [range] | χ: start [range] | Q | field ledger |
+|---|---|---|---|---|---|
+| E-ring alone | 0 | 0 | 0 | 41.7 | 3.2×10⁻¹³ |
+| B-ring alone | 0 | 0 | — | 112 | 5.8×10⁻¹⁴ |
+| E + B, quadrature (+90°) | 0 | 0 | −0.137 [−0.195, +0.198] | 63.3 | 2.8×10⁻¹⁴ |
+| E + B, quadrature (−90°) | 0 | 0 | +0.137 [−0.198, +0.195] | 63.3 | 2.8×10⁻¹⁴ |
+| E + B, in phase | 0 | 0 | −0.025 [−0.193, +0.199] | 63.3 | 1.0×10⁻¹³ |
+| m = 1 standing | 0 | 0 | — | 1,380 | 2.6×10⁻¹³ |
+| m = 1 travelling (+) | +0.0112 [+0.0089, +0.0123] | +1.890 [+1.712, +1.987] | 0 | 1,380 | 1.7×10⁻¹³ |
+| m = 1 travelling (−) | −0.0112 [−0.0123, −0.0089] | −1.890 [−1.987, −1.712] | 0 | 1,380 | 1.7×10⁻¹³ |
+| ½ E-ring + ½ m = 1 travelling | +0.0037 [+0.0037, +0.0072] | +0.622 [+0.622, +1.184] | — | 239 | 2.7×10⁻¹³ |
+
+("0" means below 10⁻⁴; ranges while the energy is above 10⁻³ of its start.)
+The helicity h of E + B starts at ±2.10 and swings through [−4.3, +4.3]. But
+the potentials, built from the filtered phasors (A = iÊ/ω), miss curl A = B
+by 0.69 of max |B| at the start (0.13 for m = 1). So h is read only for its
+sign and its swings, and χ is the cleaner number.
+
+What the field solver shows:
+
+- **Spin about the axis as E-ring + B-ring (m = 0).** The azimuthal E×B
+  circulation is there: ε0∫ρ|(E×B)_φ|·ω/U = 0.022. It integrates to J_z = 0
+  in both forms, because a field unchanged by a rotation about the axis
+  carries no angular momentum about it. Its handedness (χ, h) starts with the
+  sign of the relative phase. Then, as the two modes (2.10 and 4.82 GHz)
+  beat, it swings through both signs within a period. It is not conserved,
+  as expected where the dielectric breaks electric–magnetic duality
+  symmetry (Fernandez-Corbaton et al., *PRL* 111, 060401, 2013).
+- **A pattern that turns (m = 1).** This field has net J_z. Its sign is set
+  by the phase (the ± runs are exact mirror images) and held while it
+  radiates (Minkowski 1.71–1.99, never changing sign). Its size is not a
+  clean 1. The Abraham form is about 0.01 because the field's momentum sits
+  in the dielectric. The Minkowski form is 1.9 because the cubic grid has only
+  fourfold symmetry, which couples m to m ± 4, and the lattice "m = 1" mode is
+  only 58 % m = 1 on the ring circle (27 % m = −3, 7 % m = 5, 8 % m = −7). On
+  the staircased torus J_z is conserved only modulo 4.
+- **Decay.** The travelling and standing m = 1 patterns ring down with the
+  same Q (1,380 on this grid). Spinning neither lengthens nor shortens the
+  decay.
+- **Handedness against measurement.** Neutrinos are left-handed (helicity
+  −½) and antineutrinos right-handed. Maxwell's equations are parity-even,
+  so the sign of J_z or χ is set only by how the field is started. Nothing
+  in the model selects the left-handed one, and a ring at rest has no
+  momentum to measure helicity against.
+
+The "twist" reading (spin around the ring, poloidal circulation) is H23's
+(2, 1) double loop. It was run in the field solver in
+[photon_electron](../photon_electron), where it leaves within half a period
+in vacuum. In the dielectric torus a poloidal travelling wave would be one of
+the cross-section modes seen near 7 GHz in 5b. The torus has no poloidal
+rotation symmetry (its inner and outer sides differ), so the angular momentum
+of that circulation is not conserved either.
+
+**Standard prediction.** A field's helicity and angular momentum are
+ordinary electromagnetism. Neutrino handedness comes from the V−A weak
+interaction.
+
+**Grid r/3** (dx = 0.833 mm, 912,673 nodes, 1,219 s). Modes: E-ring
+2.0571 GHz, B-ring 4.7021 GHz, m = 1 4.4354 GHz (93.1 % inside; turned 90°
+0.0000, turned 180° −1.0000). The m = 1 lattice mode is now 95.6 % m = 1 on
+the ring circle (3.1 % m = −3, 1.3 % m = 5). The potentials miss curl A = B
+by 0.07 (E + B) and 0.03 (m = 1) of max |B| at the start.
+
+| Field | J_z·ω/U Abraham: start [range] | Minkowski: start [range] | χ: start [range] | Q | field ledger |
+|---|---|---|---|---|---|
+| E-ring alone | 0 | 0 | 0 | 38.9 | 9.5×10⁻¹³ |
+| B-ring alone | 0 | 0 | — | 103 | 9.5×10⁻¹³ |
+| E + B, quadrature (+90°) | 0 | 0 | −0.149 [−0.217, +0.214] | 58.8 | 6.3×10⁻¹³ |
+| E + B, quadrature (−90°) | 0 | 0 | +0.149 [−0.214, +0.217] | 58.8 | 6.3×10⁻¹³ |
+| E + B, in phase | 0 | 0 | −0.019 [−0.217, +0.215] | 58.7 | 3.1×10⁻¹³ |
+| m = 1 standing | 0 | 0 | — | 201 | 5.7×10⁻¹³ |
+| m = 1 travelling (cos φ + i sin φ) | −0.0230 [−0.0238, −0.0225] | −0.793 [−0.837, −0.790] | 0 | 201 | 3.5×10⁻¹³ |
+| m = 1 travelling (cos φ − i sin φ) | +0.0230 [+0.0225, +0.0238] | +0.793 [+0.790, +0.837] | 0 | 201 | 3.5×10⁻¹³ |
+| ½ E-ring + ½ m = 1 travelling | −0.0074 [−0.0129, −0.0074] | −0.256 [−0.437, −0.256] | — | 92.7 | 4.3×10⁻¹³ |
+
+On the finer grid the lattice mode is nearly pure m = 1, and its Minkowski
+J_z·ω/U settles at −0.79. Its sign is the one that pattern's sense of turning
+calls for: with time as e^{iωt}, cos φ + i·sin φ = e^{iφ} turns toward −φ.
+On r/2 the same phase read +1.89, because there 27 % of the pattern was
+m = −3 and 8 % m = −7, which turn the other way and carry 3 and 7 times as
+much per quantum. So **the turning pattern's angular momentum converges
+toward one unit per quantum (m = 1) as the grid resolves the mode.** It
+does not converge toward ½. The Abraham form stays at about 0.02, the share
+of the momentum outside the dielectric.
+
+The m = 1 Q moves from 1,383 to 201 between the grids (that mode is poorly
+resolved at 2 cells per tube radius). On each grid, though, travelling and
+standing decay alike, which is the point being tested. The E + B handedness
+behaves the same on both grids: χ starts at ∓0.14–0.15 with the relative
+phase and swings through both signs (±0.20–0.22).
+
+### 7c. Mass and confinement
+
+Rotation adds energy, and so mass E/c², but no binding. A material ring at
+the burst speed carries ½v² = 1.77×10⁶ J/kg, ΔM/M = v²/2c² = 2.0×10⁻¹¹. In
+the lab, a wave of order m in a ring turning at Ω has energy U(1 + mΩ/ω).
+At the burst Ω of the bench ring (1.88×10⁵ rad/s, against ω = 1.295×10¹⁰
+rad/s) that is mΩ/ω = 1.45×10⁻⁵ for m = 1. In the field solver the turning
+pattern decays as the standing one: Q = 1,380 for both on r/2 (Q/ω = 49 ns)
+and 201 for both on r/3 (7.2 ns). A centrifugal pull outward needs a wall to push against. The
+dielectric is that wall here; a neutrino has none.
+
+### Status (H40): bounded
+
+What rotation supplies, and what it cannot:
+
+| Missing piece | What rotation gives | Measured / standard |
+|---|---|---|
+| CP phase | Yes, in form: a turning ring is non-reciprocal, U becomes complex, J ≠ 0 and P(e→μ) ≠ P(μ→e) in kronspice (0.173 against 0.013 without). δ_CP = 188° is reached with the angles kept. 212° is reached only with θ₁₃ at −3.2σ and the ratio −6.5 %. Either needs a rim speed 11–444× the burst speed of the strongest fibre (≥ c for the circuit's own slow wave). At the burst speed δ_CP moves 0.8° from 180°. | δ_CP = 212° (+26/−41), a phase of the weak-interaction (PMNS) matrix |
+| Left-handed helicity | A sign, chosen by how the field is started; not selected, and not conserved for E + B in the dielectric | helicity −½ (V−A) |
+| Spin ½ | No: J_z·ω/U is a mean of whole m; the turning pattern tends to one unit (−0.79 on r/3, 95.6 % m = 1); ½ only for a mixture | ½ |
+| Mass | ½v² of the ring and ΩJ_z of the wave, paid by the drive (ΔM/M ≤ 2×10⁻¹¹ at the burst speed) | m < 0.45 eV |
+| Confinement | None: the turning pattern decays as the standing one | lifetime ≥ 5.3×10⁴ s (SN1987A) |
+| Weak interaction, three generations | Nothing | the content of the Standard Model |
+
+Limits: the circuit's gyrator is the first-order Sagnac term set on one pair
+(its ω² dependence across the cluster's 2.5 % spread is not followed). The
+field solves are staircased (tube radius 2–3 cells, fourfold lattice
+symmetry). The helicity's potentials come from filtered phasors. J_z is
+given in both Abraham and Minkowski forms without settling between them.
+
 ## Chart and sound
 
 `viz/resonance.png`: (1) the E-ring's resonance at εr 30–1000, narrowing
@@ -566,6 +878,13 @@ order, kronspice); the three-state run against the full mode expansion and
 the 3×3 formula; the free explosions of S, D, C; the rebuilds; the flavour
 superposition's conversion through the explosion and the rebuild.
 
+`viz/spin.png` (Part 7, from `render_part7.py`): δ_CP of the rotating
+three-state ring against the non-reciprocity ν, with the rim speed it needs
+and the burst limit; the mixing angles' drift in measured σ; P(e→μ) and
+P(μ→e) in kronspice at δ_CP ≈ 211° and their difference with and without
+rotation; 7b — J_z·ω/U of the spinning fields (Minkowski, with Abraham
+dotted) and the helicity's swings as the E- and B-rings beat.
+
 ## Tests
 
 | Test | Checks | Held to |
@@ -585,6 +904,14 @@ superposition's conversion through the explosion and the rebuild.
 | `TestFlavourBeat` | Δf from kronspice = exact eigen-splitting; = first order; CW → CCW fully; standing start s = 1 gives sin²30° | 1 %; 2 %; 0.01; 0.01 |
 | `TestThreeFlavour` | the fit reaches the measured angles (1.5σ) and ratio (5 %); kronspice = full mode expansion; P(e→μ) = P(μ→e) | 1e-3; 0.03 |
 | `TestImplodeTypes` | through one port S leaves, D stays, C is left as D with half its energy; reversed explosion rebuilds S (one port) and C (two ports), one port gives half of C; ledgers | 1e-3, 0.99, 0.01; 0.9999; 1e-3 |
+| `TestSagnacSplit` | 7a: gyrators split harmonic 1 by 4·Gy·sin κ/c_κ (quadratic = complex modes = first order); kronspice = exact at its trapezoidal frequencies; S → D amplitude 1; gyrators absorb nothing, pass energy; ledger (plain and crossed) | 1e-9, 1e-12; 1e-3; 0.01; 1e-12; 1e-3 |
+| `TestRimTwin` | rim speed aΩ = νc²/2v_g equals `spacetime.SagnacSplitting`·v_g/c; speeds ≥ c flagged impossible | 1e-12 |
+| `TestJarlskog` | no rotation: J = 0, δ_CP = 180°, Part 6's angles; with rotation J ≠ 0; reversing it reverses J (δ → 360° − δ); mode residual | 1e-12, 1e-6, 0.01; 1e-9; 1e-10 |
+| `TestTwoStateRot` | defect + equal rotation: CW → CCW sin²2θ = ½; Δf kronspice = exact; exact ≈ √(Δd² + Δr²) | 0.01; 1 %; 2 % |
+| `TestTViolation` | pinned CP point: kronspice = exact complex modes; P(e→μ) − P(μ→e) matches the prediction and is > 3× its no-rotation (readout) value; gyrator work | 2e-3; 0.01; 1e-9 |
+| `TestHelicityNorm` | h·ω/u = ±1 for circular light, 0 for linear, at every instant | 1e-12 |
+| `TestFieldIntegrals` | grid J_z of E ∝ (x, y, 0), B ∝ ẑ against the closed form −ε0E0B0·16b⁵/3L; Minkowski path; ∫E·B = 0 | 0.3(dx/b)²; 1e-12 |
+| `TestSpinFieldCoarse` | 7b on r/2, short runs: m = 1 orthogonal to itself turned 90°, −1 at 180°; travelling ± are mirror images with net Minkowski J_z > 0.5, Abraham of the same sign; E + B (m = 0) J_z ≈ 0, helicity sign flips with the phase; field ledgers | 0.01; 1e-9; 0.02; 1e-10 |
 | `TestExport` | E-ring and both ring lines exported (torn-solution tolerance 1e-6 for the E-ring, from 1 GΩ bleeders beside 0.29 Ω) | |
 
 ## Files
@@ -601,6 +928,11 @@ superposition's conversion through the explosion and the rebuild.
 | `part56.go` | the report for Parts 5 and 6 |
 | `viz56.go`, `viz/render_part56.py` | `-viz` data for Parts 5 and 6; `viz/implosion.png`, `viz/flavours.png` |
 | `part56_test.go` | the Part 5 and 6 tests above |
+| `spin.go` | Part 7a: gyrators on `FRing` (the ring's rotation), exact complex modes (`RotModes`), the rotating three-state cluster with J and δ_CP (`RotClusterMix`, Löwdin unitarization), `FitCP`, the Sagnac, two-state and T-violation runs, rim speed against the burst limit (`Rim`) |
+| `spinfield.go` | Part 7b: `SpinField` — modes of the torus found and filtered (E-ring, B-ring, m = 1), turned 90° on the grid, combined; ring-downs with A and C carried beside the solver; J_z (Abraham, Minkowski), ∫E·B, helicity, Q; azimuthal content |
+| `part7.go` | the report for Part 7 |
+| `viz7.go`, `viz/render_part7.py` | `-viz` data for Part 7; `viz/spin.png` |
+| `part7_test.go` | the Part 7 tests above |
 | `export_test.go` | netlists, KiCad schematics and results sheets in `export/` |
 | `ramp_check.txt` | the ramp-length independence check, raw rows |
 | `run_output.txt` | the run above |
