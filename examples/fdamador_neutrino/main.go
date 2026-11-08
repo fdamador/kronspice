@@ -81,6 +81,7 @@ import (
 	"math/cmplx"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/fdamador/kronspice/analysis"
 	"github.com/fdamador/kronspice/circuit"
@@ -450,7 +451,9 @@ func (d DualRing) Modes(n int, fStart, fStop float64) ([]float64, float64, error
 }
 
 func main() {
-	viz := flag.String("viz", "", "also write the data for viz/render.py (chart and sound) to this directory")
+	viz := flag.String("viz", "", "also write the data for viz/render.py (chart and sound) and viz/render_part56.py to this directory")
+	field := flag.Bool("field", false, "also run Part 5b, the field-solver implosion (about 10 minutes for the default grids r/2, r/3)")
+	fieldCells := flag.String("fieldcells", "2,3", "Part 5b grids, in cells per tube radius")
 	flag.Parse()
 	if *viz != "" {
 		if err := writeViz(*viz); err != nil {
@@ -570,4 +573,41 @@ func main() {
 		b.VacuumQ/b.QNeeded, b.VacuumQ, b.QNeeded)
 	fmt.Println("   the classic measurement of inhibited emission found ~20× (Hulet, Hilfer & Kleppner, PRL 55, 2137, 1985), and a")
 	fmt.Println("   free neutrino has no walls. Standard prediction: the vacuum is the ground state; net exchange with it is zero.")
+
+	// Parts 5 and 6.
+	p5a, err := reportPart5a()
+	if err != nil {
+		fmt.Println("   Part 5a error:", err)
+		return
+	}
+	var p5b []FieldResult
+	if *field {
+		var cells []float64
+		for _, f := range strings.Split(*fieldCells, ",") {
+			c, err := strconv.ParseFloat(strings.TrimSpace(f), 64)
+			if err != nil || c <= 0 {
+				fmt.Println("   bad -fieldcells:", f)
+				return
+			}
+			cells = append(cells, c)
+		}
+		p5b, err = reportPart5b(cells)
+		if err != nil {
+			fmt.Println("   Part 5b error:", err)
+			return
+		}
+	} else {
+		fmt.Println("\n5b. Field solver: run with -field (about 10 minutes); see run_output.txt for the recorded run.")
+	}
+	p6, err := reportPart6()
+	if err != nil {
+		fmt.Println("   Part 6 error:", err)
+		return
+	}
+	if *viz != "" {
+		if err := writeViz56(*viz, p5a, p5b, p6); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("\nviz data for Parts 5 and 6 written to", *viz, "— run python3 viz/render_part56.py")
+	}
 }

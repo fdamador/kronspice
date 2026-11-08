@@ -50,3 +50,147 @@ Hypothesis: this structure is the neutrino. Standard prediction beside every res
    but that state is noise. To keep a coherent ring for SN1987A's proper time needs F ≈ 5.1e-21 (vacuum Q 0.041 → 8.1e+18);
    the classic measurement of inhibited emission found ~20× (Hulet, Hilfer & Kleppner, PRL 55, 2137, 1985), and a
    free neutrino has no walls. Standard prediction: the vacuum is the ground state; net exchange with it is zero.
+
+5. Implosion and explosion of the E-ring (H28 × H30)
+5a. Circuit: R_rad as a port to the outside (a line of impedance R_rad); an incoming wave on it is a source
+    2·v_inc behind R_rad; v_ref = v_inc − R_rad·i is the outgoing wave (reflection while driven, explosion after)
+    bench ring: f0 = 2.0606 GHz, Q = 40.52, τ_E = Q/ω0 = 3.129 ns; growth rates: exact reversal (R_rad+R_d)/2L = 1.5977e+08 /s,
+    no-reflection (CPA) (R_rad−R_d)/2L = 1.5848e+08 /s; predicted reflection of the exact reversal R_d/(R_rad+R_d) = 0.004052 in amplitude (1.6e-05 in power)
+    every drive carries the same incident energy 2.298e-10 J over 8 τ_E (growing drives start at e^-8 of their final power), then off;
+    explosion followed for as long again. Fractions of the incident energy:
+    drive                                                 absorbed    peak W explosion  heat R_d    ledger     waves
+    time-reversed ring-down, CPA rate (R_rad−R_d)/2L      0.999656   0.99536   0.99123  8.08e-03   5.1e-06   1.0e-05
+    time-reversed ring-down, exact rate (R_rad+R_d)/2L    0.999640   0.99538   0.99124  8.05e-03   5.1e-06   1.0e-05
+    growing at twice the rate                             0.889452   0.88742   0.88373  5.41e-03   6.7e-06   8.9e-06
+    growing at half the rate                              0.901874   0.89483   0.89112  1.04e-02   3.6e-06   9.2e-06
+    the ring-down itself (decaying, not reversed)         0.028366   0.53939   0.02031  8.05e-03   1.1e-07   2.1e-07
+    constant burst at f0, 2 τ_E long                      0.799747   0.79681   0.79350  5.97e-03   5.5e-06   8.1e-06
+    constant burst at f0, 8 τ_E long                      0.486970   0.47658   0.47459  1.22e-02   1.6e-06   4.9e-06
+    CPA run, ledger: source work 4.58343e-10 J = radiated (R_rad) 4.56406e-10 J + heat (R_d) 1.857e-12 J + stored at end 7.77e-14 J; time-stepping 5.1e-06
+    wave books: incident 2.29791e-10 J = reflected 7.914e-14 J + explosion 2.27775e-10 J + heat 1.857e-12 J + stored 7.77e-14 J
+    the CPA reflection 0.00034 of the incident energy is the drive's switch-on: e^-8 = 0.00034
+    Pulsing ring: an implosion (3 τ_E of CPA growth) every 40 periods, 6 cycles:
+    pulsing, locked to the free ring (ledger 6.6e-06):
+      cycle 1: in 2.175e-10 J, out 2.082e-10 J, heat 1.44e-12 J, stored 0 → 7.91e-12 J, peak 2.052e-10 J
+      cycle 2: in 2.175e-10 J, out 2.151e-10 J, heat 1.7e-12 J, stored 7.91e-12 → 8.63e-12 J, peak 2.241e-10 J
+      cycle 3: in 2.175e-10 J, out 2.158e-10 J, heat 1.72e-12 J, stored 8.63e-12 → 8.67e-12 J, peak 2.249e-10 J
+      cycle 4: in 2.175e-10 J, out 2.158e-10 J, heat 1.72e-12 J, stored 8.67e-12 → 8.67e-12 J, peak 2.25e-10 J
+      cycle 5: in 2.175e-10 J, out 2.158e-10 J, heat 1.72e-12 J, stored 8.67e-12 → 8.67e-12 J, peak 2.25e-10 J
+    pulsing, antiphase to the free ring (ledger 6.8e-06):
+      cycle 1: in 2.175e-10 J, out 2.082e-10 J, heat 1.44e-12 J, stored 0 → 7.91e-12 J, peak 2.052e-10 J
+      cycle 2: in 2.175e-10 J, out 2.17e-10 J, heat 1.24e-12 J, stored 7.91e-12 → 7.21e-12 J, peak 1.871e-10 J
+      cycle 3: in 2.175e-10 J, out 2.144e-10 J, heat 1.69e-12 J, stored 7.21e-12 → 8.6e-12 J, peak 2.232e-10 J
+      cycle 4: in 2.175e-10 J, out 2.157e-10 J, heat 1.71e-12 J, stored 8.6e-12 → 8.67e-12 J, peak 2.249e-10 J
+      cycle 5: in 2.175e-10 J, out 2.158e-10 J, heat 1.72e-12 J, stored 8.67e-12 → 8.67e-12 J, peak 2.25e-10 J
+    steady cycle: the outside supplies 2.175e-10 J and takes back 2.158e-10 J; the difference 1.718e-12 J is the dielectric heat 1.716e-12 J
+    (0.79 % of the incoming wave); nothing is made inside. (10s)
+    Standard prediction: the implosion is the explosion reversed; its energy is the declared incoming wave's, the
+    time-reversed drive is absorbed without reflection (coherent perfect absorption, Chong et al., PRL 105, 053901, 2010),
+    any other drive is partly reflected, and a pulsing ring needs one implosion's energy from outside every cycle.
+
+5b. Field: the dielectric torus (a = 10 mm, r = 2.5 mm, εr = 100, lossless) in em/fdtd.go, Huygens surface at ±2a,
+    absorber from ±3a; incoming wave = the time reverse of the ring's own outgoing radiation (phasor at f0 on the surface,
+    from a ring-down started from the filtered low mode), growing as e^{+γt} over 6 τ_E and switched off at an E maximum;
+    the explosion then crosses the surface into the absorber (followed 3 τ_E). Compared with a constant burst of the same
+    pattern and incident energy. 'Delivered' = the surface's net work up to the peak.
+    grid r/2 (dx = 1.25 mm, 389017 nodes, 128 s):
+      ring-down: f0 = 2.101 GHz, Q = 41.69 (energy decay), 41.56 (field peaks); ledger residual 5.1e-14 of the start
+      implosion: incident 1.534e-17 J (2γ·W0·∫g²dt), delivered by the surface 1.0253 of it; at the peak (39.8 periods)
+        the ring region holds 0.9976 of the delivered energy and 2.40e-03 of it is outside the surface or absorbed
+        (reflection + mismatch of the declared wave); explosion afterwards 0.9473 of the delivered energy;
+        at the end inside 5.03e-02; surface work in 1.0633, out 0.0380; ledger residual 3.3e-13 of the incident energy
+      pattern at the peak: E_φ carries 0.9966 of the electric energy in the tube; a quarter period later B_φ carries 2.26e-04
+        of the magnetic energy there, B_z at the centre -2.38e-09 T, at (2a, 0, 0) 1.74e-10 T (opposite: the flux closes outside);
+        correlation of E with the free ring-down's E at an E maximum: 0.9991
+      constant burst (2 τ_E, same energy and pattern): peak inside 0.7923, outside + absorbed when it ends 0.2379; ledger -5.4e-13
+    grid r/3 (dx = 0.833 mm, 912673 nodes, 453 s):
+      ring-down: f0 = 2.0571 GHz, Q = 38.9 (energy decay), 39.04 (field peaks); ledger residual 1.3e-12 of the start
+      implosion: incident 1.726e-17 J (2γ·W0·∫g²dt), delivered by the surface 0.9966 of it; at the peak (37.1 periods)
+        the ring region holds 0.9974 of the delivered energy and 2.61e-03 of it is outside the surface or absorbed
+        (reflection + mismatch of the declared wave); explosion afterwards 0.9466 of the delivered energy;
+        at the end inside 5.08e-02; surface work in 1.0271, out 0.0305; ledger residual 4.8e-13 of the incident energy
+      pattern at the peak: E_φ carries 0.9971 of the electric energy in the tube; a quarter period later B_φ carries 7.36e-05
+        of the magnetic energy there, B_z at the centre -2.45e-09 T, at (2a, 0, 0) 1.74e-10 T (opposite: the flux closes outside);
+        correlation of E with the free ring-down's E at an E maximum: 0.9996
+      constant burst (2 τ_E, same energy and pattern): peak inside 0.7649, outside + absorbed when it ends 0.2389; ledger -8.8e-13
+    lumped model (Part 1, lossless): f0 = 2.0606 GHz, Q_rad = 40.68
+
+6. Flavours as wave types (H39, user hypothesis 2026-11-07): constructive, destructive, standing
+   The uniform E-ring (TE01δ, azimuthal order 0) is one state; the types live on harmonics n ≥ 1 of the inverted
+   ring lines (Part 3 values, 24 sections, 1 pF stray to ground, 1 mΩ shunt loss). z_j = u_j + iωL_g·g_j = A e^{−iκj} + B e^{iκj}.
+   Fixed definition, relative to a reference point c: C (constructive) = travelling, B = 0; S (standing) = |A| = |B|,
+   antinode at c; D (destructive) = |A| = |B|, node at c.
+   Full cancellation: Σ|z_j|² = N(|A|²+|B|²) (the two waves are orthogonal; smallest singular value √N = 4.8990),
+   so no non-zero state cancels everywhere; C = (S + iD)/√2, so the three types span two dimensions, not three.
+   Test 1, persistence on the perfect ring (harmonic 1, c = ½, 100 periods, kronspice transient from the imposed state):
+   ring     type      own min    other max   purity min    turns/T energy end    ledger
+   plain    C    1.0000000000     1.73e-11 1.0000000000    0.99909    0.99469   9.5e-05
+   plain    S    1.0000000000     7.02e-25 1.0000000000    0.00000    0.99469   9.5e-05
+   plain    D    1.0000000000     2.47e-25 1.0000000000    0.00000    0.99469   9.5e-05
+   crossed  C    1.0000000000     4.53e-12 1.0000000000    0.99909    0.99723   1.0e-04
+   crossed  S    1.0000000000     1.17e-23 1.0000000000    0.00000    0.99723   1.0e-04
+   crossed  D    1.0000000000     1.81e-23 1.0000000000    0.00000    0.99723   1.0e-04
+   All three are stationary: C rotates once a period (pattern turning, nothing converts), S and D keep their nodes;
+   energy falls only by the 1 mΩ shunt loss. Standard prediction: every superposition of a degenerate pair is stationary.
+   Test 2, flavour oscillation: one section's C made C(1+δ) (both wires). The pair splits into standing waves with
+   node / antinode at the defect; CW → CCW → CW with P = sin²2θ·sin²(πΔf·t):
+   ring         δ  start     Δf exact  Δf 1st ord. Δf kronspice   sin²2θ    θ fit max |res|   ledger
+   plain     0.05      C     37428 Hz     37426 Hz     37327 Hz   1.0000   45.00°  5.72e-04  2.0e-05
+   plain     0.10      C     71454 Hz     71449 Hz     71266 Hz   1.0000   45.00°  1.10e-03  6.2e-05
+   plain     0.20      C  1.31e+05 Hz 1.3099e+05 Hz 1.3066e+05 Hz   1.0001   45.00°  2.02e-03  8.3e-05
+   plain     0.40      C 2.2453e+05 Hz 2.2456e+05 Hz 2.2399e+05 Hz   1.0001   45.00°  3.57e-03  9.3e-05
+   crossed   0.20      C 2.4551e+05 Hz 2.4537e+05 Hz 2.4486e+05 Hz   1.0000   45.00°  1.80e-03  9.5e-05
+   (f = 19.139 MHz; first order Δf = δ·f/(N(1+δ))·4C sin²(κ/2)/(4C sin²(κ/2) + Cg); the plain ring's kronspice Δf is 0.27 % below the exact, trapezoidal frequency warping at 60 steps a period)
+   Mixing angle set by where the state is made: start in the standing wave with its antinode s sections from the
+   defect's centre (θ = κ·s), δ = 0.2:
+     s = 1: θ predicted 15.0°, sin²2θ predicted 0.2500; kronspice sin²2θ 0.2507 (θ 15.02°), Δf 1.3064e+05 Hz (exact 1.31e+05)
+     s = 2: θ predicted 30.0°, sin²2θ predicted 0.7500; kronspice sin²2θ 0.7512 (θ 30.04°), Δf 1.3064e+05 Hz (exact 1.31e+05)
+     s = 3: θ predicted 45.0°, sin²2θ predicted 1.0000; kronspice sin²2θ 1.0000 (θ 44.94°), Δf 1.3064e+05 Hz (exact 1.31e+05)
+   In the travelling-wave basis θ is 45° for any reciprocal defect (the eigenmodes are real standing waves); a
+   different θ needs a basis tied to a production point, or broken time-reversal symmetry (rotation, a gyrator).
+   Three states: one harmonic gives two, so three flavours need a third near-degenerate state. The plain ring's band
+   edge has one: the π-mode (κ = π, neighbouring nodes in antiphase, a standing wave that cannot travel) lies 0.86 %
+   below the pair at κ = 11π/12 (the CL dispersion is flat there). Ring flavours f1, f2 = standing cos / sin at c = ½
+   on κ = 11π/12, f3 = the π-mode; two capacitor defects (sizes ≤ 0.5, any two sections) set the mixing.
+   unperturbed: ω = 1.58094e+07, 1.59458e+07, 1.59458e+07 rad/s
+   best match to NuFIT 6.0 (normal ordering, with SK-atm): δ = 0.2064 on section 2, 0.1628 on section 23; flavours e, μ, τ = f1, f2, f3
+     θ12 33.66° (measured 33.68 ± 0.72), θ23 42.28° (43.3 ± 0.9), θ13 8.56° (8.56 ± 0.11), Δ31/Δ21 33.56 (Δm²31/Δm²21 = 33.55)
+     cost 1.28 (sum of squared deviations in measured σ); largest share of a mode outside the three ring states 0.087
+     modes ω = 1.54798e+07, 1.58623e+07, 1.58737e+07 rad/s; U (rows f1, f2, f3; columns modes by ω):
+        -0.1423  +0.7687  +0.5205
+        -0.6357  +0.3093  -0.6599
+        +0.6991  +0.4889  -0.5004
+     U is real (a reciprocal, lossless ring): δ_CP is 0 or 180°, no CP violation is possible; measured δ_CP = 212° (+26/−41),
+     consistent with CP conservation at about 1σ in normal ordering (NuFIT 6.0).
+   kronspice, started in e (f1), 1399 periods (one slow beat); energy in each ring flavour / the whole ring's:
+     against the ring's full mode expansion (all 24 modes, same readout, trapezoidal frequencies): largest deviation 1.09e-04
+     against the 3×3 formula P(α→β) = |Σ_i U_αi U_βi e^{iω_i t}|²: largest deviation 0.277 (up to 8.7 % of a mode lies
+       outside the three states: the defects these angles need mix other harmonics in)
+     ledger 2.6e-04; T symmetry: |P(e→μ)(t) − P(μ→e)(t)| at most 1.4e-02
+   Standard prediction: this is the generic mathematics of coupled modes (beats), which the measured neutrino formula
+   shares; the neutrino's content is that flavour is defined by the weak interaction (the charged lepton made), the
+   splittings are mass differences (Δm²L/4E), and matter changes them (MSW). The ring reproduces the beat form; its
+   flavours are positions on a ring, its splittings are defect sizes, and its numbers match only as far as tuned.
+   Test 3, implosion and explosion of each type through a port (the ring's radiation port, R set for Q_ext = 40.5 at an
+   antinode: R = 811.7 Ω, differential, at node 0; a second port at node 6 = a quarter wavelength on). Reference c = node 0.
+     free explosion of S through port 0 (80 periods): energy left 0.0000; end state S 1.0000, D 0.0000, CW 0.5000; ledger 2.3e-03
+     free explosion of D through port 0 (80 periods): energy left 0.9957; end state S 0.0000, D 1.0000, CW 0.5000; ledger 9.8e-05
+     free explosion of C through port 0 (80 periods): energy left 0.4979; end state S 0.0000, D 1.0000, CW 0.5021; ledger 1.2e-03
+     S leaves completely, D is dark to the port and stays, C loses its S half and is left as D: the explosion converts
+     a travelling wave into a standing wave with its node at the port.
+     rebuild S, one port      : absorbed 0.99867, ring at the peak 0.9980 of the incident energy, fidelity 1.00000 (S 1.0000 D 0.0000 CW 0.5000),
+       explosion 0.9956; recording left 1.4e-05 in the ring; ledger 1.6e-04, time-stepping 3.1e-04
+     rebuild C, ports 0 and 6 : absorbed 0.99864, ring at the peak 0.9979 of the incident energy, fidelity 1.00000 (S 0.5002 D 0.4998 CW 1.0000),
+       explosion 0.9954; recording left 6.2e-05 in the ring; ledger 1.6e-04, time-stepping 3.1e-04
+     rebuild C, port 0 only   : absorbed 0.99865, ring at the peak 0.9979 of the incident energy, fidelity 0.50000 (S 1.0000 D 0.0000 CW 0.5000),
+       explosion 0.9956; recording left 5.0e-01 in the ring; ledger 1.6e-04, time-stepping 3.1e-04
+     (rebuild = the recorded explosion of the time-reversed target, played back reversed as the incident wave on each port)
+     D cannot be built through port 0 at all (its explosion there is zero); C needs both ports, in quadrature.
+     flavour superposition: defect δ = 0.2 on section 0, port at node 2, F = standing wave with antinode at the port
+       (θ = 22.5° to the defect's modes). Free explosion (120 periods): energy left 0.0221, conversion to F⊥ reaches 0.9904
+       while it decays (the beat goes on through the explosion: the dark part beats into F and leaves).
+       rebuild by the reversed explosion: absorbed 0.99082, ring 0.9901, fidelity 0.98440 (F 0.9844, F⊥ 0.0156); the recording left 0.0221
+       rebuild by a single-tone growth at the port: absorbed 0.99841, ring 0.9980, fidelity 0.96903 (F 0.9690, F⊥ 0.0310)
+       To rebuild a flavour state the incoming wave must carry both mode frequencies with the right amplitudes and phases:
+       the time-reversed beat. After the peak the beat resumes as in the free explosion.
+   (Part 6: 1m24s)
