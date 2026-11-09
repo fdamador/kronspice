@@ -1,0 +1,1 @@
+[Cd 0.10 Cd 0.40 Cpulse 0.15 Cpulse 0.50 κ_v 0.10 St only 0.446 (Xue)]

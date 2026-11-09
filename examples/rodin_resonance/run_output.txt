@@ -237,4 +237,134 @@ Part 3 — groups of output coils round the toroid, the drive frequency evolved 
     radiation: each coil a magnetic dipole, R_rad = 20π²N²(ka)⁴ Ω = 1.82e-13 Ω against its wire 2.15 Ω (not modelled)
     external channels other than electrical and thermal (neutrino among them) carry nothing in these runs: every joule is booked against the two drive sources
 
-(run time 673 s)
+Part 3t — the output winding as a toroidal inductor winding in 12 sections round the torus
+  drive: sine on A, cosine on B, 3.383 V peak each through 1 Ω, as Part 3
+  winding: 0.5 mm copper (enamel 0.03 mm), every turn round the tube's cross-section, through the hole and over the outside,
+  laid on winding B's outer surface (first layer's turn radius a0 = 23.023 mm round the tube's centre circle R0 = 32.1250 mm);
+  12 sections centred at θ0 + k·30° (pole 1 at 0°, the wire's hole crossings at 15° + k·30°), arc 2°–29° each, up to 6 layers;
+  turns that fit on the inside of the hole per section (arc → turns in 1 … 6 layers): 10° → 11; 20° → 25; 29° → 39;
+  checks of the inductance tables:
+    turn–pass mutuals, interpolated and carried round by the 30° symmetry vs direct, at 7.3°, 133.71°, 251.06°, 359.9°: largest error 1.6e-04 of the largest
+    closely wound uniform toroid of 114 turns (one layer all round): turns summed 158.59 µH vs current sheet μ0N²(R0 − √(R0² − a²)) 158.76 µH (-1.07e-03)
+    one section of 8 turns over 20°: as rings vs as a helix closed by its return lead along the outer equator —
+      mutual to one circuit of A 747.41 vs 745.56 nH (+2.48e-03), of B 929.09 vs 931.01 nH (-2.06e-03), self 4.4679 vs 4.6178 µH (-3.25e-02; the helix adds its lead loop)
+  one turn round the tube at every azimuth (720 angles), its open-circuit EMF from the full sectional net (12 sections per circuit):
+    f =     1000 Hz, toroidal sense: |EMF| per turn mean 10.91 mV (over θ 10.59 … 11.37, m = 12 at 0.034 of the mean), phase over θ -0.3 … +0.8°;
+      A alone 7.244 mV, B alone 8.413 mV, √(A² + B²) 11.1 mV; A and B in phase 15.65 mV; the whole ring of turns summed (all alike) 10.91 mV per turn
+    f =     1000 Hz, dipole   sense: |EMF| per turn mean 11.29 mV (over θ 10.91 … 11.9, m = 12 at 0.04 of the mean), phase over θ -0.8 … +0.3°;
+      A alone 7.244 mV, B alone 8.413 mV, √(A² + B²) 11.1 mV; A and B in phase 1.2 mV; the whole ring of turns summed (all alike) 11.29 mV per turn
+    f =    1e+04 Hz, toroidal sense: |EMF| per turn mean 14.68 mV (over θ 14.23 … 15.36, m = 12 at 0.036 of the mean), phase over θ -0.5 … +1.5°;
+      A alone 9.287 mV, B alone 11.53 mV, √(A² + B²) 14.81 mV; A and B in phase 20.82 mV; the whole ring of turns summed (all alike) 14.68 mV per turn
+    f =    1e+04 Hz, dipole   sense: |EMF| per turn mean 14.93 mV (over θ 14.44 … 15.71, m = 12 at 0.039 of the mean), phase over θ -1.4 … +0.5°;
+      A alone 9.287 mV, B alone 11.53 mV, √(A² + B²) 14.81 mV; A and B in phase 2.253 mV; the whole ring of turns summed (all alike) 14.93 mV per turn
+    f =    1e+05 Hz, toroidal sense: |EMF| per turn mean 14.85 mV (over θ 14.38 … 15.58, m = 12 at 0.037 of the mean), phase over θ -0.6 … +1.5°;
+      A alone 9.304 mV, B alone 11.59 mV, √(A² + B²) 14.86 mV; A and B in phase 20.9 mV; the whole ring of turns summed (all alike) 14.85 mV per turn
+    f =    1e+05 Hz, dipole   sense: |EMF| per turn mean 14.88 mV (over θ 14.4 … 15.63, m = 12 at 0.038 of the mean), phase over θ -1.5 … +0.6°;
+      A alone 9.304 mV, B alone 11.59 mV, √(A² + B²) 14.86 mV; A and B in phase 2.29 mV; the whole ring of turns summed (all alike) 14.88 mV per turn
+    f =    1e+06 Hz, toroidal sense: |EMF| per turn mean 14.87 mV (over θ 14.36 … 15.74, m = 12 at 0.038 of the mean), phase over θ -2.9 … +4.6°;
+      A alone 9.304 mV, B alone 11.59 mV, √(A² + B²) 14.87 mV; A and B in phase 20.9 mV; the whole ring of turns summed (all alike) 14.87 mV per turn
+    f =    1e+06 Hz, dipole   sense: |EMF| per turn mean 14.87 mV (over θ 13.95 … 16.48, m = 12 at 0.038 of the mean), phase over θ -1.9 … +0.7°;
+      A alone 9.304 mV, B alone 11.59 mV, √(A² + B²) 14.87 mV; A and B in phase 2.291 mV; the whole ring of turns summed (all alike) 14.87 mV per turn
+    f = 1.966e+06 Hz, toroidal sense: |EMF| per turn mean 14.94 mV (over θ 14.32 … 16.5, m = 12 at 0.039 of the mean), phase over θ -12.0 … +13.9°;
+      A alone 9.304 mV, B alone 11.59 mV, √(A² + B²) 14.87 mV; A and B in phase 20.9 mV; the whole ring of turns summed (all alike) 14.87 mV per turn
+    f = 1.966e+06 Hz, dipole   sense: |EMF| per turn mean 14.87 mV (over θ 12 … 19.17, m = 5 at 0.076 of the mean), phase over θ -3.6 … +1.3°;
+      A alone 9.304 mV, B alone 11.59 mV, √(A² + B²) 14.87 mV; A and B in phase 2.291 mV; the whole ring of turns summed (all alike) 14.87 mV per turn
+    f =    5e+06 Hz, toroidal sense: |EMF| per turn mean 22.75 mV (over θ 14.23 … 52.73, m = 1 at 0.25 of the mean), phase over θ -80.8 … +63.3°;
+      A alone 13.09 mV, B alone 14.37 mV, √(A² + B²) 19.44 mV; A and B in phase 20.9 mV; the whole ring of turns summed (all alike) 14.89 mV per turn
+    f =    5e+06 Hz, dipole   sense: |EMF| per turn mean 19.41 mV (over θ 0.7675 … 63.01, m = 5 at 0.61 of the mean), phase over θ -174.4 … +2.7°;
+      A alone 13.07 mV, B alone 14.36 mV, √(A² + B²) 19.42 mV; A and B in phase 2.291 mV; the whole ring of turns summed (all alike) 14.87 mV per turn
+
+  model for the searches: the sectional net with 2 sections per circuit (48 + 12 sections = 60 windings, within the kronspice N element)
+  constraints: turns fit in ≤ 6 layers on the inside of the hole; wire ≤ λ/20 (each section, the whole winding in series);
+  tuning capacitor (equivalent single capacitor for the series string) ≥ 30 pF; fitness: P_load × bridge factor, as Part 3
+
+  genetic search, sine on A, cosine on B (the drive of Parts 2 and 3) (evo, seed 45, 64 × 50): genes | f [Hz] ∈ [1000, 3e+07] | θ0 (log10 x · 30°) ∈ [1, 10] | arc (2° + log10 x · 27°) ∈ [1, 10] | turns per section ∈ [1, 40] | polarity (1 all alike, 2 alternating) ∈ [1, 2] | combine (1 separate, 2 series, 3 parallel) ∈ [1, 3] | R_L [Ω] ∈ [0.1, 10000] | sense (1 toroidal, 2 dipole) ∈ [1, 2]
+  fitness P_load × bridge factor: best of generation 0 0.0615 W; evolved after 3102 evaluations (7 s) 0.2196 W (P_load 0.297 W, bridge factor 0.739)
+  winner: f = 1575 Hz, primary sense dipole, B's source 90.0° ahead of A's (90° = sine/cosine), 12 sections centred at 0.00° + k·30°, arc 28.21°, 39 turns each, all sections wound alike, series (one bridge), R_L = 22.8 Ω
+    6 layer(s), mean turn radius 24.423 mm; wire 5.985 m per section, 71.82 m in all (λ/20 at f: 9525 m)
+    section L 93.83 µH, R 0.5121 Ω at f, tuning C 4.121e+04 nF; neighbouring sections' mutual 41.66 µH (k 0.444), across the torus 3.15 µH
+    whole winding in series: L 2974 µH, R 6.145 Ω; mutual to winding A 519.3 µH, to B 643.3 µH (path sense); to the series pair in its sense -124 µH,
+    coupling to each winding k = M/√(L_winding·L): to A 0.587, to B 0.669; to the series pair in its sense -0.122 (L_pair = 350 µH)
+    (with the two sources 90° apart the two couplings neither add nor cancel, so the pair figure says little)
+    AC books: sources 1.568 + 0.7659 W = load 0.297 W + copper 1.156 W + source resistors 0.8811 W (difference 2.4e-11 W)
+    section current phases [°]: [89.1 89.1 89.1 89.1 89.1 89.1 89.1 89.1 89.1 89.1 89.1 89.1]
+    load voltage amplitudes [V]: [3.683]
+    reaction on the drives: without the winding the sources give 1.287 + 0.9504 W (|I| 0.8759, 1.105 A); with it 1.568 + 0.7659 W (|I| 0.9904, 0.884 A)
+    efficiency at AC (load / sources) 0.1273
+    sections moved round the torus (θ0, all else fixed), P_load [W]: 0.0°: 0.297; 7.5°: 0.2966; 15.0°: 0.2958; 22.5°: 0.2966; 30.0°: 0.297;
+    section arc (turns kept, layers recomputed), P_load [W]: 5°: infeasible; 10°: infeasible; 15°: infeasible; 20°: infeasible; 25°: infeasible; 29°: 0.2968;
+    turns per section (arc kept), P_load [W]: 1: 0.0006042; 2: 0.002117; 4: 0.008321; 8: 0.03111; 12: 0.06448; 16: 0.1043; 24: 0.1884; 32: 0.258; 40: infeasible;
+    combined separate (one bridge per group), sections all alike:  0.06344 W (efficiency 0.0280, bridge factor 0.203)
+    combined separate (one bridge per group), sections alternating: 0.06344 W (efficiency 0.0279, bridge factor 0.203)
+    combined series (one bridge),             sections all alike:  0.297 W (efficiency 0.1273, bridge factor 0.739)
+    combined series (one bridge),             sections alternating: 1.229e-24 W (efficiency 0.0000, bridge factor 0.000)
+    combined parallel (one bridge),           sections all alike:  0.005779 W (efficiency 0.0026, bridge factor 0.213)
+    combined parallel (one bridge),           sections alternating: 3.932e-34 W (efficiency 0.0000, bridge factor 0.000)
+    drive sine on A, cosine on B:              P_load 0.297 W, sources 2.334 W, efficiency 0.1273
+    drive A and B in phase:                    P_load 0.004133 W, sources 3.219 W, efficiency 0.0013
+    drive A and B in antiphase:                P_load 0.5661 W, sources 1.449 W, efficiency 0.3907
+    drive cosine on A, sine on B:              P_load 0.2732 W, sources 2.334 W, efficiency 0.1170
+    the primaries connected in the other sense: P_load 0.2732 W (efficiency 0.1170)
+    the same winding at other drive frequencies (sections retuned), P_load [W]: 1e+03 Hz: 0.264; 2e+03 Hz: 0.287; 4e+03 Hz: 0.176; 1e+04 Hz: 0.0439; 3e+04 Hz: 0.00534; 1e+05 Hz: 0.000485; 3e+05 Hz: infeasible; 1e+06 Hz: infeasible; 3e+06 Hz: infeasible;
+    discretization check: the same winding on  4 sections per circuit gives 0.297 W (ok)
+    discretization check: the same winding on  6 sections per circuit gives 0.297 W (ok)
+    discretization check: the same winding on 12 sections per circuit gives 0.297 W (ok)
+
+  kronspice transient of the winner: 400 cycles (254 ms) at 60 steps per cycle (winding loaded Q 1.02, drive L/R 0.123 ms),
+  48 primary sections and the 12 output sections as the 60 windings of one N element, Schottky bridges (as Part 3), bank 4700 µF
+  sized to fill within the run (AC load voltage 3.683 V peak); 398 s
+    bank: 4.3 V, 4.345e+04 µJ at the end (254 ms)
+      at 61.6 ms: 2.007 V, 9470 µJ
+      at 107 ms: 2.956 V, 2.053e+04 µJ
+      at 185 ms: 3.878 V, 3.533e+04 µJ
+      at 254 ms: 4.3 V, 4.345e+04 µJ
+    energy from the sources: A 3.902e+05 µJ, B 2.105e+05 µJ (total 6.007e+05 µJ)
+    split: bank 4.345e+04 µJ (7.23 %), copper 3.068e+05 µJ (51.06 %), source resistors 2.335e+05 µJ (38.87 %), diodes 1.276e+04 µJ (2.12 %), bleeders and joints 0.0367 µJ, left in coils and capacitors 4106 µJ
+    charging efficiency (bank energy / source energy) 0.0723; books: sources − (bank + copper + source R + diodes + bleed + stored) = 141 µJ; ledger integration mismatch 142 µJ (2.2e-04 of the energy in), largest point residual 0.0e+00
+    external channels other than electrical and thermal (neutrino among them) carry nothing: every joule is booked against the two drive sources
+
+  genetic search, the phase between the two drives evolved too (evo, seed 46, 64 × 50): genes | f [Hz] ∈ [1000, 3e+07] | θ0 (log10 x · 30°) ∈ [1, 10] | arc (2° + log10 x · 27°) ∈ [1, 10] | turns per section ∈ [1, 40] | polarity (1 all alike, 2 alternating) ∈ [1, 2] | combine (1 separate, 2 series, 3 parallel) ∈ [1, 3] | R_L [Ω] ∈ [0.1, 10000] | sense (1 toroidal, 2 dipole) ∈ [1, 2] | B's shift from the cosine (log10 x · 360°) ∈ [1, 10]
+  fitness P_load × bridge factor: best of generation 0 0.005216 W; evolved after 3102 evaluations (3 s) 0.4533 W (P_load 0.5697 W, bridge factor 0.796)
+  winner: f = 1557 Hz, primary sense toroidal, B's source 356.4° ahead of A's (90° = sine/cosine), 12 sections centred at 30.00° + k·30°, arc 29.00°, 39 turns each, all sections wound alike, series (one bridge), R_L = 21.5 Ω
+    6 layer(s), mean turn radius 24.423 mm; wire 5.985 m per section, 71.82 m in all (λ/20 at f: 9634 m)
+    section L 92.94 µH, R 0.5121 Ω at f, tuning C 4.217e+04 nF; neighbouring sections' mutual 41.99 µH (k 0.452), across the torus 3.15 µH
+    whole winding in series: L 2973 µH, R 6.145 Ω; mutual to winding A 519 µH, to B 642.8 µH (path sense); to the series pair in its sense 1162 µH,
+    coupling to each winding k = M/√(L_winding·L): to A 0.586, to B 0.669; to the series pair in its sense 0.754 (L_pair = 797.9 µH)
+    AC books: sources 0.8511 + 0.6113 W = load 0.5697 W + copper 0.5618 W + source resistors 0.3309 W (difference 4.3e-11 W)
+    section current phases [°]: [137.5 137.5 137.5 137.5 137.5 137.5 137.5 137.5 137.5 137.5 137.5 137.5]
+    load voltage amplitudes [V]: [4.953]
+    reaction on the drives: without the winding the sources give 0.741 + 0.5361 W (|I| 0.7992, 0.715 A); with it 0.8511 + 0.6113 W (|I| 0.6495, 0.4898 A)
+    efficiency at AC (load / sources) 0.3896
+    sections moved round the torus (θ0, all else fixed), P_load [W]: 0.0°: 0.5697; 7.5°: 0.5694; 15.0°: 0.5688; 22.5°: 0.5694; 30.0°: 0.5697;
+    section arc (turns kept, layers recomputed), P_load [W]: 5°: infeasible; 10°: infeasible; 15°: infeasible; 20°: infeasible; 25°: infeasible; 29°: 0.5697;
+    turns per section (arc kept), P_load [W]: 1: 0.001195; 2: 0.004256; 4: 0.01666; 8: 0.06202; 12: 0.128; 16: 0.2061; 24: 0.3684; 32: 0.4993; 40: infeasible;
+    combined separate (one bridge per group), sections all alike:  0.1267 W (efficiency 0.0946, bridge factor 0.280)
+    combined separate (one bridge per group), sections alternating: 0.1267 W (efficiency 0.0938, bridge factor 0.280)
+    combined series (one bridge),             sections all alike:  0.5697 W (efficiency 0.3896, bridge factor 0.796)
+    combined series (one bridge),             sections alternating: 2.407e-24 W (efficiency 0.0000, bridge factor 0.000)
+    combined parallel (one bridge),           sections all alike:  0.0116 W (efficiency 0.0090, bridge factor 0.293)
+    combined parallel (one bridge),           sections alternating: 6.99e-34 W (efficiency 0.0000, bridge factor 0.000)
+    drive sine on A, cosine on B:              P_load 0.2749 W, sources 2.353 W, efficiency 0.1168
+    drive A and B in phase:                    P_load 0.5695 W, sources 1.461 W, efficiency 0.3899
+    drive A and B in antiphase:                P_load 0.004117 W, sources 3.246 W, efficiency 0.0013
+    drive cosine on A, sine on B:              P_load 0.2987 W, sources 2.353 W, efficiency 0.1269
+    the primaries connected in the other sense: P_load 0.003928 W (efficiency 0.0012)
+    the same winding at other drive frequencies (sections retuned), P_load [W]: 1e+03 Hz: 0.515; 2e+03 Hz: 0.545; 4e+03 Hz: 0.327; 1e+04 Hz: 0.0811; 3e+04 Hz: 0.00991; 1e+05 Hz: 0.000902; 3e+05 Hz: infeasible; 1e+06 Hz: infeasible; 3e+06 Hz: infeasible;
+    discretization check: the same winding on  4 sections per circuit gives 0.5697 W (ok)
+    discretization check: the same winding on  6 sections per circuit gives 0.5697 W (ok)
+    discretization check: the same winding on 12 sections per circuit gives 0.5697 W (ok)
+
+  kronspice transient of the winner: 400 cycles (256.9 ms) at 60 steps per cycle (winding loaded Q 1.05, drive L/R 0.123 ms),
+  48 primary sections and the 12 output sections as the 60 windings of one N element, Schottky bridges (as Part 3), bank 4700 µF
+  sized to fill within the run (AC load voltage 4.953 V peak); 232 s
+    bank: 6.097 V, 8.737e+04 µJ at the end (256.9 ms)
+      at 55.5 ms: 2.631 V, 1.627e+04 µJ
+      at 88.1 ms: 3.712 V, 3.238e+04 µJ
+      at 169 ms: 5.296 V, 6.591e+04 µJ
+      at 257 ms: 6.097 V, 8.737e+04 µJ
+    energy from the sources: A 2.223e+05 µJ, B 1.64e+05 µJ (total 3.863e+05 µJ)
+    split: bank 8.737e+04 µJ (22.62 %), copper 1.67e+05 µJ (43.24 %), source resistors 1.039e+05 µJ (26.88 %), diodes 1.888e+04 µJ (4.89 %), bleeders and joints 0.0737 µJ, left in coils and capacitors 9017 µJ
+    charging efficiency (bank energy / source energy) 0.2262; books: sources − (bank + copper + source R + diodes + bleed + stored) = 153 µJ; ledger integration mismatch 154 µJ (3.7e-04 of the energy in), largest point residual 0.0e+00
+    external channels other than electrical and thermal (neutrino among them) carry nothing: every joule is booked against the two drive sources
+
+(run time 1329 s; Part 3t run on its own, 656 s)

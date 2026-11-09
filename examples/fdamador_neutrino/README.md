@@ -11,7 +11,8 @@ prediction. Parts 5 and 6 implode and explode it (H30) and test the
 user's reading of the three neutrino flavours as three wave types (H39);
 Part 7 spins it (H40); Part 8 reads the flavours as its three spin states
 m = +1, 0, −1 (H41); Part 9 asks how two of them interact (H42): two rings
-and chains of rings as coupled resonators.
+and chains of rings as coupled resonators; Part 10 asks whether the weak
+interaction is the ring's own field acting on the electron (H45).
 
 ```
 go run ./examples/fdamador_neutrino                                     # Parts 1–4, 5a, 6, 7a, 8a–c, 8e: about 10 minutes
@@ -26,13 +27,16 @@ go run ./examples/fdamador_neutrino -only 9 -field -viz examples/fdamador_neutri
 python3 examples/fdamador_neutrino/viz/render_part9.py                 # pair.png (Part 9)
 python3 examples/fdamador_neutrino/viz/plot_pair_structure.py          # structure_pair.png
 python3 examples/fdamador_neutrino/viz/plot_pair_cycle.py              # pair_cycle.gif
+go run ./examples/fdamador_neutrino -only 10 -viz examples/fdamador_neutrino/viz         # Part 10: a few seconds
+python3 examples/fdamador_neutrino/viz/render_part10.py                # weak.png (Part 10)
 go test ./examples/fdamador_neutrino                                   # about 9 minutes; -short skips the long runs (15 s)
 KRONSPICE_EXPORT=1 go test ./examples/fdamador_neutrino -run TestExport # netlists, KiCad schematics, results sheets
 ```
 
 `run_output.txt` is the output of the `-field` run; Part 7 was appended from
 `-only 7 -field -spincells 2,3`, Part 8 from `-only 8 -field` (grids r/2, r/3), Part 9
-from `-only 9 -field` (grids r/2, r/3; the field rows read back with `-pairfieldcsv`).
+from `-only 9 -field` (grids r/2, r/3; the field rows read back with `-pairfieldcsv`), Part 10
+from `-only 10`.
 
 ## What the inversion is, from Maxwell alone
 
@@ -1378,6 +1382,179 @@ Parts 2–8.
   passage at c) and ignores relativistic corrections. The comparison is
   order-of-magnitude, as stated.
 
+## 10. The weak interaction as the ring's own field (H45)
+
+The user's hypothesis (2026-11-08): the weak interaction is the ring's own
+electromagnetic field acting on the electron's field — first proposed as
+magnetic, then as electric. The test computes the ring's electromagnetic
+vertex from its own sources, couples it to an electron by the standard
+formulas, and sets it beside the Standard Model weak interaction and the
+measurements.
+
+```
+go run ./examples/fdamador_neutrino -only 10 -viz examples/fdamador_neutrino/viz   # a few seconds
+python3 examples/fdamador_neutrino/viz/render_part10.py                            # viz/weak.png
+```
+
+### 10a. Moments of the ring
+
+The ring's only sources are the polarization current J = ∂P/∂t round the
+ring and the bound charge −∇·P that an azimuthally varying current leaves
+(continuity: ∂λ/∂t = −(1/a)∂I/∂φ). On a thin ring (720 elements, 64 phases a
+period) the state m carries I(φ, t) = I₀cos(mφ − ωt) and
+λ = (m·I₀/aω)cos(mφ − ωt). From them:
+
+- net charge q = Σλ dl and charge radius ⟨r²⟩ = Σλr² dl/e;
+- electric dipole p = Σλr dl and magnetic dipole μ = ½Σ r × I dl;
+- toroidal (anapole) dipole T = (1/10)Σ[(r·I dl)r − 2r²I dl] (Dubovik &
+  Tugushev, *Phys. Rep.* 187, 145, 1990).
+
+Each state holds one quantum ħω. For m = 0 that is ½LI₀² = ħω with Part 1's
+L, Part 2's moment. For m = ±1 the bound charges' vacuum field is the
+longitudinal part of E (ε0∇·E = −∇·P), so ½ε0∫E_long² ≤ U_E = ħω/2. Setting
+it equal gives an **upper estimate** of p (thin-ring n = 1 kernel K1 = 3.005
+at a/r = 4). At the bench, Part 8d's field-solver dipoles are 0.048 (r/2)
+and 0.123 (r/3) of this estimate: below it, and not converged between grids.
+
+| Scale | State | q | ⟨r²⟩ | \|μ\| | \|p\|·c | \|p\| | ω\|T\|/(c²\|p\|) | time average |
+|---|---|---|---|---|---|---|---|---|
+| bench (a = 10 mm) | m = 0 | 0 | 0 | 3.81×10¹¹ μB | 0 | 0 | — (T = 0) | 0 |
+| bench | m = ±1 | ≤ 9×10⁻¹⁶ of \|p\|/a | ≤ 1×10⁻¹⁵ of \|p\|a | round-off | ≤ 5.98×10¹¹ μB | ≤ 11.6 e·cm | 0.173 = (ka)²/5 | 0 |
+| Part 2 (a = 1.46×10⁻¹² m, 0.1 eV) | m = 0 | 0 | 0 | **0.073 μB** | 0 | 0 | — | 0 |
+| Part 2 | m = ±1 | round-off | round-off | round-off | ≤ **0.078 μB** | ≤ 1.5×10⁻¹² e·cm | 1.1×10⁻¹³ | 0 |
+
+The ring has **no charge, no charge radius and no anapole**, exactly, by its
+symmetry. m = 0 carries no charge at all. m = ±1 carries only a dipole (l = 1)
+charge pattern, which r² (l = 0) does not see. Its toroidal moment is the
+(ka)²/5 correction of the electric dipole and vanishes for m = 0. What is left
+are dipoles that oscillate (m = 0, magnetic) or turn (m = ±1, electric) at ω:
+the magnetic reading of the hypothesis is m = 0, the electric one m = ±1.
+Every static (time-averaged) moment is zero, as in Part 8d.
+
+### 10b. Electron scattering
+
+- **Weak (Standard Model):** dσ/dT = (G_F²m_e/2π)[(g_V+g_A)² +
+  (g_V−g_A)²(1−T/E)² − (g_A²−g_V²)m_eT/E²]. For ν_e the charged current is
+  included (g_V = ½ + 2sin²θ_W, g_A = ½); ν_μ,τ have the neutral current only
+  (g_V = −½ + 2sin²θ_W, g_A = −½); for ν̄, g_A → −g_A.
+- **Ring:** the dipole term dσ/dT = (πα²/m_e²)(μ_eff/μB)²(1/T − 1/E)
+  (Vogel & Engel, *PRD* 39, 3378, 1989), μ_eff² = ⟨μ²⟩ + ⟨(pc)²⟩ over the
+  period. The oscillation moves the recoil by ±ħω = ±0.1 eV, which is
+  negligible. This is multiplied by the ring's own form factor, the
+  orientation average of [2J₁(qa sinθ)/(qa sinθ)]², q² = T² + 2m_eT. The
+  ring (1460 fm) is larger than ħ/q above T ≈ 10 keV.
+
+| E_ν | T above | σ weak ν_e | σ weak ν_μ | σ ring m = 0 (point) | σ ring m = 0 (form factor) | σ ring m = ±1 (≤) | ring/weak |
+|---|---|---|---|---|---|---|---|
+| 862 keV | 1 keV | 6.8×10⁻⁴⁵ cm² | 9.2×10⁻⁴⁶ | 3.8×10⁻²⁷ | 2.5×10⁻²⁷ | 5.7×10⁻²⁷ | 4–8×10¹⁷ |
+| 862 keV | 250 keV | 4.3×10⁻⁴⁵ | 4.7×10⁻⁴⁶ | 3.3×10⁻²⁸ | 6.5×10⁻³⁰ | 1.5×10⁻²⁹ | 1.5–3.5×10¹⁵ |
+| 10 MeV | 1 keV | 9.4×10⁻⁴⁴ | 1.5×10⁻⁴⁴ | 5.5×10⁻²⁷ | 2.5×10⁻²⁷ | 5.8×10⁻²⁷ | 3–6×10¹⁶ |
+| 10 MeV | 250 keV | 9.1×10⁻⁴⁴ | 1.4×10⁻⁴⁴ | 1.8×10⁻²⁷ | 1.3×10⁻²⁹ | 2.9×10⁻²⁹ | 1.4–3.2×10¹⁴ |
+
+The weak recoil spectrum is flat in T (up to (1 − T/E)²). The dipole one
+rises as 1/T. The measured low-energy spectra follow the weak shape.
+
+The ring's ⟨r²⟩ = 0 leaves g_V unshifted. For scale, a charge radius
+⟨r²⟩ = a² = 2.1×10⁻²⁰ cm² would shift g_V by (2/3)M_W²⟨r²⟩sin²θ_W =
+5.5×10¹⁰. The SM's ≈ 4×10⁻³³ cm² shifts it by 0.010.
+
+### 10c. Against the bounds
+
+| Quantity | Ring (Part 2 scale) | Bound / standard |
+|---|---|---|
+| Charge | 0 (exact) | \|q\| ≲ 10⁻²¹ e (neutrality of matter; Giunti & Studenikin 2015) |
+| Charge radius | 0 (exact) | SM ≈ 4×10⁻³³ cm² (Bernabéu et al. 2002); TEXONO −2.1×10⁻³² < ⟨r²⟩ < 3.3×10⁻³² cm² |
+| Effective moment at T ≈ 10 keV (form factor 0.89) | m = 0: 0.049 μB; m = ±1: ≤ 0.074 μB | XENONnT 2022: < 6.4×10⁻¹² μB — **7.6×10⁹× over** |
+| Effective moment at T ≈ 300 keV (form factor 0.024) | m = 0: 0.008 μB; m = ±1: ≤ 0.012 μB | Borexino 2017: < 2.8×10⁻¹¹ μB — **2.9×10⁸× over** |
+| Static moment | 0 | SM Dirac 3×10⁻²⁰ μB·(m/0.1 eV) |
+
+At fixed ħω the moment per quantum grows as a^{3/2}, μ = π√(2ħωa³/(μ0Λ)).
+To meet XENONnT the ring would need a ≤ 3.6×10⁻¹⁹ m, 4×10⁶× smaller than
+Part 2's ring. It would then radiate even faster (Q_rad ∝ (ka)⁻³).
+
+### 10d. SNO
+
+- **Charged current** (ν_e d → e⁻ p p): an electromagnetic field conserves
+  every particle's charge, so the ring cannot turn ν into e⁻ or n into p. The
+  model's CC rate is **0 exactly**. SNO measured CC at about a third of NC
+  (P_ee ≈ 0.317; total ⁸B flux 5.25×10⁶ cm⁻²s⁻¹ from NC; Aharmim et al.,
+  *PRC* 88, 025501, 2013).
+- **Neutral current** (ν d → ν n p, ≥ 2.224 MeV; in the SM the axial
+  Gamow–Teller spin flip): the ring's dipole can break the deuteron through
+  the photon, as in photodisintegration. The estimate uses the Coulomb
+  channel in the dipole approximation, R_L(q, ω) = q²σ_E1(ω)/(4π²αω)
+  (Siegert), with σ_E1 Bethe–Peierls with the effective-range factor (peak
+  2.40 mb at 4.45 MeV), and dσ/dω = κ²σ_E1(ω)/(4π²ω)·∫dq² F²(qa) with
+  κ² = (μ/μB)²πα/m_e². It is an order-of-magnitude estimate; the transverse
+  channel adds about as much. At 10 MeV a point dipole of 1 μB gives
+  1.1×10⁻²⁷ cm². The ring (q ≥ ω ≥ 2.2 MeV, so qa ≥ 16) gives 3.4×10⁻³⁵ cm²
+  (m = 0) and ≤ 7.7×10⁻³⁵ (m = ±1). The SM NC cross-section is of order
+  10⁻⁴² cm² (Nakamura et al., *Nucl. Phys. A* 707, 561, 2002), so the ring
+  predicts **3×10⁷× too many break-ups**. SNO's NC agreeing with the SM to
+  ~10 % allows a point moment ≲ 9×10⁻⁹ μB.
+
+### 10e. Parity and energy
+
+- σ(ν̄_e e)/σ(ν_e e) at 10 MeV: weak 0.431; ring 1. The dipole terms are
+  parity- and C-even, so ν and ν̄ of either helicity scatter alike, and a
+  dipole flips helicity, so it cannot interfere with the weak amplitude. The
+  measured weak interaction violates parity maximally (Wu et al. 1957).
+- Energy: d ln σ/d ln E over 10–30 MeV (T > 1 keV) is 1.010 for the weak
+  interaction (σ ∝ E, measured from solar to accelerator energies) and
+  0.001 for the ring: its dipole cross-section grows only as ln E for a
+  point, and the ring's form factor flattens even that.
+
+### 10f. kronspice twin
+
+The bench ring is one loop: C charged to 1 V, L, and R_rad + R_d. The
+electron is a small coaxial loop (radius a/10, one ring radius along the
+axis), coupled by M = 6.96×10⁻¹¹ H (`em.MutualCircles`, k = 0.0087). Its
+moment is held by a DC current source (10 mA), and the run is 40 periods at
+T/200.
+
+- The ring's Q is 40.528 with the electron and without; its current changes
+  by 3.9×10⁻¹³ of its peak. A held moment induces nothing back.
+- The work done on the electron's source, ∫V·I_e dt = 1.229×10⁻¹⁷ J, equals
+  M·I_e·ΔI_ring = 1.230×10⁻¹⁷ J. The interaction energy M·I_ring·I_e (peak
+  2.45×10⁻¹⁵ J) passes back and forth.
+- Its time average over the last 10 periods is 6.5×10⁻⁶ of the peak power.
+- The ledger closes.
+
+So the ring's field gives an electron **no static potential**. It acts only
+through the oscillating terms of 10b.
+
+At the Part 2 scale the m = 0 ring's field on a μB moment one ring radius
+along the axis is ±0.89 eV, oscillating at ω₀ with time average 0. The weak
+contact √2G_F(ħc)³ spread over the ring's volume is 3.3×10⁻⁸ eV (9e). The one
+time-averaged term is the ponderomotive energy e²A²/4m_e of a free electron
+in the ring's induced E at ρ = 2a in its plane (dipole A_φ): 2.8×10⁻⁶ eV,
+repulsive, second order, falling as ρ⁻⁴.
+
+### Status (H45): bounded
+
+| Claim | Result | Measured / standard |
+|---|---|---|
+| The weak interaction is the ring's magnetic field on the electron | m = 0: an oscillating magnetic dipole, 0.073 μB per quantum; static moment 0 | static moment < 6.4×10⁻¹² μB (XENONnT); SM 3×10⁻²⁰ μB |
+| … or its electric field | m = ±1: a turning electric dipole, p·c ≤ 0.078 μB (1.5×10⁻¹² e·cm); m = 0 has none | an EDM enters the same bound |
+| Contact (charge-radius, anapole) coupling | none: q, ⟨r²⟩, anapole all 0 | SM ⟨r²⟩ ≈ 4×10⁻³³ cm² |
+| Rate | 10¹⁴–10¹⁸× the weak ν–e rate, 1/T spectrum | weak: flat in T, σ ∝ E |
+| Charged current | 0 (EM conserves charge) | SNO: CC ≈ ⅓ NC |
+| Deuteron NC | 3×10⁷× the SM order | SNO NC = SM to ~10 % |
+| Parity | ν = ν̄, no helicity preference | maximal parity violation, ν̄/ν = 0.43 |
+
+**Limits.**
+
+- The ring is a thin filament. The m = ±1 normalization is an upper
+  estimate of p; the field solver's p at the bench is 5–12 % of it, and
+  Part 2's εr is far from the bench's. A smaller p does not change the
+  status: the bound is 10⁹–10¹⁰× away.
+- The form factor treats the ring as rigid and uniform, at one orientation
+  average.
+- The deuteron estimate is order of magnitude (Coulomb channel, E1 only,
+  zero range).
+- The SM deuteron NC cross-section is taken as its order (10⁻⁴² cm² at
+  10 MeV), not computed.
+
 ## Chart and sound
 
 `viz/cycle.gif` (`python3 viz/plot_cycle.py`): one cycle of the bench ring
@@ -1476,6 +1653,19 @@ energy, which passes to ring 1 and back. The frames show E at the tubes, the
 B lines of both rings together, and the energy per ring. The decay is left
 out.
 
+`viz/weak.png` (Part 10, from `render_part10.py`) has six panels:
+
+1. the electron recoil spectra at 862 keV, weak against the ring's dipole
+   term (point and with its form factor) and a point dipole at the XENONnT
+   bound;
+2. the same at 10 MeV;
+3. the total cross-section against E: weak ∝ E, ring flat;
+4. the ring's moments at the Part 2 scale against the bounds and the SM;
+5. the deuteron's E1 photodisintegration cross-section used for SNO, with
+   the ring's form factor;
+6. the kronspice twin: ring current, power into the electron's held moment,
+   and the work, which lies on the current (no net gain).
+
 ## Tests
 
 | Test | Checks | Held to |
@@ -1517,6 +1707,15 @@ out.
 | `TestPairBeats` | beat splitting from the zero crossings = the circuit's; transfer ≥ 0.9 | 5e-3 |
 | `TestPairForceSigns` | coaxial in phase attracts, antiphase repels; kronspice ⟨I1I2⟩ = analytic | 2 % |
 | `TestChainDarkMode` | the darkest mode's Q grows with N (2, 4, 8) with net moment 0; kronspice N = 8 = matrix | 1e-9; 1 % |
+| `TestWeakKnownValues` | 10: total ν–e cross-sections far above m_e against Formaggio & Zeller's table (ν_e 9.49, ν_μ 1.58, ν̄_e 3.98, ν̄_μ 1.31 ×10⁻⁴⁵ cm²·E/MeV); numerical T integral = closed form | 2.5 %; 2m_e/E |
+| `TestDipoleFormula` | dipole term = 2.495×10⁻⁴⁵ cm²(μ/10⁻¹⁰μB)²(1/T − 1/E); ring form factor 1 − 0.2x² small, x⁻³ far out | 1e-3; 1e-8; 0.01 |
+| `TestToroidalSolenoid` | moments routine: a toroidal solenoid's toroidal dipole = ½nIπb²a exactly (b/a = 0.3), no μ, no q | 1e-9 |
+| `TestRingMoments` | m = 0: μ = πa²I₀, no p, T; m = ±1: p = πaI₀/ω, ω\|T\|/(c²\|p\|) = (ka)²/5, no q, ⟨r²⟩, μ; time averages 0; Part 2's moment | 1e-12, 1e-9 |
+| `TestChargeRadiusShift` | δg_V = (2/3)M_W²⟨r²⟩sin²θ_W against the tree-level √2πα⟨r²⟩/(3G_F) | 8 % |
+| `TestSigmaE1Peak` | Bethe–Peierls σ_E1 peaks at 2B with the closed form, 2.2–2.7 mb | 1e-12 |
+| `TestDeutEMLimit` | deuteron break-up ∝ μ², → point value as a → 0, suppressed by the ring's form factor | 1e-3 |
+| `TestEnergyDependence` | weak slope d ln σ/d ln E = 1 at 10–30 MeV; ring ≈ 0 | 0.02; 0.05 |
+| `TestProbeTwin` | kronspice twin: ring unchanged by a held moment; work = M·I_e·ΔI; time average → 0; ledger | 1e-9; 1 %; 1e-3; 1e-9 |
 | `TestExport` | E-ring and both ring lines exported (torn-solution tolerance 1e-6 for the E-ring, from 1 GΩ bleeders beside 0.29 Ω) | |
 
 ## Files
@@ -1548,6 +1747,9 @@ out.
 | `part9.go` | the report for Part 9, the field jobs and test 9e (`nuPair`) |
 | `viz9.go`, `viz/render_part9.py`, `viz/plot_pair_structure.py`, `viz/plot_pair_cycle.py` | `-viz` data for Part 9; `viz/pair.png`, `viz/structure_pair.png`, `viz/pair_cycle.gif` |
 | `part9_test.go` | the Part 9 tests above |
+| `part10.go` | Part 10: `Moments` (q, p, μ, toroidal T, Σqr² of discrete sources), `RingSources`, `ToroidalSolenoid`, `ComputeState`, the bound-charge kernel `BoundChargeK1`, form factor, SM and dipole ν–e cross-sections, charge-radius shift, deuteron E1 and break-up, the kronspice probe twin, and the report |
+| `viz10.go`, `viz/render_part10.py` | `-viz` data for Part 10; `viz/weak.png` |
+| `part10_test.go` | the Part 10 tests above |
 | `export_test.go` | netlists, KiCad schematics and results sheets in `export/` |
 | `ramp_check.txt` | the ramp-length independence check, raw rows |
 | `run_output.txt` | the run above |
@@ -1575,4 +1777,8 @@ out.
 - R. H. Lehmberg, *Phys. Rev. A* 2, 883 (1970); Z. Ficek, R. Tanaś, *Phys. Rep.* 372, 369 (2002) — collective decay of two dipoles; R. H. Dicke, *Phys. Rev.* 93, 99 (1954) — super- and subradiance.
 - A. Asenjo-Garcia, M. Moreno-Cardoner, A. Albrecht, H. J. Kimble, D. E. Chang, *Phys. Rev. X* 7, 031024 (2017) — subradiant modes of finite arrays, Γ ∝ N⁻³.
 - M. M. Burns, J.-M. Fournier, J. A. Golovchenko, *PRL* 63, 1233 (1989) — optical binding.
+- P. Vogel, J. Engel, *Phys. Rev. D* 39, 3378 (1989) — ν–e scattering with a magnetic moment and charge radius; C. Giunti, A. Studenikin, "Neutrino electromagnetic interactions: a window to new physics," *Rev. Mod. Phys.* 87, 531 (2015); V. M. Dubovik, V. V. Tugushev, *Phys. Rep.* 187, 145 (1990) — toroidal moments.
+- J. A. Formaggio, G. P. Zeller, *Rev. Mod. Phys.* 84, 1307 (2012) — ν–e cross-section table.
+- E. Aprile et al. (XENONnT), *PRL* 129, 161805 (2022) — μ_ν < 6.4×10⁻¹² μB; M. Deniz et al. (TEXONO), *PRD* 81, 072001 (2010) — charge radius; J. Bernabéu, J. Papavassiliou, J. Vidal, *PRL* 89, 101802 (2002) — SM charge radius.
+- B. Aharmim et al. (SNO), *PRC* 88, 025501 (2013); S. Nakamura et al., *Nucl. Phys. A* 707, 561 (2002) — ν d cross-sections; H. A. Bethe, C. Longmire, *Phys. Rev.* 77, 647 (1950) — deuteron photodisintegration with effective range; C. S. Wu et al., *Phys. Rev.* 105, 1413 (1957).
 - J. Pantaleone, *Phys. Lett. B* 287, 128 (1992) — neutrino–neutrino forward scattering in dense media; S. Tremaine, J. E. Gunn, *PRL* 42, 407 (1979); Planck Collaboration, *A&A* 641, A6 (2020) — N_eff.

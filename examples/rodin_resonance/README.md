@@ -28,9 +28,9 @@ prediction: an ordinary pair of coupled inductors (a transformer, and near
 self-resonance a transmission line), with a ledger that closes.
 
 ```
-go run ./examples/rodin_resonance            # full run, about 12 minutes (16 cores)
+go run ./examples/rodin_resonance            # full run, about 23 minutes (16 cores; Part 3t about 11)
 go run ./examples/rodin_resonance -short     # coarse grids, small searches, about 1 minute
-go run ./examples/rodin_resonance -part 2    # one part: 1, 2, 2b or 3
+go run ./examples/rodin_resonance -part 2    # one part: 1, 2, 2b, 3 or 3t (toroidal output winding)
 python3 examples/rodin_resonance/viz/plot_all.py      # figures from the CSVs in viz/
 python3 examples/rodin_resonance/viz/plot_cycle.py    # viz/cycle.gif
 python3 examples/rodin_resonance/viz/make_report.py examples/rodin_resonance/rodin_resonance_report.pdf
@@ -382,13 +382,164 @@ negligible. The output coils load the drive — the sources' power changes
 when they are added — as a transformer's secondary loads its primary.
 `viz/bank.png`, the coils in `viz/geometry.png`.
 
+## Part 3t — the output winding wound round the torus, in 12 sections
+
+Part 3's output coils sit beside the toroid: a coil coaxial with it, coils
+under the aperture, or a single coil round the tube at one angle. Here the
+output winding is **wound round the torus as on a toroidal inductor core**:
+every turn goes over the outside, down through the hole and back under,
+round the tube's cross-section, laid on top of the two Rodin windings. It is
+split into **12 sections 30° apart**, section k centred at θ0 + k·30° (pole 1
+at 0°; the Rodin wire crosses the hole at 15° + k·30°), each over an arc of
+2°–29° (1° left between sections for the leads). Wire: 0.5 mm copper,
+enamel 0.03 mm (declared, as Part 3). The first layer's turns have radius
+a0 = 23.023 mm round the tube's centre circle (on winding B's outer
+surface). The inside of the hole is the crowded side: a 29° section holds
+39 turns in 6 layers, a 20° section 25, a 10° section 11.
+
+**Model** (`toroidal.go`). A turn is a circle round the tube at its azimuth.
+A section's turns are spread evenly over its arc, and when they need several
+layers they sit at the layers' mean radius. The helix's advance round the
+axis is cancelled by the section's leads, which run back together (twisted,
+like every lead between sections and to the bridges). Every turn's mutual
+inductance to every segment of the Rodin windings is tabulated over 0–30°
+in 0.25° steps, then carried round the axis by the windings' 30° symmetry: a
+30° turn maps pass q of A onto pass q + 5 and pass q of B onto pass q + 7,
+checked point by point. The turn–turn mutual is tabulated against the
+azimuth difference. Each section is tuned by a series capacitor to its
+inductance with all sections carrying equal currents (L_k + Σ M_kj), which
+is exact for the series string.
+
+| check | result |
+|---|---|
+| turn–pass mutuals, interpolated and carried round, vs direct at 7.3°, 133.71°, 251.06°, 359.9° | largest error 1.6×10⁻⁴ of the largest |
+| uniform one-layer toroid of 114 turns vs the current sheet μ0N²(R0 − √(R0² − a²)) | 158.59 vs 158.76 µH (−1.1×10⁻³) |
+| one section of 8 turns over 20°: rings vs an explicit helix with its return lead | mutual to A +2.5×10⁻³, to B −2.1×10⁻³, self −3.3 % (the lead loop) |
+| the winners on 4, 6 and 12 sections per circuit | the same load power to 4 figures |
+| AC books (sources = load + copper + source resistors) | ≤ 4.3×10⁻¹¹ W |
+
+### One turn round the tube: what the 12 sections can collect
+
+The EMF of one turn at every azimuth (720 angles) from the full sectional
+net (12 sections per circuit), drive 3.383 V peak each through 1 Ω:
+
+| f | sense | \|EMF\| per turn, sin/cos, mean (range over θ) | A alone | B alone | √(A² + B²) | A and B in phase |
+|---|---|---|---|---|---|---|
+| 1 kHz | toroidal | 10.91 mV (10.59–11.37) | 7.244 | 8.413 | 11.10 | **15.65** |
+| 1 kHz | dipole | 11.29 mV (10.91–11.90) | 7.244 | 8.413 | 11.10 | 1.20 |
+| 100 kHz | toroidal | 14.85 mV (14.38–15.58) | 9.304 | 11.59 | 14.86 | **20.90** |
+| 100 kHz | dipole | 14.88 mV (14.40–15.63) | 9.304 | 11.59 | 14.86 | 2.29 |
+| 1.966 MHz | dipole | 14.87 mV (12.00–19.17), m = 5 | | | | |
+| 5 MHz | toroidal | 22.75 mV (14.23–52.73), m = 1 | | | | |
+
+- **Where the sections sit hardly matters below the self-resonance.** A
+  turn's EMF changes by 3–4 % round the torus, with the 30° period of the
+  poles (m = 12), and its phase by ≤ 2°. Moving the evolved sections from
+  centred on the poles (θ0 = 0°) to centred on the hole crossings (15°)
+  changes the load power by 0.16 %. Above the self-resonance (5 MHz) the
+  EMF varies up to 69× with angle (`viz/toroidal.png` (d)), as Part 3
+  found for the round coils, but no search settles there (below).
+- **A toroidal turn collects the toroidal flux only**: the flux in the tube
+  made by the through-the-hole parts of the two windings. Under sin/cos the
+  two windings' contributions are a quarter cycle apart, so a turn sees
+  √(A² + B²) whichever way B is connected. Driven in phase and connected in
+  the toroidal sense they add, A + B: 15.65 mV against 11.10 mV, a factor
+  1.41. Driven in phase in the dipole sense they cancel (1.20 mV).
+
+### The genetic searches
+
+`evo` (value genome, 64 × 50) on the sectional net with 2 sections per
+circuit, so the 48 primary sections and the 12 output sections are 60
+windings, which the kronspice N element holds. Genes: drive frequency
+1 kHz–30 MHz, θ0 (0–30°), arc (2°–29°), turns per section (1–40), polarity
+(all sections alike, or alternate ones reversed), combination (one bridge
+per section, all in series into one bridge, all in parallel into one), R_L,
+connection sense of the primaries, and in the second search the phase of
+B's source. Constraints: the turns fit in ≤ 6 layers; wire ≤ λ/20 (the whole
+winding when in series); tuning capacitor (for the series string its
+equivalent single capacitor) ≥ 30 pF. Fitness as Part 3.
+
+| | sine on A, cosine on B | drive phase evolved too |
+|---|---|---|
+| best of generation 0 → evolved (fitness) | 0.0615 → 0.2196 W | 0.005216 → 0.4533 W |
+| drive frequency | 1,575 Hz | 1,557 Hz |
+| phase of B relative to A, primary sense | +90° (as set), dipole | **356.4° (in phase)**, **toroidal** |
+| winding | 12 sections × 39 turns (6 layers, mean radius 24.42 mm), arc 28.2°, θ0 = 0°, all alike, in series into one bridge | 12 × 39 turns, arc 29°, θ0 = 30° (= 0°), all alike, in series into one bridge |
+| section L, R; neighbour k | 93.8 µH, 0.512 Ω; 0.44 | 92.9 µH, 0.512 Ω; 0.45 |
+| whole winding: L, R, wire | 2,974 µH, 6.15 Ω, 71.8 m | 2,973 µH, 6.15 Ω, 71.8 m |
+| coupling to A, to B (k); to the series pair in its sense | 0.587, 0.669; −0.122 (says little in quadrature) | 0.586, 0.669; **0.754** |
+| load voltage amplitude, R_L | 3.683 V, 22.8 Ω | 4.953 V, 21.5 Ω |
+| AC: sources = load + copper + source R | 2.334 = 0.297 + 1.156 + 0.881 W | 1.462 = 0.570 + 0.562 + 0.331 W |
+| **AC efficiency** (load / sources) | **0.127** | **0.390** |
+| the same winding, other drive phases: in phase / antiphase / sin-cos / cos-sin | 0.0041 / 0.566 / 0.297 / 0.273 W | 0.570 / 0.0041 / 0.275 / 0.299 W |
+| combined separate / series / parallel (all alike) | 0.0634 / **0.297** / 0.0058 W | 0.127 / **0.570** / 0.0116 W |
+| alternating sections in series or parallel | ≤ 10⁻²³ W (cancel by symmetry) | ≤ 10⁻²³ W |
+| turns per section 8 / 16 / 24 / 32 / 39 | 0.031 / 0.104 / 0.188 / 0.258 / 0.297 W | 0.062 / 0.206 / 0.368 / 0.499 / 0.570 W |
+| other frequencies (retuned): 1 k / 2 k / 4 k / 10 k / 100 kHz | 0.264 / 0.287 / 0.176 / 0.044 / 0.0005 W | 0.515 / 0.545 / 0.327 / 0.081 / 0.0009 W |
+
+(The first search's winner is in the dipole sense; under sin/cos the sense
+hardly matters, 0.297 against 0.273 W: reversing B turns its quarter-cycle
+lead into a lag, and |A + jB| = |A − jB|. "Antiphase" in the dipole sense
+is the in-phase toroidal case of the second column.)
+
+What the searches found:
+
+- **The toroidal winding wants as many turns as fit**, all in series into
+  one bridge, the sections nearly touching (a whole toroidal winding in 12
+  pieces). Separate bridges or a parallel connection lose 4–50× because
+  each section's voltage is too low for the diodes; alternating sections
+  cancel exactly.
+- **Under sin/cos drive** the winding takes 0.297 W, more than Part 3's
+  best outside coil (0.252 W), but at an AC efficiency of 0.127 against
+  0.336. With the sources 90° apart the winding couples to each source's
+  winding without the two adding, so each source pushes a large current
+  that heats the copper while only the √(A² + B²) part of the flux reaches
+  the load.
+- **Left free to choose the phase, the search drives A and B in phase,
+  connected in the toroidal sense**: the through-the-hole parts then add,
+  the coupling to the series pair is k = 0.75 (pair L 797.9 µH), and the
+  same winding gives 0.570 W at 0.390 efficiency. Sine and cosine are the
+  worse drive for a toroidal output winding by about 2× in power and 3× in
+  efficiency. The quadrature drive turns the field vector at each point
+  (Part 2); a toroidal winding cannot use that rotation, only the toroidal
+  flux.
+
+### The winners charging the bank (kronspice transient)
+
+The 48 primary sections and the 12 output sections as the 60 windings of
+one N element, tuning capacitors, one Schottky bridge (as Part 3), the
+bank, the sources soft-started:
+
+| | sine on A, cosine on B | drive phase evolved (in phase) |
+|---|---|---|
+| run | 400 cycles, 254 ms | 400 cycles, 256.9 ms |
+| bank | 4,700 µF | 4,700 µF |
+| bank voltage | 2.007, 2.956, 3.878, **4.300 V** at 61.6, 107, 185, 254 ms | 2.631, 3.712, 5.296, **6.097 V** at 55.5, 88.1, 169, 257 ms |
+| bank energy at the end | 43.45 mJ | 87.37 mJ |
+| energy from source A / B | 390.2 / 210.5 mJ | 222.3 / 164.0 mJ |
+| **charging efficiency** (bank / sources) | **0.0723** | **0.2262** |
+| copper / source resistors / diodes | 51.06 / 38.87 / 2.12 % | 43.24 / 26.88 / 4.89 % |
+| left in coils and capacitors | 4.11 mJ | 9.02 mJ |
+| books: sources − (bank + losses + stored) | 141 µJ | 153 µJ |
+| kronspice ledger integration mismatch | 142 µJ (2.2×10⁻⁴ of the energy in) | 154 µJ (3.7×10⁻⁴) |
+
+Against Part 3's winners (bank efficiency 0.1764 for the coaxial coil and
+0.3214 for the two coils under the aperture; 12.5 mJ and 1.2 mJ banked),
+the toroidal winding banks the most energy (87.4 mJ, 7× the coaxial coil)
+when the drives are in phase, at 0.23 of the input. Under sin/cos it banks
+43.5 mJ at only 0.072. Every joule in the bank came from the two sources;
+the books close to the integration mismatch. `viz/toroidal.png`: (a) the
+sections on the pair in 3-D (also the right panel of `viz/geometry.png`), (b) a cross-section with a turn through the hole,
+(c) the EMF of one turn against angle for every drive, (d) its
+(frequency, angle) map, (e) the bank charging, (f) the searches.
+
 ## Status of H43
 
 | claim (hobbyist and promotional sources) | what the runs show | standard prediction |
 |---|---|---|
-| a "vortex" field | under sin/cos drive the field vector turns at each point (ellipticity 0.09–0.11), but the pattern stands still round the axis (12-fold advance ≤ 3×10⁻¹³° per cycle) | the superposition of two coils' Biot–Savart fields a quarter cycle apart |
+| a "vortex" field | under sin/cos drive the field vector turns at each point (ellipticity 0.09–0.11), but the pattern stands still round the axis (12-fold advance ≤ 3×10⁻¹³° per cycle); a toroidal output winding cannot use the turning: it collects √(A² + B²) of the toroidal flux under sin/cos and A + B in phase, and its search picks the in-phase drive (2× the power, 3× the efficiency) | the superposition of two coils' Biot–Savart fields a quarter cycle apart |
 | the field "accumulates" | only by resonance, to the Q-limited level (Q 76.4 against ω0L/R 77.3), paid by the source; the quadrature pair cannot be tuned as a pair (k = 0.39), and tuned to one mode its currents lock in phase | a series RLC tank |
-| energy beyond the input (over-unity) | none: every ledger closes (lumped drives ≤ 9×10⁻⁷ at 1 kHz and ≤ 6.7×10⁻⁵ in the 100 kHz build-ups, AC books ≤ 5×10⁻¹³ W, transient ≤ 1.1×10⁻³ of the energy in, its integration error); the bank holds 0.18–0.32 of the source energy; output ≤ input in every case | a three-winding transformer: output ≤ input |
+| energy beyond the input (over-unity) | none: every ledger closes (lumped drives ≤ 9×10⁻⁷ at 1 kHz and ≤ 6.7×10⁻⁵ in the 100 kHz build-ups, AC books ≤ 5×10⁻¹¹ W, transient ≤ 1.1×10⁻³ of the energy in, its integration error); the bank holds 0.07–0.32 of the source energy (round coils 0.18–0.32; the 12-section toroidal winding 0.07 under sin/cos, 0.23 in phase); output ≤ input in every case | a three-winding transformer: output ≤ input |
 | a special role of the {12/5} (5, 12) path | it sets inductance, coupling and frequencies; the 720° modes appear for the series counter-wound loop with the (5, 12) and the (2, 1) path alike | a property of the connection, not of the knot |
 | "vortex-based mathematics" (1-2-4-8-7-5) | no equation is given, so there is nothing to compute | — |
 
@@ -399,9 +550,11 @@ with one fitted turn count at 1.60 and 1.25 A. What would move the entry:
 a bench measurement in which the energy delivered to a load or bank exceeds
 the energy measured at the drive terminals, with every input counted.
 Bench test: the Part 3 winner (or the paper's coil with a coaxial
-secondary), a power analyser on both drive channels, the bank energy ½CV²;
-the standard prediction is 0.18–0.32 of the input in the bank with these
-parts.
+secondary), or the Part 3t toroidal winding (12 sections of 39 turns of
+0.5 mm wire over the pair, in series into one bridge), a power analyser on
+both drive channels, the bank energy ½CV²; the standard prediction is
+0.07–0.32 of the input in the bank with these parts (the toroidal winding
+0.07 under sin/cos, 0.23 with A and B in phase).
 
 ## Tests
 
@@ -415,6 +568,7 @@ parts.
 | `TestACTwin` | own complex MNA vs kronspice N-element transient of the same net (3×10⁻³); AC books (10⁻⁹) |
 | `TestCrossedRing720` | the crossed ring's first mode has trip parity < −0.9, Rodin and (2, 1) |
 | `TestGroupsLedger` | two output coils: AC books; kronspice transient with bridges and bank: books = ledger mismatch, 0 < bank < sources |
+| `TestToroidalSecondary` | Part 3t tables: interpolation (10⁻³), uniform toroid vs current sheet (5×10⁻³), rings vs helix (1 %, self 5 %); AC books; alternating sections in series cancel; transient books = ledger mismatch, 0 < bank < sources |
 
 `go test -short ./examples/rodin_resonance` (about 20 s); in the
 kronspice-tools image `go test -race -short` as well.
@@ -423,7 +577,7 @@ kronspice-tools image `go test -race -short` as well.
 
 | file | contents |
 |---|---|
-| `main.go` | the four parts, the printed results, the CSV files in viz/ |
+| `main.go` | the five parts, the printed results, the CSV files in viz/ |
 | `geom.go` | the taut-wire {12/5} Rodin path, the (2, 1) knot, bundles, the pair |
 | `induct.go` | segment (partial-inductance) method; Biot–Savart field of a polyline |
 | `model.go` | pass matrix, winding L and M, bundle leakage, reciprocity, flux and field-energy checks |
@@ -433,6 +587,8 @@ kronspice-tools image `go test -race -short` as well.
 | `acsolve.go` | complex MNA of the sectional net with sources, output coils and loads |
 | `groups.go` | output-coil geometry, mutuals, clearance, EMF and power maps |
 | `part3.go` | genome, decoding, constraints, bridge factor, searches |
+| `toroidal.go` | Part 3t: the 12-section toroidal output winding — layers, turn tables carried round by the 30° symmetry, section inductances and tuning, genome, per-turn EMF, checks |
+| `part3t.go` | Part 3t runner: per-turn EMF and maps, the two searches, variations round the winners, transients |
 | `tranverify.go` | kronspice transient with the N element, Schottky bridges and bank; energy split per element |
 | `rodin_resonance_test.go` | the tests above |
 | `run_output.txt` | output of the full run |
@@ -456,6 +612,13 @@ kronspice-tools image `go test -race -short` as well.
   with a resistive load and a smooth bridge factor in place of the
   rectifier, replaced by real diodes in the kronspice transient.
 - Radiation estimated (small-loop R_rad), not modelled.
+- Toroidal output winding (Part 3t): turns as circles round the tube at
+  their azimuths, spread evenly over the section's arc, several layers at
+  their mean radius, never closer than touching on the inside of the hole;
+  the helix's advance round the axis cancelled by its returning leads
+  (checked against an explicit helix: mutuals 0.25 %, self 3 %); leads
+  twisted with no loop area; no winding capacitance for the output winding
+  (the ≥ 30 pF tuning limit keeps it far below its own resonance).
 
 ## Sources
 

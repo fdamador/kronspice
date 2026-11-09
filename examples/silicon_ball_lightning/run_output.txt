@@ -1,0 +1,67 @@
+== 1. Observations ==
+Abrahamson & Dinniss 2000 (the 'average' ball)          | natural, eyewitness                | diameter 0.3–0.3 m | lifetime 10–10 s
+   luminosity similar to a 100 W lamp; ends by explosion or fading
+Cen, Yuan & Xue 2014 (Qinghai, 23 July 2012)            | natural, spectrographs at 0.9 km   | diameter 5–5 m | lifetime 1.64–1.64 s
+   apparent (luminous) diameter ≈ 5 m in the stable stage; 8.6 m/s; Si I, Fe I, Ca I lines throughout; N I, O I periodic; 99.4 Hz light oscillation; 35 kV line 20 m away
+Paiva et al. 2007 (PRL 98, 048501)                      | laboratory: arc on pure silicon    | diameter 0.01–0.04 m | lifetime 2–5 s
+   arc 20–25 V, 100–140 A, 60 Hz; bluish white or orange white
+Stephan & Massey 2008 (J. Atmos. Sol.-Terr. Phys. 70, 1589) | laboratory: silicon                | diameter 0.0001–0.001 m | lifetime —
+   about 3140 K; luminous balls of 1–4 cm lit by a liquid core of about 1 mm
+Dikhtyar & Jerby 2006 (PRL 96, 045002)                  | laboratory: microwave hot spot     | diameter 0.03–0.03 m | lifetime 0.03–0.04 s
+   fireballs last 30–40 ms after the microwave power is turned off
+
+== 2. The chemical store: heat on burning in air vs the heat to make the vapor ==
+ element → oxide   | burns (kJ/g) | vaporize (kJ/g) | return | mass for 1 kJ (mg)
+ Si → SiO2         |        32.43 |           17.60 |   1.84 |     30.8
+ Fe → Fe2O3        |         7.38 |            8.32 |   0.89 |    135.5
+ Mn → MnO          |         7.01 |            5.65 |   1.24 |    142.6
+ Ca → CaO          |        15.84 |            5.14 |   3.08 |     63.1
+ Al → Al2O3        |        31.05 |           14.14 |   2.20 |     32.2
+ Ti → TiO2         |        19.72 |           11.79 |   1.67 |     50.7
+ reduced silicon species (Abrahamson & Dinniss):
+   Si → SiO2           32.43 kJ/g
+   SiO(g) → SiO2       18.38 kJ/g
+   SiC → SiO2 + CO2    30.70 kJ/g
+ the 'average' ball (100 W for 10 s ≈ 1 kJ, an upper bound if all heat leaves as light and heat):
+   31 mg of silicon; soil holds it as SiO2, so the strike must first reduce it, paying the same 32.4 kJ/g (and the vapor's 17.6 kJ/g)
+   oxides (SiO2 sand, TiO2 rutile flux) store nothing: only reduced metal burns
+
+== 3. How long silicon nanoparticles take to burn (Deal–Grove, dry O2, scaled by pO2) ==
+ sea-level air (pO2 0.21 atm) — burn-through time (s):
+   r (nm) |    1100 K |    1200 K |    1300 K |    1400 K |    1500 K |
+        5 |  4.68e+04 |  8.27e+03 |  1.94e+03 |       572 |       203 |
+       10 |   9.6e+04 |  1.74e+04 |  4.22e+03 |   1.3e+03 |       484 |
+       25 |  2.59e+05 |  4.97e+04 |  1.31e+04 |   4.4e+03 |  1.79e+03 |
+       50 |  5.79e+05 |   1.2e+05 |  3.45e+04 |  1.26e+04 |  5.53e+03 |
+      100 |  1.41e+06 |  3.25e+05 |  1.03e+05 |  4.06e+04 |  1.88e+04 |
+ Qinghai, 2530 m (pO2 0.16 atm) — burn-through time (s):
+   r (nm) |    1100 K |    1200 K |    1300 K |    1400 K |    1500 K |
+        5 |  6.14e+04 |  1.09e+04 |  2.55e+03 |       751 |       266 |
+       10 |  1.26e+05 |  2.28e+04 |  5.54e+03 |   1.7e+03 |       635 |
+       25 |  3.39e+05 |  6.53e+04 |  1.72e+04 |  5.77e+03 |  2.35e+03 |
+       50 |   7.6e+05 |  1.58e+05 |  4.53e+04 |  1.66e+04 |  7.26e+03 |
+      100 |  1.85e+06 |  4.27e+05 |  1.35e+05 |  5.33e+04 |  2.47e+04 |
+ (Deal–Grove is fitted at 973–1473 K on planar wafers; values above 1473 K and at nanometre radii are extrapolations)
+ at 1100–1500 K Deal–Grove burns 5–100 nm particles in minutes to days, far slower than the observed seconds.
+ temperature at which a particle burns through in the observed lifetime (sea-level air; extrapolated beyond 1473 K):
+   r =  10 nm:  1.64 s → 2940 K;  3.5 s → 2568 K;  10 s → 2198 K;
+   r =  25 nm:  1.64 s → 4582 K;  3.5 s → 3694 K;  10 s → 2917 K;
+   r =  50 nm:  1.64 s → above 5000 K;  3.5 s → above 5000 K;  10 s → 4030 K;
+ (silicon melts at 1687 K; Stephan & Massey estimate about 3140 K for their silicon balls)
+
+== 4. kronspice: an AC stick welder at Paiva et al.'s operating point ==
+open-circuit 70 V rms, arc 22.5 V, 60 Hz: leakage L = 1.447 mH gives 120.0 A rms; arc voltage 23.0 V rms; arc power 2494 W; ledger 2.1e-05
+(Paiva et al.: 20–25 V, 100–140 A, 60 Hz)
+ one second of arc, if a fraction f of its energy vaporizes the electrode metal:
+   metal | f     | vapor (mg) | chemical store (J) | 100 W ball lasts (s)
+   Si    |    1% |        1.4 |               46.0 | 0.46
+   Si    |   10% |       14.2 |              459.6 | 4.60
+   Fe    |    1% |        3.0 |               22.1 | 0.22
+   Fe    |   10% |       30.0 |              221.3 | 2.21
+   Mn    |    1% |        4.4 |               30.9 | 0.31
+   Mn    |   10% |       44.1 |              309.5 | 3.09
+
+== 5. kronspice: the 35 kV line 20 m from the Qinghai ball ==
+ball radius 0.15 m: C_m 1.25e-13 F, C_ball 1.67e-11 F; the most power the line can drive into it 5.97e-05 W (at R = 2e+08 Ω); power pulses at 100.00 Hz
+ball radius 2.50 m: C_m 3.48e-11 F, C_ball 2.78e-10 F; the most power the line can drive into it 0.248 W (at R = 1e+07 Ω); power pulses at 100.00 Hz
+observed: light oscillating at 99.4 Hz (Cen et al.); the ball shines ~ 100 W

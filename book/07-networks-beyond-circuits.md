@@ -159,6 +159,37 @@ reversed, like the knot; the radiated sound makes it irreversible; and in
 the field solver its thermal flash shows no net circular polarization,
 where the knot shows +0.9996.
 
+Many such cavities at once make a heater.
+[harmonic_cavitation](../examples/harmonic_cavitation) designs one: a
+dimpled metal drum at each outlet of a shaft driven by a motor or a Tesla
+turbine, spinning in a fixed housing. Every constant comes from a published
+rotational cavitation reactor or is declared.
+- **Calibration.** Xue et al. (2024) fix the cavitation number where
+  bubbles start (0.97–1.24) and where the pulsation is strongest (0.775).
+- **Why a drum.** On a drum every dimple runs at one speed and cavitation
+  number, so one shaft speed puts them all at their best.
+- **The shaft circuit.** Each design's shaft is a speed source driving one
+  conductance per loss, so the operating point's ledger books every watt.
+- **NSGA-II.** It finds 18.9 % at any size from 1.1 to 3 kW, with a
+  matching dimple ring on the housing at a 0.8 mm gap. The figure moves
+  from 9 % to 47 % with the declared drag, vapour and pulse constants.
+- **The gap as an acoustic ring.** Its modes in kronspice match the
+  lattice's exact frequencies, and the rotating dimple pattern cannot
+  reach them at these speeds.
+- **Collapses on the axis.** Collapses that line up can focus their peak
+  pressure on the axis, at most their summed energy.
+- **Mandelbulb cavities.** The user's hypothesis H46 evolves the power n.
+  The best reaches 18.7 %. With its fine detail removed it reaches 19.1 %,
+  so a smooth lobed ring does as well as dimples.
+- **The closed steam loop.** In the user's layout the drums raise steam
+  that drives a Tesla turbine on the same shaft, and the condensate is
+  pumped back. Carnot allows 13 % between 111 °C and 60 °C, and the
+  turbine returns 3–4 % of the shaft work, so a motor supplies the rest.
+  Boiling in the drums wastes the cavitation: steam that leaves has not
+  collapsed. Pressurized drums with a flash tank keep it.
+- **Heat.** All shaft work ends as heat, and a heat pump on the same
+  electricity gives 3.5 times more.
+
 ## 7.3 Water's bonds as a circuit
 
 The same mobility analogy, taken down to a molecule. In

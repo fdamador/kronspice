@@ -30,11 +30,13 @@ only from citations or excerpts.
 | 1939 | *Tensor Analysis of Networks* |
 | 1942 | *A Short Course in Tensor Analysis for Electrical Engineers* (*Tensors for Circuits*, Dover, 1959) |
 | 1944–45 | Equivalent circuits for Maxwell's equations, differential equations and the Schrödinger equation |
+| 1950 | Soviet criticism: A. Berendeev's letter in *Elektrichestvo* (Popkov) |
 | 1951 | *Equivalent Circuits of Electric Machinery* |
 | 1953–55 | First tearing papers |
 | 1956 | The two "universal engineering" articles |
 | 1957–59 | *Diakoptics* serial in *The Electrical Journal* (London); book 1963 |
 | 1959–65 | Papers on multi-dimensional space filters, self-organizing automata, and networks beyond graphs |
+| 1961 | Honorary doctorate, University of Nottingham (Popkov; not in our other sources) |
 | 1966 | Retires from General Electric in July |
 | 1968 | Dies in Schenectady on March 25 |
 | 1969 | Union College symposium on October 14; papers published in 1973 as *Gabriel Kron and Systems Theory* |
@@ -67,7 +69,12 @@ General Electric took him on in 1934, after a conference that Philip Alger
 arranged to air his ideas. He stayed for 32 years under fifteen managers,
 moving between machines, power systems, turbine stress analysis, electronics
 with Simon Ramo, and reactor piles. Most of his theoretical writing was done
-at night and on weekends (Alger 1973).
+at night and on weekends (Alger 1973). Popkov gives the later postings: the
+steam-turbine department from 1942 (stresses), the research laboratory from
+1945 to 1963 (temperature distribution, reactor control), with a break from
+1950 to 1953, and an engineering analysis unit from 1963 until he retired
+(pp. 3–4). He also places Kron at the Lincoln Electric Company in Cleveland
+from late 1928, before the 1930 paper (p. 3).
 
 ## How the method developed
 
@@ -243,6 +250,22 @@ structure", found that "many details have not been disclosed by Kron himself,
 even where he has published numerical results", and "does not reach as far as
 Kron's automaton" (pp. 19–20).
 
+**Popkov's summary of the late work** (pp. 9–12) follows the 1962 paper
+closely and adds no equations. Four points go beyond it, all at second hand
+and without page references to Kron. First, the non-oscillatory polyhedron is a
+"multidimensional space-filter with a fixed set of natural frequencies", and the
+oscillatory one was meant to have a *continuous* spectrum so that it could fit
+every function at once (p. 10). The 1962 paper says only that its modes and
+frequencies are "self-adaptive" (p. 67), so the phrase is Popkov's, or comes
+from the 1960 "dynamo-type automata" paper, which he cites for that passage.
+Second, putting the polyhedra into a *moving* plasma makes the simplexes curved,
+"Riemannian or non-Riemannian" through affine connections, with new parameters
+for curvature and torsion (p. 11). This is the link back to the 1934 machine
+theory. Third, the polyhedron has a statistical reading: the waves stand for
+means, variances, correlation functions and spectral densities (p. 12). Fourth,
+in Popkov's view the open, self-organizing polyhedron is a model of
+Prigogine's "order from chaos" (p. 12). That is his comparison, not Kron's.
+
 Later titles continue the argument, such as "Invisible Dual (n-1)-Networks
 Induced by Electric 1-Networks" (1965). The record of that abstract says the
 visible and invisible p-networks around the branches together form a
@@ -299,11 +322,38 @@ obituary traces to his influence a "trend toward the teaching of engineering
 as a unified discipline". Keith Bowden later described his search as one for
 "an ontology of engineering" (via Wikipedia, *Diakoptics*).
 
+**Popkov's review.** Despite its title, Popkov's paper never defines universal
+engineering. What it gives is the structure of the idea, and that supports the
+reading above. He divides Kron's work into three parts (p. 5): the generalized
+machine, power systems and diakoptics; a "tensor philosophy"; and the adaptive
+wave networks built on both. Its core is that "two different networks, which
+have the same branches, are … two different coordinate systems of one and the
+same physical essence" (p. 5). The "key notions" are transformation,
+invariance and group: the non-singular connection matrices that take one
+configuration of the same components to any other form a "group of
+connections", whose representation is the connection tensor (pp. 7–8). What
+stays invariant may be the total power, part of it, or a set of applied voltages
+(p. 8). Popkov notes that this is not topology, because topology does not
+study what stays invariant when a network is torn apart and rejoined (p. 7).
+The components may be electrical, thermal, chemical or mechanical, and the
+problems may be economic or operational (p. 8). He quotes Kron (1953, *J. Appl.
+Phys.* 24, 965) on the circuit itself: a model should strictly be "either
+algebraic or geometric (topological)", and the electric circuit "is not
+absolutely necessary", just a device to stand in for very large sets of
+equations (p. 8). Popkov's quotations from Kron are back-translated from
+Russian, so they are close to Kron's sense but not his exact words. Popkov
+extends the idea to tensor databases and design automation (p. 12, after Kuzin
+et al. 1984), which is the Russian school's own development, not Kron's.
+
 Together these support a working definition: **universal engineering treats
 every engineering system as an instance of one geometric structure of
 interconnected networks, so that a method or result carries from one field to
-another by transformation.** This is our synthesis, not Kron's wording. His
-1956 articles should be checked against it.
+another by transformation.** This is our synthesis, not Kron's wording. Popkov
+adds two refinements, which Kron's own 1953 words support. The network is a
+convenient picture of an underlying algebraic or topological structure, not
+the structure itself. And the transformations form a group under which a chosen
+quantity, usually power, stays invariant, including when the system is torn and
+rejoined. Kron's 1956 articles should still be checked against both.
 
 ## Reception
 
@@ -312,6 +362,19 @@ redefined terms and broke established rules (Alger 1973). J. Slepian likened
 the work to fruit salad, and Duschek and Hochrainer dismissed it in their tensor
 textbook. As Hoffmann observed, critics said both that it was wrong and that it
 was right but not new (*Tensors for Circuits*, p. vii).
+
+The Soviet reception followed the same pattern (Popkov, pp. 1–2). In 1950
+*Elektrichestvo* printed A. Berendeev's letter, which said Kron's articles had
+impressed readers "not well enough acquainted with tensor mathematics", and the
+editors agreed. By 1969 the same journal's obituary praised him as the pioneer
+of tensors in machines and networks. The translations came slowly: an abridged
+*Short Course* in 1955, *Diakoptics* in 1972 and *Tensor Analysis of Networks*
+in 1978. A. E. Petrov's *Tensor Methodology in Systems Theory* (1985) gave a
+clear account, with economic examples. Popkov quotes Kron, from the Russian
+edition of *Tensor Analysis of Networks*, as saying that Veblen, Weyl and von
+Neumann at the Institute for Advanced Study, and Hoffmann and Langevin, urged
+him to go on, and that Einstein knew of his work from his collaborators (p. 1).
+The source is probably the 1965 introduction, but we have not checked it.
 
 Some of the criticism was fair, and his defenders said so. Hoffmann conceded
 faults of rigor and exposition, including name-dropping such as *Unified Field
@@ -355,9 +418,15 @@ forms; H. Nicholson at Sheffield wrote two reports on the polyhedron model and
 the scattering problem (1973, 1974); and Lynn and Russell published "Kron's Wave
 Automaton" in 1974. Tolan suspected that Kron was working toward a general
 theory of the universe as a whole system, but he offered that as his own
-belief, and it should be read that way. Later work on Kron's polyhedra and dual
-networks exists (Popkov 2007; Petrov 2008), but we have seen it only in
-excerpts.
+belief, and it should be read that way. In Russia, Petrov (1985, 2008) and the
+Kuzin group (tensor databases, 1984) kept the tensor method going. Popkov's
+review, now read in full, is a survey with no new analysis, and it ends by
+calling for the self-organizing polyhedra to be studied further. His statement
+that "after his death, there appeared no new models of electric circuits,
+proposed by other authors" (p. 8) is wrong: transmission-line matrix modelling
+(Johns and Beurle 1971, from Kron's 1944 network) and tensorial analysis of
+networks (Maurice et al.) both came later. Petrov 2008 is still known only
+from its abstract.
 
 ## In kronspice
 
@@ -386,11 +455,13 @@ H20 in [CLAUDE.md](CLAUDE.md#hypotheses-under-test), with a build plan for
 | Montefiore Prize | 1935 (obituary, Alger, Happ) | 1933 (Maurice et al.) |
 | Paper's journal volume | *J. Math. Phys.* 13 (Kron's publication list; Kron 1962) | 12 (Roth 1959) |
 | *A Short Course* | 1942 (publication list) | 1940 (Alger) |
-| Michigan honor, 1936 | Honorary M.S. (obituary, Happ) | "Doctor of Engineering" (Anders website) |
-| End of GE career | Retired July 1966 (obituary, Happ) | Worked there until his death (AIP catalog) |
+| Michigan honor, 1936 | Honorary M.S. (obituary, Happ) | "Doctor of Engineering" (Anders website); honorary M.Eng. (Popkov) |
+| Employer after Robbins and Myers, about 1929–33 | Lincoln Electric from late 1928, then a Warner Brothers contract, 1931–33 (Alger; Popkov for Lincoln) | "Westinghouse", Springfield, where the 1931 slot-combination paper was written (Popkov, p. 4) |
+| Start of diakoptics | First tearing papers 1953–55 (publication list) | "beginning of 1950" (Popkov, p. 6) |
+| End of GE career | Retired July 1966 (obituary, Happ; Popkov p. 4, at 65) | Worked there until his death (AIP catalog; Popkov p. 4, in the same paragraph) |
 | *Diakoptics* serial | 20 chapters, June 7, 1957 – February 13, 1959 (Kron 1962; publication list) | 21 installments (Wikipedia). The GE report edition has 21 chapters, which may be the source of the confusion |
 | "Camouflaging" paper | *Quarterly of Applied Mathematics* 20 (the paper's own page headers) | Vol. 10 (publication list) |
-| Number of papers | More than 100 (Alger) | More than 50 (obituary) |
+| Number of papers | More than 100 (Alger; Popkov: 5 books and more than 100 articles over 35 years) | More than 50 (obituary) |
 
 We left out claims online that link Kron to free energy from "negative
 resistors", wartime secret projects or similar. We found them only in
@@ -444,6 +515,14 @@ Only the parts named were read, unless noted otherwise.
   *C. R. Physique* 10, 70–82, 2009: abstract and introduction. In `reference/`.
 - P. Russer, "The Transmission Line Matrix Method," TU München: reference list
   only. In `reference/`.
+- V. Popkov (International Alexander Bogdanov Institute, Ekaterinburg),
+  "Gabriel Kron's universal engineering," working paper, 13 pp.: read in full.
+  [ResearchGate](https://www.researchgate.net/publication/313407243_GABRIEL_KRON'S_UNIVERSAL_ENGINEERING),
+  where it is dated 2007. The PDF itself is undated, and its latest reference
+  is from 2000. As far as we can tell it is not peer reviewed. It is an English
+  translation of a Russian text, so Kron's words reach us translated twice and
+  with no page references. Its biography follows Narr (= Happ) 1973. In
+  `reference/` (`Popkov Gabriel Kron's Universal Engineering.pdf`).
 
 ### Known only from citations, catalogs or excerpts
 
@@ -510,8 +589,9 @@ first group is where to start.
   pp. 40–46, December 1958, and quotes both (pp. 8–11).
 - "Building-blocks of self-organizing automata – I," General Electric Report
   60GL164, August 1960, 24 pp. Quoted by Balasubramanian (pp. 15–17); the
-  "dynamo-type automata" paper in *Matrix and Tensor Quarterly* 11, 1960, is
-  presumably its published form.
+  "dynamo-type automata" paper, "Self-organizing, dynamo-type automata,"
+  *Matrix and Tensor Quarterly* 11(2), 42, 1960 (as cited by Popkov, ref. 16),
+  is presumably its published form.
 - "Basic concepts of multi-dimensional space filters," *AIEE Transactions* 78,
   554–561, 1959.
 - "Graphs as illegitimate models of electrical networks," *Matrix and Tensor
@@ -562,9 +642,14 @@ their citations.
   pp. 1228–1234.
 - F. Dörfler, F. Bullo, "Kron reduction of graphs with applications to electrical
   networks," [arXiv:1102.2950](https://arxiv.org/abs/1102.2950).
-- V. Popkov, "Gabriel Kron's universal engineering,"
-  [working paper](https://www.researchgate.net/publication/313407243_GABRIEL_KRON'S_UNIVERSAL_ENGINEERING),
-  2007. Not peer reviewed as far as we can tell; search excerpts only.
+- A. Berendeev, "About Kron's works on tensor calculus application in
+  electrical engineering," *Elektrichestvo* 1950(12), 78; obituary,
+  *Elektrichestvo* 1969(1), 92 (both via Popkov).
+- A. E. Petrov, *Tensornaya metodologiya v teorii sistem* (Tensor methodology in
+  systems theory), Radio i Svyaz, Moscow, 1985 (via Popkov).
+- L. T. Kuzin, A. E. Armensky, A. E. Petrov, D. Yu. Abramov, A. N. Ermakov,
+  "Tensornye banki dannykh" (Tensor data banks), *Izv. Vuzov SSSR,
+  Priborostroenie* 1984(6), 38 (via Popkov).
 - Petrov, "Tensor method and dual networks in electrical engineering," *Russian
   Electrical Engineering*, 2008,
   [doi:10.3103/S1068371208120018](https://doi.org/10.3103/S1068371208120018).

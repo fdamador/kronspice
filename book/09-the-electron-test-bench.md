@@ -294,7 +294,65 @@ by Z². With the charge set to e, the levels are Bohr's, and the rest tests
 the proton's moment and size. The knot sized to the electron rings at
 1.74 MeV, so it predicts an excited electron that no experiment has seen.
 
-## 9.8 What to keep
+## 9.8 The Claude electron: the photon held by the ether (H44)
+
+Read side by side, the bench's results point to one combination. H23 is
+the only candidate that gets spin ½ and the mass from one construction.
+Its numerical misses all trace to one number, the 0.910 e charge: with
+q = e the anomaly is Schwinger's α/2π, and section 9.7 gives Bohr's
+levels. Its other failure is confinement, and
+[ether_knot](../examples/ether_knot) is the one model here that holds a
+knot whose magnetic term is knotted light.
+[claude_electron](../examples/claude_electron) puts the two together,
+with a Hestenes zitterbewegung electron (Dirac's theory read as a point
+charge circulating at c on a Compton helix) as the standard twin.
+
+The twin comes first and changes the picture. Hestenes' zitter radius
+ħ/2mc is exactly H23's loop radius, but a charge moving at c on that
+circle gives g = 1, not 2. The paper's g = 2(1 + α′/2π) is asserted, not
+obtained from its own loop.
+
+The knot comes next. ether_knot's axisymmetric relaxer, given a second
+winding, holds Battye & Sutcliffe's A_{M,K} knots of Hopf charge M·K.
+H23's double loop, twice round the ring and once round the tube, is
+A_{1,2}, of charge 2. It is not held: its core falls onto the axis and
+its charge leaves through the grid. The knot that holds at charge 2 winds
+the other way. A charge-2 knot is a boson anyway: Finkelstein–Rubinstein
+quantization allows spin ½ only for odd charge.
+
+The single loop, charge 1, can carry spin ½. Quantizing it as a rigid
+rotor fixes its least size, though. Its J = ½ rotation fits inside the
+electron's mass only for ℓ ≥ 444 fm, 1.15 Compton lengths, with the rim at
+0.65 c. Every measurement points the other way:
+
+| Constraint | Allows ℓ |
+|---|---|
+| no excited electron below 5.6 TeV (the knot's tone 1.36 ħc/ℓ) | ≤ 4.8×10⁻⁵ fm |
+| scattering, size < 10⁻¹⁸ m | ≤ 5.5×10⁻⁴ fm |
+| hydrogen 1S–2S finite-size shift < 10 kHz | ≤ 0.047 fm |
+| Coulomb energy of e on the ring < m_e c² | ≥ 1.2 fm |
+| spin ½ within m_e c² | ≥ 444 fm |
+
+The windows do not meet, by a factor of 9×10⁶. A small knot riding the
+Compton helix fails on its own spin, which would make it turn faster than
+light. The charge is still an input: Rañada's topological unit is 3.30 e.
+H44 is recorded as bounded, with these numbers.
+
+Both knots live in an ether that cannot tear: its field is a unit vector
+everywhere, and a knot can untie only where the field vanishes.
+[ether_cavitation](../examples/ether_cavitation) (proposed H47) gives the
+ether an amplitude, so that it can cavitate, and measures how strong it
+is. In one dimension the softened ether behaves like a liquid. It has a
+surface tension, ⅔√(κ2λ) or ½√(κ2λ) depending on its equation of state.
+It has a tensile strength: a twist of n tears it past k_c = 1/(√6 ξ).
+Between the binodal and the spinodal, a critical cavity bubble is reached
+over a barrier that becomes Gibbs's 16πσ³/3Δ² as the bubble grows. A
+reversal of n squeezed into less than about 4.9 healing lengths must pass
+through zero. A rough estimate from these criteria puts the knot's own
+core at the edge of cavitating for β = λκ4/κ2² ≈ 33–41. Computing that
+threshold properly is the example's next step.
+
+## 9.9 What to keep
 
 - The bench is fixed before any model is run: the measured values and the
   Dirac prediction appear beside every result, and the Zeeman test comes
@@ -314,6 +372,7 @@ go run ./examples/vortex_ring
 go run ./examples/space_vortex
 go run ./examples/kron_electron          # -png viz/ring_field.png, -gif viz/ring_motion.gif
 go run ./examples/photon_electron        # about ten minutes
+go run ./examples/ether_cavitation       # step 1, under a minute
 go run ./examples/light_hydrogen         # about two seconds
 go test ./examples/kelvin_ring ./examples/vortex_ring ./examples/space_vortex ./examples/kron_electron ./examples/photon_electron ./examples/light_hydrogen
 ```

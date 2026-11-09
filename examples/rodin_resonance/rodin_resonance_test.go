@@ -218,3 +218,61 @@ func TestGroupsLedger(t *testing.T) {
 		t.Errorf("bank %g J against sources %g J", tr.EBankEnd, es)
 	}
 }
+
+// The toroidal secondary (Part 3t): its inductance tables reproduce a
+// direct computation, the current-sheet toroid and an explicit helix; the
+// AC books close; 12 alternating sections in series cancel by symmetry;
+// the kronspice transient with bridges and bank closes its books.
+func TestToroidalSecondary(t *testing.T) {
+	kit, err := NewTorKit(NewPair(Rodin, Circuits))
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := kit.Checks(rodinModel(t), 114, 8, 20)
+	if c.TableErr > 1e-3 {
+		t.Errorf("table interpolation error %.2e", c.TableErr)
+	}
+	if e := c.TorRings/c.TorSheet - 1; math.Abs(e) > 5e-3 {
+		t.Errorf("uniform toroid %.4g H vs sheet %.4g H", c.TorRings, c.TorSheet)
+	}
+	if math.Abs(c.RingMA/c.HelMA-1) > 1e-2 || math.Abs(c.RingMB/c.HelMB-1) > 1e-2 || math.Abs(c.RingL/c.HelL-1) > 5e-2 {
+		t.Errorf("rings vs helix: M_A %g/%g, M_B %g/%g, L %g/%g", c.RingMA, c.HelMA, c.RingMB, c.HelMB, c.RingL, c.HelL)
+	}
+	m := NewModel(NewPairSec(Rodin, Circuits, 2))
+	tp := NewTorPart(kit, m)
+	l := TorLayout{F: 4e3, Sense: Toroidal, Theta0: 0.1, Arc: 25 * math.Pi / 180, Turns: 12, Comb: Series, RLoad: 10}
+	pw, r, err := tp.Score(l, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ps := r.PSrc[0] + r.PSrc[1]
+	if d := ps - pw - r.PCopper - r.PSrcR; math.Abs(d) > 1e-9*ps || pw <= 0 || pw >= ps {
+		t.Errorf("AC books open by %g W (load %g of %g W)", d, pw, ps)
+	}
+	alt := l
+	alt.Alt = true
+	if pa, _, err := tp.Score(alt, 0); err != nil || pa > 1e-12*pw {
+		t.Errorf("alternating series sections give %g W against %g W (%v)", pa, pw, err)
+	}
+	if testing.Short() {
+		return
+	}
+	n := tp.net(l.Sense)
+	n.SetFreq(l.F)
+	gs, mg, err := kit.Groups(m, n, l)
+	if err != nil {
+		t.Fatal(err)
+	}
+	tr, err := TranGroups(n, l.F, l.Sense, 0, gs, mg, l.Comb, l.RLoad, 30, 30, 1e-4)
+	if err != nil {
+		t.Fatal(err)
+	}
+	es := tr.ESrc[0] + tr.ESrc[1]
+	books := es - tr.EBankEnd - tr.ECopper - tr.ESrcR - tr.EDiode - tr.EBleed - tr.ECoilsEnd
+	if math.Abs(books-tr.Mismatch) > 1e-6*tr.EIn || math.Abs(tr.Mismatch) > 2e-3*tr.EIn {
+		t.Errorf("transient books %g J, ledger mismatch %g J of %g J", books, tr.Mismatch, tr.EIn)
+	}
+	if tr.EBankEnd <= 0 || tr.EBankEnd > es {
+		t.Errorf("bank %g J against sources %g J", tr.EBankEnd, es)
+	}
+}

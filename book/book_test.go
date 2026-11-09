@@ -14,7 +14,7 @@ import (
 
 // exampleRef matches a reference to an example folder in a chapter, as a
 // relative link (../examples/name) or a path (examples/name).
-var exampleRef = regexp.MustCompile(`examples/([a-z0-9_]+)`)
+var exampleRef = regexp.MustCompile(`examples/([A-Za-z0-9_-]+)`)
 
 // TestEveryExampleHasAChapter checks both directions of the book's rule:
 // every folder under examples/ is cited by at least one chapter, and every

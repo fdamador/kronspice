@@ -7,7 +7,8 @@ python examples/rodin_resonance/viz/make_report.py examples/rodin_resonance/rodi
 
 Numbers come from examples/rodin_resonance/run_output.txt (the program's
 output) and README.md; figures are viz/geometry.png, fields_xy.png,
-fields_xz.png, energy.png, modes.png, map.png and bank.png (plot_all.py).
+fields_xz.png, energy.png, modes.png, map.png, bank.png and toroidal.png
+(plot_all.py).
 Layout from internal/pdfreport/kronreport.py.
 """
 import os
@@ -84,8 +85,9 @@ def build(out):
         "winding numbers. In the mirror language, a winding tuned by a series capacitor is the series RLC loop.")
     r.figure(fig("geometry.png"),
              "Figure 1. Left: the Rodin pair from above — winding A (1→6→11…) and its mirror B, the 12 poles, and the "
-             "evolved output coils (green: free search; violet: distributed groups). Middle: one circuit of each "
-             "winding in 3-D. Right: a (2, 1) winding, the class of photon_electron's path.", max_height_mm=70)
+             "Part 3 output coils beside the toroid (green: free search; violet: distributed groups). Middle: one circuit of each "
+             "winding in 3-D. Third: a (2, 1) winding, the class of photon_electron's path. Right: the Part 3t "
+             "toroidal output winding, 12 sections of 39 turns, every turn round the tube through the hole.", max_height_mm=70)
 
     r.h1("Part 1. Geometry and validation")
     r.p("Taut-wire path: from above, each pass is the chord from pole P<sub>k</sub> to P<sub>k+5</sub>, the first "
@@ -247,6 +249,39 @@ def build(out):
              "Figure 6. Bank voltage and energy of the two winners in the kronspice transient (Schottky bridges), and "
              "the best fitness of each genetic search by generation.", max_height_mm=60)
 
+    r.h1("Part 3t — a toroidal output winding in 12 sections")
+    r.p("The output winding wound round the torus as on a toroidal inductor core: every turn over the outside, "
+        "through the hole and back under, laid on the two Rodin windings, in 12 sections 30° apart (arc ≤ 29°, "
+        "0.5 mm copper, up to 6 layers; a 29° section holds 39 turns). Each turn's mutual to every Rodin segment is "
+        "tabulated over 30° and carried round by the windings' 30° symmetry (pass q of A → q + 5, of B → q + 7). "
+        "Checks: interpolation 1.6×10<super>−4</super>; a uniform 114-turn toroid 158.59 vs the current sheet "
+        "158.76 µH; rings vs an explicit helix with its return lead, mutuals 0.25 %, self 3 %.")
+    r.p("A toroidal turn collects only the toroidal flux of the through-the-hole parts. Under sine/cosine the two "
+        "windings' parts are a quarter cycle apart, so a turn sees √(A² + B²) in either sense (11.10 mV per turn at "
+        "1 kHz); driven in phase in the toroidal sense they add, A + B (15.65 mV). Round the torus the EMF varies by "
+        "3–4 % (m = 12) below the self-resonance, so where the sections sit hardly matters (0.16 % in load power).")
+    r.table([
+        ["", "sine on A, cosine on B", "drive phase evolved too"],
+        ["frequency, phase of B, sense", "1,575 Hz, +90°, dipole", "1,557 Hz, 356.4° (in phase), toroidal"],
+        ["winding", "12 × 39 turns, arc 28.2°, series, one bridge", "12 × 39 turns, arc 29°, series, one bridge"],
+        ["L, R of the whole winding", "2,974 µH, 6.15 Ω", "2,973 µH, 6.15 Ω"],
+        ["AC: sources = load + copper + source R", "2.334 = 0.297 + 1.156 + 0.881 W", "1.462 = 0.570 + 0.562 + 0.331 W"],
+        ["AC efficiency", "0.127", "0.390"],
+        ["bank (kronspice, 4,700 µF, ~255 ms)", "4.300 V, 43.45 mJ", "6.097 V, 87.37 mJ"],
+        ["charging efficiency", "0.0723", "0.2262"],
+        ["ledger integration mismatch", "142 µJ (2.2×10<super>−4</super>)", "154 µJ (3.7×10<super>−4</super>)"],
+    ], [0.34, 0.33, 0.33])
+    r.p("The search fills every section with as many turns as fit and puts them in series into one bridge; separate "
+        "or parallel bridges lose 4–50×, alternating sections cancel. Under sine/cosine the toroidal winding takes "
+        "more power than Part 3's best outside coil (0.297 vs 0.252 W) at a third of its efficiency; left free to "
+        "choose, the search drives the two windings in phase in the toroidal sense, where the same winding takes "
+        "0.570 W at 0.390 and banks 7× the coaxial coil's energy. A toroidal winding cannot use the rotation of "
+        "the field vector that sine and cosine produce; it uses only the toroidal flux.")
+    r.figure(fig("toroidal.png"),
+             "Figure 7. Part 3t: (a) the 12 sections on the pair, (b) a cross-section, (c) the EMF of one turn against "
+             "angle at 1 kHz for every drive, (d) its (frequency, angle) map, (e) bank charging, (f) the searches.",
+             max_height_mm=120)
+
     r.h1("Status of H43")
     r.table([
         ["claim", "what the runs show", "standard prediction"],
@@ -254,7 +289,7 @@ def build(out):
          "two Biot–Savart fields a quarter cycle apart"],
         ["the field accumulates", "only by resonance, Q 76.4 vs 77.3, paid by the source; a tuned pair locks in phase",
          "a series RLC tank"],
-        ["over-unity", "every ledger closes; the bank holds 0.18–0.32 of the source energy", "transformer: output ≤ input"],
+        ["over-unity", "every ledger closes; the bank holds 0.07–0.32 of the source energy (toroidal winding 0.07 under sine/cosine, 0.23 in phase)", "transformer: output ≤ input"],
         ["the (5, 12) path is special", "it sets L, k and frequencies; 720° modes for (5, 12) and (2, 1) alike",
          "a property of the connection"],
         ["vortex-based mathematics", "no equation given", "—"],
@@ -275,6 +310,8 @@ def build(out):
         "Searches on 2 sections per circuit with a resistive load and a smooth bridge factor; the kronspice "
         "transient replaces them with real diodes.",
         "Radiation estimated (small loop), not modelled.",
+        "Toroidal output winding: turns as circles at their azimuths, layers at their mean radius, leads twisted; "
+        "no winding capacitance of the output winding.",
     ])
 
     r.h1("Run it")
