@@ -416,7 +416,49 @@ aperture at 29 kHz, charge a capacitor bank through Schottky bridges with
 18–32 % of the source energy, and the ledger closes to the integration
 error. Status: *bounded*: a coupled-inductor pair, output ≤ input.
 
-## 10.12 The bounds recorded so far
+## 10.12 Nachamkin's force-free plasmoids: harmonics and size (H26)
+
+Nachamkin's 1992 report (PL-TR-92-3044) proposes ball lightning as a
+plasma sphere holding a standing wave whose E and H are parallel
+everywhere. [plasmoid_rings](../examples/plasmoid_rings) checked his field
+and his worked example; [Force-Free_Harmonic_Plasmoids](../examples/Force-Free_Harmonic_Plasmoids)
+studies the paper as written, for every size and energy reported for ball
+lightning (diameter 10–50 cm, mean 24 cm; lifetime 2–5 s, mean about
+10 s).
+
+His resonance condition, j1(αR) = j1(kR) = 0 with k > α, allows each size
+a comb of frequencies f_n = x_n·c/2πR, and his charge condition (eq. 49)
+is the cold-plasma dispersion relation; a kronspice plasma-loaded line
+resonates at it to the lattice error. His Appendix B has an arithmetic
+slip: E0 = 3.566×10⁹ V/m follows from ∫|M|²dV = 35.87/α², while his own
+B3, confirmed numerically, is 35.87/α³, so the field should be √α = 6.7
+times larger. With his recipe the electrons move at v/c = ξ·kR, between
+1.4 and 12 c over the whole reported range. Keeping them below 0.1 c moves
+the plasmoid into the terahertz.
+
+Free, it radiates. Its two halves (the TE and TM l = 1 modes, whose
+spectrum kronspice returns to 10⁻¹⁵ in frequency and 2×10⁻⁶ in Q) lose
+their energy in τ_TE = R(kR)²/(2c·x1²), a closed form checked against the
+root finder. Lasting the seconds that ball lightning lasts sets kR,
+independent of the energy, and with it the electron density: 7–74 times
+sea-level molecular density for a 12 cm radius, where fully stripped air
+holds only 14.5. Status unchanged: *untested* as ball lightning, its
+equations sound, its example and its free lifetime bounded.
+
+The standard counterpart stores the energy in chemistry instead.
+[silicon_ball_lightning](../examples/silicon_ball_lightning) tests
+Abrahamson and Dinniss's model, in which lightning reduces soil silica to
+silicon nanoparticles that burn slowly in air, against the first spectrum
+of a natural ball (Cen, Yuan and Xue 2014: silicon, iron and calcium
+lines for 1.64 s). Thirty-one milligrams of silicon hold the 1 kJ of an
+average ball; Deal-Grove kinetics burn 10 nm particles in seconds only at
+about 2000-3000 K, which the laboratory estimate of 3140 K supports. A
+welding arc at the laboratory operating point (kronspice: 120 A, 23 V,
+2.5 kW) makes enough vapor for seconds of glow, and the 35 kV line beside
+the Qinghai ball can flicker it at 100 Hz but delivers microwatts, not the
+100 W it shines.
+
+## 10.13 The bounds recorded so far
 
 | Entry | What was computed | Standard reading | Status |
 |---|---|---|---|
@@ -433,6 +475,7 @@ error. Status: *bounded*: a coupled-inductor pair, output ≤ input.
 | H37, [magnetostrictive_transformer](../examples/magnetostrictive_transformer) | drive × sound products up to 2.9 mA, sound × sound 100× weaker; reciprocal to 2e-10 at small drive, not at full drive | magnetoelastic nonlinearity of the core | bounded |
 | H38, [al_cell_pump](../examples/al_cell_pump) | evolved η 0.857 at −321 V (0.869 for one rod in an iron cup); coil and oxide film the losses; Si still better | e·|V| per electron is the floor | bounded |
 | H43, [rodin_resonance](../examples/rodin_resonance) | sin/cos drive turns the field vector, the pattern stands still; 0.44–0.45 W passed between the sources through M; Q-limited build-up; output coils charge a bank with 18–32 % of the input | coupled inductors / transformer; near 2 MHz a line on a (5, 12) knot | bounded |
+| H26, [Force-Free_Harmonic_Plasmoids](../examples/Force-Free_Harmonic_Plasmoids) | comb f_n = x_n·c/2πR; electrons at 1.4–12 c by his recipe; free lifetime τ_TE = R(kR)²/2c·x1²; seconds need 7–74 × sea-level density at 12 cm | cold-plasma standing wave; leaky sphere modes | untested; example and lifetime bounded |
 
 In every case the engine found the energy, and in every case it was
 already on the books: shaft work in H15, the pump in H16, the loaded EMF
@@ -443,7 +486,7 @@ between SU(3) and U(1), with no circuit quantity on the non-abelian side. None o
 a statement of what the published equations or numbers contain, with the
 measurement that would change the status written next to it.
 
-## 10.13 What to keep
+## 10.14 What to keep
 
 - A register entry is a model, a standard twin, an evidence criterion and
   a status, and it stays after a null result with its bound.
@@ -457,6 +500,7 @@ measurement that would change the status written next to it.
 ## Run it yourself
 
 ```
+go run ./examples/Force-Free_Harmonic_Plasmoids   # about five seconds
 go run ./examples/eckardt_homopolar
 go run ./examples/parametric_lcr
 go run ./examples/space_power_generator

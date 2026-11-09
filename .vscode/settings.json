@@ -1,0 +1,7 @@
+{
+  // examples/AIAS is a separate, git-ignored repository. Keep VS Code's
+  // Source Control on the kronspice repository only, so its decorations
+  // match `git status`.
+  "git.ignoredRepositories": ["examples/AIAS"],
+  "git.repositoryScanIgnoredFolders": ["node_modules", "examples/AIAS"]
+}

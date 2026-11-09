@@ -21,6 +21,10 @@ program writes to viz/:
                 Rodin (5, 12) and the (2, 1) windings, coloured by trip parity
   bank.png      the winner's bank voltage and energy against time, and the GA
                 history
+  toroidal.png  Part 3t: the 12-section toroidal output winding on the pair
+                (top view and cross-section), the EMF of one turn round the
+                tube against angle and against (frequency, angle), and the
+                winners' bank charging and GA histories
 
 Sequential maps use one hue (light to dark); categorical lines use the
 reference palette's fixed order (dataviz skill).
@@ -54,14 +58,46 @@ def have(name):
     return os.path.exists(os.path.join(HERE, name))
 
 
+def tor_sections():
+    """The Part 3t winding (the in-phase winner if present, else the sin/cos one)."""
+    for tag in ("_phase", ""):
+        if have(f"tor_sections{tag}.csv"):
+            return rows(f"tor_sections{tag}.csv")
+    return []
+
+
+def draw_tor3d(ax, P, sec, every=1):
+    """The pair and the toroidal output winding in 3-D: every turn a circle round
+    the tube in its meridian plane, through the hole and over the outside."""
+    ax.plot(*(P["A"].T * 100), color=SER[0], lw=0.8)
+    ax.plot(*(P["B"].T * 100), color=SER[1], lw=0.8)
+    u = np.linspace(0, 2 * np.pi, 48)
+    for x in sec:
+        c, arc, a = np.radians(float(x["centre_deg"])), np.radians(float(x["arc_deg"])), float(x["radius"])
+        n = int(x["turns"])
+        col = SER[2] if float(x["sign"]) > 0 else SER[4]
+        for j in range(0, n, every):
+            ph = c - arc / 2 + arc * (j + 0.5) / n
+            r = R0 + a * np.cos(u)
+            ax.plot(r * np.cos(ph) * 100, r * np.sin(ph) * 100, a * np.sin(u) * 100, color=col, lw=0.5, alpha=0.8)
+    ax.view_init(elev=32, azim=-62)
+    try:
+        ax.set_box_aspect((1, 1, 0.45), zoom=1.35)
+    except TypeError:  # matplotlib < 3.6
+        ax.set_box_aspect((1, 1, 0.45))
+    ax.set_axis_off()
+
+
 def geometry():
     r = rows("paths.csv")
     P = {}
     for x in r:
         P.setdefault(x["winding"], []).append((float(x["x"]), float(x["y"]), float(x["z"])))
     P = {k: np.array(v) for k, v in P.items()}
-    fig = plt.figure(figsize=(9, 3.4))
-    ax = fig.add_subplot(1, 3, 1)
+    sec = tor_sections()
+    ncol = 4 if sec else 3
+    fig = plt.figure(figsize=(3 * ncol, 3.4))
+    ax = fig.add_subplot(1, ncol, 1)
     th = np.linspace(0, 2 * np.pi, 200)
     for rr in (R0 - A0, R0 + A0):
         ax.plot(rr * np.cos(th) * 100, rr * np.sin(th) * 100, color=GRID, lw=1)
@@ -83,25 +119,29 @@ def geometry():
             x = rho * np.cos(t) + u * np.cos(t) - w * np.sin(t)
             y = rho * np.sin(t) + u * np.sin(t) + w * np.cos(t)
             ax.plot(x * 100, y * 100, color=col, lw=1.2)
-        ax.plot([], [], color=col, label=f"output coil(s), {lab}")
+        ax.plot([], [], color=col, label=f"Part 3 output coil(s), {lab}")
     ax.set_aspect("equal")
     ax.set_title("Rodin pair, top view: the {12/5} star")
     ax.set_xlabel("x [cm]")
     ax.set_ylabel("y [cm]")
     ax.legend(fontsize=6, loc="upper center", bbox_to_anchor=(0.5, -0.18), ncol=2, frameon=False)
-    ax = fig.add_subplot(1, 3, 2, projection="3d")
+    ax = fig.add_subplot(1, ncol, 2, projection="3d")
     ax.plot(*(P["A"].T * 100), color=SER[0], lw=0.8)
     ax.plot(*(P["B"].T * 100), color=SER[1], lw=0.8)
     ax.view_init(elev=35, azim=-60)
     ax.set_title("3-D: 5 times round, 12 times through")
     ax.set_box_aspect((1, 1, 0.45))
     ax.set_axis_off()
-    ax = fig.add_subplot(1, 3, 3, projection="3d")
+    ax = fig.add_subplot(1, ncol, 3, projection="3d")
     ax.plot(*(P["K21A"].T * 100), color=SER[6], lw=1)
     ax.view_init(elev=35, azim=-60)
     ax.set_title("(2, 1) winding (photon_electron's class)")
     ax.set_box_aspect((1, 1, 0.45))
     ax.set_axis_off()
+    if sec:
+        ax = fig.add_subplot(1, ncol, 4, projection="3d")
+        draw_tor3d(ax, P, sec, every=4)
+        ax.set_title(f"Part 3t: toroidal output winding\n12 sections × {sec[0]['turns']} turns (every 4th drawn)")
     fig.tight_layout()
     fig.savefig(os.path.join(HERE, "geometry.png"))
     plt.close(fig)
@@ -330,6 +370,93 @@ def bank():
     plt.close(fig)
 
 
+def toroidal():
+    if not have("tor_turn_emf.csv"):
+        return
+    fig = plt.figure(figsize=(9.5, 6.2))
+    # (a) 3-D: the pair and the 12 sections, every turn through the hole
+    ax = fig.add_subplot(2, 3, 1, projection="3d")
+    P = {}
+    for x in rows("paths.csv"):
+        P.setdefault(x["winding"], []).append((float(x["x"]), float(x["y"]), float(x["z"])))
+    P = {k: np.array(v) for k, v in P.items()}
+    sec = rows("tor_sections.csv") if have("tor_sections.csv") else []
+    draw_tor3d(ax, P, sec, every=4)
+    ax.set_title("(a) 12 toroidal sections (green) wound\nround the tube over the pair (every 4th turn drawn)", fontsize=7)
+    # (b) cross-section through one section: tube, bundles shell, turn
+    ax = fig.add_subplot(2, 3, 2)
+    for x in sec[:1]:
+        a = float(x["radius"])
+        u = np.linspace(0, 2 * np.pi, 200)
+        for rr, col, lw, lab in ((A0, GRID, 1.5, "former"), (a, SER[2], 1.5, "output turn (round the tube)")):
+            ax.plot((R0 + rr * np.cos(u)) * 100, rr * np.sin(u) * 100, color=col, lw=lw, label=lab)
+            ax.plot((-R0 + rr * np.cos(u)) * 100, rr * np.sin(u) * 100, color=col, lw=lw)
+        ax.axvline(0, color=INK2, lw=0.5, ls=":")
+    for k, col in (("A", SER[0]), ("B", SER[1])):
+        a3 = np.array(P[k])
+        rho = np.hypot(a3[:, 0], a3[:, 1])
+        sel = np.abs(np.arctan2(a3[:, 1], a3[:, 0])) < np.radians(4)
+        ax.scatter(rho[sel] * 100, a3[sel, 2] * 100, s=4, color=col, label=f"winding {k} near 0°")
+    ax.set_aspect("equal")
+    ax.set_xlabel("ρ [cm] (meridian plane)")
+    ax.set_ylabel("z [cm]")
+    ax.set_ylim(-4.2, 2.8)
+    ax.set_title("(b) cross-section: each turn goes through the hole", fontsize=7)
+    ax.legend(fontsize=5.5, frameon=False, loc="lower center", ncol=2)
+    # (c) EMF of one turn vs angle, 1 kHz
+    ax = fig.add_subplot(2, 3, 3)
+    r = rows("tor_turn_emf.csv")
+    phi = np.array([float(x["phi_deg"]) for x in r])
+    for key, col, lab in (("tor_sincos_amp", SER[0], "toroidal sense, sin/cos"), ("tor_inphase_amp", SER[0], "toroidal sense, in phase"),
+                          ("dip_sincos_amp", SER[1], "dipole sense, sin/cos"), ("dip_inphase_amp", SER[1], "dipole sense, in phase"),
+                          ("tor_A_amp", SER[3], "A alone"), ("tor_B_amp", SER[2], "B alone")):
+        ls = "--" if "inphase" in key else "-"
+        ax.plot(phi, np.array([float(x[key]) for x in r]) * 1e3, color=col, ls=ls, lw=1.1, label=lab)
+    for k in range(13):
+        ax.axvline(30 * k, color=GRID, lw=0.5)
+    ax.set_xlim(0, 360)
+    ax.set_xticks(range(0, 361, 60))
+    ax.set_xlabel("azimuth of the turn [°] (poles at 0°, 30° …)")
+    ax.set_ylabel("|EMF| per turn [mV]")
+    ax.set_ylim(0, 23)
+    ax.set_title("(c) one turn round the tube, 1 kHz", fontsize=7)
+    ax.legend(fontsize=5.2, frameon=False, ncol=2, loc="upper center")
+    # (d) map
+    ax = fig.add_subplot(2, 3, 4)
+    f, thm, z = readmap("tor_map_toroidal.csv")
+    im = ax.pcolormesh(thm, f, np.log10(np.maximum(z * 1e3, 1e-6)), cmap=SEQ, shading="nearest")
+    ax.set_yscale("log")
+    ax.set_xticks([0, 90, 180, 270, 360])
+    ax.set_xlabel("azimuth of the turn [°]")
+    ax.set_ylabel("drive frequency [Hz]")
+    ax.set_title("(d) log10 |EMF| per turn [mV], toroidal sense, sin/cos", fontsize=7)
+    cb = fig.colorbar(im, ax=ax, fraction=0.05, pad=0.02)
+    cb.ax.tick_params(labelsize=6)
+    # (e) bank, (f) GA
+    axb = fig.add_subplot(2, 3, 5)
+    axg = fig.add_subplot(2, 3, 6)
+    for i, (tag, lab) in enumerate((("", "sin/cos drive"), ("_phase", "drive phase evolved"))):
+        if have(f"tor_bank{tag}.csv"):
+            b = rows(f"tor_bank{tag}.csv")
+            t = np.array([float(x["t"]) for x in b])
+            axb.plot(t * 1e3, [float(x["vbank"]) for x in b], color=SER[i], lw=1.3, label=lab)
+        if have(f"tor_ga_history{tag}.csv"):
+            h = rows(f"tor_ga_history{tag}.csv")
+            axg.plot([int(x["generation"]) for x in h], [10 ** (6 - float(x["best"])) for x in h], color=SER[i], lw=1.3, label=lab)
+    axb.set_xlabel("t [ms]")
+    axb.set_ylabel("bank voltage [V]")
+    axb.set_title("(e) bank charging (kronspice transient)", fontsize=7)
+    axb.legend(fontsize=6, frameon=False)
+    axg.set_yscale("log")
+    axg.set_xlabel("generation")
+    axg.set_ylabel("P_load × bridge factor [W]")
+    axg.set_title("(f) genetic searches, best so far", fontsize=7)
+    axg.legend(fontsize=6, frameon=False)
+    fig.tight_layout()
+    fig.savefig(os.path.join(HERE, "toroidal.png"))
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     geometry()
     fields()
@@ -338,4 +465,5 @@ if __name__ == "__main__":
         maps()
     modes()
     bank()
+    toroidal()
     print("figures written to", HERE)

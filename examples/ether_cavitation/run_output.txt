@@ -1,0 +1,44 @@
+ether_cavitation, step 1 (κ2 = 1, λ = 1: lengths in ξ, energies in κ2 units)
+
+== 1. Surface tension of the ether (1-D walls) ==
+  h = 0.100 ξ:  Q cavity wall σ = 0.6666111 (exact 2/3 = 0.6666667, rel -8.3e-05, profile 1.4e-04) | S coexistence σ = 0.4998957 (exact 1/2, rel -2.1e-04, profile 2.7e-04, centre 2.5e+00 ξ)
+  h = 0.050 ξ:  Q cavity wall σ = 0.6666528 (exact 2/3 = 0.6666667, rel -2.1e-05, profile 3.5e-05) | S coexistence σ = 0.4999740 (exact 1/2, rel -5.2e-05, profile 6.9e-05, centre 2.5e+00 ξ)
+  h = 0.025 ξ:  Q cavity wall σ = 0.6666632 (exact 2/3 = 0.6666667, rel -5.2e-06, profile 8.8e-06) | S coexistence σ = 0.4999935 (exact 1/2, rel -1.3e-05, profile 1.7e-05, centre 2.7e+00 ξ)
+  quadrature check: Q 0.666666666667, S(ε=0) 0.500000000000
+
+== 2. Tension: n twisted at rate k (tensile strength) ==
+  Q: spinodal k_c = 0.408248/ξ (Eckhaus) , max j at k = 0.408248/ξ, exact 1/√6 = 0.408248; j_c = 0.544331 (exact 4/(3√6) = 0.544331), a0² = 0.6667 (2/3)
+  S (sextic): binodal k_B (cavity phase as cheap as the twisted ether) and spinodal k_c
+    ε = 0.01 λ: k_B = 0.1001/ξ (≈ √ε = 0.1000), k_c = 0.5472/ξ (j-max 0.5472), j_c = 0.8620, a0(k_c) = 0.8875
+    ε = 0.05 λ: k_B = 0.2249/ξ (≈ √ε = 0.2236), k_c = 0.5855/ξ (j-max 0.5855), j_c = 0.9181, a0(k_c) = 0.8854
+    ε = 0.10 λ: k_B = 0.3195/ξ (≈ √ε = 0.3162), k_c = 0.6304/ξ (j-max 0.6304), j_c = 0.9839, a0(k_c) = 0.8834
+    ε = 0.20 λ: k_B = 0.4551/ξ (≈ √ε = 0.4472), k_c = 0.7123/ξ (j-max 0.7123), j_c = 1.1041, a0(k_c) = 0.8803
+  Ring relaxation (U(1): n turns in a plane; 400 nodes, h = 0.5 ξ, L = 200 ξ, noise 1e-3, seed 1)
+    Q, winding 12 (k = 0.3770 = 0.92 k_c): winding 12 → 12, min a 0.8451, first a < 0.05 at t = -1, E 24.326 → 24.325, ledger 9.0e-05
+    Q, winding 14 (k = 0.4398 = 1.08 k_c): winding 14 → 6, min a 0.0082, first a < 0.05 at t = 429, E 31.110 → 6.849, ledger 1.0e-04
+  Ring relaxation (S²: n free to leave the plane, as Faddeev's ether)
+    Q, winding 6: winding 6 → 0, min a 0.9629, E 6.850 → 0.000, ledger 5.8e-04
+    Q, winding 14: winding 14 → 0, min a 0.7821, E 31.111 → 0.000, ledger 1.3e-04
+
+== 3. Reversal squeezed into a slab (n: +n̂ → −n̂ over L) ==
+  Q         L_c (cavity sheet unstable above) = 4.9337 ξ, L_t (bending ether tears below) = 4.9337 ξ; at L_t: E_turned 1.6303, E_straight 1.6303
+  S ε=0.05  L_c (cavity sheet unstable above) = > 30 ξ (search limit), L_t (bending ether tears below) = 5.0786 ξ; at L_t: E_turned 2.0674, E_straight 1.2729
+  S ε=0.20  L_c (cavity sheet unstable above) = 12.6490 ξ, L_t (bending ether tears below) = 4.1231 ξ; at L_t: E_turned 2.5477, E_straight 1.8618
+  S ε=0.50  L_c (cavity sheet unstable above) = 6.3256 ξ, L_t (bending ether tears below) = 3.1579 ξ; at L_t: E_turned 3.3244, E_straight 2.6866
+
+== 4. Critical cavity bubble in 3-D (sextic ether) ==
+  ether metastable (ε < 0), no twist: against thin wall R* = 2σ/Δ, E* = 16πσ³/3Δ²
+    ε = -0.10: R* =    9.432 ξ (thin wall   10.000, ratio 0.9432), E* =    145.929 (thin wall    209.440, ratio 0.6968), negative modes 1
+    ε = -0.05: R* =   19.468 ξ (thin wall   20.000, ratio 0.9734), E* =    711.450 (thin wall    837.758, ratio 0.8492), negative modes 1
+    ε = -0.02: R* =   49.486 ξ (thin wall   50.000, ratio 0.9897), E* =   4920.596 (thin wall   5235.988, ratio 0.9398), negative modes 1
+    ε = -0.01: R* =   99.489 ξ (thin wall  100.000, ratio 0.9949), E* =  20312.035 (thin wall  20943.951, ratio 0.9698), negative modes 1
+  ether stable (ε = 0.05 λ) under twist k (local approximation): binodal → spinodal
+    k = 0.2970/ξ (20 % of the way): a0 = 0.9794, Δ = 0.03645, R* =  26.952 ξ, E* =  1413.448 (thin wall  1589.083), negative modes 1
+    k = 0.3691/ξ (40 % of the way): a0 = 0.9668, Δ = 0.08195, R* =  11.639 ξ, E* =   236.394 (thin wall   311.914), negative modes 1
+    k = 0.4413/ξ (60 % of the way): a0 = 0.9494, Δ = 0.13563, R* =   6.724 ξ, E* =    67.123 (thin wall   109.049), negative modes 1
+    k = 0.5134/ξ (80 % of the way): a0 = 0.9249, Δ = 0.19617, R* =   4.320 ξ, E* =    21.312 (thin wall    45.579), negative modes 1
+    k = 0.5675/ξ (95 % of the way): a0 = 0.8978, Δ = 0.24481, R* =   3.121 ξ, E* =     7.868 (thin wall    22.885), negative modes 1
+
+== 5. Kron twin: the ladder as a kronspice circuit (OP) ==
+  Q cavity wall (201 nodes): max |V − a| = 1.1e-07, σ circuit 0.6666111 vs Go 0.6666111, ledger 0.0e+00, model-supplied 6.667e-01 W
+  S critical bubble ε = −0.1 (336 nodes, a saddle): max |V − a| = 7.0e-06, E* circuit 145.87280 vs Go 145.87280, ledger 0.0e+00, model-supplied 5.086e+01 W

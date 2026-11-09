@@ -1,0 +1,161 @@
+1. Calibration on Xue et al. 2024 (rotor Ø 80 mm, 20 grooves 6 mm wide; 1 atm at the rotor declared)
+   surface speed: 12.57 m/s none, 14.24 m/s cavitating, 15.92 m/s best
+   inception σ between 0.968 and 1.243 (σ_i = 1.105 taken); best σ = 0.775
+   pulsation St = fW/U = 0.446; dominant f / groove passing = 0.935
+   resonance rule on Xue's rotor: N = 18.7 (built 20)
+   vapour law g(σ) = x·e^(1−x), x = (σ_i − σ)/Δ; Δ = 0.272 fitted so Xue's collapse rate peaks at 3800 rpm
+
+2. Sizing a drum from the calibration (outlet 1 atm, water at 300 K)
+   drum R 40 mm: cavitation from 3181 rpm (U 13.3 m/s), strongest pulsation at 3800 rpm (U 15.9 m/s); resonance rule for Ø 10 mm dimples: 11 per row
+   drum R 50 mm: cavitation from 2545 rpm (U 13.3 m/s), strongest pulsation at 3040 rpm (U 15.9 m/s); resonance rule for Ø 10 mm dimples: 14 per row
+   drum R 84 mm: cavitation from 1515 rpm (U 13.3 m/s), strongest pulsation at 1810 rpm (U 15.9 m/s); resonance rule for Ø 10 mm dimples: 24 per row
+   every dimple on a drum runs at the same speed and σ, so one speed suits them all
+
+3. Reference drums: R 50 mm, 10 rows of Ø 10 mm hemispheres, rotor pitch 1.5 W, housing pitch 2.2 W, gap 1.5 mm, 3050 rpm
+   U 15.97 m/s, p 101.3 kPa, σ 0.770, g(σ) 0.98, 680 cavities
+   shaft 13682 W = friction 134 W + cavity drag 13548 W; collapse energy 2114 W of the drag → η = 0.1545
+   kronspice shaft circuit: source gives 13681.74 W against the model's 13681.74 W, ledger residual 0.0e+00 (err <nil>)
+   same with a plain housing: η = 0.1102 (collapse 895 W of 8120 W)
+
+4. NSGA-II over the dimple drums (population 80, 80 generations), shaft ≤ 3 kW
+   6 feasible designs on the front; by efficiency:
+        η     collapse W   shaft W     σ
+    0.1891        217       1148   0.886   R 38.9 mm, 2 row(s), Ø 6.1 mm, depth 0.50 W, 20 per row (pitch 1.96 W), housing pitch 2.31 W, gap 0.80 mm, 3932 rpm, outlet 1.17 bar
+    0.1891        447       2362   0.886   R 67.5 mm, 2 row(s), Ø 5.8 mm, depth 0.50 W, 25 per row (pitch 2.93 W), housing pitch 1.20 W, gap 0.80 mm, 2273 rpm, outlet 1.17 bar
+    0.1887        555       2943   0.882   R 83.8 mm, 2 row(s), Ø 5.3 mm, depth 0.50 W, 49 per row (pitch 2.00 W), housing pitch 1.30 W, gap 0.80 mm, 1838 rpm, outlet 1.18 bar
+    0.1887        563       2983   0.881   R 83.3 mm, 2 row(s), Ø 5.9 mm, depth 0.50 W, 30 per row (pitch 2.87 W), housing pitch 1.20 W, gap 0.80 mm, 1840 rpm, outlet 1.17 bar
+    0.1886        565       2996   0.889   R 83.7 mm, 2 row(s), Ø 5.9 mm, depth 0.50 W, 30 per row (pitch 2.92 W), housing pitch 1.20 W, gap 0.80 mm, 1825 rpm, outlet 1.17 bar
+    0.1886        565       2998   0.881   R 84.3 mm, 2 row(s), Ø 6.0 mm, depth 0.50 W, 26 per row (pitch 3.33 W), housing pitch 1.20 W, gap 0.80 mm, 1828 rpm, outlet 1.18 bar
+   the front is flat in η (0.1886–0.1891), so the drums can be sized to the load; heater design (most collapse power within 0.5 % of the best η):
+   R 84.3 mm, 2 row(s), Ø 6.0 mm, depth 0.50 W, 26 per row (pitch 3.33 W), housing pitch 1.20 W, gap 0.80 mm, 1828 rpm, outlet 1.18 bar
+   heater design: kronspice shaft circuit 2997.84 W (model 2997.84 W), ledger residual 0.0e+00
+   The same search with the declared constants changed (population 60, 60 generations):
+   Cd 0.10              η 0.4657  R 34.1 mm, 2 row(s), Ø 25.0 mm, depth 0.50 W, 7 per row (pitch 1.22 W), housing pitch 11.45 W, gap 0.80 mm, 5382 rpm, outlet 1.66 bar
+   Cd 0.40              η 0.1195  R 42.9 mm, 1 row(s), Ø 9.0 mm, depth 0.50 W, 25 per row (pitch 1.20 W), housing pitch 1.88 W, gap 0.80 mm, 3998 rpm, outlet 1.44 bar
+   Cpulse 0.15          η 0.1593  R 53.5 mm, 2 row(s), Ø 9.0 mm, depth 0.50 W, 20 per row (pitch 1.79 W), housing pitch 1.20 W, gap 0.80 mm, 2717 rpm, outlet 1.05 bar
+   Cpulse 0.50          η 0.2300  R 91.0 mm, 4 row(s), Ø 3.0 mm, depth 0.50 W, 137 per row (pitch 1.38 W), housing pitch 2.54 W, gap 0.80 mm, 1614 rpm, outlet 1.07 bar
+   κ_v 0.10             η 0.0937  R 37.2 mm, 2 row(s), Ø 3.0 mm, depth 0.50 W, 27 per row (pitch 2.87 W), housing pitch 1.58 W, gap 0.80 mm, 6353 rpm, outlet 2.77 bar
+   St only 0.446 (Xue)  η 0.3052  R 51.8 mm, 2 row(s), Ø 8.7 mm, depth 0.50 W, 30 per row (pitch 1.22 W), housing pitch 1.20 W, gap 0.80 mm, 2739 rpm, outlet 1.00 bar
+
+5. The gap as an acoustic ring (kronspice AC): best design, R 84.3 mm, gap 0.80 mm, band 19.2 mm
+   clear water: modes 1–3 at 2836, 5672, 8506 Hz (lattice exact 2836, 5672, 8506; m·c/2πR = 2836, 5673, 8509)
+   rotor pattern: 26 cavities per ring → passing 792 Hz; mode 26 in clear water is at 73747 Hz (×93)
+   the pattern meets mode 26 only if the mixture's sound speed falls to U = 16.1 m/s; Wood's minimum at 118 kPa is 21.7 m/s, so it never does here
+
+6. One cavity's collapse: vapour 11.1 mm³ (sphere R0 1.38 mm) under 170.9 kPa (local 114.1 + housing pulse 56.7)
+   empty cavity, no viscosity: collapse 96.66 µs against Rayleigh 0.915·R0·√(ρ/Δp) = 96.69 µs
+   with gas (1e-3 of Δp at R0, declared), surface tension, viscosity: collapse 96.74 µs to R_min 9.4 µm, gas peak 2.2e+11 Pa
+   (incompressible Rayleigh–Plesset: the final peaks are overstated; liquid compressibility, as in Keller–Miksis, limits them)
+   energy: (p∞ − p_v)·V0 = 0.0019 J; peak liquid kinetic energy 0.00185 J; ledger residual 2.1e-06
+   radiated peak at the axis (distance R = 84.3 mm) from one collapse: 2.45e+07 Pa
+   rotor 26 and housing 73 cavities per ring line up 1 at a time → 1 collapses together: focal peak ≤ 2.45e+07 Pa
+   with housing count = rotor count (26), all 26 collapse together: focal peak ≤ 6.38e+08 Pa (×26), the energy still only the 26 collapses'
+   the focal values are upper bounds: linear superposition of incompressible near fields, at amplitudes where neither holds
+   the axis of a solid drum is metal: the focused pulse goes into the rotor, not the water, unless the drum is hollow with a water core
+
+7. Energy books for the heater design (declared: motor 0.90, pump 0.70, Tesla turbine 0.30)
+   drive                    electric W  shaft W  heat to water W  heat to room W  collapse W  collapse/J   steam kg/h  L/min +45 K  heat pump (COP 3.5) W
+   motor on the shaft            3331     2998             2998             333         565      0.1697        4.13         0.95       11658
+   pump + Tesla turbine         14275     2998            12848            1428         565      0.0396       17.70         4.09       49964
+   all heat ≤ the electricity; the turbine drive costs cavitation per joule but its losses still warm the water
+
+8. The Mandelbulb challenger (H46, proposed): polar convention, MaxIt 10, detail ≥ 0.3 mm, rings within ±0.5 rad
+   tips round the equator within 1 % of the outer radius (n − 1 main lobes, plus smaller bulbs reaching as far), polar / latitude:
+   n=3: 4/4 n=4: 6/3 n=6: 15/5 n=8: 7/7 n=12: 11/21 n=16: 15/45
+   n = 8 bulb ring on the heater design (same R, gap, speed, pressure, housing): 160 cavities, η = 0.0985 (dimples 0.1886), shaft 4671 W
+   NSGA-II over n and the machine (60 × 60): best η 0.1868, collapse 385 W, shaft 2063 W: n 14, R 30.8 mm, 1 ring(s), housing pitch 1.20 × 10 mm, gap 0.80 mm, 6737 rpm, outlet 2.11 bar
+   best η for each n (n fixed, NSGA-II 50 × 50 each):
+     n  3  η 0.1654  (104 cavities)
+     n  4  η 0.1769  (170 cavities)
+     n  5  η 0.1705  (144 cavities)
+     n  6  η 0.1666  (80 cavities)
+     n  7  η 0.1713  (282 cavities)
+     n  8  η 0.1719  (44 cavities)
+     n  9  η 0.1727  (288 cavities)
+     n 10  η 0.1814  (86 cavities)
+     n 11  η 0.1578  (72 cavities)
+     n 12  η 0.1761  (124 cavities)
+     n 13  η 0.1803  (252 cavities)
+     n 14  η 0.1864  (106 cavities)
+     n 15  η 0.1730  (264 cavities)
+     n 16  η 0.1737  (124 cavities)
+   best n: 14
+   the winning bulb with its fine detail removed (MaxIt 3): η 0.1905 against 0.1868 with detail (MaxIt 10)
+
+9. Summary (cavitation per joule of shaft work; declared constants in CLAUDE.md, ranges in part 4)
+   heater dimple drums: η 0.1886, collapse 565 W of 2998 W shaft — R 84.3 mm, 2 row(s), Ø 6.0 mm, depth 0.50 W, 26 per row (pitch 3.33 W), housing pitch 1.20 W, gap 0.80 mm, 1828 rpm, outlet 1.18 bar
+   control, same drums with a plain housing: η 0.1168
+   best Mandelbulb drums: η 0.1868 — n 14, R 30.8 mm, 1 ring(s), housing pitch 1.20 × 10 mm, gap 0.80 mm, 6737 rpm, outlet 2.11 bar
+   reference drums of part 3: η 0.1545 at 13682 W shaft (over the 3 kW limit)
+10. Closed steam loop (user's layout): drums → steam → Tesla turbine on the shaft → condenser (home heat) → pump back
+   declared: turbine isentropic efficiency 0.30, condenser 0.2 bar (60 °C), motor 0.90, pump 0.70; 3 kW of shaft work in the drums
+   η against water temperature, heater drums at the speed best for 60 °C water at each pressure:
+     drum 1.18 bar,  1700 rpm:   25°C 0.127  60°C 0.188  80°C 0.129 100°C 0.024 110°C boils 120°C boils 130°C boils
+     drum 1.50 bar,  2000 rpm:   25°C 0.178  60°C 0.186  80°C 0.139 100°C 0.047 110°C 0.015 120°C boils 130°C boils
+     drum 3.00 bar,  2900 rpm:   25°C 0.187  60°C 0.188  80°C 0.173 100°C 0.122 110°C 0.084 120°C 0.047 130°C 0.019
+   Carnot limit between 111 °C and 60 °C: 0.133 of the heat can become work
+   cycle                                         steam kg/h  turbine W  motor shaft W  electric W  home heat W  room W  collapse W  η loop  collapse/elec J  rpm
+   A: boil in the drums at 1.50 bar                   4.42        115           2885        3206         2885     321          33   0.011            0.010  1800
+     books: electricity − (home + room) = 0.0e+00 W; kronspice shaft circuit: motor 2884.9 W, ledger residual 0.0e+00 (err <nil>)
+     sensible (subcooled) share of the heat 0.09, η on it 0.123
+   B: subcooled drums at 3.0 bar, flash at 1.01 bar      4.47         93           2907        3239         2914     326         468   0.156            0.144  2300
+     books: electricity − (home + room) = 9.1e-13 W; kronspice shaft circuit: motor 2906.7 W, ledger residual 0.0e+00 (err <nil>)
+     sensible (subcooled) share of the heat 1.00, η on it 0.156
+   the loop cannot run itself: the turbine returns a few per cent of the shaft work; the motor supplies the rest,
+   and the home receives about the electricity, as with no turbine. Boiling in the drums wastes the cavitation:
+   steam that leaves has not collapsed, and p − p_v → 0 as the water nears boiling. Subcooled drums + flash keep it.
+11. Home heating at -10 °F outside, 24/7 (indoor 70 °F, ΔT 44.4 K); loop B, drum speed matched to the demand by a VFD
+   declared: 3000 ft² (279 m²), loads 15/25/40 BTU/h·ft² (replace with Manual J), condenser U 2500 W/m²K,
+   heat-pump COP 1.5 at −10 °F; heater drums of part 4 (R 84.3 mm, Ø 6.0 mm), rows added to carry the load
+   radiant floor 45/35 °C, condenser 0.2 bar (60 °C)
+     house          load kW  BTU/h   shaft kW  rows  drum band  rpm (best)  η path  steam kg/h  electric kW  kWh/day  resist. kWh/day  HP kWh/day  condenser m²  flow L/min  emitters
+     tight new       13.19   45000     13.58     5      48 mm  2237 (2300)   0.159        20.2        14.66      352              317         211          0.27        18.9  floor 152 m² at 29 °C
+       books: electricity 14663 W = home (condenser) 13188 W + basement (motor, pump) 1475 W; residual 0.0e+00 W
+     average         21.98   75000     22.63     8      77 mm  2270 (2300)   0.160        33.7        24.44      587              528         352          0.45        31.5  floor 254 m² at 29 °C
+       books: electricity 24439 W = home (condenser) 21980 W + basement (motor, pump) 2459 W; residual 0.0e+00 W
+     older, leaky    35.17  120000     36.21    12     115 mm  2320 (2300)   0.157        53.9        39.10      938              844         563          0.72        50.4  floor 407 m² at 29 °C (more than the house has)
+       books: electricity 39102 W = home (condenser) 35169 W + basement (motor, pump) 3934 W; residual 7.3e-12 W
+   panel radiators 70/50 °C, condenser 1.01 bar (100 °C)
+     house          load kW  BTU/h   shaft kW  rows  drum band  rpm (best)  η path  steam kg/h  electric kW  kWh/day  resist. kWh/day  HP kWh/day  condenser m²  flow L/min  emitters
+     tight new       13.19   45000     13.25     7      67 mm  1985 (2000)   0.175        21.1        14.67      352              317         211          0.13         9.5  radiators rated 18.3 kW at ΔT50
+       books: electricity 14671 W = home (condenser) 13188 W + basement (motor, pump) 1483 W; residual 1.8e-12 W
+     average         21.98   75000     22.08    12     115 mm  1967 (2000)   0.176        35.1        24.45      587              528         352          0.22        15.8  radiators rated 30.5 kW at ΔT50
+       books: electricity 24451 W = home (condenser) 21980 W + basement (motor, pump) 2471 W; residual 7.3e-12 W
+     older, leaky    35.17  120000     35.34    18     173 mm  2011 (2000)   0.174        56.2        39.12      939              844         563          0.36        25.2  radiators rated 48.8 kW at ΔT50
+       books: electricity 39122 W = home (condenser) 35169 W + basement (motor, pump) 3954 W; residual 0.0e+00 W
+   through the winter (average house, radiators, 12 rows): load ∝ (70 °F − outside)
+     outside °F  load kW  shaft kW   rpm   U m/s   σ      η path   cavitating
+            -20    24.73     24.85   2046   18.1   1.83    0.170   yes (beyond the design: over speed)
+            -10    21.98     22.08   1967   17.4   1.97    0.176   yes
+              0    19.23     19.32   1882   16.6   2.16    0.158   yes
+             10    16.49     16.56   1787   15.8   2.39    0.105   yes
+             20    13.74     13.80   1682   14.8   2.70    0.050   yes
+             30    10.99     11.04   1561   13.8   3.14    0.004   no: below inception speed, cycle on/off at the best speed instead
+             40     8.24      8.28   1418   12.5   3.80    0.000   no: below inception speed, cycle on/off at the best speed instead
+             50     5.50      5.52   1239   10.9   4.98    0.000   no: below inception speed, cycle on/off at the best speed instead
+             60     2.75      2.76    983    8.7   7.91    0.000   no: below inception speed, cycle on/off at the best speed instead
+   dimple size and drum radius against the best speed (one row, loop B heating path 111 → 120 °C at 3 bar):
+     R 84.3 mm, Ø  3.0 mm: best  2000 rpm, rim 17.6 m/s, η 0.163, shaft per row  1040 W
+     R 84.3 mm, Ø  6.0 mm: best  2000 rpm, rim 17.6 m/s, η 0.169, shaft per row  2000 W
+     R 84.3 mm, Ø 10.0 mm: best  2000 rpm, rim 17.6 m/s, η 0.172, shaft per row  3265 W
+     R 84.3 mm, Ø 25.0 mm: best  2000 rpm, rim 17.6 m/s, η 0.174, shaft per row  7854 W
+     R 40.0 mm, Ø  3.0 mm: best  4200 rpm, rim 17.6 m/s, η 0.169, shaft per row   473 W
+     R 40.0 mm, Ø  6.0 mm: best  4200 rpm, rim 17.6 m/s, η 0.172, shaft per row   908 W
+     R 40.0 mm, Ø 10.0 mm: best  4200 rpm, rim 17.6 m/s, η 0.173, shaft per row  1469 W
+     R 40.0 mm, Ø 25.0 mm: best  4200 rpm, rim 17.6 m/s, η 0.175, shaft per row  3712 W
+     the best speed is set by the rim speed (σ = (p − p_v)/½ρU²), not by the hole size; a smaller drum turns faster
+   the Tesla turbine's speed: tip ≈ half the isentropic steam-jet speed (Rice 1965: best near the jet's tangential speed)
+     1.01 → 0.20 bar: Δh_s 251 kJ/kg, jet 708 m/s; tip v/2 at R 84.3 mm needs 40132 rpm (drums best ≈ 2300)
+     1.50 → 1.01 bar: Δh_s  67 kJ/kg, jet 365 m/s; tip v/2 at R 84.3 mm needs 20693 rpm (drums best ≈ 2000)
+     so the turbine on the drums' shaft runs at ~1/10 of its speed; on its own fast shaft (generator back to the motor),
+     the most it can return is its isentropic work (radiators, average house):
+     radiant floor 45/35 °C, condenser 0.2 bar (60 °C)       turbine η 0.30: turbine   704 W, electric  24439 W for  21980 W home heat (home/electric 0.899)
+     radiant floor 45/35 °C, condenser 0.2 bar (60 °C)       turbine η 0.70: turbine  1716 W, electric  24440 W for  21980 W home heat (home/electric 0.899)
+     radiant floor 45/35 °C, condenser 0.2 bar (60 °C)       turbine η 1.00: turbine  2536 W, electric  24440 W for  21980 W home heat (home/electric 0.899)
+     panel radiators 70/50 °C, condenser 1.01 bar (100 °C)   turbine η 0.30: turbine   195 W, electric  24451 W for  21980 W home heat (home/electric 0.899)
+     panel radiators 70/50 °C, condenser 1.01 bar (100 °C)   turbine η 0.70: turbine   461 W, electric  24452 W for  21980 W home heat (home/electric 0.899)
+     panel radiators 70/50 °C, condenser 1.01 bar (100 °C)   turbine η 1.00: turbine   664 W, electric  24452 W for  21980 W home heat (home/electric 0.899)
+   all heat ≤ the electricity (COP 1 with the machine indoors, as a resistance heater); a cold-climate heat pump
+   uses about 1/1.5 of it at −10 °F and less in milder weather. The cavitation does not add heat; it changes where it forms.
+
+(run time 11 s)

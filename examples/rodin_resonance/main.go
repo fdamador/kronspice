@@ -50,7 +50,7 @@ var TableII = [][4]float64{{1.60, 3.90, 4.08, 4.13}, {1.25, 3.01, 3.00, 3.05}, {
 var (
 	short  = flag.Bool("short", false, "coarse grids and a small GA")
 	vizDir = flag.String("viz", filepath.Join("examples", "rodin_resonance", "viz"), "directory for the plot data")
-	part   = flag.String("part", "all", "all, 1, 2, 2b or 3")
+	part   = flag.String("part", "all", "all, 1, 2, 2b, 3 or 3t")
 )
 
 func main() {
@@ -68,11 +68,18 @@ func main() {
 	if *part == "all" || *part == "2" {
 		lowV = part2(m)
 	}
+	if lowV == 0 {
+		// Part 2's drive amplitude: A alone carries 1.25 A peak at 1 kHz
+		lowV = 1.25 * cmplx.Abs(complex(SourceOhms+m.RDC, 2*math.Pi*1e3*m.LA))
+	}
 	if *part == "all" || *part == "2b" {
 		part2b()
 	}
 	if *part == "all" || *part == "3" {
 		part3(m, lowV)
+	}
+	if *part == "all" || *part == "3t" {
+		part3t(m, lowV)
 	}
 	fmt.Printf("\n(run time %.0f s)\n", time.Since(start).Seconds())
 }

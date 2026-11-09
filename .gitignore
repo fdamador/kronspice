@@ -1,6 +1,7 @@
 # Build output
 /kronspice
 /kronspice.exe
+/examples/*/*.exe
 *.test
 *.out
 

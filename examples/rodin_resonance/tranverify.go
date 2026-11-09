@@ -95,6 +95,17 @@ func (m *Model) TranVerify(n *Net, l Layout, withGroups bool, cycles, steps int,
 			}
 		}
 	}
+	return TranGroups(n, f, l.Sense, 0, gs, mg, l.Comb, l.RLoad, cycles, steps, bank)
+}
+
+// TranGroups runs the kronspice transient of a net (its resistances set
+// for f) with prebuilt output groups: their self and mutual inductances
+// mg, mutuals to the net's sections, tuning capacitors, combination and
+// bridges into one bank; phaseB shifts B's source from the cosine. The
+// load resistance only sizes the DC-reference
+// chokes; the load is the bridges and the bank.
+func TranGroups(n *Net, f float64, sense int, phaseB float64, gs []Group, mg [][]float64, comb Combine, rload float64, cycles, steps int, bank float64) (*TranRun, error) {
+	l := Layout{F: f, Sense: sense, Comb: comb, RLoad: rload}
 	nb := len(n.L)
 	nw := nb + len(gs)
 	if nw > circuit.MaxWindings {
@@ -148,6 +159,7 @@ func (m *Model) TranVerify(n *Net, l Layout, withGroups bool, cycles, steps int,
 	}
 	// sources: A = sin, B = cos
 	src := n.DriveSources(l.Sense, Part3Volts)
+	src[1].PhaseDeg += phaseB
 	for i, s := range src {
 		nm := []string{"A", "B"}[i]
 		lo := "s" + strings.ToLower(nm)

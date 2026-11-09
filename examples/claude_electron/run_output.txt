@@ -1,0 +1,61 @@
+== Step 0: standard twin (Dirac, read by Hestenes) ==
+zitter radius ħ/2mc = 193.080 fm (H23's loop radius λ/4π = 193.080 fm: the same)
+zitter frequency 2mc²/ħ = 1.5527e+21 rad/s, speed c
+g: Dirac 2, measured 2.00231930436; classical charge at c on ħ/2mc: g = 1.0000 (μ = μ_B/2)
+g = 2 by classical circulation at c needs radius 386.159 fm = ħ/mc, where an orbiting mass m would carry ħ, not ħ/2
+
+== Step 1: confinement (h = 0.10 ℓ) ==
+the double loop A12 (twice round the ring, once round the tube; Q = 2), every 1000 steps:
+  start: degree 1.934, E 1143.6, core 0.950 ℓ
+   1000: degree 0.765, E 892.0, core 0.150 ℓ
+   2000: degree 0.529, E 895.1, core 0.150 ℓ
+   3000: degree 0.399, E 836.8, core 0.150 ℓ
+   4000: degree 0.300, E 789.9, core 0.150 ℓ
+   5000: degree 0.253, E 765.4, core 0.150 ℓ
+   6000: degree 0.179, E 722.1, core 0.150 ℓ
+   7000: degree 0.181, E 717.7, core 0.150 ℓ
+   8000: degree 0.143, E 685.2, core 0.150 ℓ
+  → no minimum in the axial ansatz: the core falls onto the axis and the knot unties through the grid
+  control, double loop as knotted light alone (κ2 = 0): rms 1.02 → 4.23 ℓ in 3000 steps
+knot                     | Q | degree start→end | E/E0    | E2/E4  | core/ℓ | rms r/ℓ | steps | s
+A11 Rañada single loop   | 1 | 0.985→0.988      |  541.08 | 0.9329 | 1.150  | 1.813   |  4000 | 20
+  inertia check: I∥ from φ-average 473.255 vs direct 473.255
+A21 (Q = 2 minimum)      | 2 | 0.974→0.989      |  884.64 | 0.9571 | 1.750  | 2.102   |  6000 | 41
+E(A21)/E(A11) = 1.635 (Vakulenko–Kapitanski scaling Q^¾ = 1.682)
+
+== Step 2: spin (Finkelstein–Rubinstein; Krusch & Speight 2006: fermion only for odd Q) ==
+knot                     | Q | fermion | I∥     | I⊥     | c_r      | ℓ_min (spin ½ in m_e) | g (rigid)
+A11 Rañada single loop   | 1 | true    |  473.3 |  721.1 | 6.108e-04 | 444.0 fm = 1.150 λ̄   | 2.811
+A21 (Q = 2 minimum)      | 2 | false   | 2131.6 | 1865.9 | —        | —                     | 1.535
+
+== Step 3: charge ==
+H23 paper, √(3ε0ħc)/2π               q = 0.910318 e | anomaly 0.000962436 (measured 0.00115965218) | Lyman-α 146.70 nm | atom +0.090 e | derived: true
+Rañada topological unit √(ε0ħc)      q = 3.302269 e | anomaly 0.012665148 (measured 0.00115965218) | Lyman-α 11.15 nm | atom -2.302 e | derived: true
+declared e                           q = 1.000000 e | anomaly 0.001161410 (measured 0.00115965218) | Lyman-α 121.57 nm | atom +0.000 e | derived: false
+gauged ether (Babaev–Faddeev–Niemi): the pair charge is an input, not derived
+
+== Step 4: fix κ2, κ4 (A11) and predict ==
+A: knot ring = λ̄/2    ℓ = 167.9 fm, ring 193.1 fm, rms 304.4 fm, E0 = 0.9444 keV
+   spin energy 1.75 m_e c² (real E0 with spin: false), rim speed 1.72 c
+   tone ħω 1.598 MeV (excited electron), Coulomb 0.0073 m_e c², 1S–2S shift 1.268e+05 MHz, g 2.811, ESR 39.35 GHz/T
+B: ℓ = 10⁻¹⁸ m         ℓ = 0.001 fm, ring 0.00115 fm, rms 0.001813 fm, E0 = 0.9444 keV
+   spin energy 4.93e+10 m_e c² (real E0 with spin: false), rim speed 2.89e+05 c
+   tone ħω 2.684e+05 MeV (excited electron), Coulomb 1.23e+03 m_e c², 1S–2S shift 4.498e-06 MHz, g 2.811, ESR 39.35 GHz/T
+ℓ_min (spin)           ℓ = 444 fm, ring 510.6 fm, rms 805 fm, E0 = 0.9444 keV
+   spin energy 0.25 m_e c² (real E0 with spin: true), rim speed 0.65 c
+   tone ħω 0.6044 MeV (excited electron), Coulomb 0.00276 m_e c², 1S–2S shift 8.867e+05 MHz, g 2.811, ESR 39.35 GHz/T
+H23 loop with charge circulating at c: g = 1.0000 (eq. 12's g = 2(1 + α′/2π) is asserted, not obtained by circulation)
+measured: no excited electron below 5.6 TeV, size < 10⁻¹⁸ m, g = 2.00232, ESR 28.025 GHz/T
+
+windows on ℓ for A11:
+  scattering: rms size < 10⁻¹⁸ m                 ℓ ∈ [0, 0.000552] fm
+  no excited electron below 5.6 TeV (CMS 2020)   ℓ ∈ [0, 4.79e-05] fm
+  hydrogen 1S–2S finite size < 10 kHz            ℓ ∈ [0, 0.0472] fm
+  Coulomb energy of e at the ring < m_e c²       ℓ ∈ [1.23, +Inf] fm
+  spin ½ rotation fits in m_e c²                 ℓ ∈ [444, +Inf] fm
+  overlap: [444, 4.79e-05] fm → empty; the lower bounds (spin, Coulomb) exceed the upper bounds (scattering, excited states, hydrogen) by 9.3e+06
+
+== Step 5: verdict ==
+double loop (A12, Q = 2): not held, it unties; the held Q = 2 knot (A21, windings swapped) is bosonic under FR: no spin ½
+single loop (A11) can be a fermion, but no size satisfies spin, Coulomb, scattering, excited-state and hydrogen bounds together
+charge: not derived (H23 0.910 e, Rañada 3.30 e); status: bounded

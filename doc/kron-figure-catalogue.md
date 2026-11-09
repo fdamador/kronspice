@@ -196,6 +196,16 @@ reference frames of minimum stored energy "is basically a nonlinear
 programming problem … arrived at by physical reasoning … not been reduced
 as yet to a routine computer procedure" (p. 67).
 
+Popkov's review (undated working paper, p. 10; `reference/Popkov Gabriel
+Kron's Universal Engineering.pdf`) repeats this: (ρᵉ, ρₘ, Jᵉ, Jₘ), "eight types
+of adaptive parameters in each p-network", and ideal transformers between the
+primal and dual networks. He adds, citing Kron 1960 (*Matrix and Tensor
+Quarterly* 11(2), 42, not held), that the aim was a *continuous* spectrum in
+place of the fixed natural frequencies of a plain space filter. He describes
+the example as 13 generalized machines with 13 ordinary and 13 quadratic axes,
+4 for the function, 6 for first and 3 for second differences, which agrees with
+the 13 characteristics of §11. He gives no frame and no new numbers.
+
 So the oscillatory frame is a search over the 2-network's reference frame
 (which planes are open, which short, how they interconnect) with the
 objective Kron states (minimum stored energy = minimum error-square,
