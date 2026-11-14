@@ -497,6 +497,7 @@ func WriteSinkProfiles(path string) error {
 func main() {
 	log.SetFlags(0)
 	viz := flag.String("viz", "", "also write the sink profiles to DIR/sink_profile.csv")
+	full := flag.Bool("part13", false, "also run Part 13, the full ether simulation (about 8 minutes)")
 	flag.Parse()
 	if *viz != "" {
 		if err := WriteSinkProfiles(filepath.Join(*viz, "sink_profile.csv")); err != nil {
@@ -596,6 +597,12 @@ func main() {
 	part10()
 	part11()
 	part12(*viz)
+	if *full {
+		part13(*viz)
+	} else {
+		fmt.Println()
+		fmt.Println("Part 13 (the full ether simulation) runs with -part13 (about 8 minutes); its output is run_output_part13.txt.")
+	}
 }
 
 // SinkRadii are the sink sizes scanned, in healing lengths ξ.

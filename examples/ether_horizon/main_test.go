@@ -527,3 +527,65 @@ func TestGuideRing(t *testing.T) {
 		t.Errorf("guided note %g vs %g", pk, math.Hypot(g.Cutoff(), fz))
 	}
 }
+
+// Part 13: the Go solver reproduces the independent Python reference
+// (ref/ether13_ref.py) at the start, conserves energy without friction,
+// keeps the light in the void and the thin donut's vortex, and the
+// dissipative flow only lowers the energy.
+func TestEtherSimReference(t *testing.T) {
+	s := NewRingState(NewEtherGrid(0.3, 22, 30), 300, 20, 8, 2)
+	ee, el, _ := s.Energies()
+	for _, c := range []struct{ got, want float64 }{{ee, 731.406}, {el, 262.4841}, {s.Lam, 0.76553}} {
+		if math.Abs(c.got/c.want-1) > 2e-5 {
+			t.Errorf("start state %g, reference %g", c.got, c.want)
+		}
+	}
+}
+
+func TestEtherSimRealTime(t *testing.T) {
+	s := NewRingState(Part13Grid(), 300, Part13V0, 8, 2)
+	e0, l0, _ := s.Energies()
+	for k := 0; k < 200; k++ {
+		s.Step(0.01)
+	}
+	ee, el, _ := s.Energies()
+	sh := s.Shape()
+	if d := (ee + el - e0 - l0) / (e0 + l0); math.Abs(d) > 1e-3 {
+		t.Errorf("energy drift %g", d)
+	}
+	if math.Abs(ee/626.5559-1) > 1e-4 || math.Abs(s.Lam/1.3579-1) > 1e-4 {
+		t.Errorf("t = 2: E_e %g, λ %g against the reference 626.5559, 1.3579", ee, s.Lam)
+	}
+	if !sh.Any || sh.OnAxis || sh.Winding != 1 || sh.LightIn < 0.999 || sh.ZC > -0.2 {
+		t.Errorf("thin donut at t = 2: %+v", sh)
+	}
+}
+
+func TestEtherSimRelax(t *testing.T) {
+	s := NewRingState(Part13Grid(), 100, Part13V0, 8, 2)
+	e0, l0, _ := s.Energies()
+	prev := e0 + l0
+	for k := 0; k < 4; k++ {
+		s.Relax(500, 20)
+		ee, el, _ := s.Energies()
+		if ee+el > prev*(1+1e-9) {
+			t.Errorf("relax step %d raised the energy: %g > %g", k, ee+el, prev)
+		}
+		prev = ee + el
+	}
+	// light mode residual
+	g := s.G
+	h := make([]float64, len(s.Chi))
+	g.LightOp(s.Chi, h, s.dens, s.V0, s.Lam)
+	r, n := 0.0, 0.0
+	for i := 0; i < g.NR; i++ {
+		for j := 0; j < g.NZ; j++ {
+			k := g.at(i, j)
+			r += h[k] * h[k] / g.Rho[i]
+			n += g.Rho[i] * s.Chi[k] * s.Chi[k] * s.Lam * s.Lam
+		}
+	}
+	if math.Sqrt(r/n) > 1e-3 {
+		t.Errorf("light mode residual %g", math.Sqrt(r/n))
+	}
+}

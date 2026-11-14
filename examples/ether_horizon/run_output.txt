@@ -323,3 +323,5 @@ Part 12d. The anomaly with no pressure: (g − 2)/2 = U/E_L, charge on the core 
 
 Part 12e. kronspice: the guided crossed ring (shunt inductors give the cutoff)
   ring note 55901.1 Hz, cutoff 167703 Hz: kronspice 176775 Hz, √(f_c² + f_z²) = 176775 Hz (ladder 176775)
+
+Part 13 (the full ether simulation) runs with -part13 (about 8 minutes); its output is run_output_part13.txt.

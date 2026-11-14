@@ -712,6 +712,11 @@ wall:
 
 ![g, anomaly and mass against the shape](viz/donut_g.png)
 
+> **Superseded by Part 13.** The full ether simulation does not confirm
+> 12c–12d. The horn torus is not a resting state, the double loop needs no
+> hole in the ether, and the anomaly from the computed walls is 0.28–0.67
+> of measured, not 0.959.
+
 ### 12e. kronspice: the guided crossed ring
 
 A shunt inductor across each section of the crossed ring line gives a
@@ -733,6 +738,93 @@ channel's cutoff, as in 12a.
 go run ./examples/ether_horizon -viz examples/ether_horizon/viz
 python3 examples/ether_horizon/viz/plot_donut.py
 ```
+
+## 13. The full ether simulation (`ethersim.go`, `part13.go`, `ref/ether13_ref.py`)
+
+Part 12 used thin-ring formulas. This part solves the two fields directly
+on an axisymmetric (ρ, z) grid, in healing-length units:
+
+- **The ether** is a Gross–Pitaevskii field ψ,
+  E_e = ∫ ½|∇ψ|² + ¼(|ψ|² − 1)² dV. A vortex ring is a phase winding round
+  a point of the cut.
+- **The light** is the double-loop mode χ·e^{iφ/2} (m = ½), the lowest
+  eigenmode of H = −∇² + m²/ρ² + V0|ψ|², with E_L = ε√λ (ε plays ħc). The
+  ether is opaque where it is dense (V0 = 20), so the light lives in the
+  void.
+- **The coupling** runs both ways. The light pushes the ether out with
+  (εV0/2√λ)·χ²ψ.
+
+**Numerics.** The grid is 0.4 ξ in a box 20 × 52 ξ. The light mode is
+re-solved every step by inverse iteration with conjugate gradients. The
+ether is stepped by RK4 in real time, with no friction.
+
+**Checks.** An independent Python solver (`ref/ether13_ref.py`, scipy
+eigensolver) agrees with the Go solver to 4–5 digits at the start and at
+t = 2. Energy is conserved to 0.4–1.4 % over 60 time units, and the
+thin donut's shape matches a 0.3 ξ grid.
+
+```
+go run ./examples/ether_horizon -part13 -viz examples/ether_horizon/viz   # about 8 minutes
+python3 examples/ether_horizon/viz/plot_ether13.py
+```
+
+The output is in `run_output_part13.txt`.
+
+![Snapshots](viz/ether13_snapshots.png)
+
+### 13a. With friction (energy drains, as Part 12 assumed)
+
+Every run, from the thin donut at ε = 30, 100 and 300, loses its vortex.
+The ring slides in through the void and unwinds on the axis. What is
+left is a round bubble of light with no swirl, held by the ether's
+pressure: g₀ = M/E_L = 1.40, 1.39 and 1.38, near Part 9's 4/3. The light
+stays in (99.6–99.97 %).
+
+### 13b. Without friction (real time)
+
+| start | ε | what happens | inner edge on the axis | speed (sound 0.707) | (g − 2)/2 from the wall / measured |
+|---|---|---|---|---|---|
+| thin, a/R = 0.25 | 100 | keeps shape (a/R ≈ 0.24), vortex and light | 0 % of t ≥ 10 | 0.21 | 0.28 |
+| thin | 300 | keeps shape (a/R ≈ 0.32), vortex and light | 0 % | 0.24 | 0.36 |
+| thin | 1000 | swells, the hole closes, becomes a round bubble on the axis; the vortex trails off | 84 % | 0.31 | 0.63 |
+| half, a/R = 0.5 | 300 | sheds sound; light and vortex separate; light ends as a bubble on the axis | 75 % | 0.16 | 0.67 |
+| horn, a/R = 1 | 300 | breaks up into sound, ends as a small bubble on the axis | 100 % | 0.41 | 0.52 |
+
+In every run more than 99.5 % of the light stays in the void.
+
+![Time series](viz/ether13_graph.png)
+
+### What it shows
+
+- **The horn torus is not a resting state.** Started there, it breaks up
+  and ends as a small round bubble of light on the axis.
+- **Thin donuts are stable but never reach the edge.** With weak or
+  moderate light they keep their shape, vortex and light for 60 time
+  units.
+- **Strong light does swell the core to the edge, as Part 12 said, but
+  it does not stop there.** The void closes over the axis into a round
+  bubble, and the vortex separates from the light.
+- **Part 12's stopping argument fails.** The m = ½ light vanishes on the
+  axis by itself (χ ∝ √ρ), so it needs no hole in the ether to keep
+  winding.
+- **The anomaly from the computed walls is 0.28–0.67 of measured,** not
+  Part 12's 0.959. That number came from the thin-ring formulas at a
+  shape the full fields never settle in.
+- **A vortex ring always travels.** Here it moves at about a third of the
+  ether's sound speed. An electron at rest cannot be a single vortex ring.
+
+### Pictures
+
+- `viz/ether13_snapshots.png`: cuts through the axis (mirrored) at
+  t = 0, 10, 20, 40, 60 for the thin donut, the strong-light donut and the
+  horn torus.
+- `viz/ether13_graph.png`: the inner edge, travel, winding and anomaly
+  over time for all five runs.
+- `viz/ether13.mp4` and `viz/ether13.gif`: the three cases side by side,
+  t = 0–60.
+
+All three come from the Go run. The raw frames (`viz/part13_frames/`) are
+not kept in git.
 
 ## Status
 
@@ -778,6 +870,12 @@ H49 is **bounded**.
   core swells to the edge, a = R, where the hole closes. There the charge
   on the core wall gives (g − 2)/2 = 95.9 % of measured with nothing
   fitted. R ≈ 3.8 ƛ_C.
+- **The full ether simulation (Part 13).** Solving the ether and the
+  light together without thin-ring formulas overturns Part 12's edge. The
+  horn torus breaks up. Thin donuts are stable but travel and never swell
+  to the edge. Strong light closes the hole into a round bubble and sheds
+  the vortex. With friction every donut becomes a swirl-free bubble with
+  g₀ ≈ 1.4. The anomaly from the computed walls is 0.28–0.67 of measured.
 - **General relativity.** The electron-mass hole is naked, and would
   evaporate in 10⁻¹⁰⁶ s if it were not.
 - **Standard prediction.** No horizon or void inside the electron: a point
@@ -816,6 +914,7 @@ Next steps:
 - [Proton radius puzzle](https://en.wikipedia.org/wiki/Proton_radius_puzzle) (overview, including the 2026 hydrogen 2s–6p result, 0.8406(15) fm).
 - J. Schwinger, "On quantum-electrodynamics and the magnetic moment of the electron", *Phys. Rev.* 73, 416 (1948); X. Fan et al., *Phys. Rev. Lett.* 130, 071801 (2023) (a_e = 0.00115965218059).
 - D. Hestenes, "The zitterbewegung interpretation of quantum mechanics", *Found. Phys.* 20, 1213 (1990).
+- C. A. Jones, P. H. Roberts, "Motions in a Bose condensate IV: axisymmetric solitary waves", *J. Phys. A* 15, 2599 (1982) (vortex rings in the Gross–Pitaevskii fluid travel).
 - H. Lamb, *Hydrodynamics*, 6th ed., §163 (energy of a hollow vortex ring); J. D. Jackson, *Classical Electrodynamics*, 3rd ed., §8.7 (TE₁₁ cutoff of a round guide, x = 1.8412).
 - Y. Koide, *Lett. Nuovo Cim.* 34, 201 (1982) (lepton mass relation).
 - J. G. Williamson, M. B. van der Mark, *Ann. Fond. Louis de Broglie* 22, 133 (1997) (the field volume, eq. 5).

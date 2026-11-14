@@ -1,0 +1,78 @@
+$ go run ./examples/ether_horizon -part13 -viz examples/ether_horizon/viz   (Part 13 section)
+
+Part 13. The full ether simulation: Gross–Pitaevskii ether + the m = ½ light mode on an axisymmetric grid
+  (ρ, z) grid 0.4 ξ, box 20 × 52 ξ; ether opaque to light where dense (V0 = 20); no thin-ring formulas.
+  Light re-solved every step (inverse iteration, conjugate gradients); ether by RK4 in real time.
+
+Part 13a. With friction (energy drains, as Part 12 assumed): start from the thin donut R = 8, a = 2
+  ε       end: void ρ        on axis   winding   light in void   g0 = M/E_L   energy kept
+  30       0.2–2.2         true      -0.0      0.9964          1.4041       0.102
+  100      0.2–3.0         true      -0.0      0.9987          1.3929       0.223
+  300      0.2–4.2         true      -0.0      0.9997          1.3825       0.404
+  Every run loses the vortex: the ring slides in through the void and unwinds on the axis. What is left
+  is a round bubble of light with no swirl, held by the ether's pressure (g0 ≈ 1.4, near Part 9's 4/3).
+
+Part 13b. Without friction (real time, energy conserved): five starts, 60 time units each
+  thin, ε = 100 (start R = 8, a = 2):
+    t = 0    void ρ   5.4–10.6  height   5.6  on axis false winding  1.0  light in void 0.9994  z_c    0.00  energy drift +0.0000
+    t = 10   void ρ   6.2–9.8   height   3.6  on axis false winding  1.0  light in void 0.9974  z_c   -1.84  energy drift -0.0023
+    t = 20   void ρ   5.8–9.4   height   3.6  on axis false winding  1.0  light in void 0.9965  z_c   -4.03  energy drift -0.0012
+    t = 30   void ρ   5.4–9.4   height   3.6  on axis false winding  1.0  light in void 0.9982  z_c   -6.15  energy drift -0.0022
+    t = 40   void ρ   6.6–9.8   height   4.0  on axis false winding  1.0  light in void 0.9982  z_c   -8.31  energy drift -0.0037
+    t = 50   void ρ   6.2–9.8   height   4.4  on axis false winding  1.0  light in void 0.9979  z_c  -10.40  energy drift -0.0044
+    t = 60   void ρ   5.8–10.2  height   3.6  on axis false winding  1.0  light in void 0.9977  z_c  -12.36  energy drift -0.0040
+    speed along the axis -0.207 (sound 0.707); light kept ≥ 0.9953; void on the axis 0% of t ≥ 10;
+    vortex round the void 100% of t ≥ 10; mean a/R off axis 0.237; (g − 2)/2 from the wall charge 3.248e-04 (0.28 of measured)
+  thin, ε = 300 (start R = 8, a = 2):
+    t = 0    void ρ   5.4–10.6  height   5.6  on axis false winding  1.0  light in void 0.9994  z_c    0.00  energy drift +0.0000
+    t = 10   void ρ   5.4–10.2  height   4.8  on axis false winding  1.0  light in void 0.9995  z_c   -2.49  energy drift -0.0007
+    t = 20   void ρ   5.4–9.8   height   4.4  on axis false winding  1.0  light in void 0.9988  z_c   -4.75  energy drift -0.0019
+    t = 30   void ρ   5.0–10.2  height   4.8  on axis false winding  1.0  light in void 0.9994  z_c   -7.19  energy drift -0.0035
+    t = 40   void ρ   5.4–10.2  height   4.8  on axis false winding  1.0  light in void 0.9995  z_c   -9.60  energy drift -0.0053
+    t = 50   void ρ   5.4–10.2  height   4.8  on axis false winding  1.0  light in void 0.9995  z_c  -11.97  energy drift -0.0062
+    t = 60   void ρ   5.4–10.2  height   4.8  on axis false winding  1.0  light in void 0.9994  z_c  -14.16  energy drift -0.0071
+    speed along the axis -0.235 (sound 0.707); light kept ≥ 0.9988; void on the axis 0% of t ≥ 10;
+    vortex round the void 100% of t ≥ 10; mean a/R off axis 0.317; (g − 2)/2 from the wall charge 4.181e-04 (0.36 of measured)
+  thin, ε = 1000 (start R = 8, a = 2):
+    t = 0    void ρ   5.4–10.6  height   5.6  on axis false winding  1.0  light in void 0.9994  z_c    0.00  energy drift +0.0000
+    t = 10   void ρ   3.0–10.6  height   6.8  on axis false winding  1.0  light in void 0.9998  z_c   -2.64  energy drift -0.0023
+    t = 20   void ρ   0.2–10.6  height  12.0  on axis true  winding  2.0  light in void 0.9998  z_c   -6.20  energy drift -0.0085
+    t = 30   void ρ   0.2–10.2  height   8.8  on axis true  winding -0.0  light in void 0.9999  z_c  -10.34  energy drift -0.0090
+    t = 40   void ρ   0.2–9.8   height   8.4  on axis true  winding  1.0  light in void 0.9999  z_c  -13.15  energy drift -0.0110
+    t = 50   void ρ   0.2–10.6  height  10.0  on axis true  winding  2.0  light in void 0.9999  z_c  -15.15  energy drift -0.0123
+    t = 60   void ρ   0.2–10.2  height   9.6  on axis true  winding -2.0  light in void 0.9999  z_c  -17.22  energy drift -0.0137
+    speed along the axis -0.305 (sound 0.707); light kept ≥ 0.9994; void on the axis 84% of t ≥ 10;
+    vortex round the void 43% of t ≥ 10; mean a/R off axis 0.671; (g − 2)/2 from the wall charge 7.303e-04 (0.63 of measured)
+  half, ε = 300 (start R = 8, a = 4):
+    t = 0    void ρ   3.4–12.6  height   9.6  on axis false winding  1.0  light in void 0.9999  z_c    0.00  energy drift +0.0000
+    t = 10   void ρ   2.2–10.2  height   4.4  on axis false winding  1.0  light in void 0.9996  z_c   -3.15  energy drift -0.0043
+    t = 20   void ρ   1.4–10.2  height   5.2  on axis false winding  1.0  light in void 0.9992  z_c   -6.90  energy drift -0.0058
+    t = 30   void ρ   0.2–3.8   height   8.8  on axis true  winding  2.0  light in void 0.9998  z_c  -11.61  energy drift -0.0077
+    t = 40   void ρ   0.2–5.0   height   6.0  on axis true  winding -0.0  light in void 0.9995  z_c  -12.12  energy drift -0.0092
+    t = 50   void ρ   0.2–5.4   height   6.8  on axis true  winding -2.0  light in void 0.9997  z_c  -10.07  energy drift -0.0113
+    t = 60   void ρ   0.2–4.6   height  10.0  on axis true  winding -0.0  light in void 0.9995  z_c  -11.32  energy drift -0.0109
+    speed along the axis -0.164 (sound 0.707); light kept ≥ 0.9989; void on the axis 75% of t ≥ 10;
+    vortex round the void 57% of t ≥ 10; mean a/R off axis 0.761; (g − 2)/2 from the wall charge 7.775e-04 (0.67 of measured)
+  horn, ε = 300 (start R = 8, a = 8):
+    t = 0    void ρ   0.2–16.6  height  17.6  on axis true  winding  1.0  light in void 1.0000  z_c    0.00  energy drift -0.0000
+    t = 10   void ρ   0.2–12.6  height  24.0  on axis true  winding  3.0  light in void 1.0000  z_c   -2.53  energy drift -0.0049
+    t = 20   void ρ   0.2–9.4   height  10.4  on axis true  winding  2.0  light in void 0.9991  z_c   -7.64  energy drift -0.0063
+    t = 30   void ρ   0.2–11.4  height  10.8  on axis true  winding  2.0  light in void 0.9994  z_c  -10.33  energy drift -0.0045
+    t = 40   void ρ   0.2–5.8   height   8.0  on axis true  winding  3.0  light in void 0.9997  z_c  -16.26  energy drift -0.0065
+    t = 50   void ρ   0.2–7.8   height  11.2  on axis true  winding  1.0  light in void 0.9998  z_c  -17.17  energy drift -0.0078
+    t = 60   void ρ   0.2–8.6   height   8.4  on axis true  winding  0.0  light in void 0.9996  z_c  -22.59  energy drift -0.0086
+    speed along the axis -0.406 (sound 0.707); light kept ≥ 0.9991; void on the axis 100% of t ≥ 10;
+    vortex round the void 53% of t ≥ 10; mean a/R off axis NaN; (g − 2)/2 from the wall charge 6.058e-04 (0.52 of measured)
+
+  What it shows:
+  - The horn torus is not a resting state. Started there, it breaks up into sound and ends as a small round
+    bubble of light on the axis; the vortex leaves it.
+  - With weak or moderate light (ε = 100, 300) the thin donut keeps its shape (a/R ≈ 0.24–0.32), its vortex and
+    its light, but it never swells toward the edge.
+  - With strong light (ε = 1000) the core does swell to the edge, as Part 12 said, but does not stop: the hole
+    closes, the void becomes a round bubble on the axis, and the vortex trails off outside the light.
+  - Part 12's stopping argument fails: the m = ½ light vanishes on the axis by itself (χ ∝ √ρ), so it needs
+    no hole in the ether to keep winding.
+  - The anomaly from the computed walls is 0.28–0.67 of measured, not Part 12's 0.959.
+  - A vortex ring always travels (here ≈ a third of the ether's sound speed); an electron at rest cannot
+    be a single vortex ring.
