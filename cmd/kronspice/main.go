@@ -3,7 +3,8 @@
 
 // Command kronspice simulates a SPICE netlist.
 //
-//	kronspice [-o out.csv] [-json] [-all-channels] [-solver auto|dense|sparse] [circuit.cir]
+//	kronspice [-o out.csv] [-json] [-all-channels] [-solver auto|dense|sparse]
+//	          [-smith plus[,minus] [-z0 50] [-smith-svg chart.svg] [-smith-csv smith.csv]] [circuit.cir]
 //
 // It runs the analyses the netlist requests (.op, .dc, .ac, .tran; .op if
 // none) and prints node voltages, element operating points and the energy
@@ -14,6 +15,12 @@
 // output instead of the text report (output.Document): every analysis in
 // order, and on failure the error with its class, so that scripts and AI
 // assistants can drive the simulator without parsing prose.
+//
+// With -smith, every .ac analysis also measures the named port (minus
+// defaults to ground) as a network analyser would and reports it on the
+// Smith chart against -z0 (analysis.Smith). Negative resistance is kept:
+// such points lie outside the unit circle, and -smith-svg draws the
+// extended chart over the whole Γ plane (output.WriteSmithSVG).
 package main
 
 import (
@@ -23,6 +30,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/fdamador/kronspice/analysis"
 	"github.com/fdamador/kronspice/circuit"
@@ -41,6 +49,10 @@ type options struct {
 	allChannels bool
 	json        bool
 	backend     solver.Backend
+	// Smith chart port (empty: none), reference and output files.
+	smithPlus, smithMinus string
+	z0                    float64
+	smithSVG, smithCSV    string
 }
 
 func main() {
@@ -49,6 +61,10 @@ func main() {
 	all := flag.Bool("all-channels", false, "list every external channel of every element, including unmodeled ones")
 	jsonOut := flag.Bool("json", false, "write a JSON document to stdout instead of the text report")
 	backend := flag.String("solver", "auto", "linear solver: auto (dense below 30 unknowns, sparse above), dense or sparse")
+	smith := flag.String("smith", "", "measure this port on the Smith chart in every .ac analysis: plus[,minus] (minus defaults to ground)")
+	z0 := flag.Float64("z0", 50, "Smith chart reference impedance [Ω]")
+	smithSVG := flag.String("smith-svg", "", "write the extended Smith chart of the last .ac analysis as SVG to this file")
+	smithCSV := flag.String("smith-csv", "", "write the Smith sweep of the last .ac analysis as CSV to this file")
 	flag.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "usage: kronspice [flags] [circuit.cir | -]\n  (no file or \"-\": read the netlist from standard input)\n")
 		flag.PrintDefaults()
@@ -77,7 +93,21 @@ func main() {
 		defer f.Close()
 		in = f
 	}
-	opt := options{csvPath: *out, allChannels: *all, json: *jsonOut, backend: be}
+	opt := options{csvPath: *out, allChannels: *all, json: *jsonOut, backend: be, z0: *z0, smithSVG: *smithSVG, smithCSV: *smithCSV}
+	if *smith != "" {
+		parts := strings.Split(*smith, ",")
+		if len(parts) > 2 || strings.TrimSpace(parts[0]) == "" {
+			fmt.Fprintf(os.Stderr, "kronspice: -smith wants plus[,minus], got %q\n", *smith)
+			os.Exit(2)
+		}
+		opt.smithPlus, opt.smithMinus = strings.TrimSpace(parts[0]), "0"
+		if len(parts) == 2 {
+			opt.smithMinus = strings.TrimSpace(parts[1])
+		}
+	} else if *smithSVG != "" || *smithCSV != "" {
+		fmt.Fprintln(os.Stderr, "kronspice: -smith-svg and -smith-csv need -smith plus[,minus]")
+		os.Exit(2)
+	}
 	if err := run(in, os.Stdout, opt); err != nil {
 		if !opt.json {
 			fmt.Fprintln(os.Stderr, "kronspice:", err)
@@ -124,6 +154,7 @@ func simulate(in io.Reader, w io.Writer, opt options, doc *output.Document) erro
 		text = io.Discard
 	}
 	var csvWrite func(io.Writer) error
+	var lastSmith *output.SmithResult
 	for i, a := range analyses {
 		if i > 0 {
 			fmt.Fprintln(text)
@@ -159,7 +190,20 @@ func simulate(in io.Reader, w io.Writer, opt options, doc *output.Document) erro
 			if err := output.WriteACReport(text, r); err != nil {
 				return err
 			}
-			doc.Analyses = append(doc.Analyses, output.AnalysisDoc{Kind: "ac", AC: output.ACDocument(r)})
+			ad := output.AnalysisDoc{Kind: "ac", AC: output.ACDocument(r)}
+			if opt.smithPlus != "" {
+				sr, err := analysis.Smith(c, opt.smithPlus, opt.smithMinus, opt.z0, analysis.ACSpec{Variation: a.Variation, Points: a.Points, FStart: a.FStart, FStop: a.FStop}, analysis.Options{Backend: opt.backend})
+				if err != nil {
+					return fmt.Errorf("smith: %w", err)
+				}
+				fmt.Fprintln(text)
+				if err := output.WriteSmithReport(text, sr); err != nil {
+					return err
+				}
+				ad.Smith = output.SmithDocument(sr)
+				lastSmith = sr
+			}
+			doc.Analyses = append(doc.Analyses, ad)
 			csvWrite = func(f io.Writer) error { return output.WriteACCSV(f, r) }
 		case "dc":
 			var sweeps []analysis.DCSweep
@@ -177,6 +221,14 @@ func simulate(in io.Reader, w io.Writer, opt options, doc *output.Document) erro
 			csvWrite = func(f io.Writer) error { return output.WriteDCCSV(f, r) }
 		}
 	}
+	if opt.smithPlus != "" && lastSmith == nil {
+		return fmt.Errorf("smith: -smith needs an .ac analysis in the netlist")
+	}
+	if lastSmith != nil {
+		if err := writeSmithFiles(lastSmith, opt); err != nil {
+			return err
+		}
+	}
 	if opt.csvPath != "" && csvWrite != nil {
 		cf, err := os.Create(opt.csvPath)
 		if err != nil {
@@ -189,6 +241,35 @@ func simulate(in io.Reader, w io.Writer, opt options, doc *output.Document) erro
 		return cf.Close()
 	}
 	return nil
+}
+
+// writeSmithFiles writes the -smith-svg chart and the -smith-csv table.
+func writeSmithFiles(sr *output.SmithResult, opt options) error {
+	write := func(path string, f func(io.Writer) error) error {
+		if path == "" {
+			return nil
+		}
+		w, err := os.Create(path)
+		if err != nil {
+			return err
+		}
+		if err := f(w); err != nil {
+			w.Close()
+			return err
+		}
+		return w.Close()
+	}
+	gs := make([]complex128, len(sr.Points))
+	for i, p := range sr.Points {
+		gs[i] = p.Gamma
+	}
+	title := fmt.Sprintf("%s: port %s–%s, Z0 = %s", sr.Title, sr.Plus, sr.Minus, output.Eng(sr.Z0, "Ω"))
+	if err := write(opt.smithSVG, func(w io.Writer) error {
+		return output.WriteSmithSVG(w, []output.SmithTrace{{Name: "port " + sr.Plus + "–" + sr.Minus, Gamma: gs}}, output.SmithChartOptions{Title: title})
+	}); err != nil {
+		return err
+	}
+	return write(opt.smithCSV, func(w io.Writer) error { return output.WriteSmithCSV(w, sr) })
 }
 
 // errorClass names an error's class with the same words evo.Penalty uses
@@ -211,7 +292,7 @@ func errorClass(err error) string {
 		errors.Is(err, circuit.ErrUnknownKind), errors.Is(err, circuit.ErrEmptyCircuit), errors.Is(err, circuit.ErrTooLarge),
 		errors.Is(err, circuit.ErrBadWaveform), errors.Is(err, em.ErrNotQuasiStatic), errors.Is(err, em.ErrOutsideModelValidity),
 		errors.Is(err, analysis.ErrBadACSpec), errors.Is(err, analysis.ErrBadDCSpec), errors.Is(err, analysis.ErrBadTranSpec),
-		errors.Is(err, analysis.ErrUnknownSource):
+		errors.Is(err, analysis.ErrUnknownSource), errors.Is(err, analysis.ErrUnknownNode), errors.Is(err, analysis.ErrBadReference):
 		return "invalid"
 	}
 	return "error"

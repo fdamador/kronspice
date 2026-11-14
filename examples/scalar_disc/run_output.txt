@@ -1,0 +1,29 @@
+H47 step 4: optically gated rotating Al disc (Iadicicco & Verolino, arXiv:2608.21403)
+declared: lit ring r = 40 mm, width 5 mm, sector FWHM 15° (σ = 0.1112 rad), Q = 1 nC, 3000 rpm, sensor 20 mm above the track
+
+1. The source (IMV eqs. 13, B3, 24)
+   peak σ_s 1.892e-05 C/m²; peak |I_G| 0.03244 C/(m² s) against |Ω|σ_max e^(−½)/σ = 0.03243; ring integral -4.9e-16 of Σ|I|A
+
+2. S at the sensor (□S = μ₀I_G, quasi-static; em/scalar's kernel)
+   peak |S| over a revolution 1.102e-12 T (c|S| = 0.00033 V/m)
+   controls: reversed rotation S = -1 × forward; whole ring lit S = 0 T; standard prediction S = 0
+
+3. Gravity from S² (Minotti & Modanese 2026, K_φ = 1e-16 A² N⁻², C_φ = 6e21, their fit)
+   force per mass at the sensor: peak (-8.34e-38, 2.06e-37, 5.41e-37) m/s², mean over a turn (-5.45e-38, 1.04e-51, 1.19e-37) m/s²
+   reversed rotation: f_z 1 of forward (S² is even in Ω); box ×1.5: f_z changes 0.017 %
+   standard prediction: 0 (Newton's pull of the disc is static and is subtracted by ON/OFF gating)
+
+4. At the bench's limits
+   charge: air breaks down at 3 MV/m, so the sector holds ≤ 1.48e-09 C (1.5× the declared 1 nC)
+   speed: a 50 mm Al disc bursts at ω = 1.05e+04 rad/s (100305 rpm, 33.4× 3000 rpm)
+   S scales as QΩ → peak |S| 5.46e-11 T; the S² force as (QΩ)² → 1.33e-33 m/s²
+   the superconducting junction S of the 2026 fit is ≈ 2e3 T: 4e+13× the disc's best
+
+5. What the disc can decide
+   the fit implies 2ω₀ + 3 = 8πG₀ε₀C_φ/(c²K_φ) = 9.92, so ω₀ ≈ 3.5; Cassini needs ω > 4e4 unless the matter coupling is suppressed (their App. B)
+   to reach 1e-09 m/s² at the limits needs C_φ ≈ 5.2e+33 (8.7e+11× the fit): a null at that sensitivity bounds C_φ there
+   IMV's linear response Λ_opt (response ∝ S, odd in Ω) has no value in either paper: the disc measures it, S = 3.67e-13 T per (nC·krpm)
+
+6. The ordinary systematic beside it
+   Coulomb field of the gated charge at the sensor: peak 2.09e+04 V/m; on a 1 g sensor carrying 1 pC: 2.09e-05 m/s², 4e+31× the S² force
+   it is odd in Q, follows the sector at Ω and does not reverse with rotation; S is odd in Ω and vanishes for the whole ring lit

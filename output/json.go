@@ -41,6 +41,9 @@ type AnalysisDoc struct {
 	DC   *DCDoc   `json:"dc,omitempty"`
 	AC   *ACDoc   `json:"ac,omitempty"`
 	Tran *TranDoc `json:"tran,omitempty"`
+	// Smith is set on an "ac" analysis when a port was named (kronspice
+	// -smith): the port's impedance and reflection over the same sweep.
+	Smith *SmithDoc `json:"smith,omitempty"`
 }
 
 // OPDoc is an operating point.

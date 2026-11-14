@@ -1,0 +1,85 @@
+Bearden MEG and two-magnet knife edge, kronspice magnetic domain, full ledger
+COP = load power / drive power over whole cycles; claim > 1, standard prediction < 1
+
+knife: drive 0.5-100 V
+  bearden_meg knife V=0.5 f=10000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=0 drive    0.01724 W  magnets  +8.6e-09 W  load    0.01486 W  COP 0.8619  residual 5.3e-08
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=0 drive     0.2759 W  magnets  +8.6e-09 W  load     0.2378 W  COP 0.8619  residual -3.4e-10
+  bearden_meg knife V=5 f=10000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=0 drive      1.724 W  magnets  +8.6e-09 W  load      1.486 W  COP 0.8619  residual -3.4e-09
+  bearden_meg knife V=20 f=10000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=0 drive      27.59 W  magnets  +8.6e-09 W  load      23.78 W  COP 0.8619  residual -4.0e-09
+  bearden_meg knife V=50 f=10000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=0 drive      172.4 W  magnets   -0.0084 W  load      148.6 W  COP 0.8619  residual 6.3e-06
+  bearden_meg knife V=100 f=10000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=0 drive      689.9 W  magnets    +0.016 W  load      594.5 W  COP 0.8618  residual 3.2e-05
+
+knife: load 1 ohm-100 kohm
+  bearden_meg knife V=2 f=10000 RL=1 mismatch=1 Cres=0 gap=0.15 leak=0 drive      1.882 W  magnets  +8.5e-09 W  load     0.1107 W  COP 0.0588  residual 5.5e-10
+  bearden_meg knife V=2 f=10000 RL=10 mismatch=1 Cres=0 gap=0.15 leak=0 drive      1.231 W  magnets  +8.6e-09 W  load     0.4734 W  COP 0.3846  residual 7.0e-10
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=0 drive     0.2759 W  magnets  +8.6e-09 W  load     0.2378 W  COP 0.8619  residual -3.4e-10
+  bearden_meg knife V=2 f=10000 RL=300 mismatch=1 Cres=0 gap=0.15 leak=0 drive     0.1013 W  magnets  +8.6e-09 W  load    0.09614 W  COP 0.9489  residual -3.4e-09
+  bearden_meg knife V=2 f=10000 RL=1000 mismatch=1 Cres=0 gap=0.15 leak=0 drive    0.03155 W  magnets  +8.6e-09 W  load      0.031 W  COP 0.9826  residual -1.6e-08
+  bearden_meg knife V=2 f=10000 RL=3000 mismatch=1 Cres=0 gap=0.15 leak=0 drive    0.01066 W  magnets  +8.6e-09 W  load    0.01055 W  COP 0.9898  residual -4.8e-08
+  bearden_meg knife V=2 f=10000 RL=10000 mismatch=1 Cres=0 gap=0.15 leak=0 drive   0.003248 W  magnets  +8.6e-09 W  load    0.00319 W  COP 0.9820  residual -1.5e-07
+  bearden_meg knife V=2 f=10000 RL=100000 mismatch=1 Cres=0 gap=0.15 leak=0 drive  0.0003734 W  magnets  +8.6e-09 W  load  0.0003199 W  COP 0.8567  residual -1.4e-06
+
+knife: frequency 1-50 kHz
+  bearden_meg knife V=2 f=1000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=0 drive     0.2792 W  magnets  +8.6e-09 W  load     0.2373 W  COP 0.8501  residual 3.1e-09
+  bearden_meg knife V=2 f=5000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=0 drive      0.276 W  magnets  +8.6e-09 W  load     0.2378 W  COP 0.8616  residual 1.6e-09
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=0 drive     0.2759 W  magnets  +8.6e-09 W  load     0.2378 W  COP 0.8619  residual -3.4e-10
+  bearden_meg knife V=2 f=50000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=0 drive     0.2759 W  magnets  +8.5e-09 W  load     0.2378 W  COP 0.8621  residual -1.7e-08
+
+knife: magnet mismatch
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=0.9 Cres=0 gap=0.15 leak=0 drive     0.2759 W  magnets  +0.00029 W  load     0.2378 W  COP 0.8618  residual -4.1e-08
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=0.95 Cres=0 gap=0.15 leak=0 drive     0.2759 W  magnets  +7.8e-05 W  load     0.2378 W  COP 0.8619  residual -2.1e-08
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=0.99 Cres=0 gap=0.15 leak=0 drive     0.2759 W  magnets  +5.3e-06 W  load     0.2378 W  COP 0.8619  residual -8.9e-09
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=0 drive     0.2759 W  magnets  +8.6e-09 W  load     0.2378 W  COP 0.8619  residual -3.4e-10
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1.01 Cres=0 gap=0.15 leak=0 drive     0.2759 W  magnets  -1.7e-07 W  load     0.2378 W  COP 0.8620  residual 6.5e-10
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1.05 Cres=0 gap=0.15 leak=0 drive     0.2759 W  magnets  +5.1e-05 W  load     0.2378 W  COP 0.8620  residual 1.2e-08
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1.1 Cres=0 gap=0.15 leak=0 drive     0.2759 W  magnets  +0.00023 W  load     0.2378 W  COP 0.8621  residual 3.3e-08
+
+knife: magnet spacing 2-30 cm
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1 Cres=0 gap=0.02 leak=0 drive     0.2759 W  magnets  +6.1e-09 W  load     0.2378 W  COP 0.8620  residual -1.5e-10
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1 Cres=0 gap=0.05 leak=0 drive     0.2759 W  magnets  +6.8e-09 W  load     0.2378 W  COP 0.8620  residual 1.9e-10
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1 Cres=0 gap=0.1 leak=0 drive     0.2759 W  magnets  +7.7e-09 W  load     0.2378 W  COP 0.8620  residual 4.1e-11
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=0 drive     0.2759 W  magnets  +8.6e-09 W  load     0.2378 W  COP 0.8619  residual -3.4e-10
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1 Cres=0 gap=0.3 leak=0 drive     0.2759 W  magnets  +1.2e-08 W  load     0.2378 W  COP 0.8619  residual -1.2e-09
+
+knife: air leakage at the null
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=1e-08 drive     0.2752 W  magnets  -1.4e-07 W  load     0.2371 W  COP 0.8615  residual 5.6e-09
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=3e-08 drive     0.2693 W  magnets  -4.1e-07 W  load     0.2317 W  COP 0.8605  residual 1.1e-09
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=1e-07 drive     0.2162 W  magnets  -1.2e-06 W  load     0.1854 W  COP 0.8573  residual -2.0e-07
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=3e-07 drive    0.08349 W  magnets  -1.7e-06 W  load    0.07084 W  COP 0.8485  residual -2.2e-06
+  bearden_meg knife V=2 f=10000 RL=100 mismatch=1 Cres=0 gap=0.15 leak=1e-06 drive    0.01346 W  magnets  +9.8e-06 W  load    0.01106 W  COP 0.8218  residual -1.8e-05
+
+knife: series-resonant drive
+  bearden_meg knife V=2 f=10000 RL=1000 mismatch=1 Cres=3e-08 gap=0.15 leak=0 drive  0.0004352 W  magnets  +8.6e-09 W  load  0.0004276 W  COP 0.9827  residual 3.8e-06
+  bearden_meg knife V=2 f=10000 RL=1000 mismatch=1 Cres=6e-08 gap=0.15 leak=0 drive   0.001794 W  magnets  +8.6e-09 W  load   0.001763 W  COP 0.9827  residual 1.2e-06
+  bearden_meg knife V=2 f=10000 RL=1000 mismatch=1 Cres=8e-08 gap=0.15 leak=0 drive   0.003203 W  magnets  +8.6e-09 W  load   0.003148 W  COP 0.9827  residual 8.1e-07
+  bearden_meg knife V=2 f=10000 RL=1000 mismatch=1 Cres=1e-07 gap=0.15 leak=0 drive   0.004965 W  magnets  +8.6e-09 W  load   0.004879 W  COP 0.9827  residual 5.5e-07
+  bearden_meg knife V=2 f=10000 RL=1000 mismatch=1 Cres=1.5e-07 gap=0.15 leak=0 drive    0.01039 W  magnets  +8.5e-09 W  load    0.01021 W  COP 0.9827  residual 2.5e-07
+  bearden_meg knife V=2 f=10000 RL=1000 mismatch=1 Cres=3e-07 gap=0.15 leak=0 drive     0.0252 W  magnets  +8.6e-09 W  load    0.02476 W  COP 0.9827  residual -2.1e-08
+  bearden_meg knife V=2 f=10000 RL=10000 mismatch=1 Cres=3e-08 gap=0.15 leak=0 drive  0.0009412 W  magnets  +8.6e-09 W  load  0.0009245 W  COP 0.9823  residual 2.1e-06
+  bearden_meg knife V=2 f=10000 RL=10000 mismatch=1 Cres=6e-08 gap=0.15 leak=0 drive    0.01121 W  magnets  +8.6e-09 W  load    0.01101 W  COP 0.9823  residual 4.6e-07
+  bearden_meg knife V=2 f=10000 RL=10000 mismatch=1 Cres=8e-08 gap=0.15 leak=0 drive    0.03111 W  magnets  +8.5e-09 W  load    0.03055 W  COP 0.9823  residual 6.9e-08
+  bearden_meg knife V=2 f=10000 RL=10000 mismatch=1 Cres=1e-07 gap=0.15 leak=0 drive     0.0297 W  magnets  +8.5e-09 W  load    0.02918 W  COP 0.9823  residual -1.8e-07
+  bearden_meg knife V=2 f=10000 RL=10000 mismatch=1 Cres=1.5e-07 gap=0.15 leak=0 drive    0.01292 W  magnets  +8.6e-09 W  load    0.01269 W  COP 0.9823  residual -2.2e-07
+  bearden_meg knife V=2 f=10000 RL=10000 mismatch=1 Cres=3e-07 gap=0.15 leak=0 drive   0.005923 W  magnets  +8.6e-09 W  load   0.005818 W  COP 0.9823  residual -2.1e-07
+
+meg: drive 1-20 V
+  bearden_meg meg V=1 f=10000 RL=100                         drive     0.4911 W  magnets  +3.3e-06 W  load    0.05824 W  COP 0.1186  residual 6.9e-06
+  bearden_meg meg V=2 f=10000 RL=100                         drive      1.965 W  magnets  +6.7e-06 W  load      0.233 W  COP 0.1186  residual 3.5e-06
+  bearden_meg meg V=5 f=10000 RL=100                         drive      12.28 W  magnets  +1.7e-05 W  load      1.456 W  COP 0.1186  residual 1.4e-06
+  bearden_meg meg V=10 f=10000 RL=100                        drive      49.11 W  magnets  +4.2e-05 W  load      5.824 W  COP 0.1186  residual 7.7e-07
+  bearden_meg meg V=20 f=10000 RL=100                        drive      196.5 W  magnets   +0.0001 W  load       23.3 W  COP 0.1186  residual 4.3e-07
+
+meg: load 10 ohm-10 kohm
+  bearden_meg meg V=5 f=10000 RL=10                          drive      18.12 W  magnets  -0.00011 W  load        2.9 W  COP 0.1600  residual 2.0e-07
+  bearden_meg meg V=5 f=10000 RL=100                         drive      12.28 W  magnets  +1.7e-05 W  load      1.456 W  COP 0.1186  residual 1.4e-06
+  bearden_meg meg V=5 f=10000 RL=1000                        drive      10.78 W  magnets  +2.5e-05 W  load     0.1898 W  COP 0.0176  residual 2.1e-06
+  bearden_meg meg V=5 f=10000 RL=10000                       drive      10.61 W  magnets  +2.6e-05 W  load    0.01953 W  COP 0.0018  residual 2.2e-06
+
+meg: frequency 1-25 kHz
+  bearden_meg meg V=5 f=1000 RL=100                          drive      12.23 W  magnets  -0.00027 W  load      1.421 W  COP 0.1161  residual 1.0e-07
+  bearden_meg meg V=5 f=5000 RL=100                          drive      12.09 W  magnets  +3.2e-05 W  load      1.459 W  COP 0.1207  residual 7.2e-07
+  bearden_meg meg V=5 f=10000 RL=100                         drive      12.28 W  magnets  +1.7e-05 W  load      1.456 W  COP 0.1186  residual 1.4e-06
+  bearden_meg meg V=5 f=25000 RL=100                         drive      12.94 W  magnets  +2.1e-05 W  load      1.433 W  COP 0.1107  residual 1.8e-06
+
+highest COP over 60 runs: 0.9898 (0 runs did not converge)
+wrote examples/bearden_meg/results.csv

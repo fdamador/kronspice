@@ -43,6 +43,8 @@ the rest through `go run ./examples/<name>`, and all have
 | [eckardt_homopolar](eckardt_homopolar) | Eckardt 2012 self-excited twin-disk homopolar: the paper's equations beside the machine element with its back torque. | H15 | run |
 | [bearing_motor](bearing_motor) | Huber ball-bearing motor: measurement registry, κ and ω0 fits, whether bearing torque can explain the SPG. | H13, H14 | run |
 | [space_power_generator](space_power_generator) | Tewari's SPG test (UPSM pp. 159–160) through the energy ledger: the unmeasured loaded-EMF assumption. | H13 | run |
+| [bearden_meg](bearden_meg) | Bearden's MEG (US 6,362,718) and a bucking-magnet knife edge with a split drive coil at the null, as magnetic circuits (gyrator-capacitor), full ledger, ngspice twins, graphs and flux videos in viz/. | H10 | run |
+| [scalar_disc](scalar_disc) | H47 step 4: Iadicicco–Verolino gated rotating Al disc — observer-split source Ω∂_φρ, S from em/scalar (quasi-static), Minotti–Modanese S² gravity with their fit, controls (reversal, whole ring), bench limits, Coulomb systematic. | H47 | run |
 | [kron_nmr](kron_nmr) | NMR and ESR as Kron's frame II(b): Bloch's equations as a three-winding machine, rotating frame, T1/T2, pickup coil. | §3b, H21 | run |
 | [machine_spacetime](machine_spacetime) | One rotor in three gravitational fields: clocks, precession, Sagnac, burst and tidal margins; its own curvature and frame dragging. | §3l | run |
 
@@ -73,6 +75,7 @@ the rest through `go run ./examples/<name>`, and all have
 | [rotating_efield](rotating_efield) | Can a rotating E field make a B field? Displacement current, Rowland disk, Röntgen–Eichenwald disk; the magnetic-charge prediction labelled hypothetical. | §3f, H2 | run |
 | [rate_of_change](rate_of_change) | Where higher time derivatives enter: water's Debye response as a circuit twin, and Bopp–Podolsky electrodynamics beside Maxwell. | H19 | run |
 | [quantumtricity](quantumtricity) | Work in progress. Circuit theory as U(1) gauge theory on Kron's network (KVL zero holonomy, KCL the Gauss generator, Yee grid = FDTD to round-off), then SU(3) on the same graph: no circuit quantity composes non-abelianly so far; the matter sector (quark ↔ electron) is not yet modeled. | H22 | run |
+| [quantum_circuit_demo](quantum_circuit_demo) | One Python script (numpy, matplotlib) with Kron's 1945 hydrogen ladder as an LC circuit (AC poles = 1s–3p levels to 1e-8 Ha, node voltages = wavefunctions, Lyman α 121.5684 nm) and the H22 test (two-mesh RLC as U(1) gauge theory to round-off; SU(3) loop defect 0.76 against 0 for every circuit quantity); evaluation in report.html | Kron 1945, H22 | run |
 
 ## Coils, pulses and discharges
 
