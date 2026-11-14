@@ -639,6 +639,101 @@ which matches the thin-torus limit ln(8R/a)/π to 0.03 %.
 - **The size problem stays.** R = ħ/mc is 386 fm, while scattering sees
   no structure down to 10⁻¹⁸ m.
 
+## 12. The donut void (`donut.go`, `part12.go`, `viz/plot_donut.py`)
+
+This part puts the photon in the hollow core of an ether vortex ring.
+Part 1 found that a vortex in this ether empties its core; bent into a ring,
+the core is a donut-shaped void. The photon runs round inside it, and its
+wave turns over once per circuit, as on the crossed ring. That gives it
+ħ/2 about the axis for any ring radius R and core radius a, and
+g = Mc²/E_light still holds.
+
+![The donut void](viz/donut_void.png)
+
+### 12a. The light in the core
+
+The double-loop wavelength (4πR) is far longer than any core can guide.
+The core's TE₁₁ cutoff (x/a, x = 1.8412) dominates: at a/R = 0.1 only
+0.07 % of the light's energy goes round the ring, and at a/R = 1 only
+6.9 %. The light is held mostly across the channel.
+
+### 12b. The vortex ring is the string
+
+With lengths in ℓ = √(ħc/K) (K = ½ρκ²) and one parameter
+Π = p∞ħc/K², the energy at fixed shape t = a/R is
+e(λ) = A/λ + Bλ + Cλ³:
+
+- **A:** light plus the charge's static field;
+- **B = ln(8/t) − 2:** the hollow vortex ring's swirl (Lamb §163);
+- **C = 2π²Πt²:** the ether pressure on the empty core.
+
+The swirl term is linear in R: **the vortex ring is the constant-force
+string Part 11 needed.** The virial theorem gives
+g = 2(1 + U/E_L) − 2E_P/E_L.
+
+- **Swirl only:** with no pressure and no charge, g = 2 exactly, derived.
+- **Pressure** always pulls g below 2. At a/R = 1, Π = 10⁻⁴ gives 1.68
+  and Π = 1 gives 1.34.
+- **The charge's static field** pushes g above 2.
+- **Size:** the size balance is stable at every shape.
+
+### 12c. The core swells to the edge
+
+With the size relaxed at each shape, the mass falls steadily as the core
+swells, for every pressure. Both the light (x/a) and the swirl (ln 8R/a)
+push the core wall outward, and only the pressure pushes in. **No thin donut
+is held.** The swelling runs to **a/R = 1, the horn torus**, where the hole
+in the middle closes.
+
+The double loop needs that hole to wind around, so the edge is where the
+swelling has to stop. This is an argument, not a computed result: the
+thin-ring formulas are strained there, and the end state needs the full
+ether solve.
+
+### 12d. The anomaly at the edge
+
+With no pressure, (g − 2)/2 = U/E_L, with the charge spread over the core
+wall:
+
+| a/R | (g − 2)/2 | / measured |
+|---|---|---|
+| 0.1 | 2.76×10⁻⁴ | 0.24 |
+| 0.4 | 7.31×10⁻⁴ | 0.63 |
+| 0.8 | 1.035×10⁻³ | 0.89 |
+| **1.0 (the edge)** | **1.1118×10⁻³** | **0.959** |
+
+- **At the edge the anomaly is 95.9 % of the measured 1.15965×10⁻³,** with
+  no number fitted. The shape is set by the swelling, unlike Part 11's
+  hand-picked λ_C shell.
+- **It can get no closer.** A torus cannot fatten further, and any ether
+  pressure takes some back.
+- **The size is still Compton-scale.** Scaled to m_e c², the horn donut
+  has R = 3.82 ƛ_C = 1.48×10⁻¹² m.
+
+![g, anomaly and mass against the shape](viz/donut_g.png)
+
+### 12e. kronspice: the guided crossed ring
+
+A shunt inductor across each section of the crossed ring line gives a
+waveguide cutoff. With the cutoff set at 3× the ring's own note
+(55 901 Hz), the kronspice AC peak is 176 775 Hz, which is
+√(f_c² + f_z²) and the ladder's value: the double-loop wave rides on the
+channel's cutoff, as in 12a.
+
+### Pictures
+
+- `viz/donut_g.png`: g, anomaly and mass against a/R, from `donut_scan.csv`.
+- `viz/donut_void.png`: the donut in 3-D, a cut through the axis, and the
+  swelling to the edge.
+- `viz/donut_void.mp4` and `viz/donut_void.gif`: two circuits of the
+  photon. Its field turns 360° only after the second circuit (spin ½),
+  while the ether swirls round the core.
+
+```
+go run ./examples/ether_horizon -viz examples/ether_horizon/viz
+python3 examples/ether_horizon/viz/plot_donut.py
+```
+
 ## Status
 
 H49 is **bounded**.
@@ -677,6 +772,12 @@ H49 is **bounded**.
   g = 2 exactly, on R = ħ/mc, with the double loop kept. The charge's
   static self-energy gives the anomaly; it equals α/2π only if that field
   is spread over a shell of radius λ_C (one fitted radius).
+- **The donut void (Part 12).** The hollow core of an ether vortex ring
+  holds the double-loop photon, and the ring's swirl is the constant-force
+  string (g = 2 with no pressure, derived). No thin donut is held: the
+  core swells to the edge, a = R, where the hole closes. There the charge
+  on the core wall gives (g − 2)/2 = 95.9 % of measured with nothing
+  fitted. R ≈ 3.8 ƛ_C.
 - **General relativity.** The electron-mass hole is naked, and would
   evaporate in 10⁻¹⁰⁶ s if it were not.
 - **Standard prediction.** No horizon or void inside the electron: a point
@@ -715,6 +816,7 @@ Next steps:
 - [Proton radius puzzle](https://en.wikipedia.org/wiki/Proton_radius_puzzle) (overview, including the 2026 hydrogen 2s–6p result, 0.8406(15) fm).
 - J. Schwinger, "On quantum-electrodynamics and the magnetic moment of the electron", *Phys. Rev.* 73, 416 (1948); X. Fan et al., *Phys. Rev. Lett.* 130, 071801 (2023) (a_e = 0.00115965218059).
 - D. Hestenes, "The zitterbewegung interpretation of quantum mechanics", *Found. Phys.* 20, 1213 (1990).
+- H. Lamb, *Hydrodynamics*, 6th ed., §163 (energy of a hollow vortex ring); J. D. Jackson, *Classical Electrodynamics*, 3rd ed., §8.7 (TE₁₁ cutoff of a round guide, x = 1.8412).
 - Y. Koide, *Lett. Nuovo Cim.* 34, 201 (1982) (lepton mass relation).
 - J. G. Williamson, M. B. van der Mark, *Ann. Fond. Louis de Broglie* 22, 133 (1997) (the field volume, eq. 5).
 - G. Barontini et al., "Controlling the dynamics of an open many-body quantum system with localized dissipation", *Phys. Rev. Lett.* 110, 035302 (2013).

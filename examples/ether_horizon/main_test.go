@@ -478,3 +478,52 @@ func TestCrossedHalf(t *testing.T) {
 		t.Errorf("crossed/plain = %g, want 0.5", r)
 	}
 }
+
+// Part 12: the vortex ring is a constant-force string (g = 2 with no
+// pressure or charge, virial exact); pressure lowers g, the wall charge
+// raises it; the donut never holds a thin shape; the horn-torus anomaly is
+// 95.9 % of measured; kronspice's guided ring note is √(f_c² + f_z²).
+func TestDonut(t *testing.T) {
+	for _, pi := range DonutPressures {
+		for _, s := range DonutShapes {
+			d := DonutAt(s, pi, WallInvD(s))
+			if v := d.EL + d.EU - d.EV - 3*d.EP; math.Abs(v) > 1e-9*d.M {
+				t.Errorf("Π %g a/R %g: virial %g", pi, s, v)
+			}
+			if g := 2*(1+d.EU/d.EL) - 2*d.EP/d.EL; math.Abs(g-d.G) > 1e-9 {
+				t.Errorf("Π %g a/R %g: g %g vs virial %g", pi, s, d.G, g)
+			}
+			if d.D2 <= 0 {
+				t.Errorf("Π %g a/R %g: unstable in size", pi, s)
+			}
+		}
+		if _, fat := ShapeScan(ShapeGrid(), pi, WallInvD); !fat {
+			t.Errorf("Π %g: a thin donut is held", pi)
+		}
+	}
+	for _, s := range DonutShapes {
+		if g := DonutAt(s, 0, 0).G; math.Abs(g-2) > 1e-12 {
+			t.Errorf("a/R %g: bare swirl g = %g", s, g)
+		}
+	}
+	h := DonutAt(1, 0, WallInvD(1))
+	if r := (h.G/2 - 1) / AeMeasured; math.Abs(r-0.9588) > 2e-3 {
+		t.Errorf("horn anomaly ratio %g", r)
+	}
+	if r := h.RadiusOverLbar(); math.Abs(r-3.820) > 0.01 {
+		t.Errorf("horn R/ƛ %g", r)
+	}
+}
+
+func TestGuideRing(t *testing.T) {
+	fz := GuideRing{N: 200, L: 1e-6, Cd: 1e-9, Ld: 1e30}.Analytic()
+	g := GuideRing{N: 200, L: 1e-6, Cd: 1e-9}
+	g.Ld = 1 / (math.Pow(2*math.Pi*3*fz, 2) * g.Cd)
+	pk, err := g.Peak()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if math.Abs(pk/math.Hypot(g.Cutoff(), fz)-1) > 1e-4 {
+		t.Errorf("guided note %g vs %g", pk, math.Hypot(g.Cutoff(), fz))
+	}
+}

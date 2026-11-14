@@ -595,6 +595,7 @@ func main() {
 	part9(*viz)
 	part10()
 	part11()
+	part12(*viz)
 }
 
 // SinkRadii are the sink sizes scanned, in healing lengths ξ.
