@@ -91,7 +91,7 @@ modeled, what would count as evidence, and its current status. Rules:
 | H7 | Neutrinos as a usable energy source | §1 long-term vision, §3.1 neutrino port | computed ≈ 0 under established physics |
 | H8 | Extended electrodynamics with a physical scalar field (van Vlaenderen 2003; Hively 2012) | `em/scalar/`, §3k tier 2 | untested |
 | H9 | Scalar longitudinal waves observed (Monstein & Wesley 2002) — replication | §3k tier 3, simulated setup and bench repeat | untested |
-| H10 | Bearden: scalar EM; Motionless Electromagnetic Generator, COP > 1 | §3k tier 3, MEG replica with full ledger | untested |
+| H10 | Bearden: scalar EM; Motionless Electromagnetic Generator, COP > 1 | §3k tier 3, MEG replica with full ledger; `examples/bearden_meg`: MEG and a bucking-magnet knife edge (split drive coil at the null) as magnetic circuits, ngspice twins for alignment | untested — standard prediction computed (60 runs): MEG COP 0.002–0.16, knife edge 0.06–0.990 (a good transformer through all-iron paths), flat in drive level, spacing and mismatch; magnets supply no net power over whole cycles (≤ 1e-3 of the drive, into stored energy while settling); air leakage at the null lowers COP; the claimed vacuum coupling is not modelled (no equation stated); bench replica with whole-cycle true-power measurement still needed |
 | H11 | Meyl: longitudinal vortex scalar waves | §3k tier 3, delay, distance and resonance tests | untested |
 | H12 | Electrogravitic thrust (Biefeld–Brown) beyond ion wind | §3k tier 3, air versus vacuum thrust | untested |
 | H13 | Tewari's space-vortex electron: the electron as a vortex of an incompressible space fluid around a void (Physics Essays 31, 108, 2018); his reactionless generator | `examples/space_vortex` electron test bench; `examples/space_power_generator` ledger of his published SPG test; `doc/tewari-references.md` | untested — Zeeman prediction needed; model gives g = 15/8 (15/16 with the standard ring moment) against 2.0023, proton charge 12e, α = 15π²/16 against 1/137, a density limit white dwarfs exceed; SPG test (`examples/space_power_generator`) rests on an unmeasured loaded EMF: ≤ 1.37 V predicted, 3.41 V assumed; bearing (Huber) torque could close its 24.8 N·m torque gap only in EM mode, whose back-EMF leaves the same 1.37 V, and is excluded in thermal mode at the measured η ≈ 0.10 (`examples/bearing_motor`) |
@@ -128,6 +128,8 @@ modeled, what would count as evidence, and its current status. Rules:
 | H44 | The Claude electron: H23's toroidal photon held together by H29's nonlinear ether, its (2, 1) double loop as a Hopf soliton, with spin ½ from Finkelstein–Rubinstein quantization (Krusch & Speight, *Commun. Math. Phys.* 264, 391, 2006: fermion only for odd Hopf charge) (user hypothesis, 2026-11-08) | `examples/claude_electron`: `ether_knot`'s axisymmetric relaxer generalized to Battye & Sutcliffe's A_{M,K} knots (Q = M·K) with the degree followed; Faddeev rotor inertias and FR spin energy; Hestenes zitterbewegung twin; charge options; κ2, κ4 fixed by m_e c² and a size, with every bound as a window on ℓ | bounded — the double loop is A_{1,2}, Q = 2: bosonic under FR, and not held (core falls onto the axis, degree 1.93 → 0.14 in 8000 steps at h = 0.1 ℓ; the held Q = 2 knot is A_{2,1}, windings swapped, E 884.6 = 1.635 × A11); the single loop A11 (E 541.08, = ether_knot) can be a fermion, but with I∥ 473, I⊥ 721 (E0ℓ²/c²) its J = ½ rotation fits in m_e c² only for ℓ ≥ 444 fm = 1.15 λ̄ (rim 0.65 c), against ℓ ≤ 4.8×10⁻⁵ fm from no excited electron below 5.6 TeV (CMS, *JHEP* 05 (2020) 052; the knot's tone 1.36 ħc/ℓ), ≤ 5.5×10⁻⁴ fm from scattering, ≤ 0.047 fm from hydrogen 1S–2S; empty by 9×10⁶; Compton reading (ring = λ̄/2) has spin energy 1.75 m_e c², tone 1.60 MeV, 1S–2S shift 127 GHz; rigid co-rotating charge gives g 2.81 (ESR 39.35 GHz/T); step 0: the zitter radius ħ/2mc equals H23's loop radius, and a charge at c on it gives g = 1.000, so H23's eq. 12 g = 2(1 + α′/2π) is asserted, not obtained by circulation; charge not derived (H23 0.910 e, Rañada √(ε0ħc) = 3.30 e, gauged ether: input); standard prediction: the Dirac electron with QED, pointlike, g = 2.002 319 304 36, no excited states |
 | H45 | The weak interaction is the fdamador neutrino ring's own electromagnetic field acting on the electron's field, first proposed as magnetic, then as electric (user hypothesis, 2026-11-08) | `examples/fdamador_neutrino` Part 10 (`part10.go`): the ring's vertex from its own sources (polarization current ∂P/∂t, bound charge −∇·P) per state m = 0, ±1 — charge, ⟨r²⟩, electric and magnetic dipoles, toroidal (anapole) dipole; ν–e scattering (Vogel & Engel dipole term × the ring's form factor) beside the SM weak cross-section; bounds; SNO deuteron CC and NC; parity and energy dependence; kronspice ring + held electron moment through K | bounded — the ring has no charge, no charge radius and no anapole (exact by symmetry; round-off ≤ 1e-15), so it has no contact coupling; only dipoles that oscillate (m = 0, magnetic, 0.073 μB per quantum at Part 2's a = 1.46e-12 m) or turn (m = ±1, electric, p·c ≤ 0.078 μB upper estimate; Part 8d's field gives 5–12 % of the estimate at the bench), static moments 0; scattering has a 1/T spectrum, 1.5e15× the weak ν_e rate at 862 keV (T > 250 keV), effective moment 7.6e9× the XENONnT bound (6.4e-12 μB) and 2.9e8× Borexino's, meeting it only at a ≤ 3.6e-19 m; ν = ν̄ (weak 0.43), σ flat in E (weak ∝ E, slope 1.01); SNO CC 0 (EM conserves charge) against CC ≈ ⅓ NC measured, EM deuteron break-up 3.4e-35 cm² at 10 MeV, ~3e7× the SM NC order (order-of-magnitude estimate); kronspice: a held moment leaves the ring unchanged (3.9e-13), work = M·I_e·ΔI_ring (1.229e-17 vs 1.230e-17 J), time average 6.5e-6 of peak — no static potential; standard prediction: W and Z exchange, V−A, σ ∝ G_F²E, moments ~3e-20 μB·(m/0.1 eV), ⟨r²⟩ ≈ 4e-33 cm², CC and NC as measured |
 | H46 | Harmonic cavitation: cavities shaped as a Mandelbulb (power n, evolved) on a rotor turned by a Tesla turbine give the most cavitation, their harmonics and implosions gathering in the middle; the heat (steam, hot water) heats homes; layout fixed by the user as a dimple drum at each outlet (user hypothesis, 2026-11-08) | `examples/harmonic_cavitation`: reduced cavitation model calibrated on published rotational reactors (Xue 2024, Sun 2020/21, Petkovšek 2013), shaft as a kronspice circuit with ledger, NSGA-II over hemispherical-dimple drums and over the Mandelbulb's n, gap as an acoustic ring, Rayleigh–Plesset collapse and axis focusing; report PDF | bounded (in this model) — dimple drums η = 0.189 collapse energy per shaft joule, flat from 1.1 to 3.0 kW (heater: 84 mm drums, 2 rows of Ø 6 mm hemispheres, housing dimple ring, 0.8 mm gap, 1,830 rpm, σ ≈ 0.88); Mandelbulb best 0.187 (n = 14), each n 0.158–0.186, fine detail removed 0.191 (a smooth lobed ring matches dimples; the fractal detail lowers η); η moves 0.09–0.47 with the declared drag, pulse and vapour constants; focusing raises the axis peak by up to the number of simultaneous collapses, never their summed energy; heat ≤ electricity (motor drive 0.90; pump + Tesla turbine gives 4× less cavitation per joule); closed steam loop (drums raise steam, Tesla turbine on the shaft, condenser = home heat, pump back): the turbine returns 3–4 % of the shaft work (Carnot 13 % between 111 and 60 °C, turbine 0.30 of ideal declared), so a motor supplies the rest and the home gets about the electricity; boiling in the drums drops η to 0.011 (steam that leaves has not collapsed), subcooled drums at 3 bar + flash tank keep 0.156; standard prediction: published heaters 80–90 % heat per electrical joule, a heat pump 3–4×; next: CFD (OpenFOAM, Schnerr–Sauer) and a KI-dosimetry bench |
+| H47 | The scalar part of Maxwell's quaternion equations (the convergence S.∇𝔄 that Maxwell set to zero by choice; S = ∂_μA^μ, zero in standard theory by the Coulomb or Lorenz convention) is physical and couples to gravity, so circuits that generate S change the gravitational field (user hypothesis, 2026-11-08; equations from Minotti & Modanese, *Mod. Phys. Lett. A* 40 (2025), arXiv:2408.05230, and *Eur. Phys. J. C* 86, 593 (2026), arXiv:2603.26986; source in rotating apparatus from Iadicicco, Modanese & Verolino, *Gen. Rel. Grav.* 58, 106 (2026); the AIAS route, Evans, Bearden et al., *Physica Scripta* 61, 513 (2000), drops the Lorenz condition, with Bruhn's critique and the authors' replies recorded in the notes) | `doc/h47-scalar-gravity.md`; `em/scalar/` (Aharonov–Bohm electrodynamics, step 2); weak-field φ, ψ, χ coupling (step 3); rotating gated disc after Iadicicco & Verolino, arXiv:2608.21403 (step 4) | untested — theory: Brans–Dicke plus a second scalar ψ, coupled through β_AB S²; S has a source only where local charge conservation fails (□S = μ₀∂_νj^ν), effectively at superconducting junctions (S ≈ μ₀i_c/8πλ_L ≈ 2×10³ N A⁻¹ m⁻¹) or as a rotating observer's split term Ω∂_φρ; one parameter C_φ ≈ 4–9×10²¹ fits the Podkletnov and Poher reports (unreplicated), which the authors call phenomenological; dropping the Lorenz condition alone leaves E and B unchanged, so S must enter the action (the AB term) to act; standard prediction S = 0, GR weight; bounds: Brans–Dicke ω > 4×10⁴, MICROSCOPE η < 10⁻¹⁵; no energy theorem in the papers; step 2 built (`em/scalar/`, 2026-11-08): energy theorem derived, u = ½ε₀E² + B²/2μ₀ + S²/2μ₀, flux (E×B + S E)/μ₀, work c²ρS in its own column, exact on the grid (1e-14); S = 0 reproduces `em/fdtd.go` to 5e-16; created charge radiates the retarded S = μ₀q̇/(4πr) to 0.2–0.7 % with B = 0; box S-modes at the TM cutoff; quaternion form ∇G = μ₀J with G = ∇A = S + F (§3c); step 4 (`examples/scalar_disc`): the gated rotating disc gives S = 1.1×10⁻¹² T at the sensor (5.5×10⁻¹¹ at the bench's limits), exactly odd in Ω and 0 with the whole ring lit, while MM's S² force is even in Ω (IMV's linear response is odd: the papers disagree, a CW/CCW run decides) and 1.3×10⁻³³ m/s² at the limits; the fit's junction S is 4×10¹³ × the disc's, its ω₀ ≈ 3.5 against Cassini's 4×10⁴; a null at 10⁻⁹ m/s² bounds C_φ < 5×10³³; the disc measures IMV's Λ_opt (no published value); Evans' UFT papers on the AIAS site carry the same equations (user's account; numbers to be added); magnetic scalar added (`em/scalar/magnetic.go`, 2026-11-09): the duality image S_m = div ℨ + (1/c²)∂ψ_m/∂t with magnetic charge, MagDual = `em/fdtd.go` FaceSource run to round-off, energy theorem with both scalars 8e-15, created magnetic charge radiates S_m = (μ₀/c)q̇_m/(4πr) to 0.6 % with E = 0; next: step 3, the junction numbers |
+| H48 | The spin connection of Cartan geometry belongs in Maxwell's equations: ECE theory (M. W. Evans, A.I.A.S.) makes A = A⁽⁰⁾q (tetrad) and F = A⁽⁰⁾T (torsion), so E = −∇φ − ∂A/∂t − cω₀A + ωφ, B = ∇×A − ω×A; ECE2 turns the spin connection into charge and current, ρ = −2ε₀κ·E, μ₀J = 2(κ₀E/c + κ×B); spin connection resonance draws "energy from spacetime" (Eckardt, *ECE Unified Field Theory* Vol. 1, 2022, Ch. 4–6; user request, 2026-11-09) | `em/scalar/ece.go` (relations, constraints 4.213–4.214, antisymmetry 5.14, κ at a point), `em/scalar/spin.go` (ECE2 vacuum current on the Yee grid, SpinWork column, Coulomb defect); §3c | untested — computed: ω = 0 and the book's free-space spin connection (κ = κ₀ = 0) give Maxwell's fields exactly; the antisymmetry split cancels the spin terms in E (and holds only where ∇φ − ∂A/∂t ∥ A); a uniform ω gives ∇·B = ω·∇×A (magnetic charge, H2); in the field κ₀ is a conductivity, energy e^(−2κ₀ct) to 0.2 %, growth for κ₀ < 0 booked to the spin connection (residual 3e-14); ECE2's Coulomb law does not follow from its Ampère law (defect 0.55); the book has no energy theorem with ω and no measured ω; standard prediction: ω is a frame quantity, E and B Maxwell's, a gain needs a declared source |
 
 **H6 — the Sun and high-voltage pulse fields (theoretical).** The working
 idea is that the Sun's energy, and its formation, involve high-voltage
@@ -502,7 +504,7 @@ kronspice/
 │   ├── momentum.go             # momentum ledger: forces with their reactions on exterior sources (M9n)
 │   ├── hed.go                  # quaternionic electrodynamics (Giardino 2020), hypothetical mode, free parameter β (§3f)
 │   ├── temporal.go             # temporal scalar field T (Jack 2003), hypothetical mode, coupling from Thomson coefficients (§3f)
-│   ├── scalar/                 # common interface for tier-2 scalar-field theories; comparisons on shared runs (§3k)
+│   ├── scalar/                 # common interface for tier-2 scalar-field theories; comparisons on shared runs (§3k); ab.go: electric scalar S (Aharonov–Bohm, H47); magnetic.go: magnetic scalar S_m with magnetic charge (MagDual = em/duality.go, MagAB), both on the Yee grid with one energy theorem; ece.go, spin.go: ECE spin connection (H48) — field–potential relations, constraints and antisymmetry at a point, ECE2 geometric current (2/μ₀)(κ₀E/c + κ×B) in the grid with SpinWork
 │   ├── fdtd.go                 # local Yee FDTD field solver (§3g): conducting walls, perfect inner conductors, graded matched absorbing layer, materials (εr, σ), edge current sources, magnetic face sources (Huygens surfaces), exact discrete energy ledger (source work = field + heat + absorbed, residual ~1e-13), div B / Gauss checks; validated: TM110 cavity (Yee ω to 1e-7), Hertzian dipole vs Larmor (+0.5 %), flying doughnut vs exact (3.8 % at 8 cells per q1)
 │   ├── doughnut.go             # Hellwarth–Nouchi exact toroidal "flying doughnut" pulse (fields and potentials) and its FDTD validation run
 │   ├── tlm.go                  # TLM field solver: Kron-style field network, lumped elements at nodes (§3a.1, §3g)
@@ -1429,6 +1431,146 @@ The modern compact equivalent, used for implementation and cross-checks, is
 the biquaternion / spacetime-algebra form: with `F = E + I c B` and the
 four-gradient `∇`, all four equations become `∇F = J/(ε₀c)`. This is the
 same algebra as `hyper/ga` in signature `Cl(1,3)`.
+
+**With the scalar part kept (hypothetical mode; H8, H47; `em/scalar/`).**
+Maxwell's condition `S.∇𝔄 = 0` in (A) is a choice, not a consequence of the
+other equations: the scalar part of the potential's derivative is removed
+by gauge (Coulomb there, Lorenz in modern texts). Kept, it is the
+four-scalar
+
+```
+S = ∂_μA^μ = div 𝔄 + (1/c²)∂ψ/∂t = −S.∇𝔄 + (1/c²)∂ψ/∂t      [T]
+```
+
+and the potential's full derivative is a scalar plus the field:
+
+```
+G = ∇A = S + F         (grade 0 + grade 2; Maxwell's case: S = 0, G = F)
+∇G = μ₀J               (one equation, as ∇F = μ₀J; equivalently □A = μ₀J with no gauge)
+```
+
+Its grade parts are the field equations of Aharonov–Bohm
+(Ohmura–Stueckelberg) electrodynamics, Minotti & Modanese eq. 7 with β = 0:
+the vector part `∇·F = μ₀J − ∇S`, the trivector part `∇∧F = 0`, and, from
+∇²G = μ₀∇J, the source law `□S = μ₀ ∂_νJ^ν`. In E, B and S (SI):
+
+```
+div B = 0                        curl E = −∂B/∂t                       (unchanged)
+div E = ρ/ε₀ − ∂S/∂t             curl B = μ₀J + (1/c²)∂E/∂t + grad S
+□S = μ₀(∂ρ/∂t + div J)           S has a source only where local charge conservation fails
+```
+
+Energy theorem (derived in `em/scalar/ab.go`; neither source paper states
+it):
+
+```
+∂u/∂t + div P = −J·E + c²ρS,
+u = ½ε₀E² + B²/(2μ₀) + S²/(2μ₀),    P = (E×B + S E)/μ₀
+```
+
+S carries energy and an extra, longitudinal flux S·E (a pure S-wave has
+B = 0), and does work c²ρS on charge, which is booked in its own
+(hypothetical) ledger column. On the Yee grid with S on the nodes the
+theorem holds exactly step by step. Checked (2026-11-08,
+`em/scalar/ab_test.go`): with conserved currents S stays 0 and E, B equal
+`em/fdtd.go` to 5e-16; the energy theorem closes to 1e-14; charge created at
+a node radiates S = μ₀q̇(t − r/c)/(4πr) to 0.2 % (axis) and 0.7 % (diagonal),
+arriving at r/c with B = 0; free S-modes of a conducting box ring at the
+Dirichlet (TM-cutoff) frequency (grid theory 7e-7, continuum 0.05 %); and in
+standard mode the same created charge breaks Gauss's law (defect 1), which is
+why dropping the condition alone, without the S term in the action, cannot
+carry it. Standard theory remains the default everywhere; S ≠ 0 runs only in
+`em/scalar` with `Mode: AB`, labelled, beside the S = 0 prediction.
+
+**The magnetic scalar (hypothetical; H2 + H47; `em/scalar/magnetic.go`).**
+With magnetic charge allowed (ρ_m [A·m/m³], J_m [A·m/(m²·s)], the units of
+`em/duality.go`), the dual potentials ψ_m, ℨ carry a second scalar, the
+duality image (E → cB, cB → −E) of S. Neither source paper has it; it is
+derived here. The full set, both scalars kept:
+
+```
+Potentials:  E  = −∇ψ − ∂𝔄/∂t − c curl ℨ        cB = c curl 𝔄 − ∇ψ_m − ∂ℨ/∂t
+             S_e = −S.∇𝔄 + (1/c²)∂ψ/∂t          S_m = −S.∇ℨ + (1/c²)∂ψ_m/∂t      [T]
+             □ψ = ρ/ε₀,  □𝔄 = μ₀J,              □ψ_m = cμ₀ρ_m,  □ℨ = μ₀J_m/c   (no gauge)
+
+Quaternion:  ∇E  = −(ρ/ε₀ − ∂S_e/∂t)    + (−∂B/∂t − μ₀J_m − c∇S_m)
+             ∇cB = −(cμ₀ρ_m − ∂S_m/∂t)  + (cμ₀J + (1/c)∂E/∂t + c∇S_e)
+
+Components:  div E  = ρ/ε₀ − ∂S_e/∂t            curl B = μ₀J + (1/c²)∂E/∂t + ∇S_e
+             div B  = μ₀ρ_m − (1/c)∂S_m/∂t      curl E = −∂B/∂t − μ₀J_m − c∇S_m
+
+Sources:     □S_e = μ₀(∂ρ/∂t + div J)           □S_m = (μ₀/c)(∂ρ_m/∂t + div J_m)
+
+Energy:      ∂u/∂t + div P = −J·E − J_m·B + c²ρS_e + cρ_mS_m
+             u = ½ε₀E² + B²/(2μ₀) + (S_e² + S_m²)/(2μ₀),  P = (E×B + S_e E + c S_m B)/μ₀
+```
+
+On the Yee grid S_m sits at the cell centres (where div B is) at the whole
+steps with E, ρ_m at the cell centres at the half steps with B, and grad S_m
+on the B faces with S_m = 0 outside the box, so the grid's grad and div are
+adjoint and the energy theorem closes step by step. `Config.Magnetic`
+selects `MagNone` (default; magnetic sources refused), `MagDual` (magnetic
+charge, S_m held at 0: `em/duality.go`'s equations) or `MagAB` (S_m evolved).
+Checked (2026-11-09, `em/scalar/magnetic_test.go`):
+- with a conserved magnetic current, MagDual equals `em/fdtd.go` driven by
+  the same current as a `FaceSource` (M = μ₀J_m) to round-off (E 1e-12,
+  B 4e-16 relative), and MagAB keeps S_m = 0 (5.9e-25 T);
+- the energy theorem with both scalars and electric and magnetic currents
+  and created charges closes to 8e-15;
+- created magnetic charge radiates the retarded
+  S_m = (μ₀/c)q̇_m(t − r/c)/(4πr) to +0.03 % (axis) and +0.6 % (diagonal),
+  arriving at r/c with E = 0 (the dual of the electric S wave, which has
+  B = 0);
+- electric charge created at rate q̇ and magnetic at c·q̇ give the same
+  scalar amplitude (0.2 %);
+- with S_m held at 0 the same created magnetic charge breaks div B = μ₀ρ_m
+  (defect 1).
+
+Standard prediction: no magnetic charge has been observed (MoEDAL,
+IceCube), so S_m = 0 and the set reduces to the electric-scalar equations
+above, and with charge conserved to Maxwell's.
+
+**The ECE spin connection (hypothetical; H48; `em/scalar/ece.go`,
+`em/scalar/spin.go`).** Evans' ECE theory makes the potential proportional
+to Cartan's tetrad and the field to its torsion, so the spin connection
+(scalar ω₀ and vector ω, both 1/m) enters the field–potential relations.
+Equations from Eckardt, *ECE Unified Field Theory* Vol. 1 (2022), copy in
+`examples/AIAS/papers/other/`; equation numbers are the book's:
+
+```
+ECE  (4.211–4.212):  E = −∇φ − ∂A/∂t − cω₀A + ωφ        B = ∇×A − ω×A
+ECE2 (6.189–6.190):  E = −∇φ − ∂A/∂t + 2(cω₀A − ωφ)     B = ∇×A + 2ω×A   (index summed, not dropped)
+Field equations (4.72–4.75): Maxwell's in form, homogeneous currents set to 0, so
+  ∇·(ω×A) = 0,   −c∇×(ω₀A) + ∇×(ωφ) − ∂(ω×A)/∂t = 0               (4.213–4.214)
+Antisymmetry (5.14): ∇φ − ∂A/∂t − cω₀A − ωφ = 0  (replaces the gauge)
+ECE2 wave numbers (6.164–6.169): κ₀ = φ/(cW⁽⁰⁾) − ω₀, κ = A/W⁽⁰⁾ − ω,
+  ∇·E = −2κ·E = ρ/ε₀,   ∇×B − (1/c²)∂E/∂t = 2(κ₀E/c + κ×B) = μ₀J
+```
+
+What the code shows (2026-11-09, `ece_test.go`, `spin_test.go`):
+- ω = 0 gives Maxwell. The book's free space (ω = A/W⁽⁰⁾,
+  ω₀ = φ/(cW⁽⁰⁾), so κ = κ₀ = 0) makes both spin-connection terms vanish
+  identically: the fields are Maxwell's for any W⁽⁰⁾.
+- The slides' split cω₀A = ωφ = ½(∇φ − ∂A/∂t) satisfies (5.14) only
+  where ∇φ − ∂A/∂t ∥ A. There E is Maxwell's (residual 2e-13); otherwise
+  the law fails by O(1).
+- Where (4.213) fails, the ECE B carries magnetic charge: a uniform ω
+  gives ∇·B = ω·∇×A, so it falls to the Magnetic modes above (H2).
+- ECE2 in vacuum is evolved on the Yee grid as the declared geometric
+  current J_ω = (2/μ₀)(κ₀E/c + κ×B), its work in `Ledger.SpinWork`.
+  - κ₀ is a conductivity 2κ₀/(μ₀c): a TM110 mode's energy goes as
+    e^(−2κ₀ct) to 0.2 %, falling for κ₀ > 0 and growing for κ₀ < 0. The
+    gain is booked to the spin connection exactly (residual 3e-14), as a
+    negative resistance is model-supplied.
+  - κ = 0 is em.FDTD bit for bit.
+  - ECE2's Coulomb law ∇·E = −2κ·E does not follow from its Ampère law
+    (`CoulombDefect` 0.55 for κ ∥ E on TM110).
+- The book gives no energy theorem containing ω (§5.3.1 states Poynting's
+  per index).
+
+Standard prediction: ω, ω₀ are frame quantities with no field of their
+own; E and B obey Maxwell's equations; no κ₀ < 0 vacuum has been
+observed. A circuit's energy gain needs a declared source.
 
 ### How each circuit law traces back to Maxwell
 

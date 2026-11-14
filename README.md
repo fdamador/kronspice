@@ -130,6 +130,7 @@ From the command line:
 go run ./cmd/kronspice -o bode.csv testdata/netlists/rlc_bandpass_ac.cir   # simulate a netlist
 go run ./cmd/evolve -config examples/rc_lowpass_values/config.json       # evolve R and C for a 1 kHz cutoff
 go run ./cmd/cir2kicad examples/water_vibration/netlists/h2o.cir         # KiCad schematic + results sheet
+go run ./cmd/kronspice -smith a -smith-svg chart.svg circuit.cir          # extended Smith chart of port a (negative resistance included)
 ```
 
 From a script or an AI assistant, use the JSON interface: the netlist on

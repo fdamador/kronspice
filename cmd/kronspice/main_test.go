@@ -6,7 +6,9 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"math"
+	"os"
 	"strings"
 	"testing"
 
@@ -190,4 +192,76 @@ func TestTextReportFromStdin(t *testing.T) {
 	if strings.Contains(out, `"ok"`) {
 		t.Error("text mode wrote JSON")
 	}
+}
+
+const negTank = `Negative-resistance tank
+V1 in 0 AC 1
+R1 in a 50
+Rn a b -20
+L1 b c 1u
+C1 c 0 1n
+Rleak c 0 1e9
+.ac dec 10 1meg 30meg
+.end
+`
+
+// -smith measures the port with the circuit's own AC source set to zero,
+// keeps negative resistance (|Γ| > 1), and writes the extended chart.
+func TestSmithFlag(t *testing.T) {
+	dir := t.TempDir()
+	opt := options{json: true, backend: solver.Auto, smithPlus: "a", smithMinus: "0", z0: 50,
+		smithSVG: dir + "/chart.svg", smithCSV: dir + "/smith.csv"}
+	var buf bytes.Buffer
+	if err := run(strings.NewReader(negTank), &buf, opt); err != nil {
+		t.Fatal(err)
+	}
+	var doc output.Document
+	if err := json.Unmarshal(buf.Bytes(), &doc); err != nil {
+		t.Fatal(err)
+	}
+	sm := doc.Analyses[0].Smith
+	if sm == nil || sm.Plus != "a" || sm.Z0 != 50 {
+		t.Fatalf("smith doc %+v", sm)
+	}
+	// Port a sees Rn + L1 + (C1 ∥ Rleak) to ground, and R1 to the shorted
+	// source: Re Z of the series branch is −20 Ω near resonance, so the
+	// parallel 50 ∥ (−20 + jX) is active there.
+	if sm.MaxGamma <= 1 || len(sm.ActiveBands) == 0 {
+		t.Fatalf("max |Γ| %g, bands %v", sm.MaxGamma, sm.ActiveBands)
+	}
+	for _, f := range []string{"chart.svg", "smith.csv"} {
+		if b, err := os.ReadFile(dir + "/" + f); err != nil || len(b) < 100 {
+			t.Fatalf("%s: %v (%d bytes)", f, err, len(b))
+		}
+	}
+	// Text report.
+	buf.Reset()
+	opt.json, opt.smithSVG, opt.smithCSV = false, "", ""
+	if err := run(strings.NewReader(negTank), &buf, opt); err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(buf.String(), "Smith chart: port a–0") || !strings.Contains(buf.String(), "Negative resistance") {
+		t.Fatalf("report:\n%s", buf.String())
+	}
+	// No .ac analysis, or an unknown port: an error, not a silent skip.
+	if err := run(strings.NewReader(divider), io.Discard, options{backend: solver.Auto, smithPlus: "out", smithMinus: "0", z0: 50}); err == nil {
+		t.Fatal("want an error without .ac")
+	}
+	if _, err := runJSONOpt(t, rcAC, options{json: true, backend: solver.Auto, smithPlus: "nope", smithMinus: "0", z0: 50}); err == nil {
+		t.Fatal("want an error for an unknown node")
+	}
+}
+
+func runJSONOpt(t *testing.T, netlist string, opt options) (*output.Document, error) {
+	t.Helper()
+	var buf bytes.Buffer
+	err := run(strings.NewReader(netlist), &buf, opt)
+	var doc output.Document
+	if derr := json.Unmarshal(buf.Bytes(), &doc); derr != nil {
+		t.Fatalf("output is not JSON: %v\n%s", derr, buf.String())
+	}
+	if err != nil && (doc.Error == nil || doc.Error.Class != "invalid") {
+		t.Fatalf("error class %+v", doc.Error)
+	}
+	return &doc, err
 }

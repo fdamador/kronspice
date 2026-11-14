@@ -1,0 +1,57 @@
+==============================================================================
+PART A  Hydrogen as a resonant ladder circuit (Kron 1945)
+==============================================================================
+  l=0  h=0.040 a0   1499 nodes  V0=  25.10  AC resonances (Ha): -0.49980016, -0.12498750, -0.05555309
+                     eigen twin   (Ha): -0.49980016, -0.12498750, -0.05555309   max |AC - twin| = 4.3e-14
+  l=0  h=0.020 a0   2999 nodes  V0=  50.10  AC resonances (Ha): -0.49995001, -0.12499688, -0.05555494
+                     eigen twin   (Ha): -0.49995001, -0.12499688, -0.05555494   max |AC - twin| = 1.6e-13
+  l=0  h=0.010 a0   5999 nodes  V0= 100.10  AC resonances (Ha): -0.49998750, -0.12499922, -0.05555540
+                     eigen twin   (Ha): -0.49998750, -0.12499922, -0.05555540   max |AC - twin| = 8.4e-13
+  1s: h->0 (order 2.00)  E = -0.500000010 Ha = -13.60569 eV   exact -0.500000000 Ha   error -1.0e-08
+  2s: h->0 (order 2.00)  E = -0.125000000 Ha = -3.40142 eV   exact -0.125000000 Ha   error -1.6e-10
+  3s: h->0 (order 2.00)  E = -0.055555556 Ha = -1.51174 eV   exact -0.055555556 Ha   error +1.8e-11
+
+  l=1  h=0.040 a0   1499 nodes  V0=   1.10  AC resonances (Ha): -0.12500417, -0.05555748
+                     eigen twin   (Ha): -0.12500417, -0.05555748   max |AC - twin| = 6.0e-14
+  l=1  h=0.020 a0   2999 nodes  V0=   1.10  AC resonances (Ha): -0.12500104, -0.05555604
+                     eigen twin   (Ha): -0.12500104, -0.05555604   max |AC - twin| = 4.2e-13
+  l=1  h=0.010 a0   5999 nodes  V0=   1.10  AC resonances (Ha): -0.12500026, -0.05555568
+                     eigen twin   (Ha): -0.12500026, -0.05555568   max |AC - twin| = 6.1e-13
+  2p: h->0 (order 2.00)  E = -0.125000000 Ha = -3.40142 eV   exact -0.125000000 Ha   error -6.2e-11
+  3p: h->0 (order 2.00)  E = -0.055555556 Ha = -1.51174 eV   exact -0.055555556 Ha   error -7.4e-12
+
+  Lyman alpha (2p -> 1s), reduced mass applied: 121.5684 nm   (measured 121.5670 nm)
+  Balmer alpha (3p -> 2s), reduced mass applied: 656.470 nm   (measured 656.46 nm in vacuum)
+  Remaining gap to measurement: fine structure, Lamb shift (not in this network).
+  SPICE netlist hydrogen_ladder.cir written (h = 0.25 a0): 1s resonance E = -0.492423 Ha at f = 0.083794 Hz (normalized units)
+
+==============================================================================
+PART B  Quantumtricity (H22): circuit electricity vs the quark model
+==============================================================================
+Step 1 (U(1), standard): two-mesh RLC at 1 kHz (V1 1 V, R1 100, L1 10 mH, C1 1 uF, L2 20 mH, R2 50)
+  Curl o Grad = 0         (A . C = 0)        residual 0.0e+00
+  KVL = zero holonomy      (C^T v = 0)       residual 9.7e-17
+  voltage is pure gauge    (v = A^T phi)     residual 7.8e-16
+  KCL = Gauss's law        (A i = 0)         residual 0.0e+00
+  gauge shift phi+const leaves v             residual 9.9e-16
+  mesh currents |I1| = 2.1259 mA, |I2| = 5.6224 mA; capacitor charge |Q| = 0.7604 uC; inductor flux |Phi_L1| = 21.259 uWb
+  stored energy: C1 0.2891 uJ, L1 0.0226 uJ, L2 0.3161 uJ (peak)
+  power ledger: source 1.016254 mW, resistors 1.016254 mW, difference 2.2e-19 W
+
+Every circuit quantity as a link variable exp(i x_k) on the same graph:
+  voltage                composition defect |W1W2 - W2W1| = 0.0e+00
+  current                composition defect |W1W2 - W2W1| = 0.0e+00
+  charge (C v)           composition defect |W1W2 - W2W1| = 0.0e+00
+  flux (L i)             composition defect |W1W2 - W2W1| = 0.0e+00
+  complex power v i*     composition defect |W1W2 - W2W1| = 0.0e+00
+
+Step 2 (SU(3), the hypothesis): random colour matrices on every branch, 2000 fields
+  SU(3) composition defect: mean 0.758, min 0.223, max 0.969
+  diagonal (Cartan, abelian part) SU(3): max defect 6.4e-17
+  gauge invariance: Wilson-loop traces change by <= 2.7e-15, defect by <= 2.1e-15
+
+Verdict: every circuit quantity composes like plain numbers (defect exactly 0),
+the colour field does not (defect ~0.75).  Circuits are the abelian U(1) limit of
+a lattice gauge theory; the quark model is the non-abelian SU(3) one on the same
+kind of graph.  H22 stays 'bounded' until some circuit quantity carries an index
+along its branches whose loop products do not commute.

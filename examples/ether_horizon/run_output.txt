@@ -1,0 +1,147 @@
+H49: void and horizon in a nonlinear ether, tested on the photon electron
+
+Part 1. The void: a Gross–Pitaevskii vortex (ρ in healing lengths ξ)
+  n   axis: f ≈ c·ρⁿ   f(0)   core (f² = ½)   ergoregion (swirl = local wave speed)   line energy − n²ln R
+  1   c = 0.583185       0      1.555 ξ          1.831 ξ                                0.3810
+  2   c = 0.153096       0      3.082 ξ          3.594 ξ                                -2.2348
+  3   c = 0.029455       0      4.542 ξ          5.321 ξ                                -9.2381
+  n = 1: c against 0.5827811878 (Rorai, Sreenivasan & Fisher, arXiv:1212.6389);
+  line energy π(ħ²n0/m)·ln(1.464 R/ξ) (Fetter, RMP 81, 647, 2009: ln(1.46 R/ξ)).
+  The axis is empty for every winding n ≥ 1, and only there: the void is a line (a thin
+  torus for a vortex ring) one healing length thick, not a sphere. Below one quantum of
+  circulation (n = 0) there is no vortex and no void.
+
+Part 2. The horizon
+  The vortex alone: supersonic inside the ergoregion, but the flow is all swirl,
+  so waves can still leave radially — an ergoregion, no horizon.
+  Draining bathtub with c_ether = c, inflow set for r_h = ring radius 1.931e-13 m:
+    horizon 1.931e-13 m, ergosurface 4.317e-13 m (B = 2A), T_H = 1.888e+09 K (k_B T = 162.7 keV)
+    one-channel power 3.372e+06 W → electron's rest energy gone in 2.43e-20 s
+    stable for the age of the universe needs r_h ≥ 8.17e+05 m; for Borexino's bound, ≥ 1.79e+15 m
+    The inflow needs a sink: 2πA·ρ0 of ether per unit length per second leaves the
+    picture there — a ledger column the model must name.
+
+Part 3. The coupling: a horizon inside the photon ring
+  GR, electron mass: r_s = 1.353e-57 m (8.37e-23 Planck lengths), ring radius 1.931e-13 m
+    spin a/M = 2.85e+44, charge r_Q/M = 2.04e+21: both ≫ 1, Kerr–Newman has no horizon (naked)
+    if it had one: Hawking T = 1.35e+53 K, evaporates in 6.36e-107 s
+    Carter (1968): Kerr–Newman g = 2 exactly; Dirac 2; measured 2.0023193043626 (anomaly is QED)
+    absorption Q of the ring at r_s: membrane 1.58e+89, Page 2.57e+178
+  Ether horizon, radius free (the fat-horizon knob), c_ether = c:
+  (Page's column: if it absorbed like a GR hole of that radius; low-frequency formula, k·r_h ≪ 1)
+    r_h [m]        Q_h membrane   Q_h Page      absorbs ring in [s]   Hawking lifetime [s]
+    1e-35          2.89e+45       8.62e+90      3.72e+24              6.51e-65
+    1e-32          2.89e+39       8.62e+78      3.72e+18              6.51e-59
+    1e-28          2.89e+31       8.62e+62      3.72e+10              6.51e-51
+    1e-24          2.89e+23       8.62e+46      372                   6.51e-43
+    1e-20          2.89e+15       8.62e+30      3.72e-06              6.51e-35
+    1e-16          2.89e+07       8.62e+14      3.72e-14              6.51e-27
+    1.93e-13       7.75           62            9.98e-21              2.43e-20
+  Ring survives the age of the universe: r_h ≤ 2.92e-32 m (membrane), ≤ 1.26e-22 m (Page)
+  Horizon survives its own Hawking emission as long: r_h ≥ 8.17e+05 m
+  Window: none — the two bounds miss by 37.4 (membrane) and 27.8 (Page) orders of magnitude.
+
+Part 4. The circuit: photon_electron's crossed ring with a horizon resistor per section
+  Q_h set     RH [Ω]       f peak [Hz]   f ladder [Hz]   Q AC     Q ladder   P_in [W]     wires        horizon      residual
+  ∞           0            54548.11      54548.11        34.27    34.27      476.13       475.9        0            3.5e-10
+  1000        2.778e+06    54548.50      54548.50        33.14    33.14      460.36       444.89       15.257       4.6e-10
+  100         2.778e+05    54551.40      54551.40        25.53    25.53      354.68       264.01       90.538       -2.4e-10
+  30          8.335e+04    54553.80      54553.79        16.02    16.00      222.37       103.76       118.55       9.4e-11
+  sign after one trip, lowest mode: -1 with and without the horizon (spin-½ boundary kept)
+  ladder frequency shift at Q_h = 30: 0.000104, second order in the losses (≈ 1/(Q_wire·Q_h)/8);
+  at the physical Q_h > 10³⁸ (Part 3) the shift, and with it any change of g, is below 10⁻³⁸
+
+Part 5. The sink: a localized loss −iγψ in the Gross–Pitaevskii ether, steady inflow
+  (units: radii in ξ, γ in μ/ħ, flux in ρ∞ħ/m per unit length; bulk wave speed 1)
+  n  r_s [ξ]  γ_c (Mach 1 at the edge)  flux at γ_c  loss at γ_c   γ = 10: flux   outer horizon [ξ]  Mach at edge
+  0  0.5      2.6485                    1.8169       1.8169       2.1475         1.073              6.01
+  0  1.0      1.2754                    3.3275       3.3275       1.8821         1.519              9.93
+  0  2.0      0.6003                    6.1452       6.1452       2.5440         2.548              11.36
+  0  5.0      0.2155                    13.9545      13.9545      4.5736         5.580              13.34
+  1  0.5      1.5650                    0.0499       0.0499       0.2680         0.812              6.80
+  1  1.0      1.3395                    0.5817       0.5817       1.1599         1.529              10.44
+  1  2.0      0.8395                    3.4989       3.4989       2.0644         2.559              12.32
+  1  5.0      0.2571                    13.2090      13.2090      4.3482         5.585              13.64
+  Above γ_c the inflow passes the local wave speed outside the sink, in loss-free ether:
+  a true acoustic horizon. Past the flux maximum a stronger sink takes less (the density
+  is pushed out of it, the quantum Zeno effect of localized loss). A vortex (n = 1) feeds
+  a small sink poorly: its axis is already empty.
+
+Part 6. Where the ether goes: the sink's columns
+  mass (n = 0, r_s = 1 ξ, γ = 10): inflow 1.882080 = loss 1.882101 (closes to 1.1e-05)
+  energy: each particle brings the Bernoulli constant μ = 1, so the sink column takes 1.882101 per unit time
+  The column is ether destroyed (or turned into something the model does not hold yet).
+  Who pays the Hawking radiation: in a sink flow the flow does, as the pump does in the
+  laboratory analogues — so Part 2's lifetime (paid from the electron's rest energy) is not
+  the bound. The radiation still leaves, and matter at rest does not glow:
+    Earth's heat flow 47 TW over its 1.76e+51 electrons: ≤ 2.7e-38 W per electron
+    an electron-sized horizon (1.93e-13 m) emits 3.37e+06 W; a horizon must be ≥ 2.17e+09 m to stay under the bound
+    Horizons that large round every electron would overlap through all matter: no ether
+    wave (light, if c_ether = c) could leave a planet. So a sink electron must stay subsonic:
+    its core larger than the radius where the inflow would reach c — no horizon.
+
+Part 7. A sink electron seen from afar
+  Lagally: two sinks attract with ρe·Q1·Q2/(4π d²) — inverse square, like attracts like:
+  gravity's sign, the opposite of Coulomb's (two electrons repel 4.2e+42 times harder).
+  Fitted to gravity, ρe·Q²/4π = G m_e², the flux depends only on the ether density:
+    ρe [kg/m³]            Q [m³/s]     swallowed [kg/s]  growth [1/yr]  energy column [W]  r_h if point [m]
+    1.2e-32               2.41e-19     2.89e-51          1e-13          2.59e-34           8e-15
+    8.5e-27               2.86e-22     2.43e-48          8.43e-11       2.19e-31           2.76e-16
+    1e+03                 8.34e-37     8.34e-34          2.89e+04       7.5e-17            1.49e-23
+    1e+17                 8.34e-44     8.34e-27          2.89e+11       7.5e-10            4.71e-27
+  If the swallowed ether stayed, every gravitating body would grow at √(4πGρe), the Sun too;
+  ephemerides hold d(GM_sun)/dt/GM_sun to ~1e-13 per year, so ρe ≤ 1.2e-32 kg/m³ (≈ 1.4e-06 of critical).
+  Otherwise the ether is destroyed and the energy column above leaves the books — and if it
+  turned into heat instead, the heat bound would need ρe ≤ 1.3e-40 kg/m³.
+  At every density listed the point-sink horizon is below 10⁻¹⁴ m, inside the ring radius
+  (1.93×10⁻¹³ m): a sink whose core is the photon ring is subsonic, with no horizon.
+  Antimatter: a positron is a sink too (it gravitates); ALPHA-g saw antihydrogen fall at
+  0.75 ± 0.13 ± 0.16 g (Nature 621, 716, 2023) — consistent, not a test of sinks.
+  kronspice twin: 21³ resistor lattice (potential flow: φ = voltage, flow = current,
+  continuity = KCL), faces at rest, one sink drawing Q = 1:
+    inflow through the faces 1.000000000000018 (= Q), source power 0.246398622845 = resistor power 0.246398622845, ledger 0
+    inflow speed × 4πd² (1 in the continuum):
+      d = 2 cells: 1.4709
+      d = 3 cells: 1.2788
+      d = 4 cells: 1.1535
+      d = 5 cells: 1.0969
+      d = 6 cells: 1.0796
+    (lattice discreteness near the sink, the faces far from it). A second sink at d takes
+    ρe·Q2·v1 towards the first: the attraction above, from the lattice's own v1.
+
+Part 8a. The fountain: in round the equator, swirling, out at the poles (steady Euler, Bragg–Hawthorne)
+  swirl C(ψ) = √(C0² + k²ψ²): Δ*ψ + k²ψ = 0 exactly; C0 is a line vortex on the axis (the void's swirl)
+  l  flow                               ka       cell centre (r, θ)   residual   net flux r=½   cell flux 2πψ_O
+  1  one cell: in at the south pole, out at the north  4.4934   (0.6106 a, 90.00°)   1.8e-08    -6.0e-16        6.6797
+  2  two cells: in at the equator, out at both poles  5.7635   (0.6715 a, 54.74°)   1.2e-08    5.4e-07        2.6864
+  Winding q (toroidal turns per poloidal turn) of the streamline tori, by tracing, against the axis circulation β = C0/(kψ_O):
+    l = 1, β = 0:  q = 0.825 (tube/ring 0.04)  q = 0.820 (tube/ring 0.27)  q = 0.802 (tube/ring 0.56)  q = 0.755 (tube/ring 0.95)
+    l = 1, β = 1:  q = 1.168 (tube/ring 0.04)  q = 1.229 (tube/ring 0.27)  q = 1.564 (tube/ring 0.56)  q = 4.782 (tube/ring 0.95)
+    l = 1, β = 2:  q = 1.849 (tube/ring 0.04)  q = 2.005 (tube/ring 0.27)  q = 2.802 (tube/ring 0.56)  q = 9.474 (tube/ring 0.95)
+    l = 2, β = 0:  q = 0.646 (tube/ring 0.03)  q = 0.637 (tube/ring 0.21)  q = 0.606 (tube/ring 0.43)  q = 0.526 (tube/ring 0.72)
+    l = 2, β = 1:  q = 0.914 (tube/ring 0.03)  q = 0.953 (tube/ring 0.21)  q = 1.175 (tube/ring 0.43)  q = 3.295 (tube/ring 0.72)
+    l = 2, β = 2:  q = 1.447 (tube/ring 0.03)  q = 1.554 (tube/ring 0.21)  q = 2.102 (tube/ring 0.43)  q = 6.526 (tube/ring 0.72)
+  Without the axis vortex (β = 0) every surface winds less than once: no 2:1 surface. The void's
+  swirl is what makes one. Fitting β so the q = 2 surface has the photon torus's tube/ring = ½:
+    l = 1: β = 1.5124, q = 2.0000, tube/ring = 0.5000, loop closes to 2e-04 a; scaled to R = 193 fm the sphere is a = 316 fm; one ring, in the equatorial plane
+    l = 2: β = 1.6053, q = 2.0000, tube/ring = 0.5000, loop closes to 3e-04 a; scaled to R = 193 fm the sphere is a = 352 fm; two rings, at z = ±0.388 a (±137 fm)
+  Books: nothing is destroyed (net flux through every sphere 0); each cell carries 2.6864; angular momentum 17.2814,
+  energy outside a void of radius 0.01 a: 445.9556, 0.001 a: 705.6118 (the axis vortex's ln(1/ξ)) — units ρ = a = A = 1.
+  The 2:1 surface is a fit (one knob, one condition), not a prediction. The question's flow (l = 2) gives
+  two tori, above and below the equator; the photon electron's single equatorial ring sits on l = 1.
+
+Part 8b. The spinning core as a battery (membrane circuit): EMF ∝ Ω_H, horizon R_H inside, load R_L outside
+  R_L/R_H   Ω_F/Ω_H   P_load   P_horizon   P_spin   ledger   Γ_load    Γ_core (Z = −R_L)   Γ_core·Γ_load
+  0.10      0.0909    0.0826   0.8264      0.9091   0        -0.8182   -1.2222             1.000000
+  0.50      0.3333    0.2222   0.4444      0.6667   0        -0.3333   -3.0000             1.000000
+  1.00      0.5000    0.2500   0.2500      0.5000   0        0.0000    ∞                   — (0·∞, matched)
+  2.00      0.6667    0.2222   0.1111      0.3333   0        0.3333    3.0000              1.000000
+  10.00     0.9091    0.0826   0.0083      0.0909   0        0.8182    1.2222              1.000000
+  The core seen by kronspice's network-analyser sweep (sources off): Z = 1.000000 R_H, Γ = -5.0e-10, passive.
+  So the horizon itself is +R_H (it absorbs). At the operating point the same core looks like −R_L to
+  its load: outside the unit circle, paid by the spin column. Maximum power at the match, Ω_F = Ω_H/2.
+  Superradiance for the ring (m = ½, from the 720° double loop): the core must spin faster than Ω = 2ω_C = 1.55e+21 rad/s;
+  its rim speed is c·r_c/R, below c for any core smaller than the ring (r_c = R/4: 0.25 c).
+  But the ring leaks (photon_electron §3: Q = 0.55), and a spin of ħ/2 at that rate holds E_rot = ħΩ/4 = m_e c²/2:
+  through a matched load it keeps the ring alive for 1.8e-22 s — about 0.02 of a period — then the spin is gone.
+  The electron is stable for > 6.6×10²⁸ years: the spin would need resupplying, from a column not yet in the model.
