@@ -54,7 +54,10 @@
 // exact steady Euler flow with a line vortex on the axis, finds the
 // streamline torus that winds 2:1 like the photon ring, and builds the
 // spinning core as a battery in kronspice (membrane circuit, extended Smith
-// chart, superradiance band, spin reservoir).
+// chart, superradiance band, spin reservoir). Part 9 (roundvoid.go,
+// part9.go) makes the void round: the light inside pushes out, the ether's
+// pressure and surface tension push in (the MIT bag's structure), with a
+// kronspice twin of the breathing void and the fountain's flow round it.
 //
 //	go run ./examples/ether_horizon [-viz DIR]
 //
@@ -589,6 +592,9 @@ func main() {
 	part6()
 	part7()
 	part8(*viz)
+	part9(*viz)
+	part10()
+	part11()
 }
 
 // SinkRadii are the sink sizes scanned, in healing lengths ξ.

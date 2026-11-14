@@ -13,8 +13,8 @@ inflow hides.
 
 ```
 go test -short ./examples/ether_horizon   # ~3 s
-go test ./examples/ether_horizon          # ~9 s
-go run ./examples/ether_horizon           # ~35 s, writes the tables below (run_output.txt)
+go test ./examples/ether_horizon          # ~7 s
+go run ./examples/ether_horizon           # ~40 s, writes the tables below (run_output.txt)
 ```
 
 Every result has its standard prediction beside it, and every joule its
@@ -384,6 +384,261 @@ a matched load it keeps the ring going for 1.8×10⁻²² s, about 0.02 of a
 period. The electron is stable for more than 6.6×10²⁸ years, so the spin
 would need resupplying from a column the model does not have yet.
 
+## 9. A round void (`roundvoid.go`, `part9.go`)
+
+In Parts 1 and 8 the void came out as a line, because swirl empties only
+the axis. To make it round, something has to hold it open against the
+ether and something has to stop it closing. Here:
+- **Outward:** the light of the photon electron sits inside the void and
+  pushes out with its radiation pressure.
+- **Inward:** the nonlinear ether pushes in with a pressure p∞ and a
+  surface tension σ at the void's wall.
+
+This is the structure of the MIT bag model of hadrons, where quark fields
+in a bubble push against a vacuum pressure B (Chodos et al., *Phys. Rev.
+D* 9, 3471, 1974). It is also the structure of Poincaré's stresses, which
+hold a charged electron together.
+
+### 9a. The balance
+
+The void's energy, with one photon in a cavity mode of root x, is:
+
+```
+E(R) = ħc·x/R + (4π/3)·p∞·R³ + 4π·σ·R²
+```
+
+The light's term falls as 1/R; the ether's terms grow. The minimum sets
+the size:
+
+| Mode | Held by | Radius | ÷ ring radius | Needs |
+|---|---|---|---|---|
+| TM₁₁ (x = 2.744) | pressure | 1.41×10⁻¹² m | 7.3 | p∞ = 1.7×10²¹ Pa (2×10⁻¹³ of the bag's B) |
+| TM₁₁ | tension | 1.59×10⁻¹² m | 8.2 | σ = 8.6×10⁸ N/m |
+| TE₁₁ (x = 4.493) | pressure | 2.31×10⁻¹² m | 12.0 | p∞ = 4.0×10²⁰ Pa |
+| TE₁₁ | tension | 2.60×10⁻¹² m | 13.5 | σ = 3.2×10⁸ N/m |
+
+- **Every case is stable.** Squeeze the void and the light pushes back
+  harder; let it grow and the ether wins.
+- **The size is large.** Sized for m_e c², the void is 7–13 ring radii
+  across, so the photon ring fits inside it.
+- **Standard prediction:** the electron shows no size down to below
+  10⁻¹⁸ m.
+
+### 9b. kronspice twin: the breathing void
+
+The void's light is an LC tank whose L and C both grow with the void,
+L = L0·s and C = C0·s, so ω ∝ 1/R. Scaling both together is a pure change
+of time scale. The stored energy therefore goes exactly as 1/R (the
+photon's ħω), and what it loses is work done on the moving wall: the
+radiation pressure. Run in kronspice with the void doubling smoothly (an
+EXP waveform, so no breakpoints damp the tank):
+- **Frequency** halves, ratio 0.500002.
+- **W·R** stays constant to 1×10⁻⁵.
+- **The books close.** The work on the wall equals the energy lost to
+  7×10⁻⁶.
+
+### 9c. The fountain round the void: does it stay round?
+
+At the centre of the two-pole flow, the ether comes in round the equator
+and leaves along the axis. That is a stagnation point, where the ether's
+pressure is highest. A round void there makes the flow slide over it with
+speed (5/2)·E·b·|sin 2θ|: still at the poles and the equator, fastest at
+45°. Linearized Young–Laplace (Lamb, *Hydrodynamics*, §275) then gives the
+wall's shape:
+
+![The round void in the fountain](viz/round_void.png)
+
+| We = ρ(Eb)²b/σ | Pole r/b | Equator r/b | Pole/equator |
+|---|---|---|---|
+| 0 | 1 | 1 | 1 |
+| 0.1 | 1.014 | 0.979 | 1.035 |
+| 0.3 | 1.042 | 0.938 | 1.111 |
+| 1 (beyond linear) | 1.139 | 0.792 | 1.44 |
+
+- **The flow stretches the void along the axis.** It pinches the waist and
+  heads towards the line void of Parts 1 and 8. The void is 10 % longer
+  than wide at We = 0.27.
+- **Round needs tension.** The void stays round only while
+  ½ρ(Eb)² ≲ 0.14·σ/b. Held by pressure alone, it has nothing in this model
+  to restore its shape.
+- **The axis vortex adds hollow tails** out to the poles, of radius
+  C0/√(2p∞/ρ) (Rankine's hollow core). They stay thin while the swirl's
+  ½ρU_φ² stays below p∞. The picture is a round bead on a thread.
+
+## 10. Konstantin Meyl's vortex picture beside H49 (`meyl.go`, `part10.go`)
+
+Meyl adds a vortex of the electric field, the *potential vortex*, which
+contracts, against the eddy-current vortex, which expands. In his picture
+particles are spherical vortices held in that balance. That is close to
+H49's round void: light pushing out, ether pushing in. Two of his laws can
+be tested directly:
+
+- **The field sets the size.** E, H ∝ 1/L² (his eq. 2.20, "the field
+  determines the dimensions", §2.5).
+- **The radius depends on the probe.** The probe's field adds to the
+  target's, (H_p + H_e) ∝ 1/R² (§3.5).
+
+His own particle-mass and radius calculations are in a later volume that
+could not be retrieved. This part therefore tests his stated laws, not his
+numbers.
+
+### 10a. Which squeeze holds a void at one size?
+
+E(R) = ħc·x/R + S(R), scanned for stationary points:
+
+| contraction S(R) | balance | kind |
+|---|---|---|
+| ether pressure, +p·R³ | yes | stable (Part 9) |
+| ether tension, +σ·R² | yes | stable (Part 9) |
+| linear, +k·R | yes | stable |
+| logarithmic, +k·ln R | yes | stable |
+| Meyl self-similar, −k/R | every R (k = ħcx) or none | neutral, or runs away |
+| steeper, −k/R² | yes | unstable (a maximum) |
+
+A self-similar field (E ∝ 1/L²) has an energy ∝ 1/R, the same power as
+the light. So it either cancels the light at every size or loses at every
+size: **it sets no size.** Something that grows with R has to. H49 needs
+the ether's pressure or tension; Meyl's contraction alone does not do it.
+
+### 10b. The void at the nucleon mass
+
+The Part 9 balance scales with ħ/(mc), so at the proton mass:
+
+| mode | held by | void radius | measured |
+|---|---|---|---|
+| TM₁₁ | pressure | 0.769 fm | proton 0.84075 fm (CODATA 2022) |
+| TM₁₁ | tension | 0.866 fm | neutron magnetic 0.864 fm |
+| TE₁₁ | pressure / tension | 1.26 / 1.42 fm | |
+
+- **Radius.** The TM₁₁ void lands within 10 % of the proton with no
+  fitted constant. This is the MIT bag model's old success, not a new one.
+  Read as the rms of a filled ball (√(3/5)·R) it is 20–30 % too small, so
+  the charge would have to sit near the wall.
+- **Neutron.** The neutron comes out the same size to 0.1 %, as measured.
+- **Moments.** A void of neutral light has no magnetic moment. Measured
+  μ_p = 2.793 μ_N and μ_n = −1.913 μ_N; their ratio −0.685 is matched by
+  the quark/bag model's −2/3 to 2.7 %. The void needs charged content.
+
+### 10c. Is the proton's radius probe-dependent?
+
+Meyl's rule says a muon should see a smaller proton than an electron. In
+2010 it did: electron data gave 0.8775 fm, muonic hydrogen 0.84087 fm, a
+4.4 % gap (the proton radius puzzle). His rule had the right sign.
+
+New electronic data have since closed the gap. Hydrogen 2s–6p (2026) gives
+0.8406(15) fm against muonic 0.84087(39) fm, Δr/r = −0.03 %, so any probe
+dependence is below 0.4 % (2σ), at least 11× smaller than the 2010 gap.
+The 2010 electron value was the outlier. H49's void radius depends only on
+the target's mass, which is what the data now show.
+
+### 10d. An onion of light–void shells
+
+Nested shells as coupled LC tanks in kronspice AC, self-similar (each
+shell's mode frequency 206.77× the last, fitted to m_μ/m_e):
+
+| shell | uncoupled | coupled peak | ratio |
+|---|---|---|---|
+| 0 | 1000 Hz | 999.7 Hz | 1 |
+| 1 | 2.068e5 Hz | 2.058e5 Hz | 205.8 |
+| 2 | 4.275e7 Hz | 4.255e7 Hz | 4.26e4 |
+
+Weak wall coupling moves each note by less than 1 %. The third shell
+predicts m_τ ≈ 21.8 GeV against 1.777 GeV, 12× too heavy. The lepton steps
+are 206.77 and 16.82, not equal, so a self-similar onion fails. The shells
+would need a rule of their own.
+
+### What carries over
+
+- **Shared.** A spherical vortex balanced between outward and inward
+  pressure; field and size tied together; a size set by the particle's
+  mass (H49: ħ/mc times a cavity root).
+- **Different.** H49's balance needs an ether pressure or tension that
+  grows with R. Meyl's 1/L² law alone is scale-free.
+- **Ruled out.** A probe-dependent proton radius beyond 0.4 %, and a
+  self-similar onion of shells for the three leptons.
+
+## 11. g − 2 on the photon ring (`g2.go`, `part11.go`)
+
+This part puts the photon ring back at the centre and asks what it needs
+to reach the electron's g = 2.00232.
+
+### 11a. g is set by how much of the mass goes round
+
+The ring's light carries energy E_c round a loop at c, so its angular
+momentum is (E_c/c)·R. Its charge rides with it at c, giving a moment
+μ = e·c·R/2. With S = ħ/2, g = 2mμ/(eS) reduces to
+
+  **g = M c² / E_c**, the rest energy over the part that circulates.
+
+- **H23 as written.** All the energy circulates on the λ_C/4π loop:
+  μ = μ_B/2 and **g = 1**, as `claude_electron` step 0 found.
+- **Light held by a squeeze k·R^n.** At equilibrium the light carries
+  1/(1 + 1/n) of the mass, so g = 1 + 1/n:
+
+| squeeze | n | light's share | g |
+|---|---|---|---|
+| ether pressure (Part 9) | 3 | 3/4 | 4/3 |
+| ether tension (Part 9) | 2 | 2/3 | 3/2 |
+| **constant-force string** | **1** | **1/2** | **2** |
+
+Only a constant-force string gives g = 2. The light then carries exactly
+half the rest energy. Its spin (mc/2)·R = ħ/2 puts it on **R = ħ/mc**
+(3.86×10⁻¹³ m, twice H23's loop), and the string pulls with 0.106 N
+(0.66 keV/fm; QCD's string is about 0.9 GeV/fm). The half-energy photon's
+wavelength is two circumferences, so it closes after two turns: the double
+loop. That last part holds for any photon carrying ħ/2 on a circle
+(λ = h/p = 4πR). What the string adds is the energy split that makes g = 2.
+
+### 11b. kronspice: the crossed ring holds the half-energy photon
+
+The photon_electron ring line (200 sections) in kronspice AC:
+
+| ring | lowest wave | kronspice | ladder |
+|---|---|---|---|
+| plain | one wavelength per turn | 109 102 Hz | 109 102 Hz |
+| crossed | one wavelength per two turns | 54 548.1 Hz | 54 548.1 Hz |
+
+On the same ring the crossed (double-loop) wave has 0.49998 of the
+energy: the half-energy photon of 11a.
+
+### 11c. The anomaly: the charge's static field does not go round
+
+The charge's self-energy U = α·ħc·β/R sits in its static field, outside
+the circulating light. It adds to the mass but not to E_c, so g/2 = 1 + 2αβ.
+Schwinger's α/2π needs β = 1/4π.
+
+| charge spread over | β | (g − 2)/2 | / measured |
+|---|---|---|---|
+| the light's torus, tube 0.01 R | 1.064 | 0.0155 | 13.4 |
+| the light's torus, tube 0.1 R | 0.696 | 0.0102 | 8.8 |
+| the light's torus, tube R (horn) | 0.291 | 0.0042 | 3.7 |
+| a shell of radius R | 0.5 | 0.0073 | 6.3 |
+| **a shell of radius 2πR = λ_C** | **1/4π** | **0.0011614** | **1.0015** |
+
+The torus values come from a quadrature over coaxial rings (elliptic K),
+which matches the thin-torus limit ln(8R/a)/π to 0.03 %.
+
+- **Charge on the light's own torus overshoots,** by 3.7–13×.
+- **α/2π needs the field spread wider.** It lands on α/2π if the charge's
+  field is spread over a shell of radius λ_C, the ring's circumference.
+  If the moving charge's magnetic self-energy is also counted as not
+  going round, that shell is 4πR instead. Either way it is **one fitted
+  radius**.
+- **The leftover matches QED's next term.** α/2π is 0.15 % above the
+  measured value, about the size of QED's next term, −0.328(α/π)².
+- **An alternative.** With no self-energy, a string slightly softer than
+  constant force (n = 0.99769) gives the measured g.
+
+### What it means for the photon ring
+
+- **g = 2 comes from the ring itself** once only half the mass goes round
+  and the rest sits in a constant-force string. It also moves the ring to
+  R = ħ/mc and keeps the double loop.
+- **The anomaly has the right sign and the right order,** α times a
+  geometric factor, but the factor is fitted, not derived.
+- **The size problem stays.** R = ħ/mc is 386 fm, while scattering sees
+  no structure down to 10⁻¹⁸ m.
+
 ## Status
 
 H49 is **bounded**.
@@ -407,6 +662,21 @@ H49 is **bounded**.
   the two-pole flow gives two tori, not one. A spinning core can feed the
   ring (−R at its load, +R_H in itself), but its spin is spent in 0.02 of
   a period.
+- **The round void (Part 9).** Light pushing out against ether pressure
+  or tension gives a stable round void, but sized for m_e c² it is
+  1.4–2.6×10⁻¹² m, 7–13 ring radii. The fountain stretches it along the
+  axis unless surface tension holds it (We < 0.27 for 10 %).
+- **Meyl's vortex picture (Part 10).** His self-similar field (E ∝ 1/L²)
+  sets no size by itself; H49 needs a squeeze that grows with R. The void
+  at the proton mass is 0.77–0.87 fm (measured 0.84 fm), as in the bag
+  model, but has no magnetic moment. A probe-dependent radius is now
+  ruled out beyond 0.4 %, and a self-similar onion of shells puts the τ
+  at 21.8 GeV.
+- **g − 2 on the photon ring (Part 11).** g = Mc²/E_c, so H23 as
+  written gives g = 1. A constant-force string holding the light gives
+  g = 2 exactly, on R = ħ/mc, with the double loop kept. The charge's
+  static self-energy gives the anomaly; it equals α/2π only if that field
+  is spread over a shell of radius λ_C (one fitted radius).
 - **General relativity.** The electron-mass hole is naked, and would
   evaporate in 10⁻¹⁰⁶ s if it were not.
 - **Standard prediction.** No horizon or void inside the electron: a point
@@ -433,9 +703,19 @@ Next steps:
 - R. D. Blandford, R. L. Znajek, "Electromagnetic extraction of energy from Kerr black holes", *MNRAS* 179, 433 (1977).
 - Ya. B. Zel'dovich, "Generation of waves by a rotating body", *JETP Lett.* 14, 180 (1971).
 - K. Kurokawa, *Bell Syst. Tech. J.* 48, 1937 (1969).
+- A. Chodos, R. L. Jaffe, K. Johnson, C. B. Thorn, V. F. Weisskopf, "New extended model of hadrons", *Phys. Rev. D* 9, 3471 (1974); T. DeGrand, R. L. Jaffe, K. Johnson, J. Kiskis, *Phys. Rev. D* 12, 2060 (1975).
+- H. Lamb, *Hydrodynamics*, 6th ed. (Cambridge, 1932): §160 (hollow vortex), §275 (oscillations of a spherical surface under tension).
+- J. D. Jackson, *Classical Electrodynamics*, 3rd ed., §8.9 (spherical cavity modes).
 - C. Rorai, K. R. Sreenivasan, M. E. Fisher, "Propagating and annihilating vortex dipoles in the Gross-Pitaevskii equation", [arXiv:1212.6389](https://arxiv.org/abs/1212.6389) (axis slope 0.5827811878).
 - D. Kleckner, L. H. Kauffman, W. T. M. Irvine, "How superfluid vortex knots untie", *Nature Phys.* 12, 650 (2016).
 - Borexino Collaboration, "Test of electric charge conservation with Borexino", *Phys. Rev. Lett.* 115, 231802 (2015).
+- K. Meyl, *Potential Vortex, Volume 2: Theory of Objectivity*, 2nd ed. (INDEL, Villingen-Schwenningen); eq. 2.20 and §§2.5, 3.5 (excerpt at [slideshare.net/vortex-meyl](https://www.slideshare.net/)).
+- CODATA 2022 / PDG 2025: proton charge radius 0.84075(64) fm; neutron magnetic radius; nucleon magnetic moments.
+- R. Pohl et al., *Nature* 466, 213 (2010); A. Antognini et al., *Science* 339, 417 (2013) (muonic hydrogen, 0.84087(39) fm).
+- [Proton radius puzzle](https://en.wikipedia.org/wiki/Proton_radius_puzzle) (overview, including the 2026 hydrogen 2s–6p result, 0.8406(15) fm).
+- J. Schwinger, "On quantum-electrodynamics and the magnetic moment of the electron", *Phys. Rev.* 73, 416 (1948); X. Fan et al., *Phys. Rev. Lett.* 130, 071801 (2023) (a_e = 0.00115965218059).
+- D. Hestenes, "The zitterbewegung interpretation of quantum mechanics", *Found. Phys.* 20, 1213 (1990).
+- Y. Koide, *Lett. Nuovo Cim.* 34, 201 (1982) (lepton mass relation).
 - J. G. Williamson, M. B. van der Mark, *Ann. Fond. Louis de Broglie* 22, 133 (1997) (the field volume, eq. 5).
 - G. Barontini et al., "Controlling the dynamics of an open many-body quantum system with localized dissipation", *Phys. Rev. Lett.* 110, 035302 (2013).
 - J. H. Davies, D. R. Davies, "Earth's surface heat flux", *Solid Earth* 1, 5 (2010): 47 ± 2 TW.
