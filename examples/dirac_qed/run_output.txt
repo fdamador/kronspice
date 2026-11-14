@@ -1,0 +1,74 @@
+dirac_qed: the standard model of the electron (Dirac + QED), built as the benchmark
+Units in Parts 1–3: ħ = c = m = 1 (energies in m c², lengths in ƛ = ħ/mc).
+
+Part 1. Dirac's equation, free: H = α·p + β, diagonalized (4×4 Hermitian, by Jacobi)
+  p                     eigenvalues                                  √(p² + 1)     helicity on E > 0
+  (    0,    0,0.001)   +1.000000500000 +1.000000500000 -1.000000500000 -1.000000500000   1.000000500000   +0.500000 -0.500000
+  (  0.3,  0.4,  1.2)   +1.640121946686 +1.640121946686 -1.640121946686 -1.640121946686   1.640121946686   -0.500000 +0.500000
+  (    2,   -1,  0.5)   +2.500000000000 +2.500000000000 -2.500000000000 -2.500000000000   2.500000000000   -0.500000 +0.500000
+  (   10,    0,    0)   +10.049875621121 +10.049875621121 -10.049875621121 -10.049875621121   10.049875621121   -0.500000 +0.500000
+  S² = 0.750000000000 on every state = s(s + 1) with s = ½.
+  Two energies ±√(p² + m²), each twice: particle and antiparticle, spin up and down. Spin ½ is not put in; it
+  comes from the 4-component equation that relativity forces.
+
+Part 2. Dirac's equation in a field B along z: Landau levels in the oscillator basis (40 levels)
+  b = B/B_crit   E(n=0,↓) − 1        spin splitting            cyclotron spacing         g = 2·spin/cyclotron
+  1e-06          +0.000e+00         9.999995000953277e-07   9.999995000953277e-07   2.000000000000
+  1e-04          +0.000e+00         9.999500049984178e-05   9.999500049984178e-05   2.000000000000
+  1e-02          +0.000e+00         9.950493836207830e-03   9.950493836207830e-03   2.000000000000
+  1e-01          +0.000e+00         9.544511501033215e-02   9.544511501033215e-02   2.000000000000
+  1e+00          +0.000e+00         7.320508075688776e-01   7.320508075688776e-01   2.000000000000
+  B_crit = m²c²/(eħ) = 4.42e+09 T. In every field the spin flip costs exactly one cyclotron quantum, so g = 2:
+  the levels are √(1 + 2b·k), k = n + ½ + s_z, and spin and orbit enter only through k (Dirac's g = 2).
+
+Part 3. Hydrogen from Dirac's radial equations (RK4 shooting in ln r, bisection), Z = 1, infinite nuclear mass
+  level     κ    E/mc² (shooting)       E/mc² (exact formula)   binding [eV]
+  1S½       -1   0.999973373968303      0.999973373968303       13.605874258
+  2S½       -1   0.999993343469921      0.999993343469921       3.401479886
+  2P½       +1   0.999993343469921      0.999993343469921       3.401479886
+  2P3/2     -2   0.999993343558540      0.999993343558540       3.401434601
+  2P3/2 − 2P½ fine structure: 10.9497 GHz (infinite mass); × reduced mass 0.999456 → 10.9437 GHz
+  with QED the interval is 10.96905 GHz (the value the n = 2 measurements are fitted with): Dirac alone is 0.23 %
+  low, the gap chiefly the anomalous moment. Dirac puts 2S½ and 2P½ at the same energy exactly; measured, 2S½
+  is 1057.845(9) MHz higher (Lundeen & Pipkin 1981; Lamb & Retherford 1947) — QED's first success.
+  2S½ − 2P½ from Dirac: 0.000e+00 Hz (zero).
+
+Part 4. QED's correction to g: a_e = (g − 2)/2 = Σ A⁽²ⁿ⁾(α/π)ⁿ + hadronic + weak
+  one loop, Feynman-parameter integral (computed): F2(0) = 0.5000000000000 (α/π)  → Schwinger's α/2π
+  … and its fall with momentum transfer: F2(Q² = m²) = 0.430409, F2(Q² = 4m²) = 0.311612 (α/π)
+  two loops, Petermann's closed form (computed): A⁽⁴⁾ = -0.328478965579194   (literature −0.328478965579194)
+  with α⁻¹ = 137.035999206 from Rb (Morel 2020):
+    one loop (Schwinger), computed                 +1.161409731852e-03
+    two loops (Petermann closed form), computed    -1.772302245551e-06
+    three loops (Laporta & Remiddi)                +1.480411038136e-08
+    four loops (Laporta; AHKN)                     -5.564088105430e-11
+    five loops (AHKN, disputed)                    +4.552998499045e-13
+    hadronic                                       +1.685000000000e-12
+    weak                                           +2.970000000000e-14
+    a_e (theory) = 1.159652180245891e-03   measured 1.15965218059000e-03 (±1.3e-13)   measured − theory = +3.44 × 10⁻¹³
+    g (theory) = 2.00231930436049   g/2 − measured g/2 = +3.44e-13 (relative)
+  with α⁻¹ = 137.035999046 from Cs (Parker 2018):
+    one loop (Schwinger), computed                 +1.161409733208e-03
+    two loops (Petermann closed form), computed    -1.772302249690e-06
+    three loops (Laporta & Remiddi)                +1.480411043322e-08
+    four loops (Laporta; AHKN)                     -5.564088131416e-11
+    five loops (AHKN, disputed)                    +4.552998525625e-13
+    hadronic                                       +1.685000000000e-12
+    weak                                           +2.970000000000e-14
+    a_e (theory) = 1.159652181597839e-03   measured 1.15965218059000e-03 (±1.3e-13)   measured − theory = -10.08 × 10⁻¹³
+    g (theory) = 2.00231930436320   g/2 − measured g/2 = -1.01e-12 (relative)
+  Theory and measurement agree to ~3×10⁻¹³ (Rb) or ~1×10⁻¹² (Cs) in a_e — parts in 10¹⁰ of the anomaly,
+  parts in 10¹³ of g. The two α measurements disagree with each other by more than that (5.5σ).
+
+Part 5. The measurement in kronspice (Penning trap, B = 5.3 T, ν̄_z = 114 MHz; Fan et al. 2023)
+  the electron's axial motion as a series LC (Wineland & Dehmelt): L_e = m d²/e² = 434.7 H, C_e = 4.484e-21 F (d = 3.5 mm)
+  detector tank: L = 1e-07 H, C = 1.949e-11 F, R = 7.163e+04 Ω (Q = 1000); electron coupled through an ideal 1:100000 transformer
+  kronspice AC: dip at ν_z -8.49e-07 Hz off 114 MHz, depth 4.22e-04, width at half depth 15.1479 Hz × √3 = 26.2369 Hz
+  expected γ_z/2π = R e²/(2π m d²) = 26.2241 Hz: the trapped electron is the series LC the theorem says.
+  the trap's clocks for g = 2.00231930436049: ν_c = 1.48360196e+11 Hz, ν̄_c = 1.48360152e+11 Hz, ν̄_m = 43798.8 Hz, ν̄_a = 172090024 Hz
+  each read as a tank resonance in kronspice AC (relative errors 0.0e+00, -2.2e-16, 0.0e+00, 7.5e-15)
+  g/2 = (ν̄_c + ν̄_a)/√(ν̄_c² + ν̄_z² + ν̄_m²) = 1.001159652180246  (put in 1.001159652180246): the chain reads g/2 to 5e-17.
+  The magnetron frequency comes out 43.8 kHz against Fan et al.'s measured 43 kHz.
+
+Benchmark scorecard (for the electron ledger): spin ½ derived (Part 1); g = 2 derived (Part 2); hydrogen fine
+structure 0.23 % from Dirac alone, Lamb shift missed (Part 3); a_e within 3×10⁻¹³ (Part 4); charge, mass and α are inputs.

@@ -1,0 +1,8 @@
+term,value
+"one loop (Schwinger), computed",0.00116140973185194
+"two loops (Petermann closed form), computed",-1.77230224555138e-06
+"three loops (Laporta & Remiddi)",1.48041103813637e-08
+"four loops (Laporta; AHKN)",-5.56408810542997e-11
+"five loops (AHKN, disputed)",4.5529984990448e-13
+"hadronic",1.685e-12
+"weak",2.97e-14
