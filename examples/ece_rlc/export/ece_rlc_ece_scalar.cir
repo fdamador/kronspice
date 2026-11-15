@@ -1,0 +1,7 @@
+series RLC, ECE scalar
+.ece form=ece w0=0
+V1 in 0 DC 0 AC 1 SIN(0 1 173)
+R1 in a 1
+L1 a b 10m
+C1 b 0 84.6346u kappa_a=0.05
+.end

@@ -86,6 +86,59 @@ Figs. 6–9):
 The pulse is the flywheel's energy discharged through the self-excited
 dynamo: what R receives is what the shaft gave (books close to 1e-8 J).
 
+**4. With the ECE and ECE2 spin-connection terms on** (hypothetical,
+register entry H48; `circuit/ece.go`). The circuit engine attaches the
+terms to R, L, C and K, not to the N machine element. So in this run the
+coil's self-inductance moves out of winding 3 into a series L element.
+The loop current is the same everywhere, so the circuit is unchanged: the
+plain run gives the same drive work (84.75 J), heat in R (80.1 J) and books
+as run 2 (`TestECEPlainTwin`). With s = +1 for ECE and s = −2 for ECE2:
+
+- torsion is a series resistance s·c·ω₀·L in the coil;
+- the scalar term makes R see (1 + s·κ)·φ at its terminals, which acts as
+  R/(1 + s·κ).
+
+So the loop resistance is R/(1 + s·κ) + s·c·ω₀·L, and the
+self-excitation speed moves with it. No measured ω₀ or κ exists, so both
+are declared. They are sized as in [ece_rlc](../ece_rlc): torsion
+c·ω₀·L = 0.075 Ω (a quarter of R; ω₀ = 2.50×10⁻⁷ m⁻¹), and κ = 0.05 on
+both terminals of R.
+
+Driven (α = 1 N·m from rest, 3 s). Energies in J; "spin-up" is the energy
+stored in the flywheel; "model" is what the ECE terms supply (+) or
+absorb (−):
+
+| case | ω_res (rad/s) | ω at 3 s | I at 3 s | drive | spin-up | heat in R | model | books |
+|---|---|---|---|---|---|---|---|---|
+| plain (Maxwell) | 29.84 | 30.33 | 9.68 A | 84.75 | 4.60 | 80.10 | 0 | 2.6e-5 |
+| ECE torsion | 37.30 | 36.99 | 9.08 A | 104.5 | 6.84 | 78.12 | −19.53 | 2.6e-5 |
+| ECE2 torsion | 14.92 | 16.41 | 8.11 A | 43.51 | 1.35 | 84.27 | +42.14 | 1.9e-5 |
+| ECE scalar | 28.42 | 28.99 | 10.04 A | 80.92 | 4.20 | 76.67 | +3.83 | 2.6e-5 |
+| ECE2 scalar | 33.16 | 33.33 | 9.06 A | 93.61 | 5.56 | 88.01 | −8.80 | 2.6e-5 |
+
+Flywheel (α = 0, ω0 = 40 rad/s, 0.5 s):
+
+| case | ω at 0.5 s | peak I | flywheel gave | heat in R | model |
+|---|---|---|---|---|---|
+| plain (Maxwell) | 19.54 | 32.34 A | 6.092 | 6.092 | 0 |
+| ECE torsion | 33.94 | 9.44 A | 2.241 | 1.793 | −0.448 |
+| ECE2 torsion | −10.19 | 79.31 A | 7.481 | 14.96 | +7.481 |
+| ECE scalar | 16.72 | 36.80 A | 6.603 | 6.603 | +0.330 |
+| ECE2 scalar | 26.07 | 22.00 A | 4.603 | 4.603 | −0.460 |
+
+The steady current is still set by the back torque, α = K1·I + K2·I², so
+I → 9.949 A in every case. Only the speed at which the machine holds it
+changes, so the drive supplies α·ω_res. ECE torsion is an added loss: the
+speed rises to 37.3 rad/s, and the drive pays 37.3 W for 29.7 W of heat
+in R. ECE2 torsion is a negative resistance: the speed falls to
+14.9 rad/s, and R heats at 29.7 W while the drive gives 14.9 W. The other
+14.8 W is booked to the spin connection as model-supplied, never as
+inflow. In the flywheel run, ECE2 torsion lets R take twice the
+flywheel's energy, and the shaft is driven backwards to −10 rad/s. Every
+run closes its books (`TestECEBooks`). Any gain comes from terms the
+model supplies, and the run shows exactly how much. As H48's standard
+prediction states, a real gain needs a declared source.
+
 **Standard reading.** R_eff = 0 is the self-excitation threshold of a
 series-wound dynamo (Siemens 1867; Bullard 1955; Moffatt 1978, ch. 6).
 Above it the current grows by taking power from the drive. The classical
@@ -99,6 +152,8 @@ modeled because no equations are supplied for them. Status in the register:
 |---|---|
 | `main.go` | paper parameters, `RunPaper` (eqs. 6 and 12 as printed), the N-element circuit, `RunCircuit`, steady state |
 | `main_test.go` | ω_res, the missing energy = back-torque work, bounded current with closed books, flywheel discharge; `ECKARDT_DUMP=1` prints the comparison series |
+| `ece.go`, `ece_test.go` | run 4: the circuit with the coil as a series L element, ECE / ECE2 torsion and scalar cases, plain twin, closed books, ECE2 ω_res |
+| `viz/make_report_ece.py` | the ECE / ECE2 report, `eckardt_homopolar_ECE_report.pdf` |
 | `export_test.go` | netlists, KiCad schematics and results sheets in `export/` |
 
 ## Sources

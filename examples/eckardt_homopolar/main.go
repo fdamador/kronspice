@@ -262,4 +262,6 @@ func main() {
 			alpha, imax, tmax, wEnd, tr.EOhm, -tr.ERot, tr.EDrive, tr.EL, mm)
 	}
 	fmt.Println("   the pulse is the flywheel's energy discharged through the self-excited dynamo: what R receives is what the shaft gave.")
+	fmt.Println()
+	runECE(p)
 }
