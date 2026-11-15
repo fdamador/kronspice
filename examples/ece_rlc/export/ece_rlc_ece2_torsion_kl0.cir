@@ -1,0 +1,7 @@
+series RLC, ECE2 torsion + kl0
+.ece form=ece2 w0=8.3391023799538009e-08 kl0=4.1695511899769005e-08
+V1 in 0 DC 0 AC 1 SIN(0 1 173)
+R1 in a 1
+L1 a b 10m
+C1 b 0 84.6346u
+.end
