@@ -21,6 +21,7 @@ type Builder struct {
 	elems  []Element
 	models map[string]Model
 	domain map[int]exchange.ChannelID // non-electrical nodes
+	ece    *ECESpec                   // hypothetical spin-connection terms (ece.go)
 }
 
 // NewBuilder returns a builder with only the ground node defined.
@@ -238,6 +239,10 @@ func (b *Builder) circuit() *Circuit {
 		Elements:  append([]Element(nil), b.elems...),
 		Models:    models,
 	}
+	if b.ece != nil {
+		sp := *b.ece
+		c.ECE = &sp
+	}
 	if len(b.domain) > 0 {
 		c.NodeDomains = make([]exchange.ChannelID, len(b.names))
 		for n, d := range b.domain {
@@ -307,6 +312,13 @@ func FromDeck(d *netlist.Deck) (*Circuit, error) {
 		}
 		b.Model(m.Name, m.Type, m.Params)
 	}
+	if d.ECE != nil {
+		f, ok := ParseECEForm(d.ECE.Form)
+		if !ok {
+			return nil, fmt.Errorf("%w: .ece on line %d: unknown form %q (ece, ece2 or none)", ErrBadValue, d.ECE.Line, d.ECE.Form)
+		}
+		b.ECE(ECESpec{Form: f, W0: d.ECE.W0, Kappa: d.ECE.Kappa, K0: d.ECE.K0, KL0: d.ECE.KL0})
+	}
 	if len(d.Domains) > 0 {
 		names := make([]string, 0, len(d.Domains))
 		for n := range d.Domains {
@@ -329,6 +341,14 @@ func FromDeck(d *netlist.Deck) (*Circuit, error) {
 			Name: e.Name, Value: e.Value, HasDC: e.HasDC,
 			ACMag: e.ACMag, ACPhase: e.ACPhase, IC: e.IC, HasIC: e.HasIC,
 			Model: e.Model, Area: e.Area,
+		}
+		if e.Kind == 'R' || e.Kind == 'C' || e.Kind == 'L' || e.Kind == 'K' {
+			for k, v := range e.Params { // spin-connection parameters (ece.go)
+				if el.Params == nil {
+					el.Params = map[string]float64{}
+				}
+				el.Params[k] = v
+			}
 		}
 		switch e.Kind {
 		case 'R':

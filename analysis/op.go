@@ -383,6 +383,9 @@ func (s *Sim) result(kind string) *output.Result {
 		}
 		if ms, ok := d.(device.ModelSupplier); ok {
 			er.ModelSupplied = ms.ModelSuppliedPower(op)
+			if n, ok := d.(device.ModelSupplyNoter); ok {
+				er.SuppliedNote = n.ModelSupplyNote()
+			}
 		}
 		for _, p := range er.Ports {
 			if p.Status != exchange.NotModeled {

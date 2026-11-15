@@ -31,9 +31,10 @@ import (
 // are each other's duals.)
 type Resistor struct {
 	Base
-	R  float64
-	g  float64
-	ch exchange.ChannelID // where the absorbed power goes (Thermal by default)
+	R   float64
+	g   float64
+	ch  exchange.ChannelID // where the absorbed power goes (Thermal by default)
+	ece eceTerms           // hypothetical spin-connection terms (ece.go)
 }
 
 // NewResistor builds a resistor from a circuit element. Its absorbed
@@ -70,6 +71,10 @@ func (r *Resistor) Setup(ctx *SetupContext) error {
 // Load stamps the conductance (Ho, Ruehli & Brennan 1975, MNA stamp for a conductance).
 func (r *Resistor) Load(ctx *LoadContext) error {
 	a, b := r.u[0], r.u[1]
+	if r.ece.On {
+		stampGB(ctx.M, a, b, r.g, &r.ece)
+		return nil
+	}
 	ctx.M.Add(a, a, r.g)
 	ctx.M.Add(b, b, r.g)
 	ctx.M.Add(a, b, -r.g)
@@ -80,28 +85,39 @@ func (r *Resistor) Load(ctx *LoadContext) error {
 // Operating returns voltage, current and absorbed power.
 func (r *Resistor) Operating(x []float64) OperatingPoint {
 	v := r.voltage(x)
+	if r.ece.On {
+		vb := r.body(x, &r.ece)
+		i := vb * r.g
+		return OperatingPoint{Voltage: v, Current: i, PowerAbsorbed: v * i, BodyVoltage: vb, ECEPower: (vb - v) * i}
+	}
 	i := v * r.g
 	return OperatingPoint{Voltage: v, Current: i, PowerAbsorbed: v * i}
 }
 
-// ExteriorPower: heat leaves through the thermal port (R > 0 only).
+// ExteriorPower: heat leaves through the thermal port (R > 0 only). With
+// spin-connection terms the heat is v_b·i = v·i + ECEPower.
 func (r *Resistor) ExteriorPower(c exchange.ChannelID, op OperatingPoint) float64 {
 	if c == r.ch && r.R > 0 {
-		return -op.PowerAbsorbed
+		return -(op.PowerAbsorbed + op.ECEPower)
 	}
 	return 0
 }
 
-// ModelSuppliedPower is the power a negative resistance delivers (0 for R > 0).
+// ModelSuppliedPower is the power a negative resistance delivers, or for
+// R > 0 the power the spin-connection terms deliver (0 without them).
 func (r *Resistor) ModelSuppliedPower(op OperatingPoint) float64 {
 	if r.R < 0 {
 		return -op.PowerAbsorbed
 	}
-	return 0
+	return op.ECEPower
 }
 
 // LoadAC stamps the conductance.
 func (r *Resistor) LoadAC(ctx *ACContext) error {
+	if r.ece.On {
+		stampYB(ctx.M, r.u[0], r.u[1], complex(r.g, 0), &r.ece)
+		return nil
+	}
 	stampY(ctx.M, r.u[0], r.u[1], complex(r.g, 0))
 	return nil
 }
@@ -109,5 +125,10 @@ func (r *Resistor) LoadAC(ctx *ACContext) error {
 // OperatingAC returns the resistor's phasors.
 func (r *Resistor) OperatingAC(x []complex128) ACPoint {
 	v := r.voltageAC(x)
+	if r.ece.On {
+		vb := r.bodyAC(x, &r.ece)
+		i := vb * complex(r.g, 0)
+		return ACPoint{Voltage: v, Current: i, ECEPower: avgPower(vb-v, i)}
+	}
 	return ACPoint{Voltage: v, Current: v * complex(r.g, 0)}
 }

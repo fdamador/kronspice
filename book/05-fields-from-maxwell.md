@@ -13,7 +13,9 @@ pieces: [pcb_layout](../examples/pcb_layout) evolves a microstrip pair
 from a cross-section, [rotating_efield](../examples/rotating_efield)
 asks whether a rotating electric field makes a magnetic one, and
 [rate_of_change](../examples/rate_of_change) asks where higher time
-derivatives enter, in the material and in the field equations.
+derivatives enter, in the material and in the field equations. Section
+5.5 then runs the field equations with Maxwell's scalar part kept (H47)
+and with the ECE spin connection (H48), both as hypothetical modes.
 
 ## 5.1 One physics, three notations
 
@@ -242,7 +244,102 @@ a < 0.72 mm; the Bhabha-scattering bound of Bufalo, Pimentel and Soto
 The effect is gone a few a away, so only very short-range experiments
 can see it. Status: untested, with a = 0 beside every line.
 
-## 5.5 Where the lumped picture ends: the field solver
+## 5.5 The scalar part kept, and the spin connection (H47, H48)
+
+In Maxwell's equation (A), 𝔅 = V.∇𝔄, he sets the convergence S.∇𝔄 to
+zero (Treatise Art. 619). This is a choice of gauge, not a consequence of
+the other equations. `em/scalar/` runs the equations with that scalar
+kept, and with the spin connection of ECE theory added. Both are
+hypothetical modes: off by default, labelled, with their own ledger
+columns, and run beside the standard equations (CLAUDE.md §3c).
+
+**The electric scalar S (H47).** If the condition is dropped, the
+potential's full derivative is a scalar plus the field,
+
+```
+S = ∂_μA^μ = div 𝔄 + (1/c²)∂ψ/∂t   [T]
+G = ∇A = S + F,     ∇G = μ₀J        (Maxwell's case: S = 0, G = F)
+```
+
+These are the field equations of Aharonov–Bohm (Ohmura–Stueckelberg)
+electrodynamics, Minotti and Modanese eq. 7 with β = 0. Faraday's law and
+div B = 0 are unchanged. Gauss's law gains −∂S/∂t and Ampère's law gains
+grad S. The source law is
+
+```
+□S = μ₀(∂ρ/∂t + div J)
+```
+
+so S has a source only where local charge conservation fails. Neither
+source paper states an energy theorem, so `em/scalar/ab.go` derives one:
+
+```
+∂u/∂t + div P = −J·E + c²ρS
+u = ½ε₀E² + B²/2μ₀ + S²/2μ₀,     P = (E×B + S E)/μ₀
+```
+
+S carries energy and an extra longitudinal flux S·E. The work c²ρS is
+booked in its own hypothetical column. On the Yee grid, with S on the
+nodes, the theorem holds step by step. The tests in
+`em/scalar/ab_test.go` check four things:
+- With conserved currents, S stays 0 and E, B equal `em/fdtd.go` to
+  5×10⁻¹⁶.
+- The energy theorem closes to 10⁻¹⁴.
+- Charge created at a node radiates S = μ₀q̇(t − r/c)/4πr to 0.2 % on
+  the axis and 0.7 % on the diagonal. It arrives at r/c with B = 0.
+- The free S modes of a conducting box ring at the TM cutoff
+  frequencies.
+
+The same created charge, run in standard mode, breaks Gauss's law with
+defect 1. So dropping the condition alone does nothing. S must also
+enter the action.
+
+**The magnetic scalar S_m.** With magnetic charge allowed (H2), the dual
+potentials carry a second scalar, the duality image of S. Neither paper
+has it; it is derived in `em/scalar/magnetic.go`. With S_m held at 0 the
+equations are those of `em/duality.go`, and they equal `em/fdtd.go`
+driven by the same magnetic current as a face source to round-off. The
+energy theorem with both scalars closes to 8×10⁻¹⁵. Created magnetic
+charge radiates S_m = (μ₀/c)q̇_m/4πr to 0.6 %, arriving with E = 0. No
+magnetic charge has been seen (MoEDAL, IceCube), so the standard
+prediction is S_m = 0.
+
+**The ECE spin connection (H48).** Evans' ECE theory makes the potential
+proportional to Cartan's tetrad and the field to its torsion. The spin
+connection, a scalar ω₀ and a vector ω, both in 1/m, then enters the
+field–potential relations (Eckardt, *ECE Unified Field Theory* Vol. 1,
+2022):
+
+```
+ECE  (4.211–4.212):  E = −∇φ − ∂A/∂t − cω₀A + ωφ        B = ∇×A − ω×A
+ECE2 (6.189–6.190):  E = −∇φ − ∂A/∂t + 2(cω₀A − ωφ)     B = ∇×A + 2ω×A
+```
+
+`em/scalar/ece.go` and `spin.go` compute these. The results:
+- With ω = 0, the fields are Maxwell's. The book's free-space spin
+  connection (κ = κ₀ = 0) also gives Maxwell's fields exactly, for any
+  W⁽⁰⁾.
+- A uniform ω gives div B = ω·∇×A, which is magnetic charge, so the
+  model falls into the H2 modes above.
+- ECE2's vacuum current J_ω = (2/μ₀)(κ₀E/c + κ×B), run on the Yee grid,
+  makes κ₀ a conductivity. A cavity mode's energy goes as e^(−2κ₀ct) to
+  0.2 %. It falls for κ₀ > 0 and grows for κ₀ < 0, and the growth is
+  booked to the spin connection with residual 3×10⁻¹⁴.
+- ECE2's Coulomb law does not follow from its Ampère law. The defect is
+  0.55 for κ parallel to E on the TM110 mode.
+- UFT 456's homogeneous current puts a magnetic conductivity into
+  Faraday's law. κ_Λ0 > 0 is gain, the mirror image of κ₀ < 0. Every
+  front still moves at c.
+
+The book gives no energy theorem containing ω, and no measured value of
+ω.
+
+The standard prediction for both entries: S = 0 under charge
+conservation, and ω, ω₀ are frame quantities with no field of their own.
+Chapter 10 runs both on a bench and in a circuit (sections 10.13 and
+10.14).
+
+## 5.6 Where the lumped picture ends: the field solver
 
 When a circuit is electrically large, or when the question is about the
 field itself, `em/fdtd.go` solves Maxwell's two curl equations on a Yee
@@ -261,7 +358,7 @@ is the instrument of chapter 9, where it tests whether light on a double
 loop stays confined, and it is the local field solve that §3g's
 arc-surge experiments call for.
 
-## 5.6 What to keep
+## 5.7 What to keep
 
 - The quaternion, spacetime-algebra and vector forms of Maxwell's
   equations are one physics. Every field computation is checked three
@@ -277,6 +374,10 @@ arc-surge experiments call for.
 - Rate dependence in a material is a circuit (Debye as R–C), and a
   hypothesis that changes the field equations is printed beside Maxwell
   with its bound.
+- Keeping Maxwell's scalar part, or adding a spin connection, changes
+  nothing until a source term or a conductivity is declared. When one is
+  declared, the energy theorem says who pays, and every front still
+  moves at c.
 
 ## Run it yourself
 
@@ -287,6 +388,7 @@ go run ./examples/rotating_efield
 go run ./cmd/kronspice examples/rate_of_change/export/water_cell_debye.cir
 go run ./examples/rate_of_change
 go test ./em                                      # triple twins, extraction, FDTD, dispersion, Podolsky
+go test ./em/scalar                               # S, S_m and the ECE spin connection (H47, H48)
 ```
 
 ## Sources
@@ -320,5 +422,12 @@ go test ./em                                      # triple twins, extraction, FD
   085012, 2014.
 - R. W. Hellwarth, P. Nouchi, *Phys. Rev. E*, 1996, the flying-doughnut
   pulse.
+- M. Minotti, G. Modanese, *Mod. Phys. Lett. A* 40 (2025),
+  arXiv:2408.05230, and *Eur. Phys. J. C* 86, 593 (2026),
+  arXiv:2603.26986 (Aharonov–Bohm electrodynamics and the scalar S);
+  [doc/h47-scalar-gravity.md](../doc/h47-scalar-gravity.md).
+- H. Eckardt, *ECE Unified Field Theory* Vol. 1, 2022, ch. 4–6
+  (copy in `examples/AIAS/papers/other/`); H. Eckardt, D. Goel, UFT 456,
+  2024 (the homogeneous ECE current).
 - [doc/M9h.md](../doc/M9h.md), [doc/M9i.md](../doc/M9i.md),
   [doc/M9n.md](../doc/M9n.md).

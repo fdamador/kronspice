@@ -1,0 +1,161 @@
+void_charge (proposed H51): electrical properties for the void, tested against the electron
+Ether and light as examples/void_shells: grid 0.4 ξ, box ρ < 24, |z| < 24, V0 = 20, ε = 300 (plays ħc).
+Standard prediction: a pointlike charge (< 1e-18 m), conservative isotropic Coulomb field, Darwin smearing
+0.866 ƛ from Dirac's equation, α growing at short distance (QED), e+e− → two 511 keV photons, no excited electron.
+
+Part 1. Tewari's charged void, as written (UPSM 2017 §2.3, §2.6, §3.1, §8)
+  He puts no charge inside the void: it is fieldless. The charge is the surface integral of the space
+  fluid's speed on the void's surface (eq. 2.4, q = π² r_e² c), its field is E = −c² r_e² sin²θ / 2r²
+  (eq. 3.1.3), zero along the spin axis; a positron is the same void spinning the other way (§2.3);
+  in annihilation the voids collapse and a single shell of light of width r_e leaves (§8.0–8.1).
+  void radius r_e = 4.029e-13 m = 1.043 ƛ (fixed by the measured charge, eq. 2.8)
+  test                               his void                         measured                         verdict
+  field is conservative              work 0.75 e²/r_e = 2.68 keV per    zero (static fields conserve      fails: a test charge gains
+    (∮E·dl = 0)                       loop (equator out, axis back)     energy)                           energy every lap
+  hydrogen 2p by spin orientation    levels spread by 4.08 eV           degenerate (fine structure        fails by ~1e5
+                                                                       45 µeV); Lyman-α one line
+  charge radius vs hydrogen 2S       ⟨r²⟩ = 1.089 ƛ² vs Darwin 0.750:   2S shift known to ±9 kHz          fails by ~1e6
+                                     extra 2S shift 9.9 GHz (31.8 GHz
+                                     if added to Dirac's)
+  form factor at LEP2 (√s = 200 GeV) |F| ≤ 2.4e-06 (shell: sin x / x,       ≥ 0.985                          fails
+                                     x = q r_e = 4.1e+05)
+  energy freed per annihilating pair 0.80 × 2mc² (eq. 2.14)             2mc² (two 511 keV photons)        fails by 20 %
+  annihilation light's wavelength    r_e = 0.166 × h/mc                  h/mc = 2.426e-12 m (511 keV)      fails by ×6.0
+  annihilation light's shape         one spherical shell, no frequency  two back-to-back 511 keV photons, fails
+                                                                       polarisations crossed (Wu &
+                                                                       Shaknov 1950)
+  What survives: his field-free void, the charge on its surface, the positron as opposite rotation and
+  annihilation as the voids filling in are pictures the void model can keep and test. His formulas for
+  them fail. The tests below use our ether (void_shells), where the void and its light are computed.
+
+Part 2. Charge radius: where can the charge sit on the computed bubble (ε = 300, one photon)?
+  bubble: M = 391.8232, ƛ = ε/M = 0.7657 ξ; void reaches 4.4 ξ = 5.75 ƛ across
+  Hydrogen: any charge spread shifts nS levels by (2/3)α⁴mc²⟨r²⟩/(n³ƛ²). Dirac's Darwin term is exactly such
+  a spread, ⟨r²⟩ = ¾ƛ², and it is confirmed; the 2S Lamb shift (1057.845 ± 0.009 MHz) leaves room for
+  |Δ⟨r²⟩| ≤ 3.1e-07 ƛ² more. LEP2 needs rms ≤ 7.7e-07 ƛ (3.0e-19 m).
+  placement                          rms radius   ⟨r²⟩/ƛ²   extra 2S shift if it replaces   if added to   F at q = 1/ƛ
+                                     (ƛ)                    Darwin (GHz)                    Dirac (GHz)
+  where the ether is missing         5.046        25.46     721.5                           743.4         -0.047
+  on the wall (Tewari's interface)   6.257        39.15     1121.3                          1143.2        -0.054
+  with the light                     3.027        9.16      245.6                           267.5         0.147
+  Every placement is 3–7 ƛ across, so it shifts hydrogen's 2S by hundreds of GHz against a ±9 kHz margin,
+  and its form factor is already far below 1 at q = 1/ƛ (about 0.5 MeV), let alone at LEP's 200 GeV.
+
+  The charge a probe sees inside radius r (Gauss's law), against QED's running charge:
+  r / ƛ    void: missing ether   wall     light     QED (Uehling): α(r)/α
+  8.00     0.9668                0.9175   1.0000    1.00000
+  4.00     0.3178                0.0122   0.8960    1.00000
+  2.00     0.0468                0.0000   0.2142    1.00000
+  1.00     0.0052                0.0000   0.0171    1.00000
+  0.50     0.0010                0.0000   0.0021    1.00000
+  0.25     0.0000                0.0000   0.0000    1.00000
+  0.10     0.0000                0.0000   0.0000    1.00138
+  Opposite directions: inside the void the seen charge falls toward zero; in QED it rises above e (measured:
+  α = 1/128 at the Z mass). A charged void must be smaller than ~1e-6 ƛ to look like the measured electron.
+
+Part 3. Exact charge: if the charge is the missing ether, is it fixed and does it come in units?
+  Measured: every electron, muon and proton carries the same |e| to ~1e-21 (atoms are neutral) whatever
+  its mass, speed or surroundings.
+  state                 missing ether (ξ³)   / one photon at ε = 300
+  ε = 100               173.424              0.4482
+  ε = 300               386.942              1.0000
+  ε = 1000              933.682              2.4130
+  2 photons, ε = 300    719.119              1.8585
+  3 photons, ε = 300    1047.853             2.7080
+  Not in units: two photons do not make twice the missing ether, and the amount tracks the light's strength.
+
+  In real time, a bubble started 3 % too large across breathes (no friction, ε = 300); the missing
+  ether within 7 ξ, against the relaxed bubble's:
+    t     missing ether within 7 ξ   whole box     energy drift
+    0     1.0994                     1.000000      +0.00e+00
+    10    0.9643                     1.000000      -1.84e-04
+    20    0.9849                     1.000000      -1.68e-04
+    30    1.0012                     1.000000      -1.49e-04
+    40    1.0020                     1.000000      -1.46e-04
+    50    1.0031                     1.000000      -1.18e-04
+    60    1.0274                     1.000000      -1.63e-04
+  A 3 % disturbance makes the missing ether near the particle swing from 0.961 to 1.035 of its rest value.
+  The whole box keeps it exactly (the ether is conserved), but near the particle it flickers as the void
+  breathes and sheds sound. A charge carried by missing ether would change by percent with every jolt;
+  measured, the charge holds to 1e-21. It would also differ between bubbles of different light (above).
+
+  What does come in units: the light's winding. Each photon circulates once around the axis in two turns
+  (m = ±½); m cannot change continuously, and its sign is the handedness — Tewari's opposite rotation for
+  the positron. If the charge is the winding (e for m = −½, −e for m = +½ by convention), it is exact and
+  conserved. But here m enters the light only as m² = ¼: nothing in these equations feels its sign, so the
+  winding labels the charge without producing any electric force (Part 4).
+
+Part 4. Electron and positron: two voids on the axis, centres 2d apart (relaxed bubbles, light solved)
+  e+e−: opposite windings may share the lowest light mode; e−e−: same winding, one photon per mode.
+  Coulomb for comparison: ∓α ε / 2d (ε = ħc). Light: photon energy ε√λ against the escape threshold ε√V0.
+  one bubble: M = 391.8232, photon 285.34, escape needs 1341.64 (λ = 0.9046 against V0 = 20)
+  2d (ξ)   2d (ƛ)   wall gap   e+e− energy − 2M   e−e− energy − 2M   e+e− minus e−e−   Coulomb αε/2d
+  8.8      11.49    1.6        -0.52174           -0.52079           -9.42e-04         0.24877
+  9.6      12.54    2.4        -0.16601           -0.16597           -3.96e-05         0.22804
+  10.4     13.58    3.2        -0.05211           -0.05211           -1.61e-06         0.21050
+  11.2     14.63    4.0        -0.01628           -0.01628           -6.52e-08         0.19546
+  12.0     15.67    4.8        -0.00508           -0.00508           -2.63e-09         0.18243
+  13.6     17.76    6.4        -0.00050           -0.00050           -4.21e-12         0.16097
+  16.0     20.90    8.8        -0.00002           -0.00002           -3.41e-13         0.13683
+  20.0     26.12    12.8       -0.00000           -0.00000           0.00e+00          0.10946
+  Both pairs feel the same short-range pull once their walls overlap, and it dies within a healing length
+  (the ether's static response is screened: perturbations fall as e^{−√2 r}/r). The only difference
+  between e+e− and e−e− is the light's exchange splitting, also exponential. No 1/r force, no sign:
+  like charges do not repel. Coulomb's law needs a field that reaches out, which this ether lacks.
+
+  In real time (no friction), two bubbles started with walls 1.6 ξ apart (2d = 8.8 ξ):
+  pair    t     voids   centre density   light energy   light in voids   ether energy beyond 14 ξ   drift
+  e+e−    0     2       0.640            570.588        0.9997           0.0000                     +0.0e+00
+  e+e−    10    1       0.259            450.307        0.9999           26.7421                    -1.3e-03
+  e+e−    20    1       0.139            471.166        0.9998           98.7624                    -1.3e-03
+  e+e−    30    1       0.655            473.880        0.9998           117.1188                   -2.1e-03
+  e+e−    40    1       1.076            480.207        0.9998           113.7862                   -2.1e-03
+  e−e−    0     2       0.640            570.589        0.9997           0.0000                     +0.0e+00
+  e−e−    10    1       0.442            568.900        0.9998           0.0013                     -1.5e-04
+  e−e−    20    1       0.080            523.226        0.9998           0.0979                     -3.5e-03
+  e−e−    30    1       0.086            529.708        0.9998           23.1312                    -1.9e-03
+  e−e−    40    1       0.092            530.901        0.9998           37.2366                    -3.3e-03
+  Relaxed, the merged e+e− bubble has M = 649.0108 against 2M = 783.6464 (e−e−: 726.9319): 17.2 % (7.2 %) is freed,
+  and it leaves as
+  sound in the ether, not light. How they meet differs (see the frames): e+e− may share one light mode, so
+  within t ≈ 5 both photons gather in one void; the emptied void collapses and sends out a spherical shell
+  of sound — Tewari's collapsing void and outgoing shell, but the shell is sound and the light stays.
+  e−e− cannot share a mode, so each void keeps its photon until the two coalesce, by t ≈ 20.
+  Both photons stay trapped (their energy is ~1/5 of what escape needs), so
+  the pair never annihilates: it becomes one neutral (windings cancel) bubble of light that lasts forever.
+  Measured: positronium decays in 0.125 ns (para) or 142 ns (ortho) into 2 or 3 photons carrying all 2mc².
+  Like pairs (e−e−) merge just the same. Tewari's picture — the voids fill in and the light leaves — needs
+  the light to escape when the windings cancel; in this ether nothing releases it.
+
+Part 5. Stiffness: the void's own vibrations (ħ = 1 in these units, so ħω / mc² = ω / M)
+  Read from the motion after a 3 % disturbance (signals smoothed over 2 time units to remove the sound's
+  ripple). Both modes lose their energy to sound within a few swings: broad resonances, good to ~20 %.
+  mode                       ω (μ/ħ)        ħω / mc²     energy      how read
+  breathing (l = 0)          0.27           6.8e-04      0.35 keV    does not ring: one slow swing back, first turn at t = 11.8 (ω ≈ π/t)
+  stretching (l = 2)         0.48           1.2e-03      0.62 keV    rings: median half-period over 8 turning points
+  sliding (l = 1)            0 (it is a free translation: no restoring force, no dipole)
+  A round void has no electric dipole moment (measured |d_e| < 4.1e-30 e·cm: passes), but it does have
+  soft internal modes below a keV: an excited electron. They sit near ħ × (sound speed / void size),
+  and the ether's sound (1/√2) is ~400 times slower than its light (ε = 300), so the void rings at about
+  1/1000 of the Compton frequency. Measured: no excited state of the electron has ever been seen — light
+  scatters off free electrons as off a structureless charge (Thomson, Klein–Nishina), and collider
+  searches exclude excited electrons up to TeV masses.
+
+Part 6. Scorecard: electrical properties assigned to the void
+  property                    Tewari's void (Part 1)        computed bubble (Parts 2–5)      measured
+  charge −e                   input (fixes r_e)             input (assigned)                 suggestion: put in by hand
+  field conservative          fails (∮E·dl ≠ 0)             no field at all                  yes
+  field isotropic             fails (sin²θ; Lyman-α split)  —                                yes (spin-independent Coulomb)
+  charge radius / hydrogen    fails (1.04 ƛ shell)          fails (3–7 ƛ)                    0.866 ƛ Darwin, extra ≤ 6e-4 ƛ
+  form factor at LEP2         fails                         fails                            pointlike to ~3e-19 m
+  running charge              (none; Coulomb stops at r_e)  opposite sign (falls inside)     α rises at short distance
+  charge quantized            claims (no smaller void)      winding yes; missing ether no    exact to 1e-21
+  charge constant in time     —                             missing ether flickers by %      yes
+  like charges repel          via flow (not computed)       fails (merge)                    yes, 1/r²
+  e+e− → 2mc² of light        fails (0.8, one shell)        fails (sound only, light kept)   2 × 511 keV photons
+  EDM                         0 (axial)                     0 (round)                        < 4.1e-30 e·cm: passes
+  no internal excitations     —                             fails (keV modes)                none seen
+  Verdict: assigning electrical properties to the void makes the model testable, and the tests are decided.
+  The void is too big for hydrogen and LEP by six orders, and the ether as built has no long-range field to
+  carry a charge's force or to let light out when voids meet. The one property that survives is the light's
+  winding as an exact, signed charge label — which still needs a field that feels its sign.

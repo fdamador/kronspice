@@ -68,6 +68,10 @@ func WriteReport(w io.Writer, r *Result, opt ReportOptions) error {
 		if l.ModelSupplied != 0 {
 			ew.printf("  model-supplied %s (idealized active elements; not inflow from the exterior)\n", Eng(l.ModelSupplied, "W"))
 			for _, row := range l.Supplied {
+				if row.Note != "" {
+					ew.printf("    %s  %s  [%s]\n", row.Element, Eng(row.PowerW, "W"), row.Note)
+					continue
+				}
 				ew.printf("    %s  %s\n", row.Element, Eng(row.PowerW, "W"))
 			}
 		}

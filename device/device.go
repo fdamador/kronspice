@@ -177,6 +177,9 @@ func (a *ACContext) AddRHS(i int, v complex128) {
 // as in SPICE): voltage V(n+) − V(n−) and current from n+ to n−.
 type ACPoint struct {
 	Voltage, Current complex128
+	// ECEPower is the average power the hypothetical spin-connection terms
+	// deliver to the circuit [W] (ece.go); 0 without them.
+	ECEPower float64
 }
 
 // OperatingPoint describes a two-terminal element at a solution.
@@ -187,6 +190,10 @@ type OperatingPoint struct {
 	// StoragePower is the part of PowerAbsorbed going into stored energy
 	// (capacitor, inductor, junction charge); the rest is dissipated.
 	StoragePower float64
+	// BodyVoltage and ECEPower are set only for an element carrying the
+	// hypothetical spin-connection terms (ece.go): the voltage its body
+	// sees, and the power the terms deliver to the circuit [W].
+	BodyVoltage, ECEPower float64
 }
 
 // Device is one circuit element.
@@ -356,11 +363,23 @@ func FromCircuit(c *circuit.Circuit) ([]Device, error) {
 			}
 			d = NewDiode(e, m)
 		case circuit.Resistor:
-			d = NewResistor(e)
+			r := NewResistor(e)
+			if t := c.ECEFor(e); t.On {
+				r.SetECE(t)
+			}
+			d = r
 		case circuit.Capacitor:
-			d = NewCapacitor(e)
+			cp := NewCapacitor(e)
+			if t := c.ECEFor(e); t.On {
+				cp.SetECE(t)
+			}
+			d = cp
 		case circuit.Inductor:
-			d = NewInductor(e)
+			l := NewInductor(e)
+			if t := c.ECEFor(e); t.On {
+				l.SetECE(t)
+			}
+			d = l
 		case circuit.NonlinearCapacitor:
 			d = NewNonlinearCapacitor(e)
 		case circuit.NonlinearInductor:
@@ -384,7 +403,11 @@ func FromCircuit(c *circuit.Circuit) ([]Device, error) {
 				}
 				ls[i] = c.Elements[j].Value
 			}
-			d = NewMutual(e, ls[0], ls[1])
+			m := NewMutual(e, ls[0], ls[1])
+			if t := c.ECEFor(e); t.On {
+				m.SetECE(t)
+			}
+			d = m
 		case circuit.VoltageSource:
 			d = NewVoltageSource(e)
 		case circuit.CurrentSource:

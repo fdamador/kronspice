@@ -73,6 +73,7 @@ func ExteriorDC(n *Network, form Form) (*Exterior, error) {
 		}
 		ops[ei] = op
 	}
+	n.eceOps(ops, sol, true)
 	rad := make([]float64, len(n.devs)) // radiated power per element, ≥ 0
 	for _, r := range n.radiation {
 		rad[r.elem] += real(sol.E.At(r.branch) * sol.I.At(r.branch))
@@ -107,6 +108,7 @@ func ExteriorAC(n *Network, form Form, freq float64) (*Exterior, error) {
 		ops[ei] = device.OperatingPoint{Voltage: cmplx.Abs(E), Current: cmplx.Abs(I),
 			PowerAbsorbed: n.absorbedAC(sol, k)}
 	}
+	n.eceOps(ops, sol, false)
 	rad := make([]float64, len(n.devs))
 	for _, r := range n.radiation {
 		rad[r.elem] += 0.5 * real(sol.E.At(r.branch)*cmplx.Conj(sol.I.At(r.branch)))

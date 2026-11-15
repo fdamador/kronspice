@@ -352,7 +352,94 @@ through zero. A rough estimate from these criteria puts the knot's own
 core at the edge of cavitating for β = λκ4/κ2² ≈ 33–41. Computing that
 threshold properly is the example's next step.
 
-## 9.9 What to keep
+## 9.9 The standard electron, and the models that followed
+
+**The standard electron, computed.** [dirac_qed](../examples/dirac_qed)
+builds the benchmark itself, so that its numbers can be checked line by
+line rather than quoted.
+- Dirac's free equation, diagonalized, gives ±√(p² + 1) and spin ½. Spin
+  is not put in.
+- In a magnetic field, flipping the spin costs exactly one cyclotron
+  quantum at every field strength, so g = 2.000000000000.
+- Shooting Dirac's radial equations gives hydrogen's 1S at 13.605874 eV
+  and the fine structure at 10.9497 GHz. That is 0.23 % below QED's
+  10.96905 GHz.
+- Dirac puts 2S½ and 2P½ at the same energy. The measured Lamb shift of
+  1057.845 MHz between them is the first thing QED explained.
+Every ring, vortex and void in this chapter is scored against these
+columns.
+
+**Hydrogen held by the zero-point field (H24).**
+[zpf_hydrogen](../examples/zpf_hydrogen) works Puthoff's 1987 balance.
+In stochastic electrodynamics the orbiting electron absorbs from a
+random zero-point field what it radiates when m·ω·r² = ħ. That is
+Bohr's condition: with CODATA values it gives a0 and −13.6057 eV. The
+averaged balance is restoring about a0. A 1-D oscillator in a simulated
+zero-point field holds ½ħω0, with absorbed equal to radiated to 0.03 %.
+A kronspice LC tank in its resistor's zero-point noise holds the
+expected energy with the ledger closed. The entry is reproduced at the
+level of Bohr's theory, which is all the paper claims. The quantum
+ground state has L = 0 and a spread of radii, which this model does not
+give. The net exchange is zero, so it is not an energy source.
+
+**Voids in a nonlinear ether (H49, proposed H50 and H51).** The ether of
+section 9.8 can never be empty. The next three examples give it an
+amplitude that can vanish (a Gross–Pitaevskii superfluid), so that a
+particle can be a void with light inside it.
+- [ether_horizon](../examples/ether_horizon) (H49, bounded). A vortex
+  empties a line one healing length thick, not a sphere, and makes only
+  an ergoregion. A true horizon needs an ether sink that is on no
+  ledger. A sink that is booked would have to radiate Hawking heat
+  beyond Earth's heat-flow bound unless its horizon were 2×10⁹ m wide.
+  Part 13 solves the ether and the light together. There the thin donuts
+  travel, and strong light closes each donut into a round bubble with
+  g₀ ≈ 1.4. The anomaly from the computed walls is 0.28–0.67 of
+  measured. This overturns Part 12's 0.959, which came from thin-ring
+  formulas.
+- [void_shells](../examples/void_shells) (proposed H50). One photon in
+  the void makes a stable round bubble. Higher modes and several photons
+  stretch it or share one void, but prepared shells are squeezed back
+  into the bubble. g is 1.31–1.37 for every state. g = 2 needs an ether
+  energy that pulls with a constant force, which shells cannot supply.
+- [void_charge](../examples/void_charge) (proposed H51). The void is
+  given a charge and tested electrically. Tewari's charged void fails
+  several measurements:
+  - its field is not conservative (2.68 keV gained per lap);
+  - its r_e shell adds 9.9 GHz to hydrogen's 2S level, against a
+    measurement good to ±9 kHz;
+  - its annihilation frees 0.8 × 2mc², in one shell of light rather
+    than two 511 keV photons.
+
+  The computed bubble does no better:
+  - its charge radius is 3–6 ƛ in every placement tried;
+  - the charge seen from outside falls at short range, where QED's
+    rises;
+  - two voids attract whatever their signs;
+  - an e⁺e⁻ pair keeps its light instead of annihilating.
+
+  The only exact quantity left is the light's winding m = ±½, but
+  nothing in the model feels its sign.
+
+**Other bounded models.**
+- [fdamador_neutrino](../examples/fdamador_neutrino) (H28, with H30 and
+  H39–H42, H45) turns H23's torus inside out, with the electric field as
+  the ring. A closed E loop is neutral but exists only as an
+  oscillation. At bench scale the ring is a kronspice resonator at
+  2.06 GHz with Q 40.5. To survive SN1987A's 168,000 years it would need
+  an effective vacuum permittivity of 3.4×10¹³. Parts 6–10 test flavour,
+  spin, pairs and a weak force made from the ring's own field. Each one
+  is bounded against NuFIT, XENONnT, Borexino and SNO.
+- [shoulders_ev](../examples/shoulders_ev) (H27) takes Shoulders' 1 µm
+  bead of 10¹¹ electrons. The bead needs 2.77 J against his 1 µJ source.
+  It explodes in femtoseconds, and every proposed container fails. A
+  kronspice Faraday-cup shot shows that the charge collected can never
+  exceed C·V of the source.
+- [quantum_circuit_demo](../examples/quantum_circuit_demo) is one short
+  Python script. It re-derives section 9.7's hydrogen network and the
+  H22 quark test of chapter 10 in one place, as a check that can be read
+  through in a few minutes.
+
+## 9.10 What to keep
 
 - The bench is fixed before any model is run: the measured values and the
   Dirac prediction appear beside every result, and the Zeeman test comes
@@ -361,6 +448,8 @@ threshold properly is the example's next step.
   ring to 10⁻⁵ before anything was read from it about the electron.
 - A bound is a result. H21 and H23 are *bounded*, with the number that
   bounds them recorded: g ≤ 1 for a mass ring, light gone in half a period.
+- The standard prediction is computed, not quoted. dirac_qed gives g = 2
+  and the Lamb-shift gap that every model on the bench is scored against.
 - Nothing is removed for failing. Each entry stays in the register with
   its status, and the values it must still meet are written down.
 
@@ -374,6 +463,14 @@ go run ./examples/kron_electron          # -png viz/ring_field.png, -gif viz/rin
 go run ./examples/photon_electron        # about ten minutes
 go run ./examples/ether_cavitation       # step 1, under a minute
 go run ./examples/light_hydrogen         # about two seconds
+go run ./examples/dirac_qed              # about two seconds
+go run ./examples/zpf_hydrogen
+go run ./examples/ether_horizon
+go run ./examples/void_shells
+go run ./examples/void_charge
+go run ./examples/fdamador_neutrino
+go run ./examples/shoulders_ev
+python3 examples/quantum_circuit_demo/quantum_circuit_demo.py
 go test ./examples/kelvin_ring ./examples/vortex_ring ./examples/space_vortex ./examples/kron_electron ./examples/photon_electron ./examples/light_hydrogen
 ```
 
@@ -404,5 +501,16 @@ go test ./examples/kelvin_ring ./examples/vortex_ring ./examples/space_vortex ./
   et al., *Phys. Rev. Lett.* 107, 203001 (2011); H. Hellwig et al., *IEEE
   Trans. Instrum. Meas.* 19, 200 (1970); G. Bressi et al., *Phys. Rev. A*
   83, 052101 (2011) for hydrogen (section 9.7).
+- P. A. M. Dirac, *Proc. R. Soc. A* 117, 610 (1928); S. R. Lundeen,
+  F. M. Pipkin, *Phys. Rev. Lett.* 46, 232 (1981), the Lamb shift.
+- H. E. Puthoff, *Phys. Rev. D* 35, 3266 (1987); D. C. Cole, Y. Zou,
+  *Phys. Lett. A* (2003); T. M. Nieuwenhuizen, M. T. P. Liska, *Phys.
+  Scr.* T165, 014006 (2015).
+- A. L. Fetter, *Rev. Mod. Phys.* 81, 647 (2009); D. Kleckner,
+  L. H. Kauffman, W. T. M. Irvine, *Nature Phys.* 12, 650 (2016).
+- K. R. Shoulders, *EV: A Tale of Discovery*, 1987; G. A. Mesyats,
+  *Plasma Phys. Control. Fusion* 47, A109 (2005).
+- NuFIT 6.0; Borexino 2017 and XENONnT magnetic-moment bounds; SNO, for
+  the neutrino ring (the fdamador_neutrino README lists each).
 - [doc/kelvin-references.md](../doc/kelvin-references.md),
   [doc/tewari-references.md](../doc/tewari-references.md).

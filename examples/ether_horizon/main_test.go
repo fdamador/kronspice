@@ -279,3 +279,313 @@ func TestSpinningCore(t *testing.T) {
 		t.Errorf("rim speed at r_c = R: %g c", RimSpeed(RingRadius())/C0)
 	}
 }
+
+// Part 9a: the round void's equilibrium carries m_e c² and is stable, with
+// the bag model's virial (pressure: E = (4/3)·light; tension: E = (3/2)·light).
+func TestRoundVoid(t *testing.T) {
+	for _, x := range []float64{XTM11, XTE11} {
+		R, p := PressureForElectron(x)
+		if rel(VoidEnergy(R, x, p, 0), Me*C0*C0) > 1e-12 || rel(VoidRadius(x, p, 0), R) > 1e-9 || VoidStiffness(R, x, p, 0) <= 0 {
+			t.Errorf("pressure-held void, x = %g: E %g, R %g vs %g", x, VoidEnergy(R, x, p, 0), VoidRadius(x, p, 0), R)
+		}
+		Rs, sg := TensionForElectron(x)
+		if rel(VoidEnergy(Rs, x, 0, sg), Me*C0*C0) > 1e-12 || rel(VoidRadius(x, 0, sg), Rs) > 1e-9 || VoidStiffness(Rs, x, 0, sg) <= 0 {
+			t.Errorf("tension-held void, x = %g", x)
+		}
+		if rel(Hbar*C0*x/R*4/3, Me*C0*C0) > 1e-12 {
+			t.Errorf("virial (pressure)")
+		}
+	}
+	// TM11 root: [x·j1(x)]' = 0.
+	g := func(x float64) float64 { return x * sphj(1, x) }
+	if d := (g(XTM11+1e-6) - g(XTM11-1e-6)) / 2e-6; math.Abs(d) > 1e-8 {
+		t.Errorf("TM11 root: derivative %g", d)
+	}
+}
+
+// Part 9b: the breathing tank in kronspice keeps W·R constant (the photon's
+// ħω ∝ 1/R), halves its frequency when the void doubles, and the energy it
+// loses is the work on the moving wall.
+func TestBreathingVoid(t *testing.T) {
+	steps := 800.0
+	if testing.Short() {
+		steps = 300
+	}
+	r, err := BreathingTank{L0: 1e-6, C0: 1e-9, I0: 1, SEnd: 2, Periods: 50, StepsPerPeriod: steps}.Run()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if math.Abs(r.Invariant-1) > 2e-4 || math.Abs(r.BooksResidual) > 2e-4 || math.Abs(r.Freq1/r.Freq0-0.5) > 1e-4 {
+		t.Errorf("W·R %g, books %g, frequency ratio %g", r.Invariant, r.BooksResidual, r.Freq1/r.Freq0)
+	}
+}
+
+// Part 9c: the flow over the wall vanishes at the poles and the equator,
+// the void is round with no flow and stretches along the axis with it.
+func TestVoidShape(t *testing.T) {
+	if WallSpeed(0) != 0 || math.Abs(WallSpeed(math.Pi/2)) > 1e-15 || rel(WallSpeed(math.Pi/4), 2.5) > 1e-12 {
+		t.Errorf("wall speed")
+	}
+	if Elongation(0) != 1 || !(Elongation(0.1) > 1 && Elongation(0.3) > Elongation(0.1)) {
+		t.Errorf("elongation %g %g %g", Elongation(0), Elongation(0.1), Elongation(0.3))
+	}
+	// Mean of ½u² over the sphere has no P2, P4 parts beyond those used: ε6 = 0.
+	if e := ShapeModes(1)[6]; math.Abs(e) > 1e-9 {
+		t.Errorf("ε6 = %g", e)
+	}
+	if we := WeberFor(1.1); we < 0.2 || we > 0.35 {
+		t.Errorf("We for 10 %% elongation %g", we)
+	}
+	if rel(HollowTail(2, 8, 1), 0.5) > 1e-12 {
+		t.Errorf("hollow tail")
+	}
+}
+
+// Part 10: only a squeeze that grows with R holds the void at one size;
+// Meyl's self-similar 1/R field is neutral or runs away; −1/R² balances
+// unstably.
+func TestContractionLaws(t *testing.T) {
+	want := map[string]string{
+		"pressure, +p·R³":                 "stable",
+		"tension, +σ·R²":                  "stable",
+		"linear, +k·R":                    "stable",
+		"logarithmic, +k·ln R":            "stable",
+		"Meyl self-similar, −k/R (k = ½)": "none",
+		"Meyl self-similar, −k/R (k = 1)": "neutral",
+		"steeper, −k/R² (k = ½)":          "unstable",
+	}
+	for _, c := range Contractions() {
+		roots, kinds, neutral := Balance(c)
+		got := "none"
+		switch {
+		case neutral:
+			got = "neutral"
+		case len(roots) == 1 && kinds[0] > 0:
+			got = "stable"
+		case len(roots) == 1:
+			got = "unstable"
+		case len(roots) > 1:
+			got = "several"
+		}
+		if got != want[c.Name] {
+			t.Errorf("%s: %s, want %s", c.Name, got, want[c.Name])
+		}
+		if len(roots) == 1 && math.Abs(roots[0]-1) > 1e-6 {
+			t.Errorf("%s: root %g, want 1", c.Name, roots[0])
+		}
+	}
+}
+
+func TestNucleonVoid(t *testing.T) {
+	rp := VoidAtMass(Mp, XTM11, false)
+	if math.Abs(rp*1e15-0.7694) > 2e-3 {
+		t.Errorf("proton TM11 pressure void %g fm", rp*1e15)
+	}
+	rt := VoidAtMass(Mp, XTM11, true)
+	if r := rt / RpCODATA; r < 1 || r > 1.04 {
+		t.Errorf("proton TM11 tension void / measured = %g", r)
+	}
+	if r := VoidAtMass(Mn, XTM11, true) / rt; math.Abs(r-Mp/Mn) > 1e-12 {
+		t.Errorf("neutron/proton void ratio %g", r)
+	}
+	if r := (MuN / MuP) / BagMomentRatio; math.Abs(r-1) > 0.03 {
+		t.Errorf("moment ratio off by %g", r-1)
+	}
+	d, b := ProbeBound()
+	if math.Abs(d) > 1e-3 || b > 4.1e-3 || b < 3.9e-3 {
+		t.Errorf("probe bound: d %g, bound %g", d, b)
+	}
+}
+
+func TestOnion(t *testing.T) {
+	o := Onion{N: 3, Q: 1 / MuOverE, K: 0.01, L: 1e-3, F0: 1e3}
+	p, err := o.Modes()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(p) != 3 {
+		t.Fatalf("%d peaks, want 3: %v", len(p), p)
+	}
+	for k, f := range o.Freqs() {
+		if r := p[k] / f; r < 0.98 || r > 1.001 {
+			t.Errorf("shell %d: coupled/uncoupled %g", k, r)
+		}
+	}
+	r1, r2 := p[1]/p[0], p[2]/p[1]
+	if math.Abs(r2/r1-1) > 0.01 {
+		t.Errorf("self-similar ladder not geometric: %g, %g", r1, r2)
+	}
+	if math.Abs(r2/TauOverM-1) < 5 {
+		t.Errorf("onion step %g should miss the τ/μ ratio %g by >5×", r2, TauOverM)
+	}
+}
+
+// Part 11: g = 1 + 1/n for a squeeze R^n; H23 as written gives g = 1;
+// the crossed ring's lowest note is half the plain ring's; the charge's
+// self-energy on a torus overshoots α/2π, a shell at 2πR hits it.
+func TestRingG(t *testing.T) {
+	if _, g := WvdMMoment(); math.Abs(g-1) > 1e-9 {
+		t.Errorf("H23 g = %g, want 1", g)
+	}
+	for n, want := range map[float64]float64{3: 4.0 / 3, 2: 1.5, 1: 2} {
+		if g := SplitG(n, 0); math.Abs(g-want) > 1e-12 {
+			t.Errorf("n = %g: g = %g, want %g", n, g, want)
+		}
+	}
+	R, _, ratio := StringRing(Me)
+	if math.Abs(R/(Hbar/(Me*C0))-1) > 1e-12 || math.Abs(ratio-2) > 1e-12 {
+		t.Errorf("string ring R %g, ratio %g", R, ratio)
+	}
+	if g := SplitG(1, 2*Alpha*BetaSchwinger); math.Abs(g/2-1-AeSchwinger) > 1e-15 {
+		t.Errorf("string ring with β = 1/4π: a = %g", g/2-1)
+	}
+	if n := NForAnomaly(); math.Abs(SplitG(n, 0)/2-1-AeMeasured) > 1e-12 {
+		t.Errorf("n for anomaly: %g", n)
+	}
+}
+
+func TestTorusSelfEnergy(t *testing.T) {
+	for _, a := range []float64{0.01, 0.05} {
+		if d := TorusInvD(a, 400); math.Abs(d/ThinTorusInvD(a)-1) > 2e-3 {
+			t.Errorf("a = %g: ⟨1/d⟩ %g vs thin %g", a, d, ThinTorusInvD(a))
+		}
+	}
+	prev := math.Inf(1)
+	for _, a := range []float64{0.01, 0.1, 0.5, 1} {
+		b := Beta(TorusInvD(a, 400))
+		if b >= prev || Anomaly(b) < 3*AeMeasured {
+			t.Errorf("a = %g: β %g (prev %g), anomaly %g", a, b, prev, Anomaly(b))
+		}
+		prev = b
+	}
+	if s := ShellForSchwinger(false); math.Abs(Anomaly(1/(2*s))-AeSchwinger) > 1e-15 {
+		t.Errorf("shell %g gives %g", s, Anomaly(1/(2*s)))
+	}
+}
+
+func TestCrossedHalf(t *testing.T) {
+	plain := DefaultRing()
+	plain.Crossed = false
+	mp, err := plain.Measure(1, 0.02, 2001)
+	if err != nil {
+		t.Fatal(err)
+	}
+	mc, err := DefaultRing().Measure(0, 0.02, 2001)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if r := mc.F / mp.F; math.Abs(r-0.5) > 1e-4 {
+		t.Errorf("crossed/plain = %g, want 0.5", r)
+	}
+}
+
+// Part 12: the vortex ring is a constant-force string (g = 2 with no
+// pressure or charge, virial exact); pressure lowers g, the wall charge
+// raises it; the donut never holds a thin shape; the horn-torus anomaly is
+// 95.9 % of measured; kronspice's guided ring note is √(f_c² + f_z²).
+func TestDonut(t *testing.T) {
+	for _, pi := range DonutPressures {
+		for _, s := range DonutShapes {
+			d := DonutAt(s, pi, WallInvD(s))
+			if v := d.EL + d.EU - d.EV - 3*d.EP; math.Abs(v) > 1e-9*d.M {
+				t.Errorf("Π %g a/R %g: virial %g", pi, s, v)
+			}
+			if g := 2*(1+d.EU/d.EL) - 2*d.EP/d.EL; math.Abs(g-d.G) > 1e-9 {
+				t.Errorf("Π %g a/R %g: g %g vs virial %g", pi, s, d.G, g)
+			}
+			if d.D2 <= 0 {
+				t.Errorf("Π %g a/R %g: unstable in size", pi, s)
+			}
+		}
+		if _, fat := ShapeScan(ShapeGrid(), pi, WallInvD); !fat {
+			t.Errorf("Π %g: a thin donut is held", pi)
+		}
+	}
+	for _, s := range DonutShapes {
+		if g := DonutAt(s, 0, 0).G; math.Abs(g-2) > 1e-12 {
+			t.Errorf("a/R %g: bare swirl g = %g", s, g)
+		}
+	}
+	h := DonutAt(1, 0, WallInvD(1))
+	if r := (h.G/2 - 1) / AeMeasured; math.Abs(r-0.9588) > 2e-3 {
+		t.Errorf("horn anomaly ratio %g", r)
+	}
+	if r := h.RadiusOverLbar(); math.Abs(r-3.820) > 0.01 {
+		t.Errorf("horn R/ƛ %g", r)
+	}
+}
+
+func TestGuideRing(t *testing.T) {
+	fz := GuideRing{N: 200, L: 1e-6, Cd: 1e-9, Ld: 1e30}.Analytic()
+	g := GuideRing{N: 200, L: 1e-6, Cd: 1e-9}
+	g.Ld = 1 / (math.Pow(2*math.Pi*3*fz, 2) * g.Cd)
+	pk, err := g.Peak()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if math.Abs(pk/math.Hypot(g.Cutoff(), fz)-1) > 1e-4 {
+		t.Errorf("guided note %g vs %g", pk, math.Hypot(g.Cutoff(), fz))
+	}
+}
+
+// Part 13: the Go solver reproduces the independent Python reference
+// (ref/ether13_ref.py) at the start, conserves energy without friction,
+// keeps the light in the void and the thin donut's vortex, and the
+// dissipative flow only lowers the energy.
+func TestEtherSimReference(t *testing.T) {
+	s := NewRingState(NewEtherGrid(0.3, 22, 30), 300, 20, 8, 2)
+	ee, el, _ := s.Energies()
+	for _, c := range []struct{ got, want float64 }{{ee, 731.406}, {el, 262.4841}, {s.Lam, 0.76553}} {
+		if math.Abs(c.got/c.want-1) > 2e-5 {
+			t.Errorf("start state %g, reference %g", c.got, c.want)
+		}
+	}
+}
+
+func TestEtherSimRealTime(t *testing.T) {
+	s := NewRingState(Part13Grid(), 300, Part13V0, 8, 2)
+	e0, l0, _ := s.Energies()
+	for k := 0; k < 200; k++ {
+		s.Step(0.01)
+	}
+	ee, el, _ := s.Energies()
+	sh := s.Shape()
+	if d := (ee + el - e0 - l0) / (e0 + l0); math.Abs(d) > 1e-3 {
+		t.Errorf("energy drift %g", d)
+	}
+	if math.Abs(ee/626.5559-1) > 1e-4 || math.Abs(s.Lam/1.3579-1) > 1e-4 {
+		t.Errorf("t = 2: E_e %g, λ %g against the reference 626.5559, 1.3579", ee, s.Lam)
+	}
+	if !sh.Any || sh.OnAxis || sh.Winding != 1 || sh.LightIn < 0.999 || sh.ZC > -0.2 {
+		t.Errorf("thin donut at t = 2: %+v", sh)
+	}
+}
+
+func TestEtherSimRelax(t *testing.T) {
+	s := NewRingState(Part13Grid(), 100, Part13V0, 8, 2)
+	e0, l0, _ := s.Energies()
+	prev := e0 + l0
+	for k := 0; k < 4; k++ {
+		s.Relax(500, 20)
+		ee, el, _ := s.Energies()
+		if ee+el > prev*(1+1e-9) {
+			t.Errorf("relax step %d raised the energy: %g > %g", k, ee+el, prev)
+		}
+		prev = ee + el
+	}
+	// light mode residual
+	g := s.G
+	h := make([]float64, len(s.Chi))
+	g.LightOp(s.Chi, h, s.dens, s.V0, s.Lam)
+	r, n := 0.0, 0.0
+	for i := 0; i < g.NR; i++ {
+		for j := 0; j < g.NZ; j++ {
+			k := g.at(i, j)
+			r += h[k] * h[k] / g.Rho[i]
+			n += g.Rho[i] * s.Chi[k] * s.Chi[k] * s.Lam * s.Lam
+		}
+	}
+	if math.Sqrt(r/n) > 1e-3 {
+		t.Errorf("light mode residual %g", math.Sqrt(r/n))
+	}
+}

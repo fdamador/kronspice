@@ -1,0 +1,74 @@
+void_shells (proposed H50): light pushing out, ether pushing in, built up in shells
+Grid 0.4 ξ, box ρ < 24, |z| < 24; ether opacity V0 = 20; relaxed 8000 steps (energy only falls).
+g = Mc²/E_L (rest energy over the light's, the charge riding with the light; ether_horizon Part 11).
+Standard prediction: a pointlike electron, g = 2.00231930436 from Dirac + QED, no ether.
+
+Part 1. The round bubble: one double-loop photon in the lowest mode, across its strength ε (ε plays ħc)
+  ε       void ρ / z reach   light in void   ether share   g = M/E_L   size: ρ reach / ƛ
+  30       2.4 / 2.0          0.9964          0.2626        1.3562      5.86
+  100      3.2 / 2.8          0.9987          0.2714        1.3726      5.64
+  300      4.4 / 3.6          0.9997          0.2718        1.3732      5.75
+  1000     6.0 / 4.8          0.9999          0.2693        1.3685      5.65
+  3000     8.0 / 6.4          1.0000          0.2678        1.3657      5.61
+  The light carries about three quarters of the mass and the ether the rest, so g sits between 4/3 and 3/2
+  for every strength (Part 6). The bubble is a few reduced Compton lengths across.
+
+Part 2. One photon in a higher mode (ε = 300): does a node let the ether in and make a shell?
+  mode   voids   void ρ / z reach   centre density   g
+  1      1        4.4 / 3.6          1.52e-11         1.3732
+  2      1        3.2 / 5.6          9.11e-04         1.3688
+  3      1        3.6 / 6.8          1.06e-08         1.3595
+  4      1        3.2 / 7.6          3.19e-05         1.3212
+  5      1        3.6 / 8.8          5.34e-05         1.3099
+  6      1        2.8 / 10.4         4.96e-03         1.3076
+  No. Every excited mode keeps one void: the ether cannot enter a node thinner than its healing length,
+  so the void just stretches along the axis into a chain of lobes. g goes down, not up.
+
+Part 3. A prepared shell: an ether core (r < 3) inside a void shell (3 < r < 8), one photon (ε = 300)
+  relaxed:  voids 1, centre density 1.5e-11, M = 391.823195, g = 1.373198
+  the plain round bubble: M = 391.823195, g = 1.373198 — the same state: the core dissolved.
+  In real time (no friction), the same start:
+    t = 0   centre density 0.974  voids 1  void ρ / z reach  8.8 / 8.8   light in void 0.9999  energy drift +0.00000
+    t = 5   centre density 1.390  voids 3  void ρ / z reach  6.4 / 8.0   light in void 0.9990  energy drift -0.00709
+    t = 10  centre density 0.015  voids 3  void ρ / z reach  4.0 / 9.2   light in void 0.9989  energy drift -0.00627
+    t = 15  centre density 0.003  voids 3  void ρ / z reach  3.2 / 3.2   light in void 0.9980  energy drift -0.00544
+    t = 20  centre density 0.011  voids 3  void ρ / z reach  4.0 / 15.6  light in void 0.9989  energy drift -0.00480
+    t = 25  centre density 0.007  voids 3  void ρ / z reach  4.0 / 24.0  light in void 0.9994  energy drift -0.00483
+    t = 30  centre density 0.014  voids 3  void ρ / z reach  4.4 / 20.0  light in void 0.9997  energy drift -0.00392
+    t = 35  centre density 0.015  voids 1  void ρ / z reach  4.4 / 3.2   light in void 0.9997  energy drift -0.00500
+    t = 40  centre density 0.014  voids 1  void ρ / z reach  4.4 / 4.0   light in void 0.9996  energy drift -0.00581
+  The light squeezes the core out as sound: by t ≈ 10 the centre is empty and a breathing round bubble is left.
+
+Part 4. Several photons, one per mode (spin ½, so no two share a mode), ε = 300 each
+  N   voids   void ρ / z reach   g        mass per photon
+  1   1        4.4 / 3.6          1.3732   391.82
+  2   1        4.8 / 5.6          1.3676   363.47
+  3   1        5.2 / 7.2          1.3648   352.80
+  4   1        6.4 / 7.2          1.3610   354.81
+  5   1        6.4 / 8.8          1.3602   348.35
+  6   1        6.4 / 10.4         1.3593   344.86
+  They share one growing void; no ether layer forms between them. g edges toward 4/3.
+
+Part 5. A prepared onion: void core r < 3, ether layer 3 … 5.5, void shell 5.5 … 9, two photons
+  relaxed:  voids 1, M = 726.9319, g = 1.367604;  two photons from a ball: M = 726.9319, g = 1.367604
+  The ether layer is squeezed out from both sides and the onion becomes the two-photon bubble.
+  In real time the round bubble breathes but holds (energy conserved below; ε = 300):
+    t = 0   centre density 0.000  voids 1  void ρ / z reach  6.0 / 6.0   light in void 0.9998  energy drift -0.00000
+    t = 5   centre density 0.000  voids 1  void ρ / z reach  4.4 / 3.2   light in void 0.9996  energy drift -0.00017
+    t = 10  centre density 0.000  voids 1  void ρ / z reach  4.0 / 3.2   light in void 0.9994  energy drift +0.00020
+    t = 15  centre density 0.000  voids 1  void ρ / z reach  4.0 / 3.6   light in void 0.9993  energy drift +0.00029
+    t = 20  centre density 0.000  voids 1  void ρ / z reach  4.4 / 3.6   light in void 0.9997  energy drift +0.00023
+    t = 25  centre density 0.000  voids 1  void ρ / z reach  4.4 / 3.6   light in void 0.9998  energy drift +0.00026
+    t = 30  centre density 0.000  voids 1  void ρ / z reach  4.4 / 4.0   light in void 0.9998  energy drift +0.00057
+    t = 35  centre density 0.000  voids 1  void ρ / z reach  4.4 / 4.0   light in void 0.9997  energy drift -0.00004
+    t = 40  centre density 0.000  voids 1  void ρ / z reach  4.4 / 3.2   light in void 0.9997  energy drift +0.00009
+
+Part 6. Why no shell reaches g = 2
+  g = Mc²/E_L = 1 + E_ether/E_L. Scaling the void by λ, the light's energy goes as 1/λ, the ether's
+  pressure work as λ³ and its wall as λ². At balance E_L = 3E_P + 2E_W, so
+  g = 1 + (E_P + E_W)/(3E_P + 2E_W): between 4/3 (pressure) and 3/2 (wall). The round bubbles lie there; the
+  excited modes dip just below 4/3 (1.31–1.32) because the ether's opacity is finite and the light leaks into
+  the wall, so its energy is not purely 1/λ. Every state computed here has g = 1.31–1.37, about 32–35 % below 2.
+  g = 2 needs an ether energy that grows as λ¹ — a constant-force string. In this ether only a vortex
+  line does that, and ether_horizon Part 13 found vortex rings travel or unwind. Shells only add walls
+  (λ²) and layers (λ³), so they cannot move g toward 2; the light squeezes them out anyway.

@@ -32,8 +32,11 @@ type Capacitor struct {
 	tran       bool
 	omega      float64 // angular frequency of the most recent LoadAC
 
-	vPrev, iPrev float64 // accepted state
+	vPrev, iPrev float64 // accepted state (vPrev is the body voltage with ECE terms)
 	hist         history // accepted charges for LTE
+
+	ece eceTerms // hypothetical spin-connection terms (ece.go)
+	ge  float64  // UFT 456 shunt 2cκ₀·C across the body [S] (ece.go)
 }
 
 // NewCapacitor builds a capacitor from a circuit element.
@@ -59,14 +62,21 @@ func (c *Capacitor) Load(ctx *LoadContext) error {
 	switch ctx.Mode {
 	case ModeOP, ModeTranOP:
 		c.tran, c.geq, c.ihist = false, 0, 0
+		if c.ge != 0 {
+			stampGB(ctx.M, a, b, c.ge, &c.ece) // UFT 456 shunt conducts at DC
+		}
 		return nil
 	case ModeUICInit:
 		c.tran = false
 		g := uicConductance
-		ctx.M.Add(a, a, g)
-		ctx.M.Add(b, b, g)
-		ctx.M.Add(a, b, -g)
-		ctx.M.Add(b, a, -g)
+		if c.ece.On {
+			stampGB(ctx.M, a, b, g, &c.ece) // the IC is the body voltage (charge C·v_b)
+		} else {
+			ctx.M.Add(a, a, g)
+			ctx.M.Add(b, b, g)
+			ctx.M.Add(a, b, -g)
+			ctx.M.Add(b, a, -g)
+		}
 		ctx.AddRHS(a, g*c.vPrev)
 		ctx.AddRHS(b, -g*c.vPrev)
 		c.geq, c.ihist = 0, 0
@@ -81,10 +91,14 @@ func (c *Capacitor) Load(ctx *LoadContext) error {
 		c.ihist = -c.geq * c.vPrev
 	}
 	g := c.geq
-	ctx.M.Add(a, a, g)
-	ctx.M.Add(b, b, g)
-	ctx.M.Add(a, b, -g)
-	ctx.M.Add(b, a, -g)
+	if c.ece.On {
+		stampGB(ctx.M, a, b, g+c.ge, &c.ece) // companion + UFT 456 shunt, both on v_b
+	} else {
+		ctx.M.Add(a, a, g)
+		ctx.M.Add(b, b, g)
+		ctx.M.Add(a, b, -g)
+		ctx.M.Add(b, a, -g)
+	}
 	// Branch current i = g·v + ihist flows from n+ to n−.
 	ctx.AddRHS(a, -c.ihist)
 	ctx.AddRHS(b, c.ihist)
@@ -94,11 +108,36 @@ func (c *Capacitor) Load(ctx *LoadContext) error {
 // Operating returns voltage, current and absorbed power.
 func (c *Capacitor) Operating(x []float64) OperatingPoint {
 	v := c.voltage(x)
+	if c.ece.On {
+		vb := c.body(x, &c.ece)
+		ic := 0.0 // dielectric (charging) current
+		if c.tran {
+			ic = c.geq*vb + c.ihist
+		}
+		i := ic + c.ge*vb // terminal current, with the UFT 456 shunt
+		return OperatingPoint{Voltage: v, Current: i, PowerAbsorbed: v * i, StoragePower: vb * ic,
+			BodyVoltage: vb, ECEPower: (vb-v)*i - c.ge*vb*vb}
+	}
 	i := 0.0
 	if c.tran {
 		i = c.geq*v + c.ihist
 	}
 	return OperatingPoint{Voltage: v, Current: i, PowerAbsorbed: v * i, StoragePower: v * i}
+}
+
+// bodyV is the voltage across the capacitor's dielectric at op: v_b with
+// spin-connection terms, v without.
+func (c *Capacitor) bodyV(op OperatingPoint) float64 {
+	if c.ece.On {
+		return op.BodyVoltage
+	}
+	return op.Voltage
+}
+
+// chargeI is the current that charges the dielectric at op: the terminal
+// current less the UFT 456 shunt current g_e·v_b.
+func (c *Capacitor) chargeI(op OperatingPoint) float64 {
+	return op.Current - c.ge*c.bodyV(op)
 }
 
 // Accept commits the state. For UIC the initial voltage is the IC value.
@@ -110,10 +149,13 @@ func (c *Capacitor) Accept(x []float64, t float64, mode Mode) {
 		c.hist.reset()
 	case ModeOP, ModeTranOP:
 		c.vPrev, c.iPrev = c.voltage(x), 0
+		if c.ece.On {
+			c.vPrev = c.body(x, &c.ece)
+		}
 		c.hist.reset()
 	default:
 		op := c.Operating(x)
-		c.vPrev, c.iPrev = op.Voltage, op.Current
+		c.vPrev, c.iPrev = c.bodyV(op), c.chargeI(op)
 	}
 	c.hist.push(t, c.C*c.vPrev)
 }
@@ -128,13 +170,14 @@ func (c *Capacitor) SetInitialCondition() {
 
 // StoredEnergy is ½Cv².
 func (c *Capacitor) StoredEnergy(op OperatingPoint) float64 {
-	return 0.5 * c.C * op.Voltage * op.Voltage
+	v := c.bodyV(op)
+	return 0.5 * c.C * v * v
 }
 
 // Truncate estimates the step from the charge history.
 func (c *Capacitor) Truncate(x []float64, tc *TruncContext) float64 {
 	op := c.Operating(x)
-	return lteStep(&c.hist, c.C*op.Voltage, op.Current, c.iPrev, tc.AbsTol, tc)
+	return lteStep(&c.hist, c.C*c.bodyV(op), c.chargeI(op), c.iPrev, tc.AbsTol, tc)
 }
 
 // ExteriorPower: an ideal capacitor exchanges nothing with the exterior.
@@ -160,8 +203,11 @@ type Inductor struct {
 	hasIC  bool
 	branch int
 
-	vPrev, iPrev float64
+	vPrev, iPrev float64 // vPrev: the flux-rate voltage (v_b − r_t·i with ECE terms)
 	hist         history
+
+	ece eceTerms // hypothetical spin-connection terms (ece.go)
+	rt  float64  // torsion resistance s·c·ω₀·L [Ω]
 }
 
 // NewInductor builds an inductor from a circuit element.
@@ -185,6 +231,9 @@ func (l *Inductor) Load(ctx *LoadContext) error {
 	a, b, k := l.u[0], l.u[1], l.branch
 	ctx.M.Add(a, k, 1)
 	ctx.M.Add(b, k, -1)
+	if l.ece.On {
+		return l.loadECE(ctx)
+	}
 	switch ctx.Mode {
 	case ModeOP, ModeTranOP:
 		ctx.M.Add(k, a, 1)
@@ -209,11 +258,54 @@ func (l *Inductor) Load(ctx *LoadContext) error {
 	return nil
 }
 
+// loadECE stamps the branch row with spin-connection terms:
+// α_a·φ_a − α_b·φ_b − r_t·i − (flux rate) = 0.
+func (l *Inductor) loadECE(ctx *LoadContext) error {
+	a, b, k := l.u[0], l.u[1], l.branch
+	if ctx.Mode == ModeUICInit {
+		ctx.M.Add(k, k, 1)
+		ctx.AddRHS(k, l.iPrev)
+		return nil
+	}
+	ctx.M.Add(k, a, l.ece.aA)
+	ctx.M.Add(k, b, -l.ece.aB)
+	switch ctx.Mode {
+	case ModeOP, ModeTranOP:
+		ctx.M.Add(k, k, -l.rt)
+		return nil
+	}
+	req := l.L / ctx.H
+	rhs := -req * l.iPrev
+	if ctx.Method == Trapezoidal {
+		req = 2 * l.L / ctx.H
+		rhs = -req*l.iPrev - l.vPrev
+	}
+	ctx.M.Add(k, k, -req-l.rt)
+	ctx.AddRHS(k, rhs)
+	return nil
+}
+
 // Operating returns voltage, current and absorbed power.
 func (l *Inductor) Operating(x []float64) OperatingPoint {
 	v := l.voltage(x)
 	i := x[l.branch]
+	if l.ece.On {
+		vb := l.body(x, &l.ece)
+		vl := vb - l.rt*i
+		return OperatingPoint{Voltage: v, Current: i, PowerAbsorbed: v * i, StoragePower: vl * i,
+			BodyVoltage: vb, ECEPower: (vl - v) * i}
+	}
 	return OperatingPoint{Voltage: v, Current: i, PowerAbsorbed: v * i, StoragePower: v * i}
+}
+
+// fluxV is the voltage that changes the coil's flux at op (v_b − r_t·i
+// with spin-connection terms, v without; coupled coils' mutual torsion is
+// corrected by the K element).
+func (l *Inductor) fluxV(op OperatingPoint) float64 {
+	if l.ece.On {
+		return op.BodyVoltage - l.rt*op.Current
+	}
+	return op.Voltage
 }
 
 // Accept commits the state.
@@ -225,10 +317,13 @@ func (l *Inductor) Accept(x []float64, t float64, mode Mode) {
 		l.hist.reset()
 	case ModeOP, ModeTranOP:
 		l.vPrev, l.iPrev = 0, x[l.branch]
+		if l.ece.On {
+			l.vPrev = l.fluxV(l.Operating(x))
+		}
 		l.hist.reset()
 	default:
 		op := l.Operating(x)
-		l.vPrev, l.iPrev = op.Voltage, op.Current
+		l.vPrev, l.iPrev = l.fluxV(op), op.Current
 	}
 	l.hist.push(t, l.L*l.iPrev)
 }
@@ -250,7 +345,7 @@ func (l *Inductor) StoredEnergy(op OperatingPoint) float64 {
 // tolerance is the inductor voltage (the time derivative of flux).
 func (l *Inductor) Truncate(x []float64, tc *TruncContext) float64 {
 	op := l.Operating(x)
-	return lteStep(&l.hist, l.L*op.Current, op.Voltage, l.vPrev, tc.VnTol, tc)
+	return lteStep(&l.hist, l.L*op.Current, l.fluxV(op), l.vPrev, tc.VnTol, tc)
 }
 
 // ExteriorPower: an ideal inductor exchanges nothing with the exterior.
@@ -258,14 +353,23 @@ func (l *Inductor) ExteriorPower(exchange.ChannelID, OperatingPoint) float64 { r
 
 // LoadAC stamps the admittance jωC.
 func (c *Capacitor) LoadAC(ctx *ACContext) error {
-	stampY(ctx.M, c.u[0], c.u[1], complex(0, ctx.Omega*c.C))
 	c.omega = ctx.Omega
+	if c.ece.On {
+		stampYB(ctx.M, c.u[0], c.u[1], complex(c.ge, ctx.Omega*c.C), &c.ece)
+		return nil
+	}
+	stampY(ctx.M, c.u[0], c.u[1], complex(0, ctx.Omega*c.C))
 	return nil
 }
 
 // OperatingAC returns the capacitor's phasors.
 func (c *Capacitor) OperatingAC(x []complex128) ACPoint {
 	v := c.voltageAC(x)
+	if c.ece.On {
+		vb := c.bodyAC(x, &c.ece)
+		i := vb * complex(c.ge, c.omega*c.C)
+		return ACPoint{Voltage: v, Current: i, ECEPower: avgPower(vb-v, i) - c.ge*avgPower(vb, vb)}
+	}
 	return ACPoint{Voltage: v, Current: v * complex(0, c.omega*c.C)}
 }
 
@@ -274,6 +378,12 @@ func (l *Inductor) LoadAC(ctx *ACContext) error {
 	a, b, k := l.u[0], l.u[1], l.branch
 	ctx.M.Add(a, k, 1)
 	ctx.M.Add(b, k, -1)
+	if l.ece.On {
+		ctx.M.Add(k, a, complex(l.ece.aA, 0))
+		ctx.M.Add(k, b, complex(-l.ece.aB, 0))
+		ctx.M.Add(k, k, complex(-l.rt, -ctx.Omega*l.L))
+		return nil
+	}
 	ctx.M.Add(k, a, 1)
 	ctx.M.Add(k, b, -1)
 	ctx.M.Add(k, k, complex(0, -ctx.Omega*l.L))
@@ -282,6 +392,11 @@ func (l *Inductor) LoadAC(ctx *ACContext) error {
 
 // OperatingAC returns the inductor's phasors.
 func (l *Inductor) OperatingAC(x []complex128) ACPoint {
+	if l.ece.On {
+		v, i := l.voltageAC(x), x[l.branch]
+		vl := l.bodyAC(x, &l.ece) - complex(l.rt, 0)*i
+		return ACPoint{Voltage: v, Current: i, ECEPower: avgPower(vl-v, i)}
+	}
 	return ACPoint{Voltage: l.voltageAC(x), Current: x[l.branch]}
 }
 

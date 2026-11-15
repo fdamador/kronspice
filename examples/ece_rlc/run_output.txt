@@ -1,0 +1,18 @@
+Series RLC: R 1 Ω, L 10 mH, C 84.6346 µF, f0 173.000 Hz, Q0 10.8699
+ω₀ = 8.3391e-08 1/m (c·ω₀·L = 0.25 Ω), κ = 0.05 on the capacitor's top terminal
+
+AC sweep 120–230 Hz (4001 points), 1 V; power at the peak
+  case               f_r (Hz)  closed form   Q        closed form  peak |I| (A)  vs twin   source (W)  heat (W)  model-supplied (W)  residual
+  plain (Maxwell)     172.993   173.000     10.8694  10.8699      1.0000        0e+00    0.5000      0.5000    +0.0000             0e+00
+  ECE torsion         172.993   173.000      8.6955   8.6959      0.8000        2e-15    0.4000      0.3200    -0.0800             0e+00
+  ECE2 torsion        172.993   173.000     21.7387  21.7398      2.0000        0e+00    1.0000      2.0000    +1.0000             0e+00
+  ECE scalar          168.840   168.831     10.6085  10.6079      1.0000        2e-15    0.5000      0.5000    +0.0000             0e+00
+  ECE2 scalar         182.370   182.358     11.4586  11.4579      1.0000        4e-15    0.5000      0.5000    +0.0000             0e+00
+
+Transient 0–0.3 s, 1 V sine at 173 Hz (trapezoidal, 20 µs steps); energies [J]
+  case               source in  back to source  heat       model-supplied  Δstored     mismatch
+  plain (Maxwell)     0.14022    0.00000         0.13522    +0.00000       +5.00e-03   5.9e-07
+  ECE torsion         0.11377    0.00000         0.08846    -0.02211       +3.20e-03   3.8e-07
+  ECE2 torsion        0.26046    0.00000         0.48095    +0.24048       +2.00e-02   2.4e-06
+  ECE scalar          0.11535    0.00126         0.11018    +0.00004       +3.94e-03   4.7e-07
+  ECE2 scalar         0.06758    0.00578         0.05955    -0.00021       +2.04e-03   2.4e-07

@@ -55,7 +55,11 @@ package scalar
 // This file evaluates the relations at a point from declared potentials and
 // spin connections, by central differences.
 
-import "github.com/fdamador/kronspice/em"
+import (
+	"math/cmplx"
+
+	"github.com/fdamador/kronspice/em"
+)
 
 // Potentials are declared fields: φ [V], A [V·s/m], ω₀ [1/m], ω [1/m],
 // each a function of position x [m] and time t [s]. Nil spin connections
@@ -218,4 +222,88 @@ func (p Potentials) At(x [3]float64, t, h, ht float64) ECEPoint {
 		r.MagAnti[m] = dA[j][i] + dA[i][j] + o[j]*a[i] + o[i]*a[j]
 	}
 	return r
+}
+
+// UFT 456 (Eckardt & Goel, "The homogeneous and inhomogeneous ECE current,
+// Part III", 9 Mar 2024, rev. 3 Jun 2025) writes both ECE2 current pairs as
+// fields (eqs. 28–31; UFT 454 eqs. 24–27):
+//
+//	ρ_p = −2κ_Λ·B                 [V·s/m³]   ∇·B = ρ_p            (20)
+//	V   = 2(cκ_Λ0 B − κ_Λ×E)      [V/m²]     ∂B/∂t + ∇×E = V      (21)
+//	ρ_e = −2ε₀κ·E                 [A·s/m³]   ∇·D = ρ_e            (22)
+//	J   = (2/μ₀)(κ₀E/c + κ×B)     [A/m²]     −∂D/∂t + ∇×H = J     (23)
+//
+// (20)–(23) are Maxwell's equations with magnetic sources in the weber
+// convention, V = −J_m (Jackson 3rd ed. §6.11). Checked
+// (examples/AIAS/uft456/check.py, sympy):
+//   - Gauss's law (20)+(28) is carried forward by Faraday's law (21)+(29):
+//     ∂ρ_p/∂t − ∇·V = −2cκ_Λ0(∇·B − ρ_p).
+//   - Coulomb's law (22)+(30) is not carried forward by Ampère's law
+//     (23)+(31): ∂ρ_e/∂t + ∇·J = −4κ·(∇×H) + 2cκ₀(∇·D − ρ_e), so it breaks at
+//     the rate −4κ·∇×H (CoulombDefectRate; Region.CoulombDefect measures it
+//     on the grid). With the sign of κ×B in (31) reversed it would hold: the
+//     two Lorentz-type terms are not dual images.
+//   - The Poynting theorem is ∂u/∂t + ∇·(E×H) = −J·E + V·H (eq. 57 with the
+//     conductivity parts): V·H is a source density on the right, not a term
+//     of the Poynting vector.
+
+// ECE2Sources are the field-built charges and currents of UFT 456 eqs. 28–31.
+type ECE2Sources struct {
+	RhoP float64    // ρ_p = −2κ_Λ·B [V·s/m³] (28)
+	V    [3]float64 // 2(cκ_Λ0 B − κ_Λ×E) [V/m²] (29)
+	RhoE float64    // −2ε₀κ·E [A·s/m³] (30)
+	J    [3]float64 // (2/μ₀)(κ₀E/c + κ×B) [A/m²] (31)
+}
+
+// ECE2SourcesAt evaluates eqs. 28–31 of UFT 456 for fields E [V/m], B [T]
+// and wave numbers κ₀, κ (inhomogeneous) and κ_Λ0, κ_Λ (homogeneous) [1/m].
+func ECE2SourcesAt(k0 float64, k [3]float64, kL0 float64, kL [3]float64, e, b [3]float64) ECE2Sources {
+	cl := em.SpeedOfLight
+	kxB, kLxE := cross(k, b), cross(kL, e)
+	var s ECE2Sources
+	for i := 0; i < 3; i++ {
+		s.RhoP -= 2 * kL[i] * b[i]
+		s.RhoE -= 2 * em.Eps0 * k[i] * e[i]
+		s.V[i] = 2 * (cl*kL0*b[i] - kLxE[i])
+		s.J[i] = 2 / em.Mu0 * (k0*e[i]/cl + kxB[i])
+	}
+	return s
+}
+
+// ECE2Conductivities returns UFT 456's conductivities and rates:
+// σ₀ = 2κ₀/(μ₀c) [S/m] (33), η₀ = 2cκ_Λ0μ₀ [Ω/m] (39, a magnetic
+// conductivity, not the impedance of free space), ω_e = σ₀/ε₀ = 2cκ₀ (36),
+// ω_p = η₀/μ₀ = 2cκ_Λ0 (42) [1/s]. In the usual lossy-medium form
+// ∇×E = −μ₀∂H/∂t − σ*H the paper's V = η₀H is σ* = −η₀: η₀ > 0 is gain.
+func ECE2Conductivities(k0, kL0 float64) (sigma0, eta0, omegaE, omegaP float64) {
+	cl := em.SpeedOfLight
+	sigma0 = 2 * k0 / (em.Mu0 * cl)
+	eta0 = 2 * cl * kL0 * em.Mu0
+	return sigma0, eta0, sigma0 / em.Eps0, eta0 / em.Mu0
+}
+
+// ECE2Dispersion returns the two frequencies ω [1/s] of a plane wave
+// exp(i(kx − ωt)) in UFT 456's medium, eq. 73:
+//
+//	ω² + iω(ω_e − ω_p) + ω_eω_p = c²k²
+//
+// Im ω > 0 grows. The principal part of eq. 73 is (1/c²)∂²/∂t² − ∇² for
+// every ω_e, ω_p, so the signal (front) speed is c: the rates change
+// amplitudes and phase velocities, never the front (Sommerfeld, Brillouin
+// 1914). The "equilibrium" ω_e = ω_p = ω₀ (eq. 109) gives ω² = c²k² − ω₀²,
+// growing for k < ω₀/c; ω_p = −ω_e is Heaviside's distortionless medium,
+// ω = ±ck − iω_e.
+func ECE2Dispersion(k, omegaE, omegaP float64) (w1, w2 complex128) {
+	cl := em.SpeedOfLight
+	b := complex(0, omegaE-omegaP)
+	cc := complex(omegaE*omegaP-cl*cl*k*k, 0)
+	d := cmplx.Sqrt(b*b - 4*cc)
+	return (-b + d) / 2, (-b - d) / 2
+}
+
+// CoulombDefectRate is ∂ρ_e/∂t + ∇·J on fields that satisfy Coulomb's law
+// (22)+(30) at the instant: −4κ·(∇×H) [A/m³], with H = B/μ₀. Zero only where
+// κ ⊥ ∇×H.
+func CoulombDefectRate(k, curlH [3]float64) float64 {
+	return -4 * (k[0]*curlH[0] + k[1]*curlH[1] + k[2]*curlH[2])
 }

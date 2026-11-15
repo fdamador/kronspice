@@ -24,14 +24,14 @@ added, it gets a row in `examples/README.md` and a place in a chapter.
 |---|---|---|---|
 | 1 | [Circuits and the ledger](01-circuits-and-the-ledger.md) | rc_lowpass_values, negative_resistance_gain, rectifier_filter | written |
 | 2 | [Evolution](02-evolution.md) | amplifier_gain, filter_topology, mos_amplifier_pareto, torn_ga | written |
-| 3 | [Kron's machines](03-krons-machines.md) | kron_machine, parametric_pump, parametric_lcr, homopolar, homopolar_bearing, bearing_motor, kron_nmr | written |
+| 3 | [Kron's machines](03-krons-machines.md) | kron_machine, parametric_pump, parametric_lcr, homopolar, homopolar_bearing, bearing_motor, kron_nmr, hoffmann_motor, einstein_teleparallel, kaluza_kron | written |
 | 4 | [Power and polyphase](04-power-and-polyphase.md) | power_filter | written |
-| 5 | [Fields from Maxwell](05-fields-from-maxwell.md) | pcb_layout, rotating_efield, rate_of_change | written |
-| 6 | [Coils, pulses and gaps](06-coils-pulses-and-gaps.md) | bial_bifilar, pulsed_bifilar, water_lamp, sparkgap_diode, sparkgap_diodebridge | written |
+| 5 | [Fields from Maxwell](05-fields-from-maxwell.md) | pcb_layout, rotating_efield, rate_of_change (and `em/scalar`: H47, H48) | written |
+| 6 | [Coils, pulses and gaps](06-coils-pulses-and-gaps.md) | bial_bifilar, pulsed_bifilar, water_lamp, sparkgap_diode, sparkgap_diodebridge, b3_transformer | written |
 | 7 | [Networks beyond circuits](07-networks-beyond-circuits.md) | acoustic_drive, water_vibration, dna_vibration, rna_vibration, kron_schrodinger | written |
 | 8 | [Craft and space](08-craft-and-space.md) | tether, coiled_tether, ring_towers, double_hull, machine_spacetime, earth_machine | written |
-| 9 | [The electron test bench](09-the-electron-test-bench.md) | kelvin_ring, vortex_ring, space_vortex, kron_electron, photon_electron, light_hydrogen | written |
-| 10 | [Hypotheses under test](10-hypotheses-under-test.md) | eckardt_homopolar, parametric_lcr, pais_cavity, space_power_generator, octave_magnet, toroidal_coherence, barrett_osc, magnetostrictive_transformer, al_cell_pump, rodin_resonance | written |
+| 9 | [The electron test bench](09-the-electron-test-bench.md) | kelvin_ring, vortex_ring, space_vortex, kron_electron, photon_electron, light_hydrogen, dirac_qed, zpf_hydrogen, ether_horizon, void_shells, void_charge, fdamador_neutrino, shoulders_ev, quantum_circuit_demo | written |
+| 10 | [Hypotheses under test](10-hypotheses-under-test.md) | eckardt_homopolar, parametric_lcr, pais_cavity, space_power_generator, octave_magnet, toroidal_coherence, barrett_osc, magnetostrictive_transformer, al_cell_pump, rodin_resonance, scalar_disc, ece_rlc, AIAS, bearden_meg, forward_casimir | written |
 
 ## The shape of a chapter
 

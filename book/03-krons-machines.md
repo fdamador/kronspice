@@ -6,7 +6,7 @@ frame, and a rotating machine is a circuit whose inductances depend on a
 coordinate, the rotor angle, so that its voltage equation is the equation
 of motion of a point in a curved space (CLAUDE.md §3a; §3l, curvature 3).
 kronspice carries this as the N machine element, and this chapter runs it
-through seven examples: an induction motor started in two of Kron's
+through ten examples: an induction motor started in two of Kron's
 frames ([kron_machine](../examples/kron_machine)), parametric pumping
 three ways ([kron_machine](../examples/kron_machine),
 [parametric_pump](../examples/parametric_pump),
@@ -14,9 +14,10 @@ three ways ([kron_machine](../examples/kron_machine),
 ([homopolar](../examples/homopolar)), the same machine with its current
 through its bearings ([homopolar_bearing](../examples/homopolar_bearing),
 [bearing_motor](../examples/bearing_motor)), and magnetic resonance as a
-rotating frame ([kron_nmr](../examples/kron_nmr)). The last four are also
-where three register hypotheses, H13, H14 and H16, meet their standard
-predictions.
+rotating frame ([kron_nmr](../examples/kron_nmr)), then follows torsion
+through Hoffmann, Einstein and Kaluza (section 3.8). Three register
+hypotheses meet their standard predictions here: H13 and H14 through the
+bearings, and H16 through the parametric LCR.
 
 ## 3.1 A circuit as a geometric object
 
@@ -369,7 +370,54 @@ A ring electron would resonate at half the ESR frequency. The standard
 prediction beside it is the Dirac electron with QED,
 g = 2.002 319 304 36, and the measured proton g.
 
-## 3.8 What to keep
+## 3.8 Torsion: Hoffmann, Einstein and Kaluza
+
+Kron's frames do more than change basis. A frame whose axes turn with the
+rotor while the coils stay put is *non-holonomic*: it cannot be built
+from coordinates, and the geometry it sees has torsion. Three examples
+follow that idea back to its sources.
+
+[hoffmann_motor](../examples/hoffmann_motor) builds the single-phase
+squirrel-cage motor that B. Hoffmann worked for physicists in 1949
+(*Rev. Mod. Phys.* 21, 535). In frame I the rotor coils turn and the
+inductances depend on θ (his eq. 42). In the stationary-coil frame the
+inductances are constant, and the torsion Ω of the frame (eq. 19) supplies
+the speed voltages through eq. 5′. Three solutions agree on the running
+speed, 376.587 rad/s: kronspice in frame I, kronspice in frame II(b), and
+eq. 5′ integrated directly. The motor does not start from rest, and it
+runs either way once pushed, as a single-phase induction motor should.
+Leave Ω out and the motor only coasts down under friction. These are the
+"wrong results" Hoffmann warns of on p. 540.
+
+[einstein_teleparallel](../examples/einstein_teleparallel) sets that motor
+beside Einstein's 1928 distant parallelism. Einstein builds space-time
+from a 4-bein with torsion and no curvature, and proposes the trace of
+the torsion as the electromagnetic potential. The stationary-coil frame
+of the motor is such a 4-bein. Einstein's torsion is the frame's
+anholonomy, which is Hoffmann's Ω with its index lowered by the constant
+inductance L̄. Two differences are measured. First, Einstein's potential
+φ is zero for Kron's frame and changes from one frame to another, so it
+is not a field the machine carries. Second, Einstein's connection is
+flat, while the machine's connection is curved. A kronspice motor built
+from the torsion alone equals frame II(b).
+
+[kaluza_kron](../examples/kaluza_kron) takes Kaluza's 1921 fifth
+dimension. Kaluza assumes nothing depends on the fifth coordinate, his
+"cylinder condition". Hoffmann uses the same words for Kron's machines:
+the winding charges are coordinates that never appear in the
+inductances, so their momenta, the flux linkages, are conserved. The
+exact 5-D geodesic is the Lorentz force, with q/m = 2p_w/√(1 + p_w²).
+Charge is momentum along the fifth dimension, so q/m is capped at 2√G
+per unit mass. An electron would need 2×10²¹ times that cap. Klein's
+circle has radius 2l_P/√α = 3.8×10⁻³⁴ m. A Kron machine with cyclic
+winding charges and a Routh-reduced rotor is the same construction: the
+geodesic, the reduced machine and kronspice agree.
+
+Torsion comes back in chapter 10. ECE theory (H48) also puts Cartan
+torsion into the field equations, and section 10.14 builds its circuit
+form.
+
+## 3.9 What to keep
 
 - A machine is a circuit with a coordinate: inductances L(θ) in frame I,
   or constant L′ and a speed matrix G in frame II. The two frames must
@@ -384,6 +432,9 @@ g = 2.002 319 304 36, and the measured proton g.
 - A frame change can solve a problem from another field: Bloch's
   equations are a machine in frame II(b), and the NMR rotating frame is
   Park's.
+- A non-holonomic frame has torsion, and the torsion has to be kept. It
+  is Hoffmann's Ω, Einstein's teleparallel torsion and the source of
+  Kaluza's charge, and leaving it out gives wrong answers.
 
 ## Run it yourself
 
@@ -399,6 +450,9 @@ go run ./examples/homopolar -gens 0        # reference designs only; omit -gens 
 go run ./examples/homopolar_bearing        # the sweeps and GA above (minutes)
 go run ./examples/bearing_motor
 go run ./examples/kron_nmr -gif viz/nmr.gif
+go run ./examples/hoffmann_motor
+go run ./examples/einstein_teleparallel
+go run ./examples/kaluza_kron
 ```
 
 ## Sources
@@ -417,6 +471,12 @@ go run ./examples/kron_nmr -gif viz/nmr.gif
 - F. D. Amador, H. Eckardt, "Simulation of a Parametric Resonance
   Circuit," A.I.A.S./UPITEC, 30 March 2012 (hypothesis source for H16).
 - N. Tesla, "Dynamo-Electric Machine," U.S. Patent 406,968, 1889.
+- B. Hoffmann, "Kron's Non-Riemannian Electrodynamics," *Rev. Mod. Phys.*
+  21, 535–540, 1949. A. Einstein, *Sitzungsber. Preuss. Akad. Wiss.*
+  1928, 224–227 (A. Unzicker's translation); T. Sauer, *Historia
+  Mathematica* 33, 399, 2006. Th. Kaluza, *Sitzungsber. Preuss. Akad.
+  Wiss.* 1921, 966–972 (V. T. Toth's translation); O. Klein, *Z. Phys.*
+  37, 895, 1926.
 - P. Joot, *Geometric Algebra for Electrical Engineers*, Theorem 3.16
   (reference only; CLAUDE.md §3f).
 - J. Huber, *Elektrotechnik und Maschinenbau* 76(8), 169–174, 1959;
