@@ -345,7 +345,41 @@ formed at 10 V to 2,405 Hz at 140 V, kronspice AC against 1/(2π√LC) to
 the hertz), and a frequency doubler. The water and the metals add no
 energy: every watt at a load comes from the mains or the surge source.
 
-## 6.6 What to keep
+## 6.6 A spring as a transformer core
+
+[b3_transformer](../examples/b3_transformer) turns the coil inside out:
+the core itself is a 10-turn spring, closed by a return leg. The flux runs
+along the core wire and goes round the spring's axis ten times; the user
+calls this helical flux the design's "B(3)" field. The windings wrap round
+the spring's wall, so each turn encloses some of the core's passes. A turn
+round n passes links the flux n times, so v_s/v_p = (N_s·n_s)/(N_p·n_p).
+A primary round all 10 passes and a secondary round 2 give 0.2, and the
+ratio follows the number of core turns as 2/N exactly as it would follow
+winding turns.
+
+The rate of change dΦ/dt is the same in every pass, and so at both
+windings. Per primary volt it is 1/(N_p·N), so a longer spring under the
+primary runs at a lower flux density.
+
+That holds only while the flux stays on the wire. Air between neighbouring
+turns is a parallel path, measured by the helix number
+H = (2πR)²/(μr·a²·acosh(p/2a)). Spreading the gaps helps only
+logarithmically. What keeps the flux on the wire:
+
+- a thick return leg, which removes the pass-to-pass spread;
+- a high permeability;
+- a core wire thick compared with the spring.
+
+A Ø4 mm nanocrystalline core on a Ø20 mm spring with a 16× return leg
+gives a ratio of 0.200001 and equal dΦ/dt in every pass to 6e-5. In
+kronspice it gives η 0.999, with the ledger closed to 2e-8. A Galfenol
+spring of the same size leaks so much that its 2-pass winding couples at
+k = 0.38. None of this adds energy: the core's passes act as a second turns
+ratio. The run also sets the helix's transverse and axial field parts
+beside Evans' B Cyclic theorem, with the bench measurement that tells them
+apart.
+
+## 6.7 What to keep
 
 - Tesla's 250,000× is an idealized ratio of turn-to-turn energies,
   reproduced exactly and never reported as a coil's energy gain.
@@ -374,6 +408,7 @@ go run ./examples/water_lamp                          # about three minutes
 go run ./cmd/kronspice examples/sparkgap_diode/export/water_cell_bridge.cir
 go run ./examples/sparkgap_diode
 go run ./examples/sparkgap_diodebridge
+go run ./examples/b3_transformer
 ```
 
 ## Sources

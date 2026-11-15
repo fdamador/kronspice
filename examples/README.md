@@ -74,6 +74,7 @@ the rest through `go run ./examples/<name>`, and all have
 | [shoulders_ev](shoulders_ev) | Shoulders 1987 EVs (10¹¹-electron beads) checked against Coulomb, Gauss, the Casimir force and his sources' charge and energy; his source and an EV strike as kronspice circuits with ledgers. | H27 | run |
 | [rotating_efield](rotating_efield) | Can a rotating E field make a B field? Displacement current, Rowland disk, Röntgen–Eichenwald disk; the magnetic-charge prediction labelled hypothetical. | §3f, H2 | run |
 | [rate_of_change](rate_of_change) | Where higher time derivatives enter: water's Debye response as a circuit twin, and Bopp–Podolsky electrodynamics beside Maxwell. | H19 | run |
+| [ece_rlc](ece_rlc) | One series RLC run plain, with the ECE and with the ECE2 spin-connection terms (`.ece form=ece\|ece2`: torsion and scalar), against closed forms, ordinary-element twins and the ledger; the two forms shift Q and tuning in opposite directions. | H48, §3c | run |
 | [quantumtricity](quantumtricity) | Work in progress. Circuit theory as U(1) gauge theory on Kron's network (KVL zero holonomy, KCL the Gauss generator, Yee grid = FDTD to round-off), then SU(3) on the same graph: no circuit quantity composes non-abelianly so far; the matter sector (quark ↔ electron) is not yet modeled. | H22 | run |
 | [quantum_circuit_demo](quantum_circuit_demo) | One Python script (numpy, matplotlib) with Kron's 1945 hydrogen ladder as an LC circuit (AC poles = 1s–3p levels to 1e-8 Ha, node voltages = wavefunctions, Lyman α 121.5684 nm) and the H22 test (two-mesh RLC as U(1) gauge theory to round-off; SU(3) loop defect 0.76 against 0 for every circuit quantity); evaluation in report.html | Kron 1945, H22 | run |
 
@@ -83,6 +84,7 @@ the rest through `go run ./examples/<name>`, and all have
 |---|---|---|---|
 | [bial_bifilar](bial_bifilar) | First experiment: Bi–Al capacitor element (thermal, galvanic, thermopile) in parallel with a bifilar coil, evolved for Q against stored energy. | §3e, M5a | run |
 | [pulsed_bifilar](pulsed_bifilar) | Coils as 20 coupled sections driven by one-sign pulses: ordinary, Tesla bifilar, conical and flat-spiral; build-up only on a harmonic; tuned pickup. | §3e | run |
+| [b3_transformer](b3_transformer) | A transformer whose core is a 10-turn spring closed by a return leg, so the flux goes round the axis N times (the user's "B(3)" helical field): windings round n of the passes give v_s/v_p = (N_s·n_s)/(N_p·n_p), 0.2 for 10 and 2 passes; the gap leakage and how to remove it (thick return leg, high μr, thick core wire; wider gaps help least); kronspice ledger; the helix field beside Evans' B Cyclic theorem; energy ledger against core turns; use as a magnetic amplifier; PDF report. | H52, §3e, §3j | run |
 | [coiled_tether](coiled_tether) | The 5-mile tether coiled (ordinary and bifilar) versus straight: motional EMF along the wire, solar-driven resonance, every joule from the Sun. | §3e, §3f | run |
 | [water_lamp](water_lamp) | The neon flashing-lamp oscillator with water instead of neon: glow tube, liquid spark gap, misted air gap; tuned into the bifilar coil. | §3g, §3j, H5 | run |
 | [sparkgap_diode](sparkgap_diode) | A water gap as a diode from its electrodes: aluminium valve cells (Pollak/Nodon) and polarity spark gaps; rectifiers, a 10 J pulse test, amps per volt vs frequency. | §3g, §3h | run |
@@ -122,6 +124,18 @@ the rest through `go run ./examples/<name>`, and all have
   residual; a surplus is a bug to find, not a result.
 - Hypothesis examples (H-numbers) print the standard prediction beside
   the hypothesis, and hypothetical modes are labelled in output.
+- Any example netlist can run with the ECE or ECE2 spin-connection terms
+  (register entry H48; hypothetical, off by default). Add
+  `.ece form=ece|ece2` with any of these parameters:
+  - `w0=` for torsion;
+  - `kappa=` for the scalar term;
+  - `k0=`, `kl0=` for UFT 456's conductivities.
+
+  The terms work in MNA and in Kron's frame. Their power is booked as
+  model-supplied, so the ledger shows exactly what they add or take. In
+  the field solver, set `em/scalar`'s `SpinConnection` (`Kappa0`,
+  `Kappa`, `KappaL0`, `KappaL`). [ece_rlc](ece_rlc) is the worked
+  example. Run the plain example beside it for the standard prediction.
 - `export/` folders hold each circuit as a SPICE netlist, a KiCad schematic
   and a results sheet comparing MNA with Kron's torn solution, written by
   `TestExport` with `KRONSPICE_EXPORT=1`.

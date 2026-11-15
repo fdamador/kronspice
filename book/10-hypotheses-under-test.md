@@ -10,7 +10,9 @@ them, where the engine's energy ledger does most of the work:
 [parametric_lcr](../examples/parametric_lcr) (H16),
 [pais_cavity](../examples/pais_cavity) (H18) and
 [space_power_generator](../examples/space_power_generator) (H13), with
-[bearing_motor](../examples/bearing_motor) supplying one bound.
+[bearing_motor](../examples/bearing_motor) supplying one bound. Later
+sections add the H47 scalar bench, the H48 spin connection as a circuit
+term, and two more ledgers (H10, H25).
 
 ## 10.1 How an entry is written
 
@@ -458,7 +460,177 @@ welding arc at the laboratory operating point (kronspice: 120 A, 23 V,
 the Qinghai ball can flicker it at 100 Hz but delivers microwatts, not the
 100 W it shines.
 
-## 10.13 The bounds recorded so far
+## 10.13 The scalar S on a rotating disc (H47)
+
+Section 5.5 gives the field equations with Maxwell's scalar part kept.
+H47 goes one step further: it proposes that S is physical and couples to
+gravity, so a circuit that makes S would change the weight of nearby
+masses. In Minotti and Modanese's theory S enters through a term β_AB S²
+beside two scalar fields of the Brans–Dicke kind. One parameter,
+C_φ ≈ 4–9×10²¹, fits the Podkletnov and Poher reports. Those reports have
+not been replicated, and the authors call the fit phenomenological. S
+has a source only where local charge conservation fails, so a bench has
+to make such a place. Iadicicco and Verolino propose one: a fibre ring
+on a spinning aluminium disc lights one sector and induces a charge
+there, and the lit sector turns with the disc. In the rotating frame the
+current splits so that I_G = Ω∂_φρ, and □S = μ₀I_G.
+
+[scalar_disc](../examples/scalar_disc) builds that bench with declared
+values and runs the scalar on it:
+
+| Quantity | Value | Standard prediction |
+|---|---|---|
+| Peak S at the sensor | 1.10×10⁻¹² T (cS = 0.33 mV/m) | 0 |
+| Reversed rotation | S → −S exactly | 0 |
+| Whole ring lit | S = 0 exactly | 0 |
+| S² force per mass (MM fit) | 5.4×10⁻³⁷ m/s², the same for both senses of rotation | 0 |
+| At the bench's limits (air breakdown 1.5 nC; Al burst 100,000 rpm) | S 5.5×10⁻¹¹ T; force 1.3×10⁻³³ m/s² | 0 |
+| Ordinary systematic: Coulomb field of the gated charge | 2.1×10⁴ V/m; 2.1×10⁻⁵ m/s² on a 1 g sensor carrying 1 pC | the same |
+
+The table shows three things.
+
+- **The two papers disagree on symmetry, and the bench can decide.** S is
+  exactly odd in Ω. Minotti and Modanese's force goes as S², so it is
+  even in Ω. Iadicicco, Modanese and Verolino's linear response is odd.
+  A run clockwise and then anticlockwise tells them apart.
+- **The predicted force is far too small to see.** The junction S that
+  fits the gravity reports is 4×10¹³ times the disc's S, and the ordinary
+  Coulomb force of the gated charge is 10²⁸ times the scalar force.
+- **A null result still bounds the theory.** A null at 10⁻⁹ m/s² bounds
+  C_φ < 5×10³³. The fit's ω₀ ≈ 3.5 already conflicts with Cassini's
+  Brans–Dicke bound ω > 4×10⁴.
+
+Status: untested. The bench measures Iadicicco, Modanese and Verolino's
+Λ_opt, which has no published value. Step 3 of
+[doc/h47-scalar-gravity.md](../doc/h47-scalar-gravity.md), the junction
+numbers, is next.
+
+## 10.14 The ECE spin connection in a circuit (H48)
+
+Section 5.5 puts ECE's spin connection into the field equations. To run
+it in a circuit, the field relation has to be integrated along a
+component. This mapping is proposed here; it is not in the papers.
+Integrating the ω₀ term along a coil's wire gives a torsion voltage.
+Integrating the ω term along a lead gives a scalar factor on each
+terminal potential:
+
+```
+torsion (ω₀A):   v = L di/dt + s·cω₀L·i        coupled coils: + s·cω₀M·i_other
+scalar  (ωφ):    the body sees (1 + s·κ_a)φ_a − (1 + s·κ_b)φ_b,   κ = ∫ω·dl
+```
+
+The factor s is +1 for ECE (eq. 4.211) and −2 for ECE2 (eq. 6.189). So
+ECE2 reverses every ECE effect and doubles it. UFT 456's field-built
+currents become a shunt 2cκ₀·C across every capacitor (`k0=`) and a
+series −2cκ_Λ0·L in every coil (`kl0=`). The series term is negative for
+κ_Λ0 > 0, which makes it a gain. Ideal R and C have no series
+inductance, so they carry only the scalar term.
+
+The terms are declared with one line, `.ece form=ece|ece2 w0=… kappa=…
+k0=… kl0=…`. Every element can override the defaults (`W0=`, `KAPPA=`,
+`KAPPA_A=`, `KAPPA_B=`). The power the terms deliver is booked per
+element as model-supplied and labelled hypothetical. Zero terms are
+Maxwell bit for bit. Kron's primitive tensors refuse an `.ece` circuit,
+so a torn or mesh solve cannot hide the terms. A 1 V source drives a
+coil through 10 Ω, with ω₀ = 10⁻⁶ m⁻¹:
+
+```
+ece2 series RL
+.ece form=ece2 w0=1e-6
+V1 in 0 DC 1
+R1 in a 10
+L1 a 0 10m
+.op
+.end
+```
+
+```
+  V1    voltage source  in→0   1 V         -249.741 mA  -249.741 mW
+  R1    resistor        in→a   2.49741 V   249.741 mA   623.705 mW
+  L1    inductor        a→0    -1.49741 V  249.741 mA   -373.964 mW
+  ...
+  model-supplied 373.964 mW (idealized active elements; not inflow from the exterior)
+    L1  373.964 mW  [ECE2 spin connection (hypothetical, H48): w0=1e-06 1/m]
+  residual      1.11022e-16 W (relative 0)
+```
+
+Under Maxwell the current is 100 mA. With ECE2 the torsion term is
+s·cω₀L = −2 × 2.998×10⁸ × 10⁻⁶ × 0.01 = −5.996 Ω in series with the
+coil. The current rises to 249.7 mA, and the coil delivers 374 mW at DC.
+The resistor heats by 624 mW against 250 mW from the source. The ledger
+closes only because the coil's 374 mW is booked as model-supplied, the
+way a negative resistance is (chapter 1). Change the form to `ece` and
+the same ω₀ gives +2.998 Ω. The current falls to 76.9 mA and the coil
+absorbs 17.7 mW. The tests (`analysis/ece_test.go`, `kron/ece_test.go`)
+check several things:
+
+- Each case equals its ordinary-element twin, a resistor of s·cω₀L in
+  series with the coil, to 10⁻⁹ in OP and AC.
+- At resonance a series RLC carries 1/(R + r_t).
+- The model-supplied power is −r_t|I|²/2.
+- The ledger closes in OP, AC and transient.
+
+[ece_rlc](../examples/ece_rlc) runs the two terms one at a time on a
+series RLC: R 1 Ω, L 10 mH, f0 173 Hz, Q 10.87. Each run is set beside
+its ordinary-element twin, in AC and in transient. The torsion term is
+set to cω₀L = 0.25 Ω. It leaves f0 where it is and changes Q and the
+current. With ECE, Q is 8.70, the peak current 0.80 A, and the term
+absorbs 0.08 W. With ECE2, Q is 21.74, the peak 2.00 A, and the term
+supplies 1.00 W while the source gives 1.00 W and the resistor heats
+2.00 W. The scalar term is set to κ = 0.05 on the capacitor's top
+terminal. It moves the resonance to 168.84 Hz (ECE) or 182.37 Hz (ECE2),
+as the closed form predicts, and it supplies almost no power on average.
+In transient the books close to a few 10⁻⁶ J for every case. The
+netlists are in `examples/ece_rlc/export/`.
+
+What this shows is the size of a claim, not a source of energy. Any ω₀
+that makes a measurable gain is a negative resistance whose energy has
+no declared source. The standard prediction is that ω₀ is a frame
+quantity, so a coil has no torsion resistance. A bench test is the I–V
+line of an air-core coil at DC: its slope is R_wire, and the torsion
+term would add s·cω₀L.
+
+[examples/AIAS](../examples/AIAS) is the running evaluation of the AIAS
+UFT papers. It checks each paper's equations and, where it can,
+simulates the paper's device with the ledger on. The circuit terms
+above came out of UFT 454–456. There, `form=ece` equals UFT 455's
+mapping case by case to 10⁻⁹. UFT 456's Table 2 speeds turn out to be
+level points of exponential profiles, and the front is at c in every
+medium: the Yee solver, the 3-D field solver and the kronspice ladder
+all agree. The folder's `INDEX.md` gives each paper's verdict in a
+fixed vocabulary. "Derivation holds" means the algebra checks.
+"Derivation fails at eq. n" names the first equation that does not
+follow from the ones before it. "Assumption added" marks a step that
+needs something the paper does not state.
+
+## 10.15 Two more ledgers: the MEG and the Casimir battery (H10, H25)
+
+Two more entries are claims of energy from a source that is never
+declared.
+
+[bearden_meg](../examples/bearden_meg) builds the Motionless
+Electromagnetic Generator (US 6,362,718) as a magnetic circuit with the
+full ledger. Beside it sits a bucking-magnet "knife edge", two magnets N
+to N with a split drive coil at the null. In 60 runs the MEG's COP
+ranges from 0.002 to 0.16 and the knife edge's from 0.06 to 0.990. The
+knife edge is a good transformer through all-iron paths. The COP is flat
+in drive level, spacing and mismatch. Over whole cycles the magnets
+supply no net power, at most 10⁻³ of the drive, and that goes into
+stored energy while the circuit settles. Ngspice twins of both circuits
+are included. The bench test still needed is a replica with true power
+measured over whole cycles.
+
+[forward_casimir](../examples/forward_casimir) runs Forward's 1984
+vacuum-fluctuation battery. The leaves are charged, and the Casimir pull
+closes them against a servo. One leaf pair is a Kron (q, a) system with
+its ledger closed, and the Lifshitz energy for real aluminium is 0.23 of
+the ideal at 20 nm. Each stroke releases 12 µJ/m², which is 0.02 J/kg.
+This is the plates' surface energy, released once, as Cole and Puthoff
+showed. Reopening the leaves costs more than closing them gave, so a
+close–reopen cycle is a net loss, and the battery is not a continuous
+source.
+
+## 10.16 The bounds recorded so far
 
 | Entry | What was computed | Standard reading | Status |
 |---|---|---|---|
@@ -475,6 +647,10 @@ the Qinghai ball can flicker it at 100 Hz but delivers microwatts, not the
 | H37, [magnetostrictive_transformer](../examples/magnetostrictive_transformer) | drive × sound products up to 2.9 mA, sound × sound 100× weaker; reciprocal to 2e-10 at small drive, not at full drive | magnetoelastic nonlinearity of the core | bounded |
 | H38, [al_cell_pump](../examples/al_cell_pump) | evolved η 0.857 at −321 V (0.869 for one rod in an iron cup); coil and oxide film the losses; Si still better | e·|V| per electron is the floor | bounded |
 | H43, [rodin_resonance](../examples/rodin_resonance) | sin/cos drive turns the field vector, the pattern stands still; 0.44–0.45 W passed between the sources through M; Q-limited build-up; output coils charge a bank with 18–32 % of the input | coupled inductors / transformer; near 2 MHz a line on a (5, 12) knot | bounded |
+| H10, [bearden_meg](../examples/bearden_meg) | MEG COP 0.002–0.16, knife edge 0.06–0.990; magnets supply ≤ 10⁻³ of the drive over whole cycles | transformer with permanent-magnet bias | untested, bench needed |
+| H25, [forward_casimir](../examples/forward_casimir) | 12 µJ/m² per Al stroke (Lifshitz 0.23 of ideal); close–reopen is a net loss | one-shot surface energy (Cole & Puthoff 1993) | one-shot, not continuous |
+| H47, [scalar_disc](../examples/scalar_disc) | S 1.1×10⁻¹² T, odd in Ω; S² force 10⁻³⁷–10⁻³³ m/s²; a 10⁻⁹ null bounds C_φ < 5×10³³ | S = 0 under charge conservation; GR weight | untested |
+| H48, `.ece` and [AIAS](../examples/AIAS) | torsion s·cω₀L and k0, kl0 equal ordinary resistors to 10⁻⁹; their power model-supplied; fronts at c | ω a frame quantity; a gain needs a declared source | untested |
 | H26, [Force-Free_Harmonic_Plasmoids](../examples/Force-Free_Harmonic_Plasmoids) | comb f_n = x_n·c/2πR; electrons at 1.4–12 c by his recipe; free lifetime τ_TE = R(kR)²/2c·x1²; seconds need 7–74 × sea-level density at 12 cm | cold-plasma standing wave; leaky sphere modes | untested; example and lifetime bounded |
 
 In every case the engine found the energy, and in every case it was
@@ -486,7 +662,7 @@ between SU(3) and U(1), with no circuit quantity on the non-abelian side. None o
 a statement of what the published equations or numbers contain, with the
 measurement that would change the status written next to it.
 
-## 10.14 What to keep
+## 10.17 What to keep
 
 - A register entry is a model, a standard twin, an evidence criterion and
   a status, and it stays after a null result with its bound.
@@ -511,6 +687,12 @@ go run ./examples/toroidal_coherence
 go run ./examples/barrett_osc
 go run ./examples/magnetostrictive_transformer
 go run ./examples/al_cell_pump -study pipes
+go run ./examples/bearden_meg
+go run ./examples/forward_casimir
+go run ./examples/scalar_disc
+go run ./examples/ece_rlc
+go run ./cmd/kronspice examples/ece_rlc/export/ece_rlc_ece2_torsion.cir
+go test ./analysis ./kron -run ECE                 # the .ece terms against their twins
 go run ./cmd/kronspice examples/eckardt_homopolar/export/eckardt_homopolar_driven.cir
 go run ./cmd/kronspice examples/parametric_lcr/export/parametric_lcr_fig5_pumped_c.cir
 ```
@@ -553,6 +735,17 @@ go run ./cmd/kronspice examples/parametric_lcr/export/parametric_lcr_fig5_pumped
   and Nodon aluminium rectifier); A. Güntherschulze and H. Betz, the
   high-field ionic conduction law of anodic oxides (leakage in
   [al_cell_pump](../examples/al_cell_pump)).
+- S. L. Patrick, T. E. Bearden et al., U.S. Patent 6,362,718 (2002).
+- R. L. Forward, *Phys. Rev. B* 30, 1700 (1984); D. C. Cole,
+  H. E. Puthoff, *Phys. Rev. E* 48, 1562 (1993); A. Lambrecht,
+  S. Reynaud, *Eur. Phys. J. D* 8, 309 (2000).
+- M. Minotti, G. Modanese, arXiv:2408.05230 and arXiv:2603.26986;
+  Iadicicco, Modanese, Verolino, *Gen. Rel. Grav.* 58, 106 (2026);
+  Iadicicco, Verolino, arXiv:2608.21403; B. Bertotti, L. Iess,
+  P. Tortora, *Nature* 425, 374 (2003).
+- H. Eckardt, *ECE Unified Field Theory* Vol. 1 (2022), eqs. 4.211,
+  6.189; H. Eckardt, D. Goel, UFT 456 (2024); the AIAS papers evaluated
+  in [examples/AIAS](../examples/AIAS).
 - [doc/pais-us10144532-comparison.md](../doc/pais-us10144532-comparison.md),
   [doc/tewari-references.md](../doc/tewari-references.md),
   [doc/kouril-vrba-verification.md](../doc/kouril-vrba-verification.md).

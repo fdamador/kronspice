@@ -162,6 +162,29 @@ sessions in this repository additionally get the `kronspice` skill in
   with gmin stepping, source stepping and pseudo-transient continuation.
 - **Netlists:** SPICE syntax with `.op`, `.dc`, `.ac`, `.tran`, `.model`
   and engineering suffixes.
+- **ECE and ECE2 option (hypothetical, off by default):** the
+  spin-connection terms of Einstein–Cartan–Evans theory in both of its
+  forms. Run them in a circuit with `.ece form=ece|ece2`, which takes
+  these parameters:
+  - `w0=` for the torsion term (c·ω₀·L in series with a coil, and
+    c·ω₀·M between coupled coils);
+  - `kappa=` for the scalar term on element terminals;
+  - `k0=` for UFT 456's shunt conductance 2cκ₀·C on capacitors;
+  - `kl0=` for its series term −2cκ_Λ0·L on coils.
+
+  Each term can also be set per element. ECE2 reverses the sign of these
+  terms and doubles them. They work in OP, DC, AC and transient
+  analysis, in both MNA and Kron's frame (mesh, node and torn). The field
+  solver (`em/scalar`) carries ECE2's spin-connection currents in
+  Ampère's and Faraday's laws.
+
+  The power these terms deliver or absorb is booked per element as
+  *model-supplied*, never as inflow. With every term zero, the results
+  are Maxwell's, bit for bit. Each term is tested against a twin built
+  from ordinary elements (`analysis/ece_test.go`, `kron/ece_test.go`,
+  `em/scalar/spin_test.go`). [examples/ece_rlc](examples/ece_rlc) runs
+  one RLC circuit plain, in ECE and in ECE2. See CLAUDE.md, register
+  entry H48 and §3c.
 
 **Not yet:** `.subckt`, `.param` and `.include`; temperature other than
 27 °C; switches, transmission-line devices, JFETs and BSIM models; noise and
