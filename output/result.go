@@ -27,8 +27,10 @@ type ElementResult struct {
 	// ModelSupplied is the power an idealized active element (negative
 	// resistance) delivers to the circuit [W]; 0 for ordinary elements.
 	ModelSupplied float64
-	StoredEnergy  float64 // [J]
-	Ports         []exchange.ExternalPort
+	// SuppliedNote labels hypothetical model-supplied power (ECE terms).
+	SuppliedNote string
+	StoredEnergy float64 // [J]
+	Ports        []exchange.ExternalPort
 	// ExteriorPower[c] is the power through channel c's port: + into the
 	// circuit from the exterior, − out to it. Exactly 0 for unmodeled ports.
 	ExteriorPower [exchange.NumChannels]float64
@@ -49,6 +51,9 @@ type LedgerRow struct {
 type SuppliedRow struct {
 	Element string
 	PowerW  float64
+	// Note labels hypothetical model-supplied power (the ECE spin-connection
+	// terms, H48); "" for ordinary idealized active elements.
+	Note string `json:",omitempty"`
 }
 
 // Ledger is the open-system energy ledger (CLAUDE.md §3c, §3.1).

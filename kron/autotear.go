@@ -59,8 +59,11 @@ func AutoTear(c *circuit.Circuit, pieces int, dc bool) (Tearing, error) {
 	}
 	// At DC a capacitor is an open circuit: it joins nothing and carries
 	// no current, so it is neither cut nor used to keep nodes together.
-	open := func(e circuit.Element) bool { return dc && e.Kind == circuit.Capacitor }
+	open := func(e circuit.Element) bool { return dc && e.Kind == circuit.Capacitor && c.ECEFor(e).K0 == 0 }
 	tearable := func(e circuit.Element) bool {
+		if t := c.ECEFor(e); t.KappaA != 0 || t.KappaB != 0 {
+			return false // an ECE scalar term senses its terminals' potentials (diakoptics.go)
+		}
 		switch e.Kind {
 		case circuit.Resistor, circuit.Capacitor:
 			return true

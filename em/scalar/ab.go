@@ -142,12 +142,16 @@ type Ledger struct {
 	MagScalarWork float64 // dt c Σ ρ_m S̄_m dV: work of S_m on magnetic charge
 	// ECE2 spin connection (hypothetical; zero unless Config.Spin is set).
 	SpinWork float64 // −dt Σ J_ω·Ē dV: work of the spin-connection current on the field
+	// SpinWorkHom is the work of the homogeneous current V = 2(cκ_Λ0 B −
+	// κ_Λ×E) of UFT 456 eq. 29 in Faraday's law: dt Σ B^{n+½}·(V^n +
+	// V^{n+1})/(2μ₀) dV (hypothetical; zero unless KappaL0 or KappaL is set).
+	SpinWorkHom float64
 }
 
 // Residual is W − W0 − SourceWork − ScalarWork − MagSourceWork −
-// MagScalarWork − SpinWork.
+// MagScalarWork − SpinWork − SpinWorkHom.
 func (l Ledger) Residual() float64 {
-	return l.W - l.W0 - l.SourceWork - l.ScalarWork - l.MagSourceWork - l.MagScalarWork - l.SpinWork
+	return l.W - l.W0 - l.SourceWork - l.ScalarWork - l.MagSourceWork - l.MagScalarWork - l.SpinWork - l.SpinWorkHom
 }
 
 // Region is a box of vacuum with perfectly conducting walls.
@@ -215,7 +219,9 @@ func New(cfg Config) (*Region, error) {
 	r.Sm = make([]float64, n)
 	r.RhoM = make([]float64, n)
 	if cfg.Spin != nil {
-		r.setupSpin(cfg.Spin)
+		if err := r.setupSpin(cfg.Spin); err != nil {
+			return nil, err
+		}
 	}
 	return r, nil
 }
@@ -491,12 +497,18 @@ func (r *Region) Step() {
 	wsm := r.stepSm()
 
 	// Faraday: B^{n+3/2} = B^{n+½} − dt(curl_e E^{n+1} + c grad S_m^{n+1})
-	// − dt μ₀J_m^{n+1} on the magnetic-source faces (magnetic.go).
+	// − dt μ₀J_m^{n+1} on the magnetic-source faces (magnetic.go), + dt V^{n+1}
+	// with the homogeneous spin current (spin.go, UFT 456 eq. 29).
 	csm := 0.0
 	if r.Magnetic == MagAB {
 		csm = em.SpeedOfLight
 	}
-	var wm float64
+	hom := r.spin != nil && r.spin.hom
+	gH := 1.0
+	if hom && r.spin.g != nil {
+		gH = r.spin.g(r.Time()) // time of E^{n+1}
+	}
+	var wm, wHom float64
 	for c := 0; c < 3; c++ {
 		imax, jmax, kmax := r.faceRange(c)
 		for k := 0; k < kmax; k++ {
@@ -504,9 +516,16 @@ func (r *Region) Step() {
 				for i := 0; i < imax; i++ {
 					n := r.index(i, j, k)
 					old := r.B[c][n]
-					nw := old - dt*r.curlE(c, n)
+					rest := -dt * r.curlE(c, n)
 					if csm != 0 {
-						nw -= dt * csm * r.gradSm(c, i, j, k)
+						rest -= dt * csm * r.gradSm(c, i, j, k)
+					}
+					nw := old + rest
+					if hom {
+						var v float64
+						nw, v = r.homFaraday(c, i, j, k, n, old, rest, gH)
+						wHom += old * 0.5 * (r.spin.vPrev[c][n] + v)
+						r.spin.vPrev[c][n] = v
 					}
 					r.bPrev[c][n] = old
 					r.B[c][n] = nw
@@ -515,6 +534,7 @@ func (r *Region) Step() {
 			}
 		}
 	}
+	r.led.SpinWorkHom += dt * wHom / em.Mu0 * dV
 	wm += r.applyMagSources()
 	r.Steps++
 	r.led.W = (we+wm+ws)*dV + wsm

@@ -4,6 +4,7 @@
 package scalar
 
 import (
+	"errors"
 	"math"
 	"testing"
 
@@ -122,5 +123,138 @@ func TestSpinVectorPart(t *testing.T) {
 	}
 	if d < 0.5 {
 		t.Errorf("Coulomb defect %.3g: ECE2's ∇·E = −2κ·E should fail by O(1) here", d)
+	}
+}
+
+// UFT 456's homogeneous current V = 2(cκ_Λ0 B − κ_Λ×E) in Faraday's law.
+// Declared zero it is Maxwell's scheme bit for bit.
+func TestSpinHomZeroIsMaxwell(t *testing.T) {
+	a, _ := tm110(t, nil)
+	b, _ := tm110(t, &SpinConnection{
+		KappaL0: func(x, y, z float64) float64 { return 0 },
+		KappaL:  func(x, y, z float64) [3]float64 { return [3]float64{} },
+	})
+	for s := 0; s < 300; s++ {
+		a.Step()
+		b.Step()
+	}
+	for c := 0; c < 3; c++ {
+		for n := range a.E[c] {
+			if a.E[c][n] != b.E[c][n] || a.B[c][n] != b.B[c][n] {
+				t.Fatalf("κ_Λ = 0 differs from Maxwell at component %d, index %d", c, n)
+			}
+		}
+	}
+	if w := b.Ledger().SpinWorkHom; w != 0 {
+		t.Errorf("κ_Λ = 0 but homogeneous spin work %.3g J", w)
+	}
+}
+
+// rateCorrected runs r for 16 periods and returns the mean over the last
+// period of W·exp(−rate·t)/W0 (≈ 1 when the energy goes as exp(rate·t)) and
+// the worst relative ledger residual.
+func rateCorrected(r *Region, w, rate float64) (got, worst float64) {
+	period := 2 * math.Pi / w
+	r.Run(0)
+	r.Step()
+	w0, t0 := r.Ledger().W, r.Time()
+	var sum float64
+	var n int
+	for r.Time() < t0+16*period {
+		r.Step()
+		l := r.Ledger()
+		worst = math.Max(worst, math.Abs(l.Residual())/math.Max(l.W, l.W0))
+		if r.Time() >= t0+15*period {
+			sum += l.W * math.Exp(-rate*(r.Time()-t0))
+			n++
+		}
+	}
+	return sum / float64(n) / w0, worst
+}
+
+// κ_Λ0 is UFT 456's η₀ = 2cκ_Λ0μ₀ (eq. 39), a magnetic conductivity of the
+// opposite sign to a loss: κ_Λ0 > 0 feeds the mode as exp(+2cκ_Λ0 t) (half
+// the time its energy is magnetic), κ_Λ0 < 0 drains it, and the change is
+// exactly the work booked in SpinWorkHom (eq. 57's +η₀H²).
+func TestSpinHomMagneticConductivity(t *testing.T) {
+	cl := em.SpeedOfLight
+	for _, sgn := range []float64{1, -1} {
+		_, w := tm110(t, nil)
+		kL0 := sgn * 0.01 * w / cl
+		r, _ := tm110(t, &SpinConnection{KappaL0: func(x, y, z float64) float64 { return kL0 }})
+		got, worst := rateCorrected(r, w, 2*kL0*cl)
+		l := r.Ledger()
+		t.Logf("κ_Λ0 = %+.3g 1/m: W/W0 = %.4g, rate-corrected %.4f; homogeneous work %+.4g J of ΔW %+.4g J; residual %.2g",
+			kL0, l.W/l.W0, got, l.SpinWorkHom, l.W-l.W0, worst)
+		if math.Abs(got-1) > 0.02 {
+			t.Errorf("κ_Λ0 = %g: energy rate off, corrected ratio %.4f", kL0, got)
+		}
+		if worst > 1e-12 {
+			t.Errorf("κ_Λ0 = %g: ledger residual %.3g", kL0, worst)
+		}
+		if math.Signbit(l.SpinWorkHom) != (sgn < 0) {
+			t.Errorf("κ_Λ0 = %g: homogeneous work has the wrong sign (%.3g)", kL0, l.SpinWorkHom)
+		}
+	}
+}
+
+// UFT 456's two limiting media on one mode. "Equilibrium" (eq. 109,
+// κ₀ = κ_Λ0): E loses what H gains, the mode (k ≫ ω₀/c) keeps its energy on
+// average and the two columns cancel. Heaviside's distortionless medium
+// (κ_Λ0 = −κ₀): both lossy, energy as exp(−4cκ₀t). Ledger exact in both.
+func TestSpinEquilibriumAndHeaviside(t *testing.T) {
+	cl := em.SpeedOfLight
+	_, w := tm110(t, nil)
+	k0 := 0.01 * w / cl
+	for _, tc := range []struct {
+		name string
+		kL0  float64
+		rate float64
+	}{{"equilibrium", k0, 0}, {"Heaviside", -k0, -4 * k0 * cl}} {
+		r, _ := tm110(t, &SpinConnection{
+			Kappa0:  func(x, y, z float64) float64 { return k0 },
+			KappaL0: func(x, y, z float64) float64 { return tc.kL0 },
+		})
+		got, worst := rateCorrected(r, w, tc.rate)
+		l := r.Ledger()
+		t.Logf("%s: rate-corrected %.4f; spin work %+.4g J, homogeneous %+.4g J, ΔW %+.4g J; residual %.2g",
+			tc.name, got, l.SpinWork, l.SpinWorkHom, l.W-l.W0, worst)
+		if math.Abs(got-1) > 0.02 {
+			t.Errorf("%s: corrected ratio %.4f", tc.name, got)
+		}
+		if worst > 1e-12 {
+			t.Errorf("%s: ledger residual %.3g", tc.name, worst)
+		}
+	}
+}
+
+// The vector part κ_Λ (−2κ_Λ×E in V): every joule booked.
+func TestSpinHomVectorPart(t *testing.T) {
+	_, w := tm110(t, nil)
+	kx := 0.02 * w / em.SpeedOfLight
+	r, _ := tm110(t, &SpinConnection{KappaL: func(x, y, z float64) [3]float64 { return [3]float64{kx, 0, 0} }})
+	worst := 0.0
+	for s := 0; s < 2000; s++ {
+		r.Step()
+		l := r.Ledger()
+		worst = math.Max(worst, math.Abs(l.Residual())/l.W0)
+	}
+	l := r.Ledger()
+	t.Logf("κ_Λx = %.3g 1/m: W/W0 = %.4f, homogeneous work %+.3g of W0 %.3g J, residual %.2g",
+		kx, l.W/l.W0, l.SpinWorkHom, l.W0, worst)
+	if l.SpinWorkHom == 0 {
+		t.Error("κ_Λ×E did no work on a mode with E_z and B_x, B_y")
+	}
+	if worst > 1e-12 {
+		t.Errorf("ledger residual %.3g", worst)
+	}
+}
+
+// A gain whose semi-implicit step would flip sign is refused.
+func TestSpinHomStepLimit(t *testing.T) {
+	_, err := New(Config{N: [3]int{5, 5, 5}, D: [3]float64{0.01, 0.01, 0.01},
+		Spin: &SpinConnection{KappaL0: func(x, y, z float64) float64 { return 1e3 }}})
+	if !errors.Is(err, ErrConfig) {
+		t.Errorf("c κ_Λ0 dt ≫ 1 accepted (err %v)", err)
 	}
 }

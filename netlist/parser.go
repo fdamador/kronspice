@@ -119,6 +119,18 @@ type Deck struct {
 	// belong to, from ".domain <channel> node …" lines (kronspice extension);
 	// nodes not listed are electrical.
 	Domains map[string]string
+	// ECE is the ".ece form=ece|ece2 [w0=…] [kappa=…] [k0=…] [kl0=…]" declaration
+	// (kronspice extension): hypothetical spin-connection terms on R, L,
+	// C and K elements (circuit.ECESpec). Nil when absent.
+	ECE *ECECard
+}
+
+// ECECard is one .ece line.
+type ECECard struct {
+	Form      string // "ece", "ece2" or "none", lower-cased
+	W0, Kappa float64
+	K0, KL0   float64 // UFT 456 wave numbers κ₀, κ_Λ0 [1/m]
+	Line      int
 }
 
 type logicalLine struct {
@@ -198,6 +210,15 @@ func (d *Deck) control(head string, fields []string, ll logicalLine) (end bool, 
 		d.Models = append(d.Models, m)
 	case ".title":
 		d.Title = strings.TrimSpace(strings.Join(fields[1:], " "))
+	case ".ece":
+		if d.ECE != nil {
+			return false, fmt.Errorf("%w: line %d: .ece given twice", ErrSyntax, ll.line)
+		}
+		card, err := parseECE(stripComment(ll.text), ll.line)
+		if err != nil {
+			return false, err
+		}
+		d.ECE = &card
 	case ".domain":
 		// .domain mechanical|acoustic|… node node …   (kronspice extension)
 		if len(fields) < 3 {
@@ -218,6 +239,53 @@ func (d *Deck) control(head string, fields []string, ll logicalLine) (end bool, 
 		return false, fmt.Errorf("%w: line %d: unsupported control line %q", ErrSyntax, ll.line, fields[0])
 	}
 	return false, nil
+}
+
+// parseECE reads ".ece form=ece|ece2|none [w0=v] [kappa=v] [k0=v] [kl0=v]".
+func parseECE(text string, line int) (ECECard, error) {
+	c := ECECard{Line: line}
+	f := tokenize(text)[1:]
+	seen := map[string]bool{}
+	for i := 0; i < len(f); i += 3 {
+		if i+2 >= len(f) || f[i+1] != "=" {
+			return c, fmt.Errorf("%w: line %d: .ece needs: form=ece|ece2 [w0=v] [kappa=v] [k0=v] [kl0=v]", ErrSyntax, line)
+		}
+		k := strings.ToLower(f[i])
+		if seen[k] {
+			return c, fmt.Errorf("%w: line %d: .ece %s given twice", ErrSyntax, line, k)
+		}
+		seen[k] = true
+		switch k {
+		case "form":
+			c.Form = strings.ToLower(f[i+2])
+		case "w0", "kappa", "k0", "kl0":
+			v, err := ParseValue(f[i+2])
+			if err != nil {
+				return c, fmt.Errorf("line %d: .ece %s: %w", line, k, err)
+			}
+			switch k {
+			case "w0":
+				c.W0 = v
+			case "kappa":
+				c.Kappa = v
+			case "k0":
+				c.K0 = v
+			default:
+				c.KL0 = v
+			}
+		default:
+			return c, fmt.Errorf("%w: line %d: .ece: unknown parameter %q", ErrSyntax, line, f[i])
+		}
+	}
+	if c.Form == "" {
+		return c, fmt.Errorf("%w: line %d: .ece needs form=ece or form=ece2", ErrSyntax, line)
+	}
+	return c, nil
+}
+
+// isECEKey reports whether k is an element spin-connection parameter.
+func isECEKey(k string) bool {
+	return k == "w0" || k == "kappa" || k == "kappa_a" || k == "kappa_b" || k == "k0" || k == "kl0"
 }
 
 // parseTran reads ".tran tstep tstop [tstart [tmax]] [uic]".
@@ -459,9 +527,29 @@ func parseElement(text string, line int) (ElementLine, error) {
 		}
 		el.Model = strings.ToLower(f[len(f)-1])
 	case 'K':
-		// Kname Lname1 Lname2 k   (mutual inductance, coupling coefficient)
+		// Kname Lname1 Lname2 k [W0=ω0] [KL0=κ_Λ0] [W0SKEW=ω]   (mutual
+		// inductance, coupling coefficient; W0=, KL0= and W0SKEW= are
+		// hypothetical spin-connection terms, .ece)
+		for len(f) >= 7 && f[len(f)-2] == "=" {
+			k := strings.ToLower(f[len(f)-3])
+			if k != "w0" && k != "kl0" && k != "w0skew" {
+				break
+			}
+			v, err := ParseValue(f[len(f)-1])
+			if err != nil {
+				return el, fmt.Errorf("line %d: %s: %w", line, strings.ToUpper(k), err)
+			}
+			if el.Params == nil {
+				el.Params = map[string]float64{}
+			}
+			if _, dup := el.Params[k]; dup {
+				return el, fmt.Errorf("%w: line %d: %s given twice", ErrSyntax, line, strings.ToUpper(k))
+			}
+			el.Params[k] = v
+			f = f[:len(f)-3]
+		}
 		if len(f) != 4 {
-			return el, fmt.Errorf("%w: line %d: K element needs: Kname L1 L2 coupling", ErrSyntax, line)
+			return el, fmt.Errorf("%w: line %d: K element needs: Kname L1 L2 coupling [W0=v] [KL0=v] [W0SKEW=v]", ErrSyntax, line)
 		}
 		el.Couples = []string{strings.ToLower(f[1]), strings.ToLower(f[2])}
 		v, err := ParseValue(f[3])
@@ -551,7 +639,7 @@ func parseElement(text string, line int) (ElementLine, error) {
 
 // parsePassiveSpec reads what follows the nodes of an R, C or L line:
 //
-//	R: value [EXT=channel]
+//	R: value [EXT=channel] [W0= KAPPA= KAPPA_A= KAPPA_B=]  (spin connection, .ece)
 //	C: value | Q=pwl(v1 q1 v2 q2 ...)     [SCALE=wave(...)] [EXT=channel] [IC=v]
 //	L: value | FLUX=pwl(i1 λ1 i2 λ2 ...)  [SCALE=wave(...)] [EXT=channel] [IC=i]
 //
@@ -605,7 +693,7 @@ func parsePassiveSpec(el *ElementLine, f []string, line int) error {
 	seen := map[string]bool{}
 	for i < len(f) {
 		k := keyAt(i)
-		ok := k == "ext" || (kind != 'R' && (k == "ic" || k == "scale"))
+		ok := k == "ext" || isECEKey(k) || (kind != 'R' && (k == "ic" || k == "scale"))
 		if !ok || seen[k] || i+2 >= len(f) {
 			return fmt.Errorf("%w: line %d: unexpected %q after value", ErrSyntax, line, strings.Join(f[i:], " "))
 		}
@@ -614,6 +702,16 @@ func parsePassiveSpec(el *ElementLine, f []string, line int) error {
 		switch k {
 		case "ext":
 			el.Ext = strings.ToLower(arg)
+			i += 3
+		case "w0", "kappa", "kappa_a", "kappa_b", "k0", "kl0":
+			v, err := ParseValue(arg)
+			if err != nil {
+				return fmt.Errorf("line %d: %s: %w", line, strings.ToUpper(k), err)
+			}
+			if el.Params == nil {
+				el.Params = map[string]float64{}
+			}
+			el.Params[k] = v
 			i += 3
 		case "ic":
 			ic, err := ParseValue(arg)

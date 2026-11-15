@@ -25,6 +25,10 @@ func (c *Circuit) Clone() *Circuit {
 	if c.NodeDomains != nil {
 		out.NodeDomains = append([]exchange.ChannelID(nil), c.NodeDomains...)
 	}
+	if c.ECE != nil {
+		sp := *c.ECE
+		out.ECE = &sp
+	}
 	for i, e := range c.Elements {
 		e.Wave.Args = append([]float64(nil), e.Wave.Args...)
 		e.Curve = append([]float64(nil), e.Curve...)
@@ -125,6 +129,12 @@ func (c *Circuit) WriteNetlist(w io.Writer, control ...string) error {
 		}
 	}
 
+	// Hypothetical spin-connection terms (kronspice extension, ece.go).
+	if c.ECE != nil {
+		fmt.Fprintf(bw, ".ece form=%s w0=%s kappa=%s k0=%s kl0=%s\n", strings.ToLower(c.ECE.Form.String()),
+			num(c.ECE.W0), num(c.ECE.Kappa), num(c.ECE.K0), num(c.ECE.KL0))
+	}
+
 	// SPICE reads an element's kind from the first letter of its name. A
 	// builder name that does not start with its kind's letter ("U" for a
 	// voltage source) is written with the letter prefixed ("VU"), made
@@ -191,6 +201,7 @@ func (c *Circuit) WriteNetlist(w io.Writer, control ...string) error {
 			if e.HasIC {
 				line = append(line, "IC="+num(e.IC))
 			}
+			line = append(line, eceParams(e)...)
 		case NonlinearCapacitor, NonlinearInductor:
 			// kronspice extension: C … Q=pwl(v q …) or L … FLUX=pwl(i λ …)
 			// (or a value), then optional SCALE=wave(…), EXT= and IC=.
@@ -246,6 +257,7 @@ func (c *Circuit) WriteNetlist(w io.Writer, control ...string) error {
 			line = append(line, c.NodeNames[e.CtrlNodes[0]], c.NodeNames[e.CtrlNodes[1]], num(e.Value))
 		case Mutual, Gyrator:
 			line = append(line, num(e.Value))
+			line = append(line, eceParams(e)...)
 		case CCCS, CCVS:
 			line = append(line, e.CtrlSource, num(e.Value))
 		case MOSFET:
@@ -285,4 +297,15 @@ func (c *Circuit) WriteNetlist(w io.Writer, control ...string) error {
 	}
 	fmt.Fprintln(bw, ".end")
 	return bw.Flush()
+}
+
+// eceParams writes an element's spin-connection parameters (ece.go).
+func eceParams(e Element) []string {
+	var out []string
+	for _, k := range ECEParamKeys {
+		if v, ok := e.Params[k]; ok {
+			out = append(out, strings.ToUpper(k)+"="+num(v))
+		}
+	}
+	return out
 }

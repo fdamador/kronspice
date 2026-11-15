@@ -313,6 +313,9 @@ type Circuit struct {
 	// the common reference of every domain (zero velocity, ambient
 	// pressure).
 	NodeDomains []exchange.ChannelID
+	// ECE, when set, switches on the hypothetical spin-connection terms on
+	// R, L, C and K elements (ece.go, register entry H48). Nil: Maxwell.
+	ECE *ECESpec
 }
 
 // NodeDomain returns node n's domain (electrical when none is set).
@@ -364,6 +367,9 @@ func (c *Circuit) ValidateTransient() error {
 func (c *Circuit) validateElements() error {
 	if len(c.Elements) == 0 {
 		return ErrEmptyCircuit
+	}
+	if err := c.validateECE(); err != nil {
+		return err
 	}
 	if len(c.NodeNames) > MaxNodes || len(c.Elements) > MaxElements {
 		return ErrTooLarge

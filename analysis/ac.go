@@ -157,7 +157,7 @@ func AC(c *circuit.Circuit, spec ACSpec, opt Options) (*output.ACResult, error) 
 			scaleS += cmplx.Abs(sAbs)
 			// Average power drives the exterior ports; the element models'
 			// ExteriorPower functions are linear in absorbed power.
-			ops[i] = device.OperatingPoint{Voltage: cmplx.Abs(p.Voltage), Current: cmplx.Abs(p.Current), PowerAbsorbed: real(sAbs)}
+			ops[i] = device.OperatingPoint{Voltage: cmplx.Abs(p.Voltage), Current: cmplx.Abs(p.Current), PowerAbsorbed: real(sAbs), ECEPower: p.ECEPower}
 			if _, ok := d.(device.Reactive); ok {
 				l.Reactive[k] += imag(sAbs)
 			}

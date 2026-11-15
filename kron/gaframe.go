@@ -71,6 +71,11 @@ func (n *Network) GAFrames() (mesh, node *GAFrame, err error) {
 	if len(n.chords) > 0 || len(n.radiation) > 0 {
 		return nil, nil, fmt.Errorf("%w: GA frames need a diagonal primitive metric (no chords or radiation edges)", ErrUnsupported)
 	}
+	for _, b := range n.branches {
+		if b.ge != 0 {
+			return nil, nil, fmt.Errorf("%w: GA frames: a capacitor with UFT 456's shunt conducts at DC", ErrUnsupported)
+		}
+	}
 	name := func(b branch) string { return n.c.Elements[b.elem].Name }
 	var mb, nb []int // branches of each frame
 	for k, b := range n.branches {
@@ -91,9 +96,12 @@ func (n *Network) GAFrames() (mesh, node *GAFrame, err error) {
 		b := n.branches[k]
 		from[i], to[i] = b.from, b.to
 		mesh.Branches = append(mesh.Branches, name(b))
-		if b.kind == bR {
+		switch {
+		case b.kind == bR:
 			mesh.Metric = append(mesh.Metric, b.value)
-		} else {
+		case b.kind == bL:
+			mesh.Metric = append(mesh.Metric, b.rt) // DC: 0, or the torsion resistance (circuit/ece.go)
+		default:
 			mesh.Metric = append(mesh.Metric, 0)
 		}
 	}
@@ -394,6 +402,9 @@ func Precheck(c *circuit.Circuit, opt PrecheckOptions) (*PrecheckReport, error) 
 				zero = append(zero, edge{e.Name, e.Nodes[0], e.Nodes[1], false})
 			}
 		case circuit.Inductor, circuit.NonlinearInductor:
+			if c.ECEFor(e).W0 != 0 {
+				continue // torsion gives it a resistance s·cω₀L at DC (circuit/ece.go)
+			}
 			zero = append(zero, edge{e.Name, e.Nodes[0], e.Nodes[1], true})
 		case circuit.Machine:
 			w, _ := circuit.MachineWindings(e)

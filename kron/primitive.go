@@ -59,6 +59,17 @@ type branch struct {
 	value    float64 // R [Ω], C [F], L [H], gain, or a source's DC value
 	ac       complex128
 	ctrl     int // controlling branch (control coil, or the sensed voltage source)
+
+	// Hypothetical ECE / ECE2 spin-connection terms (circuit/ece.go, H48),
+	// on R, C and L branches only. The body sees
+	// v_b = E + sa·E(ca) − sb·E(cb), where ca and cb are control coils from
+	// the terminals to the datum (−1 when absent) and sa = s·κ_a,
+	// sb = s·κ_b; an inductor also has the torsion resistance rt = s·cω₀L
+	// in series.
+	ca, cb int
+	sa, sb float64
+	rt     float64 // torsion s·cω₀L plus UFT 456's r_h = −2cκ_Λ0·L (inductors)
+	ge     float64 // UFT 456 shunt g_e = 2cκ₀·C across the body (capacitors)
 }
 
 // Network is a linear circuit as Kron's primitive network plus its
@@ -74,6 +85,14 @@ type Network struct {
 	devs       []device.Device // the elements' device models: their exterior ports
 	chords     []chord
 	radiation  []radiationEdge
+	eceK       []eceMutual // K elements with mutual torsion (for the ledger)
+}
+
+// eceMutual is a K element's mutual torsion r_m = s·cω₀M between the
+// branches a and b (circuit/ece.go).
+type eceMutual struct {
+	elem, a, b int
+	rm         float64
 }
 
 // Counts are the frame dimensions of a network: b branches, N junctions
@@ -108,7 +127,7 @@ func Build(c *circuit.Circuit) (*Network, error) {
 	for ei, e := range c.Elements {
 		nw.elemBranch[ei] = len(nw.branches)
 		br := branch{elem: ei, from: e.Nodes[0], to: e.Nodes[1], value: e.Value, ctrl: -1,
-			ac: cmplx.Rect(e.ACMag, e.ACPhase*math.Pi/180)}
+			ac: cmplx.Rect(e.ACMag, e.ACPhase*math.Pi/180), ca: -1, cb: -1}
 		switch e.Kind {
 		case circuit.Resistor:
 			br.kind = bR
@@ -151,6 +170,34 @@ func Build(c *circuit.Circuit) (*Network, error) {
 		default:
 			return nil, fmt.Errorf("%w: %s (%s)", ErrNonlinear, e.Name, e.Kind)
 		}
+		if t := c.ECEFor(e); t.On && (br.kind == bR || br.kind == bC || br.kind == bL) {
+			// Spin-connection terms: the scalar term needs each terminal's
+			// potential, a junction-pair voltage to the datum, so it gets
+			// a control coil there (as a VCVS does for its controlling
+			// pair; Kron 1939 Ch. XVI, open paths); torsion is a series
+			// resistance in the inductor's own relation.
+			k := len(nw.branches)
+			br.sa, br.sb = t.S*t.KappaA, t.S*t.KappaB
+			if br.kind == bL {
+				br.rt = t.Torsion(e.Value) + t.Homogeneous(e.Value)
+			}
+			if br.kind == bC {
+				br.ge = t.Shunt(e.Value)
+			}
+			ctl := func(node int) branch {
+				return branch{kind: bControl, elem: -1, from: node, to: 0, ctrl: -1, ca: -1, cb: -1}
+			}
+			nw.branches = append(nw.branches, br)
+			if br.sa != 0 {
+				nw.branches[k].ca = len(nw.branches)
+				nw.branches = append(nw.branches, ctl(e.Nodes[0]))
+			}
+			if br.sb != 0 {
+				nw.branches[k].cb = len(nw.branches)
+				nw.branches = append(nw.branches, ctl(e.Nodes[1]))
+			}
+			continue
+		}
 		nw.branches = append(nw.branches, br)
 	}
 	for _, k := range pending {
@@ -167,7 +214,24 @@ func Build(c *circuit.Circuit) (*Network, error) {
 		m := e.Value * math.Sqrt(nw.branches[a].value*nw.branches[b].value)
 		// Mutual inductance is the classic chord: z_ab = z_ba = jωM, the
 		// flux of one coil linking the other (CLAUDE.md §3c, inductor row).
-		nw.chords = append(nw.chords, chord{a: a, b: b, z: func(w float64) complex128 { return complex(0, w*m) }, reciprocal: true})
+		// Mutual torsion (circuit/ece.go) adds r_m = s·cω₀M to it, at DC too.
+		rm, rs := 0.0, 0.0
+		if t := c.ECEFor(e); t.On {
+			rm = t.Torsion(m) + t.Homogeneous(m)
+			rs = t.TorsionSkew(m)
+			nw.eceK = append(nw.eceK, eceMutual{elem: ei, a: a, b: b, rm: rm})
+		}
+		if rs == 0 {
+			nw.chords = append(nw.chords, chord{a: a, b: b, z: func(w float64) complex128 { return complex(rm, w*m) }, reciprocal: true})
+			continue
+		}
+		// Skew mutual torsion (circuit.ECETerms.W0Skew): a non-reciprocal
+		// pair of chords, z_ab = jωM + r_m + r_s, z_ba = jωM + r_m − r_s,
+		// the skew part being Kron's workless F (Tensors for Circuits
+		// eq. 31.5).
+		nw.chords = append(nw.chords,
+			chord{a: a, b: b, z: func(w float64) complex128 { return complex(rm+rs, w*m) }},
+			chord{a: b, b: a, z: func(w float64) complex128 { return complex(rm-rs, w*m) }})
 	}
 	nw.rebuildGraph()
 	return nw, nil
@@ -253,6 +317,9 @@ func (r relation) own(k int) (ce, ci complex128) {
 // dc selects the operating point (capacitors open, inductors shorted,
 // sources at their DC values) instead of the small-signal phasors.
 func (n *Network) relations(omega float64, dc bool) []relation {
+	if dc {
+		omega = 0 // chords (mutual inductance, mutual torsion) at the operating point
+	}
 	out := make([]relation, len(n.branches))
 	jw := complex(0, omega)
 	for k, b := range n.branches {
@@ -263,19 +330,25 @@ func (n *Network) relations(omega float64, dc bool) []relation {
 		}
 		g := complex(b.value, 0)
 		switch b.kind {
-		case bR: // E − R·i = 0 (Ohm's law, CLAUDE.md §3c)
-			r = relation{e: []term{{k, 1}}, i: []term{{k, -g}}}
-		case bC: // i − jωC·E = 0; open at DC
+		case bR: // E − R·i = 0 (Ohm's law, CLAUDE.md §3c); v_b for E with ECE terms
+			r = relation{e: b.body(k, 1), i: []term{{k, -g}}}
+		case bC: // i − jωC·E = 0; open at DC; i − (jωC + g_e)·v_b = 0 with ECE terms
+			y := jw*g + complex(b.ge, 0)
 			if dc {
-				r = relation{i: []term{{k, 1}}}
-			} else {
-				r = relation{e: []term{{k, -jw * g}}, i: []term{{k, 1}}}
+				y = complex(b.ge, 0) // UFT 456's shunt conducts at DC
 			}
-		case bL: // E − jωL·i = 0; shorted at DC
+			r = relation{i: []term{{k, 1}}}
+			if y != 0 {
+				r.e = b.body(k, -y)
+			}
+		case bL: // E − jωL·i = 0; shorted at DC; v_b − (jωL + r_t)·i = 0 with ECE terms
+			z := jw*g + complex(b.rt, 0)
 			if dc {
-				r = relation{e: []term{{k, 1}}}
-			} else {
-				r = relation{e: []term{{k, 1}}, i: []term{{k, -jw * g}}}
+				z = complex(b.rt, 0)
+			}
+			r = relation{e: b.body(k, 1)}
+			if z != 0 {
+				r.i = []term{{k, -z}}
 			}
 		case bV: // E = value
 			r = relation{e: []term{{k, 1}}, s: src}
@@ -301,5 +374,19 @@ func (n *Network) relations(omega float64, dc bool) []relation {
 		out[k] = r
 	}
 	n.applyChords(out, omega)
+	return out
+}
+
+// body returns the E terms of f·v_b for branch k: f·E, plus the scalar
+// spin-connection terms f·(s·κ_a·φ_a − s·κ_b·φ_b) on its control coils
+// when it has them (circuit/ece.go).
+func (b branch) body(k int, f complex128) []term {
+	out := []term{{k, f}}
+	if b.ca >= 0 {
+		out = append(out, term{b.ca, f * complex(b.sa, 0)})
+	}
+	if b.cb >= 0 {
+		out = append(out, term{b.cb, -f * complex(b.sb, 0)})
+	}
 	return out
 }

@@ -108,7 +108,7 @@ func BuildLedger(r *output.Result) *output.Ledger {
 			acc.AddStorage(e.StoragePower)
 		}
 		if e.ModelSupplied != 0 {
-			l.Supplied = append(l.Supplied, output.SuppliedRow{Element: e.Name, PowerW: e.ModelSupplied})
+			l.Supplied = append(l.Supplied, output.SuppliedRow{Element: e.Name, PowerW: e.ModelSupplied, Note: e.SuppliedNote})
 			acc.AddModelSupplied(e.ModelSupplied)
 		}
 	}

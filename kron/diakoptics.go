@@ -104,6 +104,13 @@ func Tear(c *circuit.Circuit, t Tearing, cache *TornCache) (*Diakoptics, error) 
 		default:
 			return nil, fmt.Errorf("%w: tearing %s: only R, C and L branches can be torn", ErrUnsupported, name)
 		}
+		if br := n.branches[k]; br.ca >= 0 || br.cb >= 0 {
+			// The scalar spin-connection term (circuit/ece.go) makes the
+			// branch sense its terminals' potentials: it is not an
+			// admittance between its two nodes, so it cannot be cut here.
+			// kron.JacobianTearing tears it (it tears the device stamps).
+			return nil, fmt.Errorf("%w: tearing %s: its ECE scalar term senses its terminals' potentials; tear a neighbouring element, or use JacobianTearing", ErrUnsupported, name)
+		}
 		if n.branches[k].kind == bR && n.branches[k].value == 0 {
 			return nil, fmt.Errorf("%w: tearing %s: a zero resistance has no admittance", ErrUnsupported, name)
 		}
@@ -152,14 +159,18 @@ func (d *Diakoptics) tornAdmittance(k int, omega float64, dc bool) (complex128, 
 		return complex(1/b.value, 0), nil
 	case bC:
 		if dc {
-			return 0, nil
+			return complex(b.ge, 0), nil // 0, or UFT 456's shunt (ece.go)
 		}
-		return complex(0, omega*b.value), nil
+		return complex(b.ge, omega*b.value), nil
 	case bL:
-		if dc || omega == 0 {
+		z := complex(b.rt, omega*b.value) // jωL + r_t (torsion, circuit/ece.go)
+		if dc {
+			z = complex(b.rt, 0)
+		}
+		if z == 0 {
 			return 0, fmt.Errorf("%w: torn inductor %s is a short circuit at the operating point", ErrUnsupported, d.n.c.Elements[b.elem].Name)
 		}
-		return 1 / complex(0, omega*b.value), nil
+		return 1 / z, nil
 	}
 	return 0, fmt.Errorf("%w: torn branch %d", ErrUnsupported, k)
 }
