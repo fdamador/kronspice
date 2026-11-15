@@ -1,0 +1,111 @@
+B(3) transformer — 10-turn spring core, primary round 10 core passes, secondary round 2
+
+1. Gap leakage. Flux stays on the wire only if the air between neighbouring turns is a poor path next
+   to the wire itself: helix number H = (2πR)²/(μr·a²·acosh(p/2a)) ≪ 1. Two leaks are measured:
+   spread = (max−min)/max of dΦ/dt over the passes with the 10-pass primary driven, and the
+   2-pass winding's edge leakage (flux round its edges through the unwound neighbours), seen as
+   the coupling k and the swap ratio v(10-pass)/v(2-pass) with the 2-pass winding driven (ideal 5).
+
+   core                   spring                                 H    spread         k     swap
+   Galfenol wire          plain: a 1 mm, gap 1 mm, ret 1×      47.2      0.19    0.2576    0.327
+   Galfenol wire          gap 1 → 8 mm                          20      0.28    0.3080    0.463
+   Galfenol wire          gap 1 → 18 mm                       15.9      0.33    0.3216    0.503
+   Galfenol wire          return 1× → 16×                     47.2     0.031    0.2576    0.331
+   Galfenol wire          core wire a 1 → 2 mm                16.4      0.23    0.3204    0.504
+   Galfenol wire          design: a 2, gap 8, ret 16×         6.55     0.034    0.3829    0.731
+   silicon-steel wire     plain: a 1 mm, gap 1 mm, ret 1×      1.03     0.049    0.5370    1.434
+   silicon-steel wire     gap 1 → 8 mm                       0.436     0.054    0.6334    1.994
+   silicon-steel wire     gap 1 → 18 mm                      0.346     0.074    0.6492    2.089
+   silicon-steel wire     return 1× → 16×                     1.03    0.0033    0.5479    1.500
+   silicon-steel wire     core wire a 1 → 2 mm               0.357     0.027    0.6727    2.255
+   silicon-steel wire     design: a 2, gap 8, ret 16×        0.143    0.0014    0.8142    3.314
+   nanocrystalline tape   plain: a 1 mm, gap 1 mm, ret 1×    0.0411    0.0024    0.9254    4.281
+   nanocrystalline tape   gap 1 → 8 mm                      0.0174    0.0025    0.9624    4.629
+   nanocrystalline tape   gap 1 → 18 mm                     0.0138    0.0034    0.9662    4.666
+   nanocrystalline tape   return 1× → 16×                   0.0411   0.00015    0.9300    4.325
+   nanocrystalline tape   core wire a 1 → 2 mm              0.0143    0.0012    0.9707    4.711
+   nanocrystalline tape   design: a 2, gap 8, ret 16×       0.0057   5.8e-05    0.9890    4.890
+   Wider gaps help only logarithmically (gap permeance ∝ 1/acosh(p/2a)); the thick return leg removes
+   the spread; the edge leakage falls with μr and (a/R)². With the nanocrystalline design the flux
+   stays on the wire: spread 1e-4, k 0.989. Silicon steel and Galfenol cannot reach that at this size.
+
+2. Ratio and rate of change (design spring, 100-turn windings). Ideal: v_s/v_p = (100·2)/(100·10) = 0.2;
+   per volt on the primary, dΦ/dt = 1/(N_p·n_p) = 1 mWb/s in every pass, and the bore (axis) wire gives N·dΦ/dt.
+   core                           H      ratio      ideal      spread    axis/v_p
+   Galfenol wire               6.55   0.200618   0.200000       0.034    0.010000 (ideal 0.010)
+   silicon-steel wire         0.143   0.200035   0.200000      0.0014    0.010000 (ideal 0.010)
+   nanocrystalline tape      0.0057   0.200001   0.200000     5.8e-05    0.010000 (ideal 0.010)
+
+3. Core turns N (primary round all N passes, secondary round 2, 100 turns each; nanocrystalline design):
+      N      ratio        2/N    dΦ/dt per V       spread
+      2   1.000000   1.000000       0.005 Wb/s      6.6e-05
+      4   0.500011   0.500000      0.0025 Wb/s      7.1e-05
+      6   0.333338   0.333333     0.00167 Wb/s      6.4e-05
+     10   0.200001   0.200000       0.001 Wb/s      5.8e-05
+     16   0.125001   0.125000    0.000625 Wb/s      5.5e-05
+     20   0.100000   0.100000      0.0005 Wb/s      5.4e-05
+     30   0.066667   0.066667    0.000333 Wb/s      5.3e-05
+     40   0.050000   0.050000     0.00025 Wb/s      5.2e-05
+   The core's turn count enters the ratio exactly like winding turns: 2/N. Per primary volt,
+   dΦ/dt falls as 1/N (the primary links the flux N_p·N times), so each pass carries less flux.
+
+4. Passes enclosed (nanocrystalline design):
+   windings                                      ratio      ideal    spread
+   primary 10 passes, secondary 1             0.099995   0.100000   5.8e-05
+   primary 10 passes, secondary 2             0.199996   0.200000   5.8e-05
+   primary 10 passes, secondary 5             0.499998   0.500000   5.8e-05
+   primary 10 passes, secondary 10            1.000000   1.000000   5.8e-05
+   primary 2 passes (1–2), secondary 9–10     0.974875   1.000000     0.028
+   primary 5 passes (1–5), secondary 9–10     0.395804   0.400000     0.011
+   A primary round only some passes drives the others' flux through the core and the return leg,
+   so each part sees the potential difference that pushes flux across the gaps: dΦ/dt is no longer the same in every pass.
+
+5. kronspice: 20 V peak at 1000 Hz, 0.5 Ω source, 1 % declared winding air leakage, copper windings.
+   core                      k(p,s)   ratio AC   axis AC     Rload       Pin      Pout        η  ledger res    B peak
+   Galfenol wire           0.379097   0.196328  0.009786    3.69 Ω    4.13 W    1.02 W    0.247     3.1e-07   0.251 T
+   silicon-steel wire      0.806173   0.198054  0.009901    37.3 Ω   0.189 W   0.183 W    0.969     3.8e-07   0.253 T
+   nanocrystalline tape    0.979164   0.198021  0.009901     632 Ω  0.0124 W  0.0124 W    0.999       2e-08   0.253 T
+   swap (drive the 2-pass winding at 4 V peak, nanocrystalline): v_10-pass/v_2-pass = 4.8417 (ideal 5), η 0.994, ledger 2e-08, B 0.253 T
+   Eddy currents and hysteresis are not modelled. Skin depth and saturation at this drive:
+     Galfenol wire          δ = 1.32 mm, B peak / Bs = 0.17 — eddy currents NOT negligible (solid wire thicker than δ): laminate, strand or use tape
+     silicon-steel wire     δ = 0.173 mm, B peak / Bs = 0.16 — eddy currents NOT negligible (solid wire thicker than δ): laminate, strand or use tape
+     nanocrystalline tape   δ = 0.054 mm, B peak / Bs = 0.21 — eddy currents negligible
+
+6. The helical field (nanocrystalline design, design drive), one pass at its peak:
+   flux Φ 3.18e-06 Wb, B along the wire 0.253 T, pitch angle 10.81°
+   transverse part B(0) = B·cos α = 0.2488 T, turning once per 12 mm of height (κ = 524 1/m)
+   B Cyclic theorem B(1)×B(2) = i·B(0)·B(3)*:  |B(3)| = B(0) = 0.2488 T along the axis (Evans, AIAS Essay 36)
+   standard: B(1)×B(2) = i·B(0)²·k, |.| = 0.0619 T² (an axial vector, not a field); field along the axis in the wire B·sin α = 0.0475 T;
+             net axial flux through any cut of the spring = Φ (returned by the leg)
+   pickups per dΦ/dt: a turn round the whole spring 1×, the wire up the bore 10×, a wall turn round 2 passes 2×
+   The bore wire reads the circulation (transverse part, N times); a coil round the outside reads the axial part once.
+
+7. Energy ledger against core turns N (nanocrystalline; primary 100 turns round all N passes, secondary
+   100 turns round 2; 20 V peak, 1 kHz, 20 cycles, one fixed 632 Ω load). Energies over the whole run [mJ]:
+      N    ratio   dΦ/dt pk    B pk      E in    E back    net in    E load  E copper  E stored   residual       Pin      Pout      η
+      2   0.9901  0.0999 Wb/s 1.265 T    6.1787    0.0417    6.1370    6.1233    0.0136    0.0001    1.5e-07   0.307 W   0.306 W  0.998
+        ↑ B above the tape's 1.2 T saturation: outside the linear model (a real core would saturate)
+      4   0.4951  0.0500 Wb/s 0.633 T    1.5930    0.0486    1.5444    1.5422    0.0022    0.0000    6.4e-08  0.0771 W   0.077 W  0.999
+      6   0.3300  0.0333 Wb/s 0.422 T    0.7443    0.0571    0.6873    0.6864    0.0009    0.0000    4.1e-08  0.0344 W  0.0343 W  0.999
+     10   0.1980  0.0200 Wb/s 0.253 T    0.3101    0.0624    0.2477    0.2473    0.0003    0.0000    2.0e-08  0.0124 W  0.0124 W  0.999
+     16   0.1238  0.0125 Wb/s 0.158 T    0.1541    0.0572    0.0968    0.0967    0.0001    0.0000    6.9e-09 0.00484 W 0.00483 W  0.999
+     20   0.0990  0.0100 Wb/s 0.127 T    0.1140    0.0520    0.0620    0.0619    0.0001    0.0000    2.4e-09  0.0031 W 0.00309 W  0.998
+     30   0.0660  0.0067 Wb/s 0.084 T    0.0684    0.0408    0.0276    0.0275    0.0001    0.0000   -3.4e-09 0.00138 W 0.00138 W  0.998
+     40   0.0495  0.0050 Wb/s 0.063 T    0.0486    0.0331    0.0155    0.0155    0.0000    0.0000   -6.2e-09 0.000775 W 0.000774 W  0.998
+   E in is what the source delivers, E back what the reactive (magnetizing) current returns to it each cycle;
+   net in = load + copper (incl. the source's 0.5 Ω) + stored, to the residual. At a fixed drive and load, v_s = 2·v_p/N,
+   so the power delivered falls as 1/N²; the input falls with it (the core turns raise the primary's
+   inductance as N², so its magnetizing current falls too). Efficiency stays near 1: the core turns change
+   the ratio and the rate of change per pass, never the energy balance.
+
+8. As a magnetic amplifier (first-order estimate; the core here is linear, saturation not simulated).
+   A DC control winding saturates the core; the gate (load) winding blocks AC until the core saturates.
+   Ampere-turn balance: I_load·N_g·n_g = I_c·N_c·n_c, so the current gain is (N_c·n_c)/(N_g·n_g).
+   windings (nanocrystalline design, 60 Hz, 100 Ω load)   I_c sat    V gate        Ki Ki plain       Rc         Kp
+   control 100 t × 10 passes, gate 100 t × 2      6.19 mA     0.8 V      5.00     1.00   2.07 Ω   1.21e+03
+   control 100 t × 10 passes, gate 100 t × 10     6.19 mA     4.0 V      1.00     1.00   2.07 Ω       48.4
+   control 100 t × 2 passes, gate 100 t × 10     30.96 mA     4.0 V      0.20     1.00   0.39 Ω       10.4
+   control 500 t × 10 passes, gate 50 t × 2       1.24 mA     0.4 V     50.00    10.00  10.34 Ω   2.42e+04
+   The core passes multiply each winding's effective turns, so a control winding round all the passes and a
+   gate round a few gains (n_c/n_g)× more current gain than the same turns on an ordinary core. It is the
+   gain of an ordinary core wound N·n turns: the spring sets those ratios with one winding each, it adds no power.
