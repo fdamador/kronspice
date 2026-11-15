@@ -1,0 +1,7 @@
+Bewley / Kron object,Bewley equation,ECE2 counterpart,kronspice code,Status,Notes
+Torsion T = −G of a rotating (non-holonomic) frame,"Eqs. 16‑3, 16‑12","Cartan torsion, F = A⁽⁰⁾T",em/scalar/ece.go; hoffmann.go (Ω),To compare,"In Kron, torsion is frame anholonomy (Hoffmann 1949 Ω, Einstein 1928)."
+Affine connection Γ = Christoffel + torsion,Eq. 16‑16,Spin connection ω,em/scalar/ece.go,To compare,"Christoffel part: only three nonzero components, ±½ ∂L/∂θ₂ (Eq. 16‑13)."
+Cutting voltage G·i·pθ,"Table 16‑1, Eq. 16‑1",Spin terms cω₀A and ωφ in E; torsion s·cω₀L in the circuit stamp,circuit/ece.go; device/ece.go,To compare,"One of Bewley's four voltage types (resistance, transformer, cutting, moving-flux)."
+"Frame transformation C(θ), rotation matrix γ","Eqs. 15‑10, 15‑12",Tetrad q,"kron/machine.go (MovingFrame, RotorFrame, RotatingFrame); kron/polyphase.go (ParkFrame); kron/hoffmann.go (frameC)",To compare,γ gives the torque matrix G and cross-flux ψ = G·i (Eq. 15‑13).
+Curvature tensor K,"Ch. 19, Eq. 19‑44",Cartan curvature,"kron/curvature.go (Curvature), added 2026-11-14",To compare,Bewley uses it only in the frame-independent oscillation equation (Art. 19‑6).
+Frame change leaves power and torque invariant,Eq. 16‑31 = Eq. 14‑9c,"Spin connection as a source of charge, current and energy",em/scalar/spin.go; examples/AIAS,To compare,Key question: in Kron every torsion term comes from a frame change and changes no measurable power; ECE2 treats ω as a physical source.
