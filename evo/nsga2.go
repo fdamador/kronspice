@@ -285,7 +285,7 @@ func ParetoFront(pop []Individual) []Individual {
 		if ind.Rank != 0 || ind.Failure != "" || ind.Violation != 0 {
 			continue
 		}
-		key := fmt.Sprint(ind.Values, ind.Terms, ind.Genome.Parts)
+		key := fmt.Sprint(ind.Values, ind.Terms, ind.Genome.Parts, ind.Genome.Program)
 		if seen[key] {
 			continue
 		}

@@ -55,14 +55,30 @@ type TopologyConfig struct {
 	MaxParts  int              `json:"max_parts,omitempty"`
 	InitParts int              `json:"init_parts,omitempty"`
 	Parts     []PartKindConfig `json:"parts"`
+	// Encoding is "direct" (default) or "developmental" (Koza's
+	// circuit-constructing programs); the developmental encoding needs
+	// Wires, the embryo's modifiable wires as node pairs.
+	Encoding  string      `json:"encoding,omitempty"`
+	Wires     [][2]string `json:"wires,omitempty"`
+	MaxSize   int         `json:"max_size,omitempty"`
+	InitDepth int         `json:"init_depth,omitempty"`
 }
 
-// PartKindConfig is one kind of part: "R", "C" or "L", its range and series.
+// PartKindConfig is one kind of part: "R", "C", "L", "V", "I", "D", "Q" or
+// "M", its range and series (PartKind).
 type PartKindConfig struct {
 	Kind   string  `json:"kind"`
 	Min    float64 `json:"min"`
 	Max    float64 `json:"max"`
 	Series string  `json:"series,omitempty"`
+	// KappaA, KappaB: hypothetical ECE scalar terms at the part's two
+	// terminals (needs .ece in the netlist; PartKind.KappaA).
+	KappaA float64 `json:"kappa_a,omitempty"`
+	KappaB float64 `json:"kappa_b,omitempty"`
+	// Model names the embryo's .model for D, Q and M parts; Length is a
+	// MOSFET part's channel length [m].
+	Model  string  `json:"model,omitempty"`
+	Length float64 `json:"length,omitempty"`
 }
 
 // BandConfig is one band of a mask objective; an omitted bound is open.
@@ -201,13 +217,19 @@ func NewExperiment(cfg Config, netlistText string) (*Experiment, error) {
 		if len(cfg.Genes) != 0 {
 			return nil, fmt.Errorf("%w: a topology experiment has no genes", ErrBadConfig)
 		}
-		top := &Topology{Terminals: tc.Terminals, Internal: tc.Internal, MaxParts: tc.MaxParts, InitParts: tc.InitParts}
+		enc, err := ParseEncoding(tc.Encoding)
+		if err != nil {
+			return nil, err
+		}
+		top := &Topology{Terminals: tc.Terminals, Internal: tc.Internal, MaxParts: tc.MaxParts, InitParts: tc.InitParts,
+			Encoding: enc, Wires: tc.Wires, MaxSize: tc.MaxSize, InitDepth: tc.InitDepth}
 		for _, pk := range tc.Parts {
 			k := strings.ToUpper(strings.TrimSpace(pk.Kind))
 			if len(k) != 1 {
 				return nil, fmt.Errorf("%w: part kind %q", ErrBadConfig, pk.Kind)
 			}
-			top.Kinds = append(top.Kinds, PartKind{Kind: circuit.Kind(k[0]), Min: pk.Min, Max: pk.Max, Series: pk.Series})
+			top.Kinds = append(top.Kinds, PartKind{Kind: circuit.Kind(k[0]), Min: pk.Min, Max: pk.Max, Series: pk.Series,
+				KappaA: pk.KappaA, KappaB: pk.KappaB, Model: pk.Model, Length: pk.Length})
 		}
 		if err := top.Validate(tpl); err != nil {
 			return nil, err

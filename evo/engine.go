@@ -205,7 +205,7 @@ type GenStats struct {
 	Best       float64 `json:"best"`
 	Mean       float64 `json:"mean"`
 	Worst      float64 `json:"worst"`
-	Diversity  float64 `json:"diversity"` // decades (value genomes) or parts (topology genomes)
+	Diversity  float64 `json:"diversity"` // decades (value genomes), parts (direct topology) or program ops (developmental)
 	Failed     int     `json:"failed"`
 	// TimedOut counts candidates penalized for exceeding Options.Timeout;
 	// non-zero means the generation's result depends on machine speed.

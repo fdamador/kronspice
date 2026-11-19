@@ -22,6 +22,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/fdamador/kronspice/circuit"
 	"github.com/fdamador/kronspice/evo"
 )
 
@@ -96,8 +97,11 @@ func run(cfgPath, out, resume string, workers int, quiet bool) error {
 		if !quiet && len(s.History) > 0 {
 			h := s.History[len(s.History)-1]
 			unit := "dec"
-			if ex.Problem.Topology != nil {
+			if t := ex.Problem.Topology; t != nil {
 				unit = "parts"
+				if t.Encoding == evo.Developmental {
+					unit = "ops"
+				}
 			}
 			front := ""
 			if ex.Options.Algorithm == evo.NSGA2 {
@@ -113,11 +117,24 @@ func run(cfgPath, out, resume string, workers int, quiet bool) error {
 		b := st.Best
 		fmt.Printf("\nbest fitness %g after generation %d (%d evaluations)\n", b.Fitness, st.Generation, st.Evaluations)
 		if ex.Problem.Topology != nil {
+			for i, p := range b.Genome.Program {
+				fmt.Printf("  program %d: %s\n", i+1, evo.FormatProgram(p))
+			}
 			if c, _, err := ex.Problem.Circuit(b.Genome); err == nil {
 				n := len(ex.Problem.Template.Elements)
 				fmt.Printf("  %d evolved parts:\n", len(c.Elements)-n)
 				for _, e := range c.Elements[n:] {
-					fmt.Printf("  %-8s %-6s %-6s %g\n", e.Name, c.NodeNames[e.Nodes[0]], c.NodeNames[e.Nodes[1]], e.Value)
+					v := e.Value
+					if e.Kind == circuit.BJT || e.Kind == circuit.Diode {
+						v = e.Area
+					} else if e.Kind == circuit.MOSFET {
+						v = e.Params["w"]
+					}
+					third := ""
+					if len(e.Extra) > 0 {
+						third = c.NodeNames[e.Extra[0]] // base or gate
+					}
+					fmt.Printf("  %-8s %-6s %-6s %-6s %g\n", e.Name, c.NodeNames[e.Nodes[0]], c.NodeNames[e.Nodes[1]], third, v)
 				}
 			}
 		} else {

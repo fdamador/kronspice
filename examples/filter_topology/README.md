@@ -11,8 +11,10 @@ The value-genome examples it builds on are [rc_lowpass_values](../rc_lowpass_val
 and [amplifier_gain](../amplifier_gain).
 
 ```
-go run ./cmd/evolve -config examples/filter_topology/config.json   # ≈ 40 s
-go test ./evo -run 'TestFilterTopologyExample|TestTopologyResume'   # the M8 acceptance tests
+go run ./cmd/evolve -config examples/filter_topology/config.json                 # direct, ≈ 40 s
+go run ./cmd/evolve -config examples/filter_topology/config_developmental.json   # Koza's developmental, ≈ 12 s
+go test ./evo -run 'TestFilterTopologyExample|TestTopologyResume'               # the M8 acceptance tests
+go test ./evo -run 'TestFilterDevelopmentalExample|TestDevelop'                 # the developmental ones
 ```
 
 ## The construction
@@ -26,8 +28,8 @@ path to tear.
 **Genome** (`evo/encode_topology.go`). A variable-length list of parts,
 each with a kind, two nodes and a log₁₀ value, grown into a copy of the
 embryo as `L_g1`, `C_g2`, … The embryo is never modified. This is a direct
-netlist encoding, not Koza's developmental program (doc/M8.md says why the
-direct one was enough). At decode, self-loops and parts with an end on an
+netlist encoding; Koza's developmental program is the second run below
+("Koza's developmental encoding"). At decode, self-loops and parts with an end on an
 internal node nothing else touches are pruned, repeatedly: they carry no
 current, so every node voltage is unchanged, and without the pruning,
 debris from mutation would turn into floating-node penalties. What remains
@@ -115,8 +117,56 @@ four), reached here from an empty fixture with standard values.
 - **Deterministic and resumable.** Operators draw from the per-generation
   PCG stream; a topology run checkpointed at generation 2 and resumed
   equals the uninterrupted run (`TestTopologyResume`).
-- **Not done here** (doc/M8.md): Koza's developmental encoding,
-  transistors and sources as evolvable parts, multi-part local search.
+- **Not done here** (doc/M8.md): transistors and sources as evolvable
+  parts, multi-part local search.
+
+## Koza's developmental encoding
+
+`config_developmental.json` evolves the same filter against the same mask
+with Koza's encoding (`evo/encode_develop.go`; doc/M8.md). The genome is a
+program, not a netlist: the embryo gets one modifiable wire from `in` to
+`out`, and a program tree rewrites it through a writing head. R, L and C
+turn the component at the head into a part (an arithmetic subtree of +, −
+and constants sets its value, in decades from the middle of the kind's
+range); SERIES, PARALLEL and VIA (a tap to ground or a terminal) divide it
+into new components, each with its own head; END stops a head and
+SAFE_CUT removes its component. Heads run breadth-first. A wire still in
+place at the end joins its nodes (a 0 V source `V_w1` if it joins two
+embryo nodes). Crossover swaps subtrees of the same type; mutation
+replaces a subtree or moves a constant. FLIP reverses a component; it
+matters only for parts with per-terminal ECE terms (`kappa_a ≠ kappa_b`
+in a part kind, hypothetical, H48) and is drawn only then, so this
+Maxwell run never uses it (doc/M8.md).
+
+The evolved program is printed with the result; seed 1's starts
+`(PARALLEL (PARALLEL SAFE_CUT (L 0.804 (SERIES END (VIA0 …`. Most of its
+ops build nothing that survives (introns, as Koza reports); the circuit
+they grow, after pruning:
+
+```
+L_g1 in   g_n1 62m
+C_g5 g_n1 in   39n      across L_g1: notch at 3.24 kHz
+L_g3 g_n1 out  120m
+C_g4 g_n1 0    160n
+C_g2 0    out  270n
+```
+
+| Seed | Parts | Form |
+|---|---|---|
+| 1 | 5 | L–C–L–C ladder with a C across the first L (trap) |
+| 2 | 5 | C–L–C–L ladder, the first series L split in two |
+| 3 | 4 | L–C–L–C ladder (fourth-order all-pole) |
+| 4 | 4 | C–L–C–L ladder |
+| 5 | 4 | shunt C, series L, series-LC trap to ground at the output (third-order elliptic) |
+| 6 | 6 | L–C–L–C ladder, both series L split in two |
+| 7 | 4 | C–L–C–L ladder |
+| 8 | 4 | series-LC trap to ground at the input, series L, shunt C (third-order elliptic) |
+
+All eight meet the mask. Where the direct encoding nearly always finds
+the four-part third-order elliptic, this one more often finds a four-part
+fourth-order all-pole ladder, the other minimal answer: SERIES and VIA
+build ladders naturally, while a trap needs a PARALLEL whose copy becomes
+the other kind.
 
 ## Files
 
@@ -124,14 +174,18 @@ four), reached here from an empty fixture with standard values.
 |---|---|
 | `embryo.cir` | the fixture: source, source resistance, load, sweep |
 | `config.json` | the topology genome settings, mask and parsimony objectives, GA settings |
+| `config_developmental.json` | the same experiment with Koza's developmental encoding |
 | `export/` | the bare embryo as `.cir`, `.kicad_sch` and a results sheet |
 | `../../evo/encode_topology.go` | the genome, decode and pruning, operators |
-| `../../evo/topology_test.go` | `TestFilterTopologyExample`, `TestTopologyResume` |
+| `../../evo/encode_develop.go` | the developmental encoding: program trees, development, operators |
+| `../../evo/topology_test.go` | `TestFilterTopologyExample`, `TestFilterDevelopmentalExample`, `TestTopologyResume` |
+| `../../evo/develop_test.go` | known programs → known circuits, operator invariants, repair, resume |
 | `../../doc/M8.md` | milestone notes and the seed table |
 
 ## Sources
 
 - J. R. Koza, F. H. Bennett III, D. Andre, M. A. Keane, *Genetic
   Programming III: Darwinian Invention and Problem Solving*, Morgan
-  Kaufmann (1999), ch. 25 — the embryo fixture, the filter mask scoring and
-  the evolved low-pass filters this example repeats with a direct encoding.
+  Kaufmann (1999), ch. 25 — the embryo fixture, the filter mask scoring,
+  the circuit-constructing functions, and the evolved low-pass filters this
+  example repeats with a direct and a developmental encoding.

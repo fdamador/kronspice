@@ -181,12 +181,32 @@ type Genome struct {
 	Sign []int8    `json:"sign"`
 	// Parts is the topology genome (Problem.Topology); empty for value genomes.
 	Parts []Part `json:"parts,omitempty"`
+	// Program is the developmental topology genome: one circuit-constructing
+	// program per embryo wire, in prefix order (encode_develop.go).
+	Program [][]Op `json:"program,omitempty"`
 }
 
 // Clone returns an independent copy.
 func (g Genome) Clone() Genome {
-	return Genome{X: append([]float64(nil), g.X...), Sign: append([]int8(nil), g.Sign...),
+	c := Genome{X: append([]float64(nil), g.X...), Sign: append([]int8(nil), g.Sign...),
 		Parts: append([]Part(nil), g.Parts...)}
+	if g.Program != nil {
+		c.Program = make([][]Op, len(g.Program))
+		for i, p := range g.Program {
+			c.Program[i] = append([]Op(nil), p...)
+		}
+	}
+	return c
+}
+
+// size is the genome's structural size: parts (direct topology genome)
+// or program ops (developmental).
+func (g Genome) size() int {
+	n := len(g.Parts)
+	for _, p := range g.Program {
+		n += len(p)
+	}
+	return n
 }
 
 // Space is the set of genes of one experiment.
