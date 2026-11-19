@@ -16,6 +16,7 @@ import (
 
 	"github.com/fdamador/kronspice/analysis"
 	"github.com/fdamador/kronspice/circuit"
+	"github.com/fdamador/kronspice/kron"
 	"github.com/fdamador/kronspice/netlist"
 )
 
@@ -154,6 +155,37 @@ type GAConfig struct {
 	Algorithm string `json:"algorithm,omitempty"`
 	// LocalSearch adds the multi-part local search (evo.LocalSearch).
 	LocalSearch *LocalSearchConfig `json:"local_search,omitempty"`
+	// MapElites gives the grid of algorithm "map_elites".
+	MapElites *MapElitesConfig `json:"map_elites,omitempty"`
+	// Precheck runs kron.Precheck on every candidate before simulation
+	// (Problem.Precheck): loops of ideal voltage outputs — and with dc,
+	// loops closed by inductors too — are penalized as singular without
+	// building a matrix. It never rejects a circuit the simulator could
+	// solve, so results are unchanged; only time is saved.
+	Precheck *PrecheckConfig `json:"precheck,omitempty"`
+}
+
+// PrecheckConfig maps onto kron.PrecheckOptions.
+type PrecheckConfig struct {
+	DC bool `json:"dc,omitempty"`
+}
+
+// MapElitesConfig is the MAP-Elites grid: one entry per dimension.
+type MapElitesConfig struct {
+	Descriptors []DescriptorConfig `json:"descriptors"`
+}
+
+// DescriptorConfig is one grid dimension. Kind is "parts" (evolved parts
+// or genes), "genome_size" (parts or program ops), "count" (elements of
+// kind Part added to the template, e.g. "Q") or "objective" (the error of
+// objective number Index, 0-based, in config order).
+type DescriptorConfig struct {
+	Kind  string  `json:"kind"`
+	Part  string  `json:"part,omitempty"`
+	Index int     `json:"index,omitempty"`
+	Min   float64 `json:"min"`
+	Max   float64 `json:"max"`
+	Bins  int     `json:"bins"`
 }
 
 // LocalSearchConfig maps onto LocalSearch; zero fields take its defaults.
@@ -417,6 +449,36 @@ func NewExperiment(cfg Config, netlistText string) (*Experiment, error) {
 		Tournament: g.Tournament, Crossover: g.Crossover, Mutation: g.Mutation, Sigma: g.Sigma,
 		SignFlip: g.SignFlip, Seed: g.Seed, Workers: g.Workers,
 		Timeout: time.Duration(g.TimeoutMS) * time.Millisecond}
+	if pc := g.Precheck; pc != nil {
+		ex.Problem.Precheck = &kron.PrecheckOptions{DC: pc.DC}
+	}
+	if m := g.MapElites; m != nil {
+		me := &MapElites{}
+		for _, dc := range m.Descriptors {
+			var d Descriptor
+			switch dc.Kind {
+			case "parts":
+				d = DescParts(dc.Min, dc.Max, dc.Bins)
+			case "genome_size":
+				d = DescGenomeSize(dc.Min, dc.Max, dc.Bins)
+			case "count":
+				k := strings.ToUpper(strings.TrimSpace(dc.Part))
+				if len(k) != 1 {
+					return nil, fmt.Errorf("%w: count descriptor part %q", ErrBadConfig, dc.Part)
+				}
+				d = DescCount(circuit.Kind(k[0]), dc.Min, dc.Max, dc.Bins)
+			case "objective":
+				if dc.Index < 0 || dc.Index >= len(ex.Problem.Objectives) {
+					return nil, fmt.Errorf("%w: objective descriptor index %d", ErrBadConfig, dc.Index)
+				}
+				d = DescTerm(ex.Problem.Objectives[dc.Index].Name, dc.Index, dc.Min, dc.Max, dc.Bins)
+			default:
+				return nil, fmt.Errorf("%w: descriptor kind %q (parts, genome_size, count or objective)", ErrBadConfig, dc.Kind)
+			}
+			me.Descriptors = append(me.Descriptors, d)
+		}
+		ex.Options.MapElites = me
+	}
 	if l := g.LocalSearch; l != nil {
 		ex.Options.LocalSearch = &LocalSearch{Size: l.Size, Every: l.Every, MaxEvals: l.MaxEvals, Step: l.Step}
 	}

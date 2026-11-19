@@ -28,11 +28,17 @@ const (
 	// constraint violators compare by their total weighted violation, and
 	// rank ahead of failed candidates, which compare by their penalty.
 	NSGA2
+	// MAPElites keeps the best candidate in every cell of a grid of
+	// behaviour descriptors (Options.MapElites; mapelites.go).
+	MAPElites
 )
 
 func (a Algorithm) String() string {
-	if a == NSGA2 {
+	switch a {
+	case NSGA2:
 		return "nsga2"
+	case MAPElites:
+		return "map_elites"
 	}
 	return "weighted"
 }
@@ -44,8 +50,10 @@ func ParseAlgorithm(s string) (Algorithm, error) {
 		return WeightedSum, nil
 	case "nsga2", "nsga-ii", "nsgaii":
 		return NSGA2, nil
+	case "map_elites", "map-elites", "mapelites":
+		return MAPElites, nil
 	}
-	return 0, fmt.Errorf("%w: algorithm %q (want weighted or nsga2)", ErrBadOptions, s)
+	return 0, fmt.Errorf("%w: algorithm %q (want weighted, nsga2 or map_elites)", ErrBadOptions, s)
 }
 
 // boundaryCrowding stands for an infinite crowding distance (the extreme

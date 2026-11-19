@@ -107,6 +107,9 @@ func run(cfgPath, out, resume string, workers int, quiet bool) error {
 			if ex.Options.Algorithm == evo.NSGA2 {
 				front = fmt.Sprintf("  front %d", h.FrontSize)
 			}
+			if ex.Options.Algorithm == evo.MAPElites {
+				front = fmt.Sprintf("  cells %d", h.Cells)
+			}
 			fmt.Printf("gen %4d  best %-12.6g mean %-12.6g failed %3d  diversity %.3g %s%s\n",
 				h.Generation, h.Best, h.Mean, h.Failed, h.Diversity, unit, front)
 		}
