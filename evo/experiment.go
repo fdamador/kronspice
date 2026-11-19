@@ -63,6 +63,10 @@ type TopologyConfig struct {
 	Wires     [][2]string `json:"wires,omitempty"`
 	MaxSize   int         `json:"max_size,omitempty"`
 	InitDepth int         `json:"init_depth,omitempty"`
+	// Library lists the primitive branches of the "kron" (connection)
+	// encoding, one part kind per slot, e.g. ["R","R","C","Q"]; empty:
+	// max_parts slots dealt round-robin over the part kinds.
+	Library []string `json:"library,omitempty"`
 }
 
 // PartKindConfig is one kind of part: "R", "C", "L", "V", "I", "D", "Q" or
@@ -176,7 +180,8 @@ type MapElitesConfig struct {
 }
 
 // DescriptorConfig is one grid dimension. Kind is "parts" (evolved parts
-// or genes), "genome_size" (parts or program ops), "count" (elements of
+// or genes), "genome_size" (parts or program ops), "meshes" (independent
+// loops, Kron's m = b − N + S), "count" (elements of
 // kind Part added to the template, e.g. "Q") or "objective" (the error of
 // objective number Index, 0-based, in config order).
 type DescriptorConfig struct {
@@ -278,6 +283,13 @@ func NewExperiment(cfg Config, netlistText string) (*Experiment, error) {
 			}
 			top.Kinds = append(top.Kinds, PartKind{Kind: circuit.Kind(k[0]), Min: pk.Min, Max: pk.Max, Series: pk.Series,
 				KappaA: pk.KappaA, KappaB: pk.KappaB, Model: pk.Model, Length: pk.Length})
+		}
+		for _, s := range tc.Library {
+			k := strings.ToUpper(strings.TrimSpace(s))
+			if len(k) != 1 {
+				return nil, fmt.Errorf("%w: library slot %q", ErrBadConfig, s)
+			}
+			top.Library = append(top.Library, circuit.Kind(k[0]))
 		}
 		if err := top.Validate(tpl); err != nil {
 			return nil, err
@@ -461,6 +473,8 @@ func NewExperiment(cfg Config, netlistText string) (*Experiment, error) {
 				d = DescParts(dc.Min, dc.Max, dc.Bins)
 			case "genome_size":
 				d = DescGenomeSize(dc.Min, dc.Max, dc.Bins)
+			case "meshes":
+				d = DescMeshes(dc.Min, dc.Max, dc.Bins)
 			case "count":
 				k := strings.ToUpper(strings.TrimSpace(dc.Part))
 				if len(k) != 1 {
@@ -473,7 +487,7 @@ func NewExperiment(cfg Config, netlistText string) (*Experiment, error) {
 				}
 				d = DescTerm(ex.Problem.Objectives[dc.Index].Name, dc.Index, dc.Min, dc.Max, dc.Bins)
 			default:
-				return nil, fmt.Errorf("%w: descriptor kind %q (parts, genome_size, count or objective)", ErrBadConfig, dc.Kind)
+				return nil, fmt.Errorf("%w: descriptor kind %q (parts, genome_size, meshes, count or objective)", ErrBadConfig, dc.Kind)
 			}
 			me.Descriptors = append(me.Descriptors, d)
 		}

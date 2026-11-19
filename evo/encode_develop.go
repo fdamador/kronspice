@@ -73,24 +73,32 @@ const (
 	Direct Encoding = iota
 	// Developmental: the genome is a circuit-constructing program.
 	Developmental
+	// Connection: the genome is Kron's interconnection of a fixed library
+	// of primitive branches (encode_kron.go).
+	Connection
 )
 
 func (e Encoding) String() string {
-	if e == Developmental {
+	switch e {
+	case Developmental:
 		return "developmental"
+	case Connection:
+		return "kron"
 	}
 	return "direct"
 }
 
-// ParseEncoding reads "direct" (or "") and "developmental".
+// ParseEncoding reads "direct" (or ""), "developmental" and "kron".
 func ParseEncoding(s string) (Encoding, error) {
 	switch strings.ToLower(strings.TrimSpace(s)) {
 	case "", "direct", "netlist":
 		return Direct, nil
 	case "developmental", "develop", "koza":
 		return Developmental, nil
+	case "kron", "connection", "tensor":
+		return Connection, nil
 	}
-	return 0, fmt.Errorf("%w: encoding %q (direct or developmental)", ErrBadTopology, s)
+	return 0, fmt.Errorf("%w: encoding %q (direct, developmental or kron)", ErrBadTopology, s)
 }
 
 // Op is one function or terminal of a developmental program, stored in
@@ -213,7 +221,7 @@ func FormatProgram(prog []Op) string {
 
 // validateDev checks the developmental fields against the embryo.
 func (t *Topology) validateDev(embryo *circuit.Circuit) error {
-	if t.Encoding > Developmental {
+	if t.Encoding > Connection {
 		return fmt.Errorf("%w: encoding %d", ErrBadTopology, t.Encoding)
 	}
 	if t.Encoding != Developmental {

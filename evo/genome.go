@@ -202,7 +202,12 @@ func (g Genome) Clone() Genome {
 // size is the genome's structural size: parts (direct topology genome)
 // or program ops (developmental).
 func (g Genome) size() int {
-	n := len(g.Parts)
+	n := 0
+	for _, p := range g.Parts {
+		if !p.Off {
+			n++
+		}
+	}
 	for _, p := range g.Program {
 		n += len(p)
 	}

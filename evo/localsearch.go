@@ -137,7 +137,7 @@ func (p Problem) lsGenes(g Genome, step float64) (int, func(g *Genome, i, dir in
 		return len(g.Parts), func(g *Genome, i, dir int) bool {
 			pt := &g.Parts[i]
 			pk, ok := t.kind(pt.Kind)
-			if !ok {
+			if !ok || pt.Off {
 				return false
 			}
 			x, moved := gridStep(pt.X, pk.Min, pk.Max, pk.Series, false, step, dir)

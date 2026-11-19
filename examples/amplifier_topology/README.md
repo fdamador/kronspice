@@ -5,12 +5,15 @@ Topology evolution with active parts (CLAUDE.md §4; doc/M8.md). The embryo
 `in`, a 10 kΩ load on `out` and the 2N3904 model of
 [amplifier_gain](../amplifier_gain); nothing connects them. Evolution
 chooses resistors, capacitors and transistors, how they are wired and their
-values, for 20 dB of gain at 1 kHz. Two runs grow it two ways:
+values, for 20 dB of gain at 1 kHz. Runs 1–3 grow it three ways; run 4
+allows the hypothetical ECE2 parts:
 
 ```
 go run ./cmd/evolve -config examples/amplifier_topology/config.json             # direct, weighted sum, ≈ 50 s
 go run ./cmd/evolve -config examples/amplifier_topology/config_map_elites.json  # Koza's developmental + MAP-Elites, ≈ 65 s
-go test ./evo -run TestAmplifierTopology                                         # both, re-simulated from best.cir
+go run ./cmd/evolve -config examples/amplifier_topology/config_kron.json        # Kron connection tensor + MAP-Elites, ≈ 3 min
+go run ./cmd/evolve -config examples/amplifier_topology/config_ece2.json        # ECE2 parts allowed (H48), ≈ 100 s
+go test ./evo -run TestAmplifierTopology                                         # all four, re-simulated from best.cir
 ```
 
 ## Why the first attempts failed
@@ -87,7 +90,52 @@ resistor — the kind of compact solution Koza reports. Seed 3 reaches
 | developmental, + bias, MAP-Elites | 1.041, 0.0019, 0.150 | —, 4, 12 |
 | direct, + bias, MAP-Elites | 0.0016, 0.0008, 1.041 | 4, 4, — |
 
+| Kron tensor, + bias | 0.326, 0.842, 0.086 | — |
+| Kron tensor, + bias, MAP-Elites with meshes | 0.0017, 0.00002, 1.041 | 4, 4, — |
+
 (gain error = |gain − 20 dB|/20; 1.04 is a passive circuit.)
+
+## Run 3: Kron's connection tensor with MAP-Elites (`config_kron.json`)
+
+The parts are a fixed library: six R, three C and two Q slots. The genome
+is Kron's interconnection of that primitive network (`evo/encode_kron.go`):
+which junction each terminal joins, or none (the slot stays in the genome
+but out of the circuit). Mutations are Kron's transformations: rewire one
+terminal, open or close a slot, join two junctions, tear one in two.
+Crossover takes each slot whole from one parent. With the weighted sum it
+gets close but solves no seed. With MAP-Elites over transistor count, gain
+error, bias error and the circuit's number of independent loops (meshes,
+m = b − N + S) it solves seeds 1 and 2 with four parts. Seed 2:
+
+```
+Q_g4  collector out, emitter 0, base in
+R_g1  vcc out 330  ┐  collector load, 330 Ω ∥ 130 Ω
+R_g3  vcc out 130  ┘
+R_g2  vcc in  11k     base bias
+```
+
+20.000 dB: a common-emitter stage with resistor bias, the source's 1 kΩ
+and the 11 kΩ setting the base current.
+
+## Run 4: ECE2 parts allowed (`config_ece2.json`)
+
+The embryo (`embryo_ece2.cir`) declares `.ece form=ece2`, and an L kind
+carries the hypothetical scalar term κ_a = 0.75 (register entry H48) beside
+plain R, C and the 2N3904; the objectives are gain and parts only. All
+three seeds grow the same two parts:
+
+```
+L_g1  out  g_n  1 µH   ECE2, κ_a 0.75 at the out end
+R_g2  g_n  in   3k
+```
+
+20.000 dB with no transistor and the rail unused. The 7.5 mW the gain
+needs is booked as model-supplied by the scalar term. With κ = 0 (Maxwell)
+the same two parts are a divider at −2.92 dB (`TestAmplifierTopologyECE2`).
+With s = −2 a κ above ½ inverts that terminal's potential, so the coil
+works as an ideal amplifier needing no supply, and evolution takes it
+before any transistor. If a run's fitness must not rest on the hypothesis,
+add a `model_supplied` limit objective.
 
 ## Files
 
@@ -96,6 +144,8 @@ resistor — the kind of compact solution Koza reports. Seed 3 reaches
 | `embryo.cir` | rail, source, load, 2N3904 model, sweep |
 | `config.json` | direct encoding, weighted sum with the bias term |
 | `config_map_elites.json` | developmental encoding, MAP-Elites grid |
+| `config_kron.json` | Kron connection-tensor encoding, MAP-Elites with a meshes axis |
+| `embryo_ece2.cir`, `config_ece2.json` | the embryo with `.ece form=ece2`, ECE2 coils allowed |
 | `export/` | the bare embryo as `.cir`, `.kicad_sch` and a results sheet |
 | `../../evo/fitness.go` | `ActiveBias` |
 | `../../evo/mapelites.go` | MAP-Elites archive and descriptors |

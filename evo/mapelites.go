@@ -56,6 +56,55 @@ func DescGenomeSize(min, max float64, bins int) Descriptor {
 		Of: func(_ Problem, ind Individual) (float64, bool) { return float64(ind.Genome.size()), true }}
 }
 
+// DescMeshes is the number of independent closed paths (meshes) of the
+// whole circuit, m = b − N + S (Kron 1939 p. 75, eqs. 3.1–3.2): the first
+// Betti number of its graph. A transistor counts as two branches (from
+// the base or gate to the emitter or source, and the main path), a
+// MOSFET's bulk tie as none. With MAP-Elites it spreads the archive over
+// topologies of increasing loop structure.
+func DescMeshes(min, max float64, bins int) Descriptor {
+	return Descriptor{Name: "meshes", Min: min, Max: max, Bins: bins,
+		Of: func(p Problem, ind Individual) (float64, bool) {
+			c, _, err := p.Circuit(ind.Genome)
+			if err != nil {
+				return 0, false
+			}
+			return float64(Meshes(c)), true
+		}}
+}
+
+// Meshes returns m = b − N + S for c's graph.
+func Meshes(c *circuit.Circuit) int {
+	parent := make([]int, len(c.NodeNames))
+	for i := range parent {
+		parent[i] = i
+	}
+	var find func(int) int
+	find = func(x int) int {
+		for parent[x] != x {
+			parent[x] = parent[parent[x]]
+			x = parent[x]
+		}
+		return x
+	}
+	b, merges := 0, 0
+	branch := func(a, z int) {
+		b++
+		if ra, rz := find(a), find(z); ra != rz {
+			parent[ra] = rz
+			merges++
+		}
+	}
+	for _, e := range c.Elements {
+		branch(e.Nodes[0], e.Nodes[1])
+		if len(e.Extra) > 0 && (e.Kind == circuit.BJT || e.Kind == circuit.MOSFET) {
+			branch(e.Extra[0], e.Nodes[1])
+		}
+	}
+	// N − S is the number of merges, the edges of a spanning forest.
+	return b - merges
+}
+
 // DescCount is the number of elements of kind k the candidate adds to its
 // template (for example transistors).
 func DescCount(k circuit.Kind, min, max float64, bins int) Descriptor {

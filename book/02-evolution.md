@@ -240,6 +240,26 @@ itself but the first of its kind survives to be built on. It grew four
 parts: a common-emitter stage into an emitter follower, gain set by a
 single feedback resistor.
 
+A third genome is Kron's own. He obtained a circuit from its primitive
+network, every branch alone and unconnected, by a change of reference
+frame that joins their terminals; the connection tensor that does it can
+itself be the genome. The library of parts is fixed (four coils, four
+capacitors, two resistors, say), and evolution chooses only how their
+terminals meet, a part being allowed to stand open, kept but unconnected.
+Its mutations are Kron's transformations: join two junctions, tear one in
+two, open or close a branch. Because every genome holds the same parts in
+the same places, two parents can be crossed part by part, which a list of
+unrelated parts does not allow. It grows the filter on all eight seeds
+and, given MAP-Elites with the circuit's number of independent loops as
+one of its axes, the amplifier on two of three.
+
+Allowed the hypothetical ECE2 coil of chapter 10, evolution grows a
+different amplifier at once: one coil and one resistor, no transistor and
+no use of the supply rail, every watt of its gain booked as model-supplied
+by the scalar term. It is the clearest picture yet of what that term would
+be if it were physical, an amplifier needing no power source, and the
+reason the ledger keeps its column apart.
+
 ## 2.5 More than one objective
 
 The third example asks for three things that pull against each other:

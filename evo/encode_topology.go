@@ -115,6 +115,10 @@ type Topology struct {
 	// InitDepth is the largest depth of the initial random programs
 	// (Developmental; default 6).
 	InitDepth int
+	// Library is the primitive network of the kron (connection) encoding:
+	// one slot per branch, each of a listed kind (encode_kron.go). Empty:
+	// MaxParts slots dealt round-robin over Kinds.
+	Library []circuit.Kind
 }
 
 // Part is one gene of a topology genome.
@@ -125,6 +129,9 @@ type Part struct {
 	X    float64 `json:"x"` // log10 of the magnitude
 	// C is the third node of a transistor (base or gate); 0 otherwise.
 	C int `json:"c,omitempty"`
+	// Off marks an open slot of the kron (connection) encoding: its
+	// junction pair is inactive and the part is left out of the circuit.
+	Off bool `json:"off,omitempty"`
 }
 
 // terminals lists the nodes a part touches.
@@ -237,7 +244,7 @@ func (t *Topology) Validate(embryo *circuit.Circuit) error {
 			return fmt.Errorf("%w: %v kappa_a, kappa_b need a .ece declaration (form ece or ece2) in the embryo", ErrBadTopology, pk.Kind)
 		}
 	}
-	return nil
+	return t.validateKron()
 }
 
 // value returns a part's decoded magnitude.
@@ -258,7 +265,7 @@ func (t *Topology) prune(parts []Part) []Part {
 	for i, p := range parts {
 		// A two-terminal part on one node is a self-loop; a transistor is
 		// one only with all three terminals on the same node.
-		keep[i] = p.A != p.B || (threeTerminal(p.Kind) && p.C != p.A)
+		keep[i] = !p.Off && (p.A != p.B || (threeTerminal(p.Kind) && p.C != p.A))
 	}
 	deg := make([]int, t.nodes())
 	for changed := true; changed; {
@@ -426,6 +433,9 @@ func (t *Topology) randomGenome(r *rand.Rand) Genome {
 	if t.Encoding == Developmental {
 		return t.devRandomGenome(r)
 	}
+	if t.Encoding == Connection {
+		return t.kronRandomGenome(r)
+	}
 	n := 1 + r.IntN(t.InitParts)
 	var parts []Part
 	for i := 0; i < n; i++ {
@@ -439,6 +449,9 @@ func (t *Topology) randomGenome(r *rand.Rand) Genome {
 func (t *Topology) crossover(r *rand.Rand, a, b Genome) (Genome, Genome) {
 	if t.Encoding == Developmental {
 		return t.devCrossover(r, a, b)
+	}
+	if t.Encoding == Connection {
+		return t.kronCrossover(r, a, b)
 	}
 	i, j := r.IntN(len(a.Parts)+1), r.IntN(len(b.Parts)+1)
 	c1 := append(append([]Part(nil), a.Parts[:i]...), b.Parts[j:]...)
@@ -471,6 +484,10 @@ var opWeight = [numOps]float64{opValue: 0.35, opAdd: 0.15, opDelete: 0.12, opRew
 func (t *Topology) mutate(r *rand.Rand, g *Genome, sigma float64) {
 	if t.Encoding == Developmental {
 		t.devMutate(r, g, sigma)
+		return
+	}
+	if t.Encoding == Connection {
+		t.kronMutate(r, g, sigma)
 		return
 	}
 	pol := t.polarized()
@@ -571,9 +588,15 @@ func (t *Topology) repair(g *Genome) {
 		t.devRepair(g)
 		return
 	}
+	if t.Encoding == Connection {
+		t.kronRepair(g)
+	}
 	nn := t.nodes()
 	for i := range g.Parts {
 		p := &g.Parts[i]
+		if t.Encoding != Connection {
+			p.Off = false
+		}
 		pk, ok := t.kind(p.Kind)
 		if !ok {
 			pk = t.Kinds[0]
@@ -591,7 +614,9 @@ func (t *Topology) repair(g *Genome) {
 			p.C = 0
 		}
 	}
-	if len(g.Parts) > t.MaxParts {
+	if t.Encoding == Connection {
+		t.kronCanonical(g)
+	} else if len(g.Parts) > t.MaxParts {
 		g.Parts = g.Parts[:t.MaxParts]
 	}
 }

@@ -257,6 +257,16 @@ func TestFilterDevelopmentalExample(t *testing.T) {
 	checkFilterExample(t, "config_developmental.json")
 }
 
+// The same with the Kron connection-tensor encoding: a fixed library of
+// four L, four C and two R slots, the genome their interconnection
+// (examples/filter_topology/config_kron.json).
+func TestFilterKronExample(t *testing.T) {
+	if testing.Short() {
+		t.Skip("about 30 s: the full 200-generation run")
+	}
+	checkFilterExample(t, "config_kron.json")
+}
+
 // checkFilterExample runs a filter_topology config as cmd/evolve does and
 // checks the written best netlist against the mask.
 func checkFilterExample(t *testing.T, config string) {

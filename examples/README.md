@@ -23,7 +23,7 @@ the rest through `go run ./examples/<name>`, and all have
 | [negative_resistance_gain](negative_resistance_gain) | A resistive divider asked for gain: evolution with signed values finds negative resistance; its power is booked as model-supplied, never as inflow. | §3c, §4 | config |
 | [amplifier_gain](amplifier_gain) | 2N3904 common-emitter stage; eight standard values evolved for 30 dB gain, 100 Hz to 200 kHz, bias targets (M7). | §4, M7 | config |
 | [filter_topology](filter_topology) | Low-pass filter grown from an empty embryo by the topology genome; mask objective and parsimony (M8). | §4, M8 | config |
-| [amplifier_topology](amplifier_topology) | 20 dB amplifier grown from a rail, a source and a load with R, C and 2N3904 parts; active-bias objective; direct encoding, and Koza's developmental encoding with MAP-Elites. | §4, M8 | config |
+| [amplifier_topology](amplifier_topology) | 20 dB amplifier grown from a rail, a source and a load with R, C and 2N3904 parts; active-bias objective; direct encoding, Koza's developmental encoding with MAP-Elites, and Kron's connection-tensor encoding; with ECE2 parts allowed (H48) a two-part amplifier powered by model-supplied power. | §4, M8 | config |
 | [mos_amplifier_pareto](mos_amplifier_pareto) | NMOS common-source amplifier; NSGA-II gain / bandwidth / power front (M9). | §4, M9 | config |
 | [torn_ga](torn_ga) | The same GA run by MNA, untorn Kron and Kron diakoptics torn at one resistor with cached pieces; same best design, timings (M9b). | §3a, M9b | run |
 | [power_filter](power_filter) | Harmonic filters for a six-pulse rectifier, scored by geometric-algebra power (IEEE 1459 twin); PF 0.903 to 0.957 (M9f). | §3b, M9f | run |

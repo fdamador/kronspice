@@ -168,6 +168,17 @@ fourth-order all-pole ladder, the other minimal answer: SERIES and VIA
 build ladders naturally, while a trap needs a PARALLEL whose copy becomes
 the other kind.
 
+## Kron's connection tensor as the genome
+
+`config_kron.json` (`go run ./cmd/evolve -config examples/filter_topology/config_kron.json`):
+the parts are a fixed library (four L, four C, two R slots) and the
+genome is how their terminals are joined, Kron's interconnection of a
+primitive network (`evo/encode_kron.go`). A slot can be open, out of the
+circuit but kept in the genome; mutations rewire one terminal, open or
+close a slot, join two junctions or tear one in two; crossover takes each
+slot whole from one parent. Seeds 1–8 all meet the mask with four parts,
+π and T ladders of two L and two C (fitness 0.008 each).
+
 ## Files
 
 | File | What it holds |
@@ -175,10 +186,12 @@ the other kind.
 | `embryo.cir` | the fixture: source, source resistance, load, sweep |
 | `config.json` | the topology genome settings, mask and parsimony objectives, GA settings |
 | `config_developmental.json` | the same experiment with Koza's developmental encoding |
+| `config_kron.json` | the same experiment with Kron's connection-tensor encoding |
 | `export/` | the bare embryo as `.cir`, `.kicad_sch` and a results sheet |
 | `../../evo/encode_topology.go` | the genome, decode and pruning, operators |
 | `../../evo/encode_develop.go` | the developmental encoding: program trees, development, operators |
-| `../../evo/topology_test.go` | `TestFilterTopologyExample`, `TestFilterDevelopmentalExample`, `TestTopologyResume` |
+| `../../evo/encode_kron.go` | the connection-tensor encoding: library slots, frame-transformation operators |
+| `../../evo/topology_test.go` | `TestFilterTopologyExample`, `TestFilterDevelopmentalExample`, `TestFilterKronExample`, `TestTopologyResume` |
 | `../../evo/develop_test.go` | known programs → known circuits, operator invariants, repair, resume |
 | `../../doc/M8.md` | milestone notes and the seed table |
 
