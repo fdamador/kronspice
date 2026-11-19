@@ -95,6 +95,7 @@ type BandConfig struct {
 //	cutoff      node, ref, target_hz, edge ("high" default, or "low")   needs .ac
 //	gain_at     node, ref, freq_hz, target_db                          needs .ac
 //	op_voltage  node, target                                           needs nothing
+//	active_bias v_min, i_min, i_max (a transistor in its active region) needs nothing
 //	tran_mean   node, from, to, target                                 needs .tran
 //	tran_ripple node, from, to, max                                    needs .tran
 //	port_voc    plus, minus, target   (open-circuit voltage)           needs nothing
@@ -123,6 +124,11 @@ type ObjectiveConfig struct {
 	Edge     string       `json:"edge,omitempty"`
 	Bands    []BandConfig `json:"bands,omitempty"`
 	Sources  []string     `json:"sources,omitempty"`
+	// VMin, IMin, IMax set active_bias's region (defaults 1 V, 100 µA,
+	// 100 mA).
+	VMin float64 `json:"v_min,omitempty"`
+	IMin float64 `json:"i_min,omitempty"`
+	IMax float64 `json:"i_max,omitempty"`
 	// Constraint makes the term a constraint under "nsga2" (see
 	// Objective.Constraint): e.g. gain_max with constraint=true is
 	// "gain ≥ target_db".
@@ -295,6 +301,21 @@ func NewExperiment(cfg Config, netlistText string) (*Experiment, error) {
 			ob = GainAt(oc.Node, ref, spec, oc.FreqHz, oc.TargetDB)
 		case "op_voltage":
 			ob = OPVoltage(oc.Node, oc.Target)
+		case "active_bias":
+			vmin, imin, imax := oc.VMin, oc.IMin, oc.IMax
+			if vmin == 0 {
+				vmin = 1
+			}
+			if imin == 0 {
+				imin = 1e-4
+			}
+			if imax == 0 {
+				imax = 0.1
+			}
+			if !(vmin > 0) || !(imin > 0) || !(imax > imin) {
+				return nil, fmt.Errorf("%w: active_bias needs v_min, i_min > 0 and i_max > i_min", ErrBadConfig)
+			}
+			ob = ActiveBias(vmin, imin, imax)
 		case "tran_mean":
 			spec, err := needTran(oc.Kind)
 			if err != nil {
