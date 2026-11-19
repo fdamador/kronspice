@@ -548,7 +548,10 @@ kronspice/
 ├── evo/                        # genetic algorithm layer
 │   ├── genome.go               # genome interfaces + encodings
 │   ├── encode_values.go        # fixed topology, evolve component values (E12/E24/E96 snapping)
-│   ├── encode_topology.go      # variable topology (graph genome / Koza-style developmental)
+│   ├── encode_topology.go      # variable topology: direct netlist genome (M8)
+│   ├── encode_develop.go       # Koza's developmental genome: circuit-constructing programs grown from the embryo's wires
+│   ├── localsearch.go          # multi-part local search on the best individual (memetic, Lamarckian)
+│   ├── mapelites.go            # MAP-Elites: elites per cell of an n-dimensional descriptor grid
 │   ├── fitness.go              # fitness functions built from analysis + measure
 │   ├── operators.go            # mutation, crossover, selection
 │   ├── engine.go               # generational loop, worker pool, elitism, logging
@@ -565,6 +568,7 @@ kronspice/
     ├── rc_lowpass_values/      # evolve R/C values to hit a cutoff
     ├── filter_topology/        # evolve a filter topology from scratch
     ├── amplifier_gain/         # evolve a BJT amplifier for gain + bandwidth
+    ├── amplifier_topology/     # grow a 20 dB amplifier from rail + source + load (R, C, 2N3904): active-bias objective, direct encoding and developmental + MAP-Elites
     ├── power_filter/           # evolve a three-phase harmonic filter scored with GA power theory
     ├── pcb_layout/             # evolve trace geometry; L/C/K extracted by em/ from Maxwell's equations
     ├── solar_harvester/        # evolve a solar-cell harvesting circuit from a declared irradiance waveform; fitness = ledger efficiency
@@ -2955,6 +2959,34 @@ channel carries no power (§3.1).
 - Objectives: `mask` (frequency bands with gain limits; error 0 inside,
   ≥ 0.1 outside, so "fitness < 0.1" means spec met) and `parts`
   (parsimony, weight per part).
+- Developmental encoding (`evo/encode_develop.go`, `"encoding":
+  "developmental"`): Koza's circuit-constructing programs, one per embryo
+  wire — R, L, C with arithmetic value subtrees, SERIES, PARALLEL, VIA,
+  NOP, END, SAFE_CUT, FLIP — run breadth-first; leftover wires merge nodes
+  (0 V source between embryo nodes); typed subtree crossover and mutation.
+  The M8 filter meets its mask on seeds 1–8 (doc/M8.md). FLIP (and the
+  direct encoding's flip mutation) is drawn only for polarized part kinds,
+  `kappa_a ≠ kappa_b` with `.ece` (H48), where orientation changes the
+  circuit; plain R, L, C runs are unchanged.
+- Active parts (both encodings): V, I (DC value, polarity from
+  orientation), D, Q, M from the embryo's `.model` cards; `Part.C` is the
+  base or gate; developmental Q/M insert the transistor with three lead
+  wires. Growing a 20 dB amplifier from an empty embryo is not yet solved
+  (doc/M8.md).
+- `active_bias` objective (`evo.ActiveBias`): a transistor in its
+  forward-active region (V_BE window, V_BC, V_CE floor, I_C floor and
+  ceiling); without the window and ceiling evolution diode-connects a
+  transistor across the supply. With it a 20 dB amplifier grows from an
+  empty embryo (`examples/amplifier_topology`).
+- MAP-Elites (`evo/mapelites.go`, `ga.algorithm: "map_elites"`; Mouret &
+  Clune 2015): elites per cell of an n-dimensional descriptor grid
+  (parts, genome size, element count, objective error); the archive is
+  the population (checkpoints unchanged). With it the developmental
+  encoding grows a four-part two-transistor amplifier.
+- Multi-part local search (`evo/localsearch.go`, `Options.LocalSearch`,
+  config `local_search`): moves up to `size` genes one grid step together
+  on the best individual, Lamarckian, deterministic; value genomes and
+  direct topology values (doc/M8.md, doc/M7.md).
 
 ### Experiment outputs
 
