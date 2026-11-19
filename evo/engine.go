@@ -56,6 +56,9 @@ type Options struct {
 	// Analysis holds the base options for every simulation (tolerances,
 	// fallbacks); its Context is set per evaluation.
 	Analysis analysis.Options
+	// LocalSearch, when set, improves the best individual by multi-part
+	// moves on the value grid (localsearch.go). Weighted-sum runs only.
+	LocalSearch *LocalSearch
 }
 
 func (o *Options) defaults(genes int) error {
@@ -291,6 +294,17 @@ func Run(ctx context.Context, p Problem, opt Options, resume *State, observe Obs
 			return nil, fmt.Errorf("%w: NSGA-II needs an objective with a positive weight that is not a constraint", ErrBadOptions)
 		}
 	}
+	var ls *LocalSearch
+	if opt.LocalSearch != nil {
+		if opt.Algorithm != WeightedSum {
+			return nil, fmt.Errorf("%w: local search is for weighted-sum runs", ErrBadOptions)
+		}
+		cp := *opt.LocalSearch
+		if err := cp.defaults(); err != nil {
+			return nil, err
+		}
+		ls = &cp
+	}
 	ev := &evaluator{p: p, opt: opt}
 
 	var st *State
@@ -358,6 +372,9 @@ func Run(ctx context.Context, p Problem, opt Options, resume *State, observe Obs
 		st.Population = append(elite, pop...)
 		st.Generation = next
 		st.Evaluations += len(pop)
+		if ls != nil && ls.due(next, opt.Generations-1) {
+			st.Evaluations += ev.localSearch(ctx, st.Population, *ls)
+		}
 		if err := st.finish(opt, observe); err != nil || st.Done {
 			return st, err
 		}

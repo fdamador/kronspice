@@ -152,6 +152,16 @@ type GAConfig struct {
 	// Algorithm is "weighted" (default: minimize Σ weight·error) or
 	// "nsga2" (a Pareto front over the objectives).
 	Algorithm string `json:"algorithm,omitempty"`
+	// LocalSearch adds the multi-part local search (evo.LocalSearch).
+	LocalSearch *LocalSearchConfig `json:"local_search,omitempty"`
+}
+
+// LocalSearchConfig maps onto LocalSearch; zero fields take its defaults.
+type LocalSearchConfig struct {
+	Size     int     `json:"size,omitempty"`
+	Every    int     `json:"every,omitempty"`
+	MaxEvals int     `json:"max_evals,omitempty"`
+	Step     float64 `json:"step,omitempty"`
 }
 
 // Experiment is a loaded, validated configuration ready to run.
@@ -407,6 +417,9 @@ func NewExperiment(cfg Config, netlistText string) (*Experiment, error) {
 		Tournament: g.Tournament, Crossover: g.Crossover, Mutation: g.Mutation, Sigma: g.Sigma,
 		SignFlip: g.SignFlip, Seed: g.Seed, Workers: g.Workers,
 		Timeout: time.Duration(g.TimeoutMS) * time.Millisecond}
+	if l := g.LocalSearch; l != nil {
+		ex.Options.LocalSearch = &LocalSearch{Size: l.Size, Every: l.Every, MaxEvals: l.MaxEvals, Step: l.Step}
+	}
 	if g.Target != nil {
 		ex.Options.Target, ex.Options.HasTarget = *g.Target, true
 	}
