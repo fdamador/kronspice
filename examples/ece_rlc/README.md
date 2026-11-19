@@ -9,6 +9,9 @@ circuit and runs it five ways:
 - with the torsion term in the ECE form and in the ECE2 form;
 - with the scalar term in the ECE form and in the ECE2 form.
 
+Three more runs add UFT 456's two conductivities to the ECE2 torsion case
+(see [UFT 456 conductivities](#uft-456-conductivities)).
+
 Each case is checked three ways: against its closed form, against a twin
 built from ordinary elements, and against the energy ledger. It is the
 smallest worked use of the option. The plain run is the standard
@@ -56,7 +59,7 @@ C1 b 0 84.6346u
 
 The option also has UFT 456's two conductivities: `k0=` adds a shunt
 2cκ₀·C across each capacitor, and `kl0=` a series −2cκ_Λ0·L in each coil.
-This example does not use them.
+The last three runs use them (see [UFT 456 conductivities](#uft-456-conductivities)).
 
 The power the terms deliver (+) or absorb (−) is booked per element as
 *model-supplied*, and labelled hypothetical. It is never counted as
@@ -124,13 +127,82 @@ A bench that measures the Q and tuning of a real tank against the values
 computed from its parts bounds |ω₀| and |κ| in both forms at once, since
 the two forms shift Q and tuning in opposite directions.
 
+## UFT 456 conductivities
+
+UFT 456 (Eckardt & Goel 2024) adds two spin-connection conductivities.
+In the circuit engine they become two terms:
+- `k0` (κ₀): a shunt conductance G = 2c·κ₀·C across each capacitor's
+  body;
+- `kl0` (κ_Λ0): a series resistance −2c·κ_Λ0·L in each coil, which is
+  negative (gain) for κ_Λ0 > 0.
+
+The three runs below add them to the ECE2 torsion case (−0.5 Ω in the
+coil):
+- k0 = 1.9706×10⁻⁸ m⁻¹ gives G = 1 mS, a 1 kΩ leak across C;
+- kl0 = 4.1696×10⁻⁸ m⁻¹ gives −0.25 Ω.
+
+```
+series RLC, ECE2 torsion + k0 + kl0
+.ece form=ece2 w0=8.3391023799538009e-08 k0=1.9706130542245846e-08 kl0=4.1695511899769005e-08
+V1 in 0 DC 0 AC 1 SIN(0 1 173)
+R1 in a 1
+L1 a b 10m
+C1 b 0 84.6346u
+.end
+```
+
+The closed form is the exact series impedance
+Z = R + r + jωL + 1/(G + jωC), with r the torsion plus kl0 resistance.
+Its |1/Z| peak and −3 dB points are found on a 0.1 mHz grid. The twin
+adds r to the resistor and puts a 1/G resistor across the capacitor.
+
+| case | f_r (Hz) | closed form | Q | closed form | peak \|I\| | vs twin | source | heat | model-supplied |
+|---|---|---|---|---|---|---|---|---|---|
+| ECE2 torsion + k0 | 173.048 | 173.043 | 17.5892 | 17.5888 | 1.618 A | 1e-15 | 0.809 W | 1.309 W | +0.500 W |
+| ECE2 torsion + kl0 | 172.993 | 173.000 | 43.4769 | 43.4796 | 4.000 A | 4e-16 | 2.000 W | 8.000 W | +6.000 W |
+| ECE2 torsion + k0 + kl0 | 173.020 | 173.022 | 29.5286 | 29.5291 | 2.716 A | 2e-15 | 1.358 W | 3.689 W | +2.331 W |
+
+Transient, energies in J:
+
+| case | source in | back to source | heat | model-supplied | Δstored | mismatch |
+|---|---|---|---|---|---|---|
+| ECE2 torsion + k0 | 0.21685 | 0 | 0.32964 | +0.12601 | 0.01322 | 2e-6 |
+| ECE2 torsion + kl0 | 0.44460 | 0 | 1.47319 | +1.10489 | 0.07630 | 9e-6 |
+| ECE2 torsion + k0 + kl0 | 0.33456 | 0 | 0.80935 | +0.51178 | 0.03697 | 4e-6 |
+
+What the tables show:
+- **kl0 lowers the loop resistance further.** The loop goes from 0.5 Ω
+  to 0.25 Ω, so the current is 4 A and Q four times the plain value. The
+  resistor heats 8 W against 2 W from the source; the terms supply the
+  other 6 W.
+- **k0 is a loss.** Near resonance the 1 mS leak across C acts as about
+  G/(ωC)² ≈ 0.118 Ω in series. The loop becomes 0.618 Ω and the current
+  1.618 A. Because that series equivalent falls with frequency, the |I|
+  peak moves up by 0.05 Hz.
+- **Together** the loop is ≈ 0.368 Ω, giving 2.716 A. The model-supplied
+  column is a net figure: the coil's −0.75 Ω supplies ½·0.75·|I|² =
+  2.767 W and the leak absorbs ½·|V_C|²·G = 0.436 W. The leak's loss is
+  booked there, beside the terms that supply power, not as heat.
+- **The books close** at every AC point (residual 0) and in every
+  transient to the integration mismatch. Where the terms supply more
+  than the source, as in the kl0 run, the mismatch follows the energy
+  moved through the circuit (1.47 J of heat), so the test measures it
+  against the larger of source input and heat.
+- **Kron's frame carries the conductivities too.** The torn solution in
+  `export/` agrees with MNA to 3×10⁻¹⁵.
+
+kl0 above 8.34×10⁻⁸ m⁻¹ would make the loop resistance negative here. The
+tank would then oscillate and grow without bound, every joule of it from
+the model-supplied column. The standard prediction is still the plain
+circuit.
+
 ## Files
 
 | File | Contents |
 |---|---|
-| `main.go` | the five cases, closed forms, ordinary-element twins, AC sweep and transient |
+| `main.go` | the five cases and the three UFT 456 runs, closed forms, ordinary-element twins, AC sweep and transient |
 | `data.go` | `-data DIR`: the report's CSV files (AC sweep, transient with running energies, summary) |
-| `main_test.go` | `TestCases` (closed forms, twins, ledgers), `TestOppositeSigns`, `TestExport` |
+| `main_test.go` | `TestCases` (closed forms, twins, ledgers; all eight runs), `TestOppositeSigns`, `TestUFT456` (currents, model-supplied = series terms less leak, heat), `TestExport` |
 | `run_output.txt` | the output quoted above |
 | `ece_rlc_report.pdf` | the report: terms, resonance, ECE against ECE2, transient ledger, Kron's frame, status |
 | `ece_rlc_summary.png` | one-page summary image: circuit, the two forms, Q, tuning and power at resonance |

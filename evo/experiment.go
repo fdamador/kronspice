@@ -16,6 +16,7 @@ import (
 
 	"github.com/fdamador/kronspice/analysis"
 	"github.com/fdamador/kronspice/circuit"
+	"github.com/fdamador/kronspice/kron"
 	"github.com/fdamador/kronspice/netlist"
 )
 
@@ -55,14 +56,34 @@ type TopologyConfig struct {
 	MaxParts  int              `json:"max_parts,omitempty"`
 	InitParts int              `json:"init_parts,omitempty"`
 	Parts     []PartKindConfig `json:"parts"`
+	// Encoding is "direct" (default) or "developmental" (Koza's
+	// circuit-constructing programs); the developmental encoding needs
+	// Wires, the embryo's modifiable wires as node pairs.
+	Encoding  string      `json:"encoding,omitempty"`
+	Wires     [][2]string `json:"wires,omitempty"`
+	MaxSize   int         `json:"max_size,omitempty"`
+	InitDepth int         `json:"init_depth,omitempty"`
+	// Library lists the primitive branches of the "kron" (connection)
+	// encoding, one part kind per slot, e.g. ["R","R","C","Q"]; empty:
+	// max_parts slots dealt round-robin over the part kinds.
+	Library []string `json:"library,omitempty"`
 }
 
-// PartKindConfig is one kind of part: "R", "C" or "L", its range and series.
+// PartKindConfig is one kind of part: "R", "C", "L", "V", "I", "D", "Q" or
+// "M", its range and series (PartKind).
 type PartKindConfig struct {
 	Kind   string  `json:"kind"`
 	Min    float64 `json:"min"`
 	Max    float64 `json:"max"`
 	Series string  `json:"series,omitempty"`
+	// KappaA, KappaB: hypothetical ECE scalar terms at the part's two
+	// terminals (needs .ece in the netlist; PartKind.KappaA).
+	KappaA float64 `json:"kappa_a,omitempty"`
+	KappaB float64 `json:"kappa_b,omitempty"`
+	// Model names the embryo's .model for D, Q and M parts; Length is a
+	// MOSFET part's channel length [m].
+	Model  string  `json:"model,omitempty"`
+	Length float64 `json:"length,omitempty"`
 }
 
 // BandConfig is one band of a mask objective; an omitted bound is open.
@@ -79,6 +100,7 @@ type BandConfig struct {
 //	cutoff      node, ref, target_hz, edge ("high" default, or "low")   needs .ac
 //	gain_at     node, ref, freq_hz, target_db                          needs .ac
 //	op_voltage  node, target                                           needs nothing
+//	active_bias v_min, i_min, i_max (a transistor in its active region) needs nothing
 //	tran_mean   node, from, to, target                                 needs .tran
 //	tran_ripple node, from, to, max                                    needs .tran
 //	port_voc    plus, minus, target   (open-circuit voltage)           needs nothing
@@ -107,6 +129,11 @@ type ObjectiveConfig struct {
 	Edge     string       `json:"edge,omitempty"`
 	Bands    []BandConfig `json:"bands,omitempty"`
 	Sources  []string     `json:"sources,omitempty"`
+	// VMin, IMin, IMax set active_bias's region (defaults 1 V, 100 µA,
+	// 100 mA).
+	VMin float64 `json:"v_min,omitempty"`
+	IMin float64 `json:"i_min,omitempty"`
+	IMax float64 `json:"i_max,omitempty"`
 	// Constraint makes the term a constraint under "nsga2" (see
 	// Objective.Constraint): e.g. gain_max with constraint=true is
 	// "gain ≥ target_db".
@@ -130,6 +157,48 @@ type GAConfig struct {
 	// Algorithm is "weighted" (default: minimize Σ weight·error) or
 	// "nsga2" (a Pareto front over the objectives).
 	Algorithm string `json:"algorithm,omitempty"`
+	// LocalSearch adds the multi-part local search (evo.LocalSearch).
+	LocalSearch *LocalSearchConfig `json:"local_search,omitempty"`
+	// MapElites gives the grid of algorithm "map_elites".
+	MapElites *MapElitesConfig `json:"map_elites,omitempty"`
+	// Precheck runs kron.Precheck on every candidate before simulation
+	// (Problem.Precheck): loops of ideal voltage outputs — and with dc,
+	// loops closed by inductors too — are penalized as singular without
+	// building a matrix. It never rejects a circuit the simulator could
+	// solve, so results are unchanged; only time is saved.
+	Precheck *PrecheckConfig `json:"precheck,omitempty"`
+}
+
+// PrecheckConfig maps onto kron.PrecheckOptions.
+type PrecheckConfig struct {
+	DC bool `json:"dc,omitempty"`
+}
+
+// MapElitesConfig is the MAP-Elites grid: one entry per dimension.
+type MapElitesConfig struct {
+	Descriptors []DescriptorConfig `json:"descriptors"`
+}
+
+// DescriptorConfig is one grid dimension. Kind is "parts" (evolved parts
+// or genes), "genome_size" (parts or program ops), "meshes" (independent
+// loops, Kron's m = b − N + S), "count" (elements of
+// kind Part added to the template, e.g. "Q") or "objective" (the error of
+// objective number Index, 0-based, in config order).
+type DescriptorConfig struct {
+	Kind  string  `json:"kind"`
+	Part  string  `json:"part,omitempty"`
+	Index int     `json:"index,omitempty"`
+	Min   float64 `json:"min"`
+	Max   float64 `json:"max"`
+	Bins  int     `json:"bins"`
+}
+
+// LocalSearchConfig maps onto LocalSearch; zero fields take its defaults.
+type LocalSearchConfig struct {
+	Size     int     `json:"size,omitempty"`
+	Every    int     `json:"every,omitempty"`
+	MaxEvals int     `json:"max_evals,omitempty"`
+	Step     float64 `json:"step,omitempty"`
 }
 
 // Experiment is a loaded, validated configuration ready to run.
@@ -201,13 +270,26 @@ func NewExperiment(cfg Config, netlistText string) (*Experiment, error) {
 		if len(cfg.Genes) != 0 {
 			return nil, fmt.Errorf("%w: a topology experiment has no genes", ErrBadConfig)
 		}
-		top := &Topology{Terminals: tc.Terminals, Internal: tc.Internal, MaxParts: tc.MaxParts, InitParts: tc.InitParts}
+		enc, err := ParseEncoding(tc.Encoding)
+		if err != nil {
+			return nil, err
+		}
+		top := &Topology{Terminals: tc.Terminals, Internal: tc.Internal, MaxParts: tc.MaxParts, InitParts: tc.InitParts,
+			Encoding: enc, Wires: tc.Wires, MaxSize: tc.MaxSize, InitDepth: tc.InitDepth}
 		for _, pk := range tc.Parts {
 			k := strings.ToUpper(strings.TrimSpace(pk.Kind))
 			if len(k) != 1 {
 				return nil, fmt.Errorf("%w: part kind %q", ErrBadConfig, pk.Kind)
 			}
-			top.Kinds = append(top.Kinds, PartKind{Kind: circuit.Kind(k[0]), Min: pk.Min, Max: pk.Max, Series: pk.Series})
+			top.Kinds = append(top.Kinds, PartKind{Kind: circuit.Kind(k[0]), Min: pk.Min, Max: pk.Max, Series: pk.Series,
+				KappaA: pk.KappaA, KappaB: pk.KappaB, Model: pk.Model, Length: pk.Length})
+		}
+		for _, s := range tc.Library {
+			k := strings.ToUpper(strings.TrimSpace(s))
+			if len(k) != 1 {
+				return nil, fmt.Errorf("%w: library slot %q", ErrBadConfig, s)
+			}
+			top.Library = append(top.Library, circuit.Kind(k[0]))
 		}
 		if err := top.Validate(tpl); err != nil {
 			return nil, err
@@ -273,6 +355,21 @@ func NewExperiment(cfg Config, netlistText string) (*Experiment, error) {
 			ob = GainAt(oc.Node, ref, spec, oc.FreqHz, oc.TargetDB)
 		case "op_voltage":
 			ob = OPVoltage(oc.Node, oc.Target)
+		case "active_bias":
+			vmin, imin, imax := oc.VMin, oc.IMin, oc.IMax
+			if vmin == 0 {
+				vmin = 1
+			}
+			if imin == 0 {
+				imin = 1e-4
+			}
+			if imax == 0 {
+				imax = 0.1
+			}
+			if !(vmin > 0) || !(imin > 0) || !(imax > imin) {
+				return nil, fmt.Errorf("%w: active_bias needs v_min, i_min > 0 and i_max > i_min", ErrBadConfig)
+			}
+			ob = ActiveBias(vmin, imin, imax)
 		case "tran_mean":
 			spec, err := needTran(oc.Kind)
 			if err != nil {
@@ -364,6 +461,41 @@ func NewExperiment(cfg Config, netlistText string) (*Experiment, error) {
 		Tournament: g.Tournament, Crossover: g.Crossover, Mutation: g.Mutation, Sigma: g.Sigma,
 		SignFlip: g.SignFlip, Seed: g.Seed, Workers: g.Workers,
 		Timeout: time.Duration(g.TimeoutMS) * time.Millisecond}
+	if pc := g.Precheck; pc != nil {
+		ex.Problem.Precheck = &kron.PrecheckOptions{DC: pc.DC}
+	}
+	if m := g.MapElites; m != nil {
+		me := &MapElites{}
+		for _, dc := range m.Descriptors {
+			var d Descriptor
+			switch dc.Kind {
+			case "parts":
+				d = DescParts(dc.Min, dc.Max, dc.Bins)
+			case "genome_size":
+				d = DescGenomeSize(dc.Min, dc.Max, dc.Bins)
+			case "meshes":
+				d = DescMeshes(dc.Min, dc.Max, dc.Bins)
+			case "count":
+				k := strings.ToUpper(strings.TrimSpace(dc.Part))
+				if len(k) != 1 {
+					return nil, fmt.Errorf("%w: count descriptor part %q", ErrBadConfig, dc.Part)
+				}
+				d = DescCount(circuit.Kind(k[0]), dc.Min, dc.Max, dc.Bins)
+			case "objective":
+				if dc.Index < 0 || dc.Index >= len(ex.Problem.Objectives) {
+					return nil, fmt.Errorf("%w: objective descriptor index %d", ErrBadConfig, dc.Index)
+				}
+				d = DescTerm(ex.Problem.Objectives[dc.Index].Name, dc.Index, dc.Min, dc.Max, dc.Bins)
+			default:
+				return nil, fmt.Errorf("%w: descriptor kind %q (parts, genome_size, meshes, count or objective)", ErrBadConfig, dc.Kind)
+			}
+			me.Descriptors = append(me.Descriptors, d)
+		}
+		ex.Options.MapElites = me
+	}
+	if l := g.LocalSearch; l != nil {
+		ex.Options.LocalSearch = &LocalSearch{Size: l.Size, Every: l.Every, MaxEvals: l.MaxEvals, Step: l.Step}
+	}
 	if g.Target != nil {
 		ex.Options.Target, ex.Options.HasTarget = *g.Target, true
 	}

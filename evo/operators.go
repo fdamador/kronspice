@@ -85,15 +85,16 @@ func diversity(pop []Individual) float64 {
 		return 0
 	}
 	if len(pop[0].Genome.X) == 0 {
-		// Topology genomes: spread of the netlist size [parts].
+		// Topology genomes: spread of the genome size [parts, or program
+		// ops for developmental genomes].
 		mean := 0.0
 		for _, p := range pop {
-			mean += float64(len(p.Genome.Parts))
+			mean += float64(p.Genome.size())
 		}
 		mean /= float64(len(pop))
 		v := 0.0
 		for _, p := range pop {
-			d := float64(len(p.Genome.Parts)) - mean
+			d := float64(p.Genome.size()) - mean
 			v += d * d
 		}
 		return math.Sqrt(v / float64(len(pop)))

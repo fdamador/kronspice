@@ -1,0 +1,74 @@
+{
+  "name": "filter_topology_kron",
+  "netlist": "embryo.cir",
+  "topology": {
+    "terminals": [
+      "in",
+      "out"
+    ],
+    "internal_nodes": 8,
+    "init_parts": 3,
+    "parts": [
+      {
+        "kind": "L",
+        "min": 1e-05,
+        "max": 10,
+        "series": "E24"
+      },
+      {
+        "kind": "C",
+        "min": 1e-10,
+        "max": 0.0001,
+        "series": "E24"
+      },
+      {
+        "kind": "R",
+        "min": 1,
+        "max": 1000000.0,
+        "series": "E24"
+      }
+    ],
+    "encoding": "kron",
+    "library": [
+      "L",
+      "L",
+      "L",
+      "L",
+      "C",
+      "C",
+      "C",
+      "C",
+      "R",
+      "R"
+    ]
+  },
+  "objectives": [
+    {
+      "kind": "mask",
+      "node": "out",
+      "bands": [
+        {
+          "from": 10,
+          "to": 1000,
+          "min_db": -7.5,
+          "max_db": -5.5
+        },
+        {
+          "from": 3000,
+          "to": 100000,
+          "max_db": -46
+        }
+      ]
+    },
+    {
+      "kind": "parts",
+      "weight": 0.002
+    }
+  ],
+  "ga": {
+    "population": 300,
+    "generations": 200,
+    "seed": 1,
+    "timeout_ms": 2000
+  }
+}

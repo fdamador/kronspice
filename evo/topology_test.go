@@ -244,7 +244,34 @@ func TestFilterTopologyExample(t *testing.T) {
 	if testing.Short() {
 		t.Skip("about 40 s: the full 200-generation run")
 	}
-	ex, err := LoadExperiment(filepath.Join("..", "examples", "filter_topology", "config.json"))
+	checkFilterExample(t, "config.json")
+}
+
+// The same acceptance test with Koza's developmental encoding: the
+// circuit is grown by a circuit-constructing program from the embryo's
+// one modifiable wire, in→out (examples/filter_topology/config_developmental.json).
+func TestFilterDevelopmentalExample(t *testing.T) {
+	if testing.Short() {
+		t.Skip("about 15 s: the full 200-generation run")
+	}
+	checkFilterExample(t, "config_developmental.json")
+}
+
+// The same with the Kron connection-tensor encoding: a fixed library of
+// four L, four C and two R slots, the genome their interconnection
+// (examples/filter_topology/config_kron.json).
+func TestFilterKronExample(t *testing.T) {
+	if testing.Short() {
+		t.Skip("about 30 s: the full 200-generation run")
+	}
+	checkFilterExample(t, "config_kron.json")
+}
+
+// checkFilterExample runs a filter_topology config as cmd/evolve does and
+// checks the written best netlist against the mask.
+func checkFilterExample(t *testing.T, config string) {
+	t.Helper()
+	ex, err := LoadExperiment(filepath.Join("..", "examples", "filter_topology", config))
 	if err != nil {
 		t.Fatal(err)
 	}

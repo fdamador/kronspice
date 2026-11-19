@@ -445,6 +445,74 @@ func FilterMask(node, ref string, spec analysis.ACSpec, bands []Band) Objective 
 	}}
 }
 
+// ActiveBias scores how near the circuit's best-biased transistor is to
+// its forward-active region at the operating point; error 0 when one
+// transistor is inside it, rising with the distance outside, capped at 1,
+// and 1 when the circuit has no transistor. In its own polarity a BJT is
+// inside when
+//
+//	0.4 V ≤ V_BE ≤ 1.0 V,  V_BC ≤ 0.4 V,  |V_CE| ≥ vMin,  iMin ≤ |I_C| ≤ iMax
+//
+// (a MOSFET: |V_DS| ≥ vMin and iMin ≤ |I_D| ≤ iMax). Distances: voltages
+// as fractions of their limit (V_BE over 0.5 V), current in decades beyond
+// its limit over 3.
+//
+// It gives topology evolution the gradient a gain target alone lacks: a
+// randomly placed transistor is nearly always cut off or saturated and
+// amplifies no better than a wire (doc/M8.md). The V_BE window and the
+// current ceiling are not optional: without them evolution meets "|V_CE|
+// ≥ vMin, I_C ≥ iMin" with a transistor whose base and collector sit on the
+// supply rail — a diode across the supply drawing amperes, amplifying
+// nothing (seen on 5 of 6 runs before they were added).
+func ActiveBias(vMin, iMin, iMax float64) Objective {
+	return Objective{Name: "active bias", Weight: 1, Eval: func(e *Eval) (float64, error) {
+		r, err := e.OP()
+		if err != nil {
+			return 0, err
+		}
+		c := e.Circuit
+		volt := func(n int) float64 {
+			if n == 0 {
+				return 0
+			}
+			v, _ := r.Voltage(c.NodeNames[n])
+			return v
+		}
+		best := 1.0
+		for _, el := range c.Elements {
+			if el.Kind != circuit.BJT && el.Kind != circuit.MOSFET {
+				continue
+			}
+			res, ok := r.Element(el.Name)
+			if !ok {
+				continue
+			}
+			sign := 1.0
+			if m, ok := c.ModelFor(el); ok && (m.Type == "pnp" || m.Type == "pmos") {
+				sign = -1
+			}
+			v, i := sign*res.Voltage, sign*res.Current
+			d := math.Max(0, (vMin-v)/vMin)
+			switch {
+			case i <= 0:
+				d += 1
+			case i < iMin:
+				d += math.Log10(iMin/i) / 3
+			case i > iMax:
+				d += math.Log10(i/iMax) / 3
+			}
+			if el.Kind == circuit.BJT {
+				vc, ve, vb := volt(el.Nodes[0]), volt(el.Nodes[1]), volt(el.Extra[0])
+				vbe, vbc := sign*(vb-ve), sign*(vb-vc)
+				d += (math.Max(0, 0.4-vbe) + math.Max(0, vbe-1.0)) / 0.5
+				d += math.Max(0, vbc-0.4) / 0.4
+			}
+			best = math.Min(best, d)
+		}
+		return math.Min(best, 1), nil
+	}}
+}
+
 // PartCount is the parsimony term of a topology genome: the number of
 // evolved parts (weight it with the per-part penalty).
 func PartCount() Objective {
