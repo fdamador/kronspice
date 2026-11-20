@@ -110,6 +110,9 @@ def build(out):
         f"{min(phA):.0f} to {max(phA):.0f} W. In the hand-picked starting design the drives were in the wrong phase: "
         f"both on gave {p(cA, 'baseline both'):.2f} W against {p(cA, 'baseline HV only'):.2f} W from the HV coil alone, "
         "and the Royer's supply took power back.",
+        f"<b>Recycling the load's energy</b> (a transformer and rectifier back into the 24 V rail) returns "
+        f"95 % of it, and the supplies then deliver only the losses: the net input falls, but nothing is kept, so it "
+        "does not make the circuit more efficient (section \"Recycling the load's energy\").",
         f"<b>No surplus anywhere.</b> The load never gets more than the two supplies deliver. The transient ledger "
         f"closes to {abs(float(chA['mismatch'])):.0e} (A) and {abs(float(chB['mismatch'])):.0e} (B) of the input "
         f"energy; a 4× finer time step moves the load power by {abs(float(chA['rel'])) * 100:.2f} % (A) and "
@@ -317,10 +320,55 @@ def build(out):
     r.figure(os.path.join(HERE, "free", "losses.png"), "Figure 11. Design B: mean power into each part.",
              width_frac=0.85)
 
+    # ------------------------------------------------------------ regen
+    with open(os.path.join(HERE, "data", "regen_best.csv")) as f:
+        G = {q["name"]: float(q["value"]) for q in csv.DictReader(f)}
+    regen_loss = sum(G.get(k, 0) for k in ("DB1", "DB2", "DB3", "DB4", "Rr1", "Rr2", "Rsn", "Rleak"))
+    circ_loss = sum(v for k, v in G.items() if k in ("Rg", "R1p", "R1s", "R3", "R2a", "R2b", "RC2", "Rs", "M1", "M2",
+                                                      "D1", "D2", "RG1", "RG2"))
+    net = G["PInHV"] + G["PInRoy"]
+    r.h1("Recycling the load's energy: a regenerative load")
+    r.p("Can the energy collected at the load be fed back so that the circuit becomes 99.99 % efficient? To test it, "
+        "the load resistor of design A is replaced by a regenerative load: a step-down transformer (ferrite, k 0.995, "
+        "2 mH primary, ratio n:1), a full bridge of low-drop rectifiers (Schottky or synchronous MOSFETs, about "
+        "0.35 V at 20 A) with an RC snubber, and a return path straight into the 24 V supply rail. The ratio and C3 "
+        "were swept (n 3–6, C3 0.8–1.2×).")
+    r.figure(os.path.join(HERE, "regen.png"),
+             "Figure 12. Left: power into the load port, power returned to the 24 V rail and the supplies' net input "
+             "against the transformer ratio. Right: the power flow at the best point.", width_frac=1.0)
+    r.table([
+        ["", "plain 24 Ω load", "regenerative load"],
+        ["power at the load", f"{G['PlainPOut']:.1f} W, kept as heat", f"{G['PPort']:.1f} W through the port"],
+        ["returned to the 24 V rail", "—", f"{G['PReturn']:.1f} W (recovery {G['PReturn'] / G['PPort']:.3f})"],
+        ["Royer supply delivers / takes back", f"{p(cA, 'evolved both', 'p_roy'):.1f} W / —",
+         f"{G['PRoyGross']:.1f} W / {G['PReturn']:.1f} W"],
+        ["supplies' net input", f"{G['PlainPIn']:.1f} W", f"{net:.1f} W"],
+        ["of which circuit losses", f"{G['PlainPIn'] - G['PlainPOut']:.1f} W", f"{circ_loss:.1f} W"],
+        ["of which the recycling path", "—", f"{regen_loss:.1f} W (rectifiers, transformer, snubber)"],
+        ["useful output kept", f"{G['PlainPOut']:.1f} W", "0 W"],
+    ], [0.34, 0.3, 0.36])
+    r.bullets([
+        f"<b>The recycling works:</b> {G['PReturn'] / G['PPort'] * 100:.1f} % of the power through the load port goes "
+        f"back to the rail, and the supplies' net input falls from {G['PlainPIn']:.0f} W to {net:.0f} W.",
+        f"<b>But the net input is exactly the losses.</b> Nothing is left at the load, so the {net:.0f} W the supplies "
+        "still deliver is what the copper, the switches, the capacitor ESR and now the rectifiers turn into heat; the "
+        f"ledger closes to {abs(G['Mismatch']):.0e}. The ratio {G['PPort']:.0f} W / {net:.0f} W = "
+        f"{G['PPort'] / net:.1f} is how much power circulates per watt of loss, like a resonator's Q, not an "
+        "efficiency: an efficiency counts what is delivered and kept.",
+        "<b>The recycling path costs its own losses</b> and the circuit's losses do not shrink, so recycling can only "
+        "lower the bill to the losses, never below them. What raises the efficiency is cutting the losses "
+        "themselves: litz wire on coil 2, thicker wire on coil 1, lower-resistance switches, a heavier supply path, "
+        "a lower-impedance HV amplifier. With copper coils at tens of kilohertz, 92–96 % is a realistic target; "
+        "99.99 % would need the 375 W to pass with under 0.04 W of loss.",
+        "<b>Where recycling is useful:</b> testing at full power without a dump load (the supply only pays the "
+        "losses, so a bench run of hundreds of watts costs about a hundred), and any application where the "
+        "energy at the load is not consumed but handed on.",
+    ])
+
     # ------------------------------------------------------------ GA
     r.h1("The genetic search")
     r.figure(os.path.join(HERE, "convergence.png"),
-             f"Figure 12. Design A's search: best score per generation (population {gA[0]}, {gA[1]} generations, "
+             f"Figure 13. Design A's search: best score per generation (population {gA[0]}, {gA[1]} generations, "
              f"seed {gA[2]}; {gA[3]} transient simulations in {gA[4]}). Design B's search: {gB[3]} simulations in "
              f"{gB[4]}, seed {gB[2]}.", width_frac=0.8)
     r.bullets([
@@ -368,6 +416,7 @@ def build(out):
            "python3 examples/three_coil_sync/viz/schematic.py examples/three_coil_sync/viz/data examples/three_coil_sync/viz\n"
            "python3 examples/three_coil_sync/viz/schematic.py examples/three_coil_sync/viz/data_free examples/three_coil_sync/viz/free\n"
            "python3 examples/three_coil_sync/viz/make_report.py examples/three_coil_sync/three_coil_sync_report.pdf\n"
+           "go run ./examples/three_coil_sync -regen -data examples/three_coil_sync/viz/data > examples/three_coil_sync/regen_output.txt\n"
            "go test ./examples/three_coil_sync\n"
            "go run ./cmd/kronspice examples/three_coil_sync/viz/data/best.cir     # design A as a netlist")
     r.build(out)

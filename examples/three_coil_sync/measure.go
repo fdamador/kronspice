@@ -33,12 +33,15 @@ type Result struct {
 	VgPk          float64 // peak HV generator (amplifier) output voltage
 	I3rms, I2rms  float64 // rms current in coil 3 and in one coil-2 strand
 	IChoke        float64 // mean supply current
-	PDiss         map[string]float64
-	Residual      float64 // ledger: max relative residual
-	Mismatch      float64 // ledger: integration mismatch / energy in
-	Steps         int
-	Wave          *output.Waveforms
-	Err           error
+	// Regenerative load: power into the load port, power returned to the
+	// 24 V rail, and what the Royer supply delivers before the return.
+	PPort, PReturn, PRoyGross float64
+	PDiss                     map[string]float64
+	Residual                  float64 // ledger: max relative residual
+	Mismatch                  float64 // ledger: integration mismatch / energy in
+	Steps                     int
+	Wave                      *output.Waveforms
+	Err                       error
 }
 
 // Simulate runs the transient and measures it. keep retains the waveforms.
@@ -176,7 +179,13 @@ func (r *Result) measure(wf *output.Waveforms) error {
 		r.Eta = r.POut / in
 	}
 	r.PDiss = map[string]float64{}
-	for _, n := range []string{"Rg", "R1p", "R1s", "R3", "R2a", "R2b", "RC2", "Rs", "M1", "M2", "D1", "D2", "RG1", "RG2"} {
+	names := []string{"Rg", "R1p", "R1s", "R3", "R2a", "R2b", "RC2", "Rs", "M1", "M2", "D1", "D2", "RG1", "RG2"}
+	if r.Design.Regen {
+		names = append(names, "Rr1", "Rr2", "DB1", "DB2", "DB3", "DB4", "Rsn", "Rleak")
+	} else {
+		names = append(names, "RL")
+	}
+	for _, n := range names {
 		r.PDiss[n] = mean(t, P(n), i0)
 	}
 
@@ -229,6 +238,17 @@ func (r *Result) measure(wf *output.Waveforms) error {
 	r.I3rms = rms(t, I("L3"), i0)
 	r.I2rms = rms(t, I("L2a"), i0)
 	r.IChoke = mean(t, I("Lchoke"), i0)
+	if r.Design.Regen {
+		vout, vcc, iLr1, iRet := node(wf, "out"), node(wf, "vcc"), I("Lr1"), I("Vret")
+		pp, pr := make([]float64, len(t)), make([]float64, len(t))
+		for k := range t {
+			pp[k] = vout[k] * iLr1[k]
+			pr[k] = vcc[k] * iRet[k]
+		}
+		r.PPort = mean(t, pp, i0)
+		r.PReturn = mean(t, pr, i0)
+		r.PRoyGross = r.PInRoy + r.PReturn
+	}
 	r.Residual = wf.Ledger.MaxRelativeResidual
 	if wf.Ledger.EnergyIn > 0 {
 		r.Mismatch = wf.Ledger.IntegrationMismatch / wf.Ledger.EnergyIn

@@ -1,0 +1,74 @@
+== Regenerative load on design A (synchronized) ==
+  turns ratio n:1 and C3 retune; P_port = power into the load port, P_return = power back into the 24 V rail
+  n 3.00 C3×0.8  P_port   234.4 W  P_return   224.7 W (0.959)  supplies net  119.5 W (HV  36.6, Royer   82.9; Royer before return  307.7)  mismatch -4.1e-05
+  n 3.00 C3×0.9  P_port   290.2 W  P_return   277.6 W (0.956)  supplies net  140.3 W (HV  26.8, Royer  113.5; Royer before return  391.1)  mismatch -2.4e-05
+  n 3.00 C3×1.0  P_port   288.4 W  P_return   276.2 W (0.957)  supplies net  118.0 W (HV  17.6, Royer  100.4; Royer before return  376.5)  mismatch -3.4e-05
+  n 3.00 C3×1.1  P_port   251.0 W  P_return   240.3 W (0.958)  supplies net   99.5 W (HV  26.5, Royer   72.9; Royer before return  313.2)  mismatch -4.5e-05
+  n 3.00 C3×1.2  P_port   222.5 W  P_return   213.5 W (0.960)  supplies net   93.4 W (HV  33.5, Royer   59.9; Royer before return  273.4)  mismatch -6.4e-05
+  n 3.25 C3×0.8  P_port   252.7 W  P_return   242.2 W (0.958)  supplies net  116.7 W (HV  35.3, Royer   81.3; Royer before return  323.6)  mismatch -2.7e-05
+  n 3.25 C3×0.9  P_port   315.4 W  P_return   301.6 W (0.956)  supplies net  137.5 W (HV  24.6, Royer  112.9; Royer before return  414.5)  mismatch -2.3e-05
+  n 3.25 C3×1.0  P_port   304.5 W  P_return   291.3 W (0.957)  supplies net  116.0 W (HV  17.1, Royer   98.9; Royer before return  390.3)  mismatch -1.8e-05
+  n 3.25 C3×1.1  P_port   262.1 W  P_return   251.0 W (0.958)  supplies net   95.4 W (HV  26.8, Royer   68.5; Royer before return  319.5)  mismatch -4.4e-05
+  n 3.25 C3×1.2  P_port   227.1 W  P_return   217.8 W (0.959)  supplies net   92.7 W (HV  33.6, Royer   59.1; Royer before return  276.9)  mismatch -4.8e-05
+  n 3.50 C3×0.8  P_port   265.3 W  P_return   254.1 W (0.958)  supplies net  115.8 W (HV  32.2, Royer   83.6; Royer before return  337.7)  mismatch -3.1e-05
+  n 3.50 C3×0.9  P_port   337.7 W  P_return   322.7 W (0.956)  supplies net  136.6 W (HV  22.1, Royer  114.5; Royer before return  437.2)  mismatch -2.2e-06
+  n 3.50 C3×1.0  P_port   318.1 W  P_return   304.2 W (0.956)  supplies net  110.9 W (HV  17.4, Royer   93.5; Royer before return  397.6)  mismatch -1.6e-05
+  n 3.50 C3×1.1  P_port   265.2 W  P_return   254.1 W (0.958)  supplies net   93.7 W (HV  28.1, Royer   65.6; Royer before return  319.7)  mismatch -2.3e-05
+  n 3.50 C3×1.2  P_port   230.2 W  P_return   220.9 W (0.960)  supplies net   87.9 W (HV  34.7, Royer   53.2; Royer before return  274.2)  mismatch -3.1e-05
+  n 3.75 C3×0.8  P_port   286.0 W  P_return   273.8 W (0.957)  supplies net  109.4 W (HV  32.0, Royer   77.3; Royer before return  351.1)  mismatch -2.8e-05
+  n 3.75 C3×0.9  P_port   359.3 W  P_return   343.1 W (0.955)  supplies net  134.5 W (HV  20.1, Royer  114.4; Royer before return  457.6)  mismatch -1.6e-05
+  n 3.75 C3×1.0  P_port   321.9 W  P_return   307.8 W (0.956)  supplies net  105.6 W (HV  19.1, Royer   86.4; Royer before return  394.2)  mismatch 3.0e-06
+  n 3.75 C3×1.1  P_port   261.2 W  P_return   250.4 W (0.959)  supplies net   90.8 W (HV  30.3, Royer   60.5; Royer before return  311.0)  mismatch -2.7e-05
+  n 3.75 C3×1.2  P_port   222.9 W  P_return   214.1 W (0.960)  supplies net   86.8 W (HV  37.4, Royer   49.4; Royer before return  263.5)  mismatch -2.0e-05
+  n 4.00 C3×0.8  P_port   296.0 W  P_return   283.8 W (0.959)  supplies net  108.2 W (HV  31.0, Royer   77.2; Royer before return  361.1)  mismatch -2.4e-05
+  n 4.00 C3×0.9  P_port   375.3 W  P_return   358.4 W (0.955)  supplies net  132.5 W (HV  16.4, Royer  116.1; Royer before return  474.5)  mismatch -6.4e-06
+  n 4.00 C3×1.0  P_port   311.1 W  P_return   297.8 W (0.957)  supplies net   98.8 W (HV  23.2, Royer   75.5; Royer before return  373.3)  mismatch 3.4e-06
+  n 4.00 C3×1.1  P_port   249.6 W  P_return   239.5 W (0.960)  supplies net   83.5 W (HV  33.8, Royer   49.7; Royer before return  289.2)  mismatch -7.7e-06
+  n 4.00 C3×1.2  P_port   207.0 W  P_return   199.3 W (0.963)  supplies net   83.3 W (HV  40.7, Royer   42.5; Royer before return  241.9)  mismatch -1.4e-05
+  n 4.25 C3×0.8  P_port   302.6 W  P_return   289.9 W (0.958)  supplies net  105.4 W (HV  29.6, Royer   75.8; Royer before return  365.7)  mismatch -2.6e-05
+  n 4.25 C3×0.9  P_port   383.4 W  P_return   365.6 W (0.954)  supplies net  125.5 W (HV  15.4, Royer  110.0; Royer before return  475.6)  mismatch -2.1e-05
+  n 4.25 C3×1.0  P_port   283.7 W  P_return   271.6 W (0.957)  supplies net   86.5 W (HV  29.4, Royer   57.1; Royer before return  328.7)  mismatch 4.9e-06
+  n 4.25 C3×1.1  P_port   218.9 W  P_return   209.6 W (0.957)  supplies net   81.6 W (HV  39.7, Royer   41.9; Royer before return  251.5)  mismatch -8.8e-06
+  n 4.25 C3×1.2  P_port   180.0 W  P_return   172.8 W (0.960)  supplies net   78.3 W (HV  45.5, Royer   32.7; Royer before return  205.6)  mismatch -1.6e-05
+  n 4.50 C3×0.8  P_port   300.1 W  P_return   287.6 W (0.958)  supplies net  101.7 W (HV  29.2, Royer   72.5; Royer before return  360.0)  mismatch -4.1e-05
+  n 4.50 C3×0.9  P_port   321.1 W  P_return   307.2 W (0.957)  supplies net   98.8 W (HV  25.0, Royer   73.7; Royer before return  381.0)  mismatch -9.5e-06
+  n 4.50 C3×1.0  P_port   224.9 W  P_return   216.6 W (0.963)  supplies net   86.0 W (HV  39.7, Royer   46.4; Royer before return  263.0)  mismatch 7.5e-06
+  n 4.50 C3×1.1  P_port   167.6 W  P_return   162.0 W (0.966)  supplies net   82.4 W (HV  48.4, Royer   33.9; Royer before return  195.9)  mismatch 6.6e-07
+  n 4.50 C3×1.2  P_port   126.0 W  P_return   122.3 W (0.970)  supplies net   84.8 W (HV  54.7, Royer   30.1; Royer before return  152.4)  mismatch 5.8e-06
+  n 4.75 C3×0.8  P_port   286.6 W  P_return   274.9 W (0.959)  supplies net   91.2 W (HV  32.7, Royer   58.6; Royer before return  333.5)  mismatch -1.7e-05
+  n 4.75 C3×0.9  P_port   237.3 W  P_return   228.2 W (0.962)  supplies net   84.8 W (HV  38.5, Royer   46.3; Royer before return  274.5)  mismatch 3.4e-05
+  n 4.75 C3×1.0  P_port   155.8 W  P_return   149.5 W (0.960)  supplies net   82.9 W (HV  50.1, Royer   32.8; Royer before return  182.3)  mismatch 9.1e-06
+  n 4.75 C3×1.1  P_port    97.8 W  P_return    94.2 W (0.963)  supplies net   86.6 W (HV  58.6, Royer   28.0; Royer before return  122.2)  mismatch 6.8e-06
+  n 4.75 C3×1.2  P_port    65.4 W  P_return    62.4 W (0.955)  supplies net   89.1 W (HV  62.9, Royer   26.1; Royer before return   88.5)  mismatch 1.6e-05
+  n 5.00 C3×0.8  P_port   237.8 W  P_return   227.8 W (0.958)  supplies net   83.2 W (HV  38.7, Royer   44.5; Royer before return  272.3)  mismatch -2.6e-05
+  n 5.00 C3×0.9  P_port   153.0 W  P_return   147.2 W (0.962)  supplies net   79.9 W (HV  50.4, Royer   29.5; Royer before return  176.6)  mismatch 3.0e-05
+  n 5.00 C3×1.0  P_port    77.8 W  P_return    74.2 W (0.954)  supplies net   87.3 W (HV  61.1, Royer   26.2; Royer before return  100.5)  mismatch 2.2e-05
+  n 5.00 C3×1.1  P_port    67.6 W  P_return    64.6 W (0.955)  supplies net   87.7 W (HV  62.3, Royer   25.3; Royer before return   89.9)  mismatch 2.2e-05
+  n 5.00 C3×1.2  P_port    57.5 W  P_return    55.2 W (0.960)  supplies net   88.6 W (HV  63.5, Royer   25.1; Royer before return   80.3)  mismatch 1.2e-05
+  n 5.25 C3×0.8  P_port   162.2 W  P_return   156.8 W (0.967)  supplies net   82.8 W (HV  49.7, Royer   33.1; Royer before return  189.9)  mismatch -1.9e-05
+  n 5.25 C3×0.9  P_port    86.2 W  P_return    82.5 W (0.957)  supplies net   84.8 W (HV  59.5, Royer   25.3; Royer before return  107.8)  mismatch 1.7e-05
+  n 5.25 C3×1.0  P_port    65.4 W  P_return    62.7 W (0.959)  supplies net   87.4 W (HV  62.4, Royer   25.0; Royer before return   87.8)  mismatch -8.2e-06
+  n 5.25 C3×1.1  P_port    43.2 W  P_return    41.6 W (0.963)  supplies net   90.9 W (HV  65.4, Royer   25.5; Royer before return   67.2)  mismatch -1.7e-05
+  n 5.25 C3×1.2  P_port    29.8 W  P_return    28.8 W (0.968)  supplies net   93.5 W (HV  67.4, Royer   26.1; Royer before return   55.0)  mismatch -8.4e-06
+  n 5.50 C3×0.8  P_port    99.1 W  P_return    95.2 W (0.961)  supplies net   83.7 W (HV  57.7, Royer   26.0; Royer before return  121.2)  mismatch -1.5e-05
+  n 5.50 C3×0.9  P_port    60.4 W  P_return    58.1 W (0.962)  supplies net   88.3 W (HV  63.0, Royer   25.3; Royer before return   83.4)  mismatch -1.2e-05
+  n 5.50 C3×1.0  P_port    35.3 W  P_return    34.1 W (0.966)  supplies net   92.4 W (HV  66.5, Royer   25.9; Royer before return   60.0)  mismatch -1.4e-05
+  n 5.50 C3×1.1  P_port    28.4 W  P_return    27.6 W (0.972)  supplies net   93.9 W (HV  67.7, Royer   26.2; Royer before return   53.9)  mismatch -2.6e-05
+  n 5.50 C3×1.2  P_port    21.5 W  P_return    21.0 W (0.978)  supplies net   95.3 W (HV  68.8, Royer   26.5; Royer before return   47.5)  mismatch -2.6e-05
+  n 5.75 C3×0.8  P_port    62.8 W  P_return    60.5 W (0.964)  supplies net   88.3 W (HV  62.8, Royer   25.4; Royer before return   86.0)  mismatch -2.4e-05
+  n 5.75 C3×0.9  P_port    36.8 W  P_return    35.6 W (0.969)  supplies net   92.4 W (HV  66.4, Royer   26.0; Royer before return   61.6)  mismatch -2.5e-05
+  n 5.75 C3×1.0  P_port    22.4 W  P_return    21.9 W (0.979)  supplies net   95.0 W (HV  68.6, Royer   26.4; Royer before return   48.3)  mismatch -9.9e-06
+  n 5.75 C3×1.1  P_port    12.8 W  P_return    12.6 W (0.989)  supplies net   96.8 W (HV  70.0, Royer   26.8; Royer before return   39.4)  mismatch 1.5e-05
+  n 5.75 C3×1.2  P_port    10.2 W  P_return    10.1 W (0.986)  supplies net   97.2 W (HV  70.4, Royer   26.8; Royer before return   36.9)  mismatch 2.5e-05
+  n 6.00 C3×0.8  P_port    39.5 W  P_return    38.4 W (0.971)  supplies net   92.1 W (HV  66.1, Royer   26.0; Royer before return   64.3)  mismatch -4.0e-05
+  n 6.00 C3×0.9  P_port    16.8 W  P_return    16.6 W (0.987)  supplies net   96.0 W (HV  69.4, Royer   26.6; Royer before return   43.2)  mismatch 2.3e-05
+  n 6.00 C3×1.0  P_port    11.5 W  P_return    11.4 W (0.993)  supplies net   96.9 W (HV  70.2, Royer   26.8; Royer before return   38.2)  mismatch 2.1e-05
+  n 6.00 C3×1.1  P_port     7.2 W  P_return     7.2 W (0.997)  supplies net   97.7 W (HV  70.7, Royer   26.9; Royer before return   34.2)  mismatch 3.3e-05
+  n 6.00 C3×1.2  P_port     4.0 W  P_return     4.0 W (1.002)  supplies net   98.2 W (HV  71.2, Royer   27.1; Royer before return   31.1)  mismatch 2.4e-05
+
+  best: n 4.25, C3 1.35e-07 F (×0.9)
+  power through the load port 383.4 W, returned to the 24 V rail 365.6 W (recovery 0.954)
+  the supplies now deliver 125.5 W net (HV 15.4 W + Royer 110.0 W); the Royer supply delivers 475.6 W and takes 365.6 W back
+  with the plain 24 Ω load: 374.6 W to the load from 477.4 W in (η 0.785), losses 102.8 W
+  ledger: integration mismatch -2.1e-05 of input; nothing is kept at the load, so net input = losses
+  losses: R1s 26.94 W; R2a 13.96 W; R2b 13.80 W; Rs 11.77 W; Rg 11.18 W; R3 10.73 W; M2 6.84 W; M1 6.43 W; DB3 3.91 W; DB2 3.91 W; DB4 3.50 W; DB1 3.50 W; RC2 3.40 W; Rr2 1.46 W; Rr1 0.83 W; Rsn 0.34 W; RG1 0.13 W; R1p 0.12 W; RG2 0.12 W; D1 0.01 W; D2 0.01 W; Rleak 0.00 W; load 0.00 W

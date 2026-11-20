@@ -96,7 +96,11 @@ func (d Design) Build() (*circuit.Circuit, Electrical, error) {
 	b.Inductor("L3", "hv", "a3", e.L3)
 	b.Resistor("R3", "a3", "b3", e.R3)
 	b.Capacitor("C3", "b3", "out", d.C3)
-	b.Resistor("RL", "out", "0", d.RL)
+	if d.Regen {
+		regenLoad(b, d)
+	} else {
+		b.Resistor("RL", "out", "0", d.RL)
+	}
 
 	// Coil 2: resonant (ZVS, Mazzilli) Royer oscillator, tank coil over coil 3.
 	supply := vcc
@@ -143,4 +147,42 @@ func (d Design) syncR() float64 {
 	w := 2 * math.Pi * d.RoyerFreq0()
 	ph := math.Max(0.5, math.Min(179.5, d.SyncPhase))
 	return math.Tan(ph*math.Pi/360) / (w * cPh)
+}
+
+// Regenerative load (declared parts): the load resistor is replaced by a
+// step-down transformer (ferrite, k = 0.995, primary L_p, ratio n:1,
+// winding resistances), a full bridge of low-drop rectifiers (Schottky or
+// synchronous MOSFETs, about 0.35 V at 20 A, 2 nF junction capacitance), an
+// RC snubber across the secondary and a 0 V ammeter into the
+// 24 V supply rail. The energy that would have heated the load returns to
+// the supply, which then delivers only the circuit's losses.
+const (
+	regenLp  = 2e-3  // transformer primary (magnetizing) inductance [H]
+	regenK   = 0.995 // transformer coupling
+	regenRp  = 0.05  // primary winding resistance [Ω]
+	regenRs  = 0.005 // secondary winding resistance [Ω]
+	regenRsn = 2.0   // snubber resistor [Ω]
+	regenCsn = 47e-9 // snubber capacitor [F]
+)
+
+func regenLoad(b *circuit.Builder, d Design) {
+	n := d.RegenN
+	b.Inductor("Lr1", "out", "r1", regenLp)
+	b.Resistor("Rr1", "r1", "0", regenRp)
+	b.Inductor("Lr2", "x1", "r2", regenLp/(n*n))
+	b.Resistor("Rr2", "r2", "x2", regenRs)
+	b.Mutual("Kr", "Lr1", "Lr2", regenK)
+	b.Model("DSYN", "d", map[string]float64{"is": 1e-5, "n": 1.05, "rs": 0.005, "cjo": 2e-9})
+	b.Diode("DB1", "x1", "rb", "DSYN")
+	b.Diode("DB2", "x2", "rb", "DSYN")
+	b.Diode("DB3", "0", "x1", "DSYN")
+	b.Diode("DB4", "0", "x2", "DSYN")
+	// RC snubber across the secondary (damps the leakage-inductance ring
+	// at each diode commutation; its loss is counted).
+	b.Resistor("Rsn", "x1", "sn", regenRsn)
+	b.Capacitor("Csn", "sn", "x2", regenCsn)
+	// The secondary floats between the bridge diodes; a 1 MΩ leak to
+	// ground gives its nodes a DC path.
+	b.Resistor("Rleak", "x2", "0", 1e6)
+	b.VoltageSource("Vret", "rb", "vcc", 0)
 }

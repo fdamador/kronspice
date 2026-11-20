@@ -125,3 +125,29 @@ func TestEvolvedDesigns(t *testing.T) {
 		}
 	}
 }
+
+// With the regenerative load nothing is kept at the load: the power
+// returned to the rail is below the power into the load port, and the
+// supplies' net input equals the sum of the losses.
+func TestRegenerativeLoad(t *testing.T) {
+	d := EvolvedSync()
+	d.Regen, d.RegenN, d.C3 = true, 4.25, d.C3*0.9
+	r := Simulate(context.Background(), d, false)
+	if r.Err != nil {
+		t.Fatal(r.Err)
+	}
+	if !(r.PPort > 300 && r.PReturn > 0.9*r.PPort && r.PReturn < r.PPort) {
+		t.Errorf("port %.1f W, returned %.1f W", r.PPort, r.PReturn)
+	}
+	loss := 0.0
+	for _, p := range r.PDiss {
+		loss += p
+	}
+	net := r.PInHV + r.PInRoy
+	if rel := math.Abs(net-loss) / net; rel > 0.03 {
+		t.Errorf("net input %.1f W, losses %.1f W (%.1f %%)", net, loss, 100*rel)
+	}
+	if math.Abs(r.Mismatch) > 1e-3 {
+		t.Errorf("ledger mismatch %.2g", r.Mismatch)
+	}
+}

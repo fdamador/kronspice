@@ -29,6 +29,7 @@ python3 examples/three_coil_sync/viz/plot_report.py examples/three_coil_sync/viz
 python3 examples/three_coil_sync/viz/plot_report.py examples/three_coil_sync/viz/data_free examples/three_coil_sync/viz/free
 python3 examples/three_coil_sync/viz/schematic.py examples/three_coil_sync/viz/data examples/three_coil_sync/viz
 python3 examples/three_coil_sync/viz/schematic.py examples/three_coil_sync/viz/data_free examples/three_coil_sync/viz/free
+go run ./examples/three_coil_sync -regen -data examples/three_coil_sync/viz/data > examples/three_coil_sync/regen_output.txt   # regenerative load, ~20 s
 python3 examples/three_coil_sync/viz/make_report.py examples/three_coil_sync/three_coil_sync_report.pdf
 go test ./examples/three_coil_sync
 ```
@@ -125,6 +126,41 @@ go test ./examples/three_coil_sync
 - **No surplus.** The load never gets more than the two supplies deliver.
   The transient ledger closes to 7e-5 (A) and 1e-4 (B) of the input energy.
 
+### Recycling the load's energy (`-regen`, `regen.go`)
+
+Can feeding the load's energy back make the circuit 99.99 % efficient? To
+test it, design A's load resistor is replaced by a regenerative load:
+
+- a step-down transformer (ferrite, k 0.995, 2 mH primary, ratio n:1);
+- a full bridge of low-drop rectifiers (Schottky or synchronous, about
+  0.35 V at 20 A, 2 nF junction capacitance);
+- an RC snubber (2 Ω, 47 nF);
+- a return path through a 0 V ammeter into the 24 V rail.
+
+The ratio n (3–6) and C3 (0.8–1.2×) are swept; the best point is n 4.25,
+C3 × 0.9.
+
+| | plain 24 Ω load | regenerative load |
+|---|---|---|
+| power at the load | 374.6 W, kept as heat | 383.4 W through the port |
+| returned to the 24 V rail | — | 365.6 W (recovery 0.954) |
+| supplies' net input | 477.4 W | 125.5 W |
+| of which circuit losses / recycling path | 102.8 W / — | 105.4 W / 17.5 W |
+| useful output kept | 374.6 W | 0 W |
+
+- **The recycling works.** The supplies' net input falls from 477 W to
+  125 W.
+- **What is left is exactly the losses.** Nothing is kept at the load, so
+  the net input is what the copper, switches, capacitor ESR and rectifiers
+  turn into heat. The test `TestRegenerativeLoad` checks this balance to
+  3 %, and the ledger closes to 2e-5.
+- **383 W / 125 W = 3.1 is not an efficiency.** It is how much power
+  circulates per watt of loss, like a resonator's Q.
+- **Recycling cannot beat the losses.** It lowers the bill to the losses,
+  never below them. Raising efficiency means cutting the losses
+  themselves; 92–96 % is realistic with copper coils at tens of kilohertz.
+- **Where it is useful:** testing at full power without a dump load.
+
 ### Build note
 
 Coil 1's secondary carries coil 3's full current, 4–5 A rms, so wind it
@@ -141,11 +177,12 @@ instructions and BOM use Ø1.0 mm.
 | `circuit.go` | the kronspice circuit: coil 1, coil 3, ZVS Royer, slaved HV amplifier |
 | `measure.go` | transient and steady-state measurements (power, frequency, lock, ripple, peaks, losses) |
 | `run.go` | genes, fitness and ratings, the GA run, comparisons, trend sweeps, CSV output |
-| `main_test.go` | geometry against Nagaoka, couplings, the Royer alone (frequency, π·Vcc peak), no surplus, evolved designs reproduce |
+| `regen.go` | the regenerative load on design A: ratio and C3 sweep, power returned to the rail (`-regen`) |
+| `main_test.go` | geometry against Nagaoka, couplings, the Royer alone (frequency, π·Vcc peak), no surplus, evolved designs reproduce, regenerative load (net input = losses) |
 | `export_test.go` | baseline and both evolved designs as netlists, KiCad schematics, results sheets (`export/`) |
 | `viz/` | `plot_report.py`, `schematic.py`, `make_report.py`; figures for A in `viz/`, for B in `viz/free/` |
 | `viz/data`, `viz/data_free` | CSV data of each run, and `best.cir`, the evolved circuit as a netlist |
-| `run_output.txt`, `run_free.txt`, `check_output.txt` | the two GA runs and the finer-step check |
+| `run_output.txt`, `run_free.txt`, `check_output.txt`, `regen_output.txt` | the two GA runs, the finer-step check, the regenerative-load sweep |
 
 ## Limits
 
