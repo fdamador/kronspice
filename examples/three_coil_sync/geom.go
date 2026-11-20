@@ -118,6 +118,10 @@ type Design struct {
 	SyncGain  float64
 	// VgAmp overrides the free-running generator's amplitude when > 0 [V].
 	VgAmp float64
+	// Regen replaces the load resistor by a transformer, a bridge rectifier
+	// and a return path into the 24 V rail, with turns ratio RegenN:1.
+	Regen  bool
+	RegenN float64
 	// Mode switches for the comparison runs.
 	RoyerOff, HVOff bool
 }

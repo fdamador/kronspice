@@ -164,3 +164,39 @@ ax.set_xlabel("time from switch-on [ms]")
 ax.set_ylabel("peak voltage per 10 µs [V]")
 ax.legend(fontsize=8, loc="lower right")
 save(fig, "startup.png")
+
+# regenerative load (design A only)
+if os.path.exists(os.path.join(data, "regen.csv")):
+    g = load("regen.csv")
+    with open(os.path.join(data, "regen_best.csv")) as f:
+        rb = {r["name"]: float(r["value"]) for r in csv.DictReader(f)}
+    ns = sorted(set(g["n"]))
+    best = []
+    for n in ns:
+        idx = [i for i in range(len(g["n"])) if g["n"][i] == n]
+        best.append(max(idx, key=lambda i: g["p_port"][i]))
+    fig, axs = plt.subplots(1, 2, figsize=(12, 4.2), gridspec_kw={"width_ratios": [1.2, 1]})
+    ax = axs[0]
+    ax.plot(ns, [g["p_port"][i] for i in best], color=OUT, marker="o", ms=3.5, label="into the load port")
+    ax.plot(ns, [g["p_return"][i] for i in best], color=GOLD, marker="o", ms=3.5, label="returned to the 24 V rail")
+    ax.plot(ns, [g["p_hv"][i] + g["p_roy_net"][i] for i in best], color=INK, lw=1.4, label="supplies, net (= losses)")
+    ax.set_xlabel("regenerative transformer ratio n:1 (C3 retuned at each n)")
+    ax.set_ylabel("mean power [W]")
+    ax.legend(fontsize=8, loc="upper right")
+    ax = axs[1]
+    groups = [("Royer supply delivers", rb["PRoyGross"], ROY), ("HV amplifier delivers", rb["PInHV"], HVC),
+              ("returned to the rail", -rb["PReturn"], GOLD),
+              ("net = losses", rb["PInHV"] + rb["PInRoy"], INK)]
+    y = range(len(groups))
+    ax.barh(list(y), [x[1] for x in groups], color=[x[2] for x in groups], height=0.55)
+    for yy, x in zip(y, groups):
+        ax.text(x[1] if x[1] > 0 else 0, yy, f"  {x[1]:+.1f} W" if x[1] < 0 else f"  {x[1]:.1f} W", va="center",
+                fontsize=8, color=INK)
+    ax.set_yticks(list(y))
+    ax.set_yticklabels([x[0] for x in groups])
+    ax.invert_yaxis()
+    ax.axvline(0, color=MUTED, lw=0.8)
+    ax.set_xlabel("mean power [W]")
+    ax.set_title(f"best point: n = {rb['N']:.2f}, recovery {rb['PReturn'] / rb['PPort']:.3f}", fontsize=9, loc="left")
+    fig.tight_layout()
+    save(fig, "regen.png")

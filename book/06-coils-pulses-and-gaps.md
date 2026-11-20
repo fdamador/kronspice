@@ -406,6 +406,12 @@ Neither search kept coil 1 as a high-voltage coil. A resonant loop of a few
 tens of ohms wants current, so evolution traded voltage for current. The
 ledger closes in every run.
 
+Feeding the load's energy back does not change that. With a transformer
+and rectifier returning it to the 24 V rail, 95 % of the 383 W through
+the load comes back, and the supplies deliver 125 W, which is exactly the
+losses. Nothing is kept, so the net input falls but the efficiency does
+not rise: recycling lowers the bill to the losses and never below them.
+
 ## 6.8 What to keep
 
 - Tesla's 250,000× is an idealized ratio of turn-to-turn energies,

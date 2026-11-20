@@ -42,10 +42,18 @@ func main() {
 	quick := flag.Bool("quick", false, "baseline only")
 	flag.BoolVar(&syncMode, "sync", false, "clock the HV amplifier from the Royer's tank (synchronized search)")
 	waves := flag.Bool("waves", false, "only rewrite the waveform files and netlists of the two evolved designs into -data and -data-free")
+	regen := flag.Bool("regen", false, "only run design A with the regenerative load (energy returned to the 24 V rail), writing regen.csv into -data")
 	dataFree := flag.String("data-free", "", "with -waves: data directory of the free-running design")
 	flag.Parse()
 	ctx := context.Background()
 
+	if *regen {
+		if err := runRegen(ctx, *dataDir); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		return
+	}
 	if *waves {
 		for _, x := range []struct {
 			dir string
