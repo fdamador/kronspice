@@ -1,0 +1,2 @@
+examples/three_coil_sync/viz/data_free: P_out 577.44 W at 2e-07 s steps, 586.75 W at 5e-08 s (0.016 relative); η 0.6778 / 0.6840; mismatch -0.00011 / -5.1e-07
+examples/three_coil_sync/viz/data: P_out 374.59 W at 2e-07 s steps, 374.69 W at 5e-08 s (0.00026 relative); η 0.7847 / 0.7848; mismatch -7.4e-05 / 1.5e-07

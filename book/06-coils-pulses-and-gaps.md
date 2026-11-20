@@ -379,7 +379,34 @@ ratio. The run also sets the helix's transverse and axial field parts
 beside Evans' B Cyclic theorem, with the bench measurement that tells them
 apart.
 
-## 6.7 What to keep
+## 6.7 Three coils, two drives
+
+[three_coil_sync](../examples/three_coil_sync) puts two drives on one
+resonant coil. Coil 1, an air-core step-up transformer, is wired to the
+top of coil 3. Coil 2, the bifilar tank of a ZVS Royer oscillator, is
+wound over coil 3. Coil 3 is a series RLC loop feeding a load. Every
+inductance comes from the winding geometry, turn by turn, and the genetic
+algorithm evolves the coils, the spacing, the capacitors, the load and
+the HV drive for the most power in the load within the parts' ratings.
+
+Coil 3 carries one current, so the two drives add as currents, not as
+powers. In phase, the load can get more than the two give alone, up to
+(√P₁ + √P₂)², and both supplies deliver more for it. Out of phase they
+fight: in the hand-picked start, both on gave less than the HV coil
+alone. Two searches were run:
+
+- **Synchronized:** the HV amplifier is clocked from the Royer, and the GA
+  sets the phase. Result: 375 W, steady, η 0.79.
+- **Free-running:** an independent HV generator. Result: 577 W, η 0.68, but
+  beating at about 2 kHz because the Royer is not locked to the generator.
+  The Royer would lock about 2 % higher in frequency, at an HV power past
+  the generator's rating.
+
+Neither search kept coil 1 as a high-voltage coil. A resonant loop of a few
+tens of ohms wants current, so evolution traded voltage for current. The
+ledger closes in every run.
+
+## 6.8 What to keep
 
 - Tesla's 250,000× is an idealized ratio of turn-to-turn energies,
   reproduced exactly and never reported as a coil's energy gain.
@@ -409,6 +436,7 @@ go run ./cmd/kronspice examples/sparkgap_diode/export/water_cell_bridge.cir
 go run ./examples/sparkgap_diode
 go run ./examples/sparkgap_diodebridge
 go run ./examples/b3_transformer
+go run ./examples/three_coil_sync -quick                # the full GA runs take ~25 min each
 ```
 
 ## Sources
