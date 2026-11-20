@@ -1,0 +1,153 @@
+== Baseline (hand-picked) ==
+  coils: N3 40, N2 6 per strand, gap 5.0 mm, N1s 400, N1p 8; C2 6.8e-07 F, C3 1e-07 F, RL 50 Ω
+  L3 5.99e-05 H, L2 strand 2.58e-06 H, k(2 strands) 0.956, k(2–3) 0.685, L1s 0.00419 H, L1p 8.42e-06 H, k1 0.328, C1self 3.95e-12 F
+  HV gen 6.077e+04 Hz, 0°; Royer tank (unloaded) 6.077e+04 Hz, measured 6.077e+04 Hz; output 6.076e+04 Hz; locked true, beat 0.020
+  P_out 0.992 W; in: HV 133 W + Royer -6.455 W; η 0.008
+  peaks: Vds 77.7 V, Id 0.6 A, V(hv) 141 V, V(C3) 5 V, V(load) 10 V; I3 0.14 A rms, I2 13.88 A rms, supply -0.28 A
+  ledger: max residual 0, integration mismatch -4.2e-05 of input; 31364 steps
+
+== Genetic evolution (HV amplifier clocked by the Royer (synchronized)): population 48, 25 generations, seed 1 ==
+  gen   0  best 0.60060  mean 3.5813  failed 0  timed out 0  (P_out ≥ 66.5 W)
+  gen   1  best 0.51917  mean 1.3766  failed 0  timed out 0  (P_out ≥ 92.6 W)
+  gen   2  best 0.49105  mean 2.6951  failed 0  timed out 0  (P_out ≥ 103.6 W)
+  gen   3  best 0.49105  mean 2.0295  failed 0  timed out 0  (P_out ≥ 103.6 W)
+  gen   4  best 0.36554  mean 1.1201  failed 0  timed out 0  (P_out ≥ 173.6 W)
+  gen   5  best 0.36554  mean 0.8183  failed 0  timed out 0  (P_out ≥ 173.6 W)
+  gen   6  best 0.36554  mean 0.6172  failed 0  timed out 0  (P_out ≥ 173.6 W)
+  gen   7  best 0.36554  mean 1125000.4297  failed 9  timed out 9  (P_out ≥ 173.6 W)
+  gen   8  best 0.35038  mean 0.5104  failed 0  timed out 0  (P_out ≥ 185.4 W)
+  gen   9  best 0.30078  mean 0.4716  failed 0  timed out 0  (P_out ≥ 232.5 W)
+  gen  10  best 0.27816  mean 0.4404  failed 0  timed out 0  (P_out ≥ 259.5 W)
+  gen  11  best 0.27416  mean 0.4102  failed 0  timed out 0  (P_out ≥ 264.8 W)
+  gen  12  best 0.27416  mean 0.4244  failed 0  timed out 0  (P_out ≥ 264.8 W)
+  gen  13  best 0.27287  mean 0.4603  failed 0  timed out 0  (P_out ≥ 266.5 W)
+  gen  14  best 0.26205  mean 0.3778  failed 0  timed out 0  (P_out ≥ 281.6 W)
+  gen  15  best 0.25762  mean 0.3511  failed 0  timed out 0  (P_out ≥ 288.2 W)
+  gen  16  best 0.24551  mean 0.4104  failed 0  timed out 0  (P_out ≥ 307.3 W)
+  gen  17  best 0.24551  mean 0.3246  failed 0  timed out 0  (P_out ≥ 307.3 W)
+  gen  18  best 0.24374  mean 0.3776  failed 0  timed out 0  (P_out ≥ 310.3 W)
+  gen  19  best 0.22144  mean 0.3392  failed 0  timed out 0  (P_out ≥ 351.6 W)
+  gen  20  best 0.21727  mean 0.3378  failed 0  timed out 0  (P_out ≥ 360.3 W)
+  gen  21  best 0.21727  mean 0.3070  failed 0  timed out 0  (P_out ≥ 360.3 W)
+  gen  22  best 0.21727  mean 0.3152  failed 0  timed out 0  (P_out ≥ 360.3 W)
+  gen  23  best 0.21727  mean 0.3341  failed 0  timed out 0  (P_out ≥ 360.3 W)
+  gen  24  best 0.21335  mean 0.3070  failed 0  timed out 0  (P_out ≥ 368.7 W)
+  gen  24  best 0.21335  mean 0.3070  failed 0  timed out 0  (P_out ≥ 368.7 W)
+  1152 evaluations in 18m33s
+
+== Evolved design ==
+  coils: N3 184, N2 8 per strand, gap 7.3 mm, N1s 50, N1p 4; C2 4.7e-06 F, C3 1.5e-07 F, RL 24 Ω
+  L3 0.000381 H, L2 strand 4.39e-06 H, k(2 strands) 0.965, k(2–3) 0.433, L1s 0.00025 H, L1p 2.69e-06 H, k1 0.542, C1self 4.58e-12 F
+  HV amplifier slaved to the tank: phase 287°, gain 0.167, output 12 V peak
+  HV gen 1.777e+04 Hz, 0°; Royer tank (unloaded) 1.768e+04 Hz, measured 1.777e+04 Hz; output 1.777e+04 Hz; locked true, beat 0.001
+  P_out 374.6 W; in: HV 15.25 W + Royer 462.1 W; η 0.785
+  peaks: Vds 72.7 V, Id 20.0 A, V(hv) 158 V, V(C3) 335 V, V(load) 136 V; I3 3.95 A rms, I2 30.08 A rms, supply 19.24 A
+  ledger: max residual 0, integration mismatch -7.4e-05 of input; 13617 steps
+  fitness 0.21335 (GA 0.21335)
+  losses: R1s 25.30 W; R2a 14.45 W; R2b 14.35 W; Rs 11.12 W; R3 10.08 W; M1 6.37 W; M2 6.23 W; Rg 6.10 W; RC2 3.65 W; RG2 0.12 W; RG1 0.12 W; R1p 0.07 W; D2 0.01 W; D1 0.01 W; load 374.59 W
+
+== Each drive alone against both (evolved design) ==
+  HV coil only  P_out    2.088 W   in: HV    63.12 W, Royer    -0.00 W   η 0.033
+  Royer only    P_out  323.704 W   in: HV     0.15 W, Royer   427.67 W   η 0.757
+  both          P_out  374.587 W   in: HV    15.25 W, Royer   462.13 W   η 0.785
+  sum of the two alone 325.791 W; coherent (in-phase) sum (√P1 + √P2)² = 377.785 W; both measured 374.587 W
+
+== Same comparison, hand-picked baseline ==
+  both          P_out    0.992 W   in: HV   133.03 W, Royer    -6.46 W
+  HV coil only  P_out    1.360 W   in: HV   129.09 W, Royer    -0.00 W
+  Royer only    P_out    0.191 W   in: HV    -0.00 W, Royer     6.67 W
+
+== Trends around the evolved design ==
+  gain (G / G,best):
+    x 0         P_out   323.704 W  HV in     0.15  Royer in   427.67  f_R    17405  locked true  beat 0.004  k23 0.433  err false
+    x 0.1       P_out   327.748 W  HV in    -3.67  Royer in   431.43  f_R    17435  locked true  beat 0.004  k23 0.433  err false
+    x 0.2       P_out   329.737 W  HV in    -6.37  Royer in   435.22  f_R    17465  locked true  beat 0.004  k23 0.433  err false
+    x 0.3       P_out   331.536 W  HV in    -7.97  Royer in   439.12  f_R    17495  locked true  beat 0.003  k23 0.433  err false
+    x 0.4       P_out   336.091 W  HV in    -8.33  Royer in   443.04  f_R    17529  locked true  beat 0.002  k23 0.433  err false
+    x 0.5       P_out   345.016 W  HV in    -7.34  Royer in   446.80  f_R    17565  locked true  beat 0.002  k23 0.433  err false
+    x 0.6       P_out   356.550 W  HV in    -5.06  Royer in   450.25  f_R    17601  locked true  beat 0.002  k23 0.433  err false
+    x 0.7       P_out   366.487 W  HV in    -1.73  Royer in   453.32  f_R    17640  locked true  beat 0.002  k23 0.433  err false
+    x 0.8       P_out   371.045 W  HV in     2.57  Royer in   456.19  f_R    17683  locked true  beat 0.003  k23 0.433  err false
+    x 0.9       P_out   371.818 W  HV in     8.11  Royer in   459.17  f_R    17727  locked true  beat 0.001  k23 0.433  err false
+    x 1         P_out   374.587 W  HV in    15.25  Royer in   462.13  f_R    17773  locked true  beat 0.001  k23 0.433  err false
+    x 1.1       P_out   382.981 W  HV in    23.55  Royer in   464.75  f_R    17822  locked true  beat 0.001  k23 0.433  err false
+    x 1.2       P_out   392.699 W  HV in    32.61  Royer in   466.94  f_R    17874  locked true  beat 0.002  k23 0.433  err false
+    x 1.3       P_out   398.493 W  HV in    42.84  Royer in   468.78  f_R    17928  locked true  beat 0.004  k23 0.433  err false
+    x 1.4       P_out   402.562 W  HV in    54.65  Royer in   470.50  f_R    17985  locked true  beat 0.005  k23 0.433  err false
+    x 1.5       P_out   409.134 W  HV in    67.47  Royer in   471.84  f_R    18044  locked true  beat 0.004  k23 0.433  err false
+  phase (deg):
+    x 0         P_out   287.727 W  HV in    41.71  Royer in   397.40  f_R    18149  locked true  beat 0.005  k23 0.433  err false
+    x 15        P_out   274.794 W  HV in    54.83  Royer in   389.81  f_R    18073  locked true  beat 0.006  k23 0.433  err false
+    x 30        P_out   262.016 W  HV in    68.32  Royer in   384.86  f_R    17961  locked true  beat 0.003  k23 0.433  err false
+    x 45        P_out   253.065 W  HV in    80.28  Royer in   382.38  f_R    17824  locked true  beat 0.001  k23 0.433  err false
+    x 60        P_out   252.304 W  HV in    91.84  Royer in   381.10  f_R    17671  locked true  beat 0.001  k23 0.433  err false
+    x 75        P_out   244.505 W  HV in   102.46  Royer in   381.57  f_R    17513  locked true  beat 0.005  k23 0.433  err false
+    x 90        P_out   254.856 W  HV in   105.34  Royer in   383.22  f_R    17355  locked true  beat 0.006  k23 0.433  err false
+    x 105       P_out   260.721 W  HV in   105.43  Royer in   385.16  f_R    17204  locked true  beat 0.003  k23 0.433  err false
+    x 120       P_out   270.741 W  HV in   103.90  Royer in   388.92  f_R    17067  locked true  beat 0.005  k23 0.433  err false
+    x 135       P_out   284.718 W  HV in    97.43  Royer in   393.98  f_R    16948  locked true  beat 0.003  k23 0.433  err false
+    x 150       P_out   300.104 W  HV in    87.14  Royer in   400.68  f_R    16853  locked true  beat 0.004  k23 0.433  err false
+    x 165       P_out   322.199 W  HV in    77.52  Royer in   409.77  f_R    16788  locked true  beat 0.004  k23 0.433  err false
+    x 180       P_out   339.865 W  HV in    65.72  Royer in   420.21  f_R    16757  locked true  beat 0.006  k23 0.433  err false
+    x 195       P_out   356.393 W  HV in    54.37  Royer in   431.39  f_R    16760  locked true  beat 0.003  k23 0.433  err false
+    x 210       P_out   369.431 W  HV in    44.43  Royer in   442.71  f_R    16803  locked true  beat 0.003  k23 0.433  err false
+    x 225       P_out   376.363 W  HV in    34.97  Royer in   454.27  f_R    16888  locked true  beat 0.003  k23 0.433  err false
+    x 240       P_out   387.845 W  HV in    27.40  Royer in   464.66  f_R    17025  locked true  beat 0.005  k23 0.433  err false
+    x 255       P_out   391.469 W  HV in    21.70  Royer in   471.36  f_R    17223  locked true  beat 0.004  k23 0.433  err false
+    x 270       P_out   389.127 W  HV in    17.40  Royer in   471.60  f_R    17474  locked true  beat 0.004  k23 0.433  err false
+    x 285       P_out   378.995 W  HV in    15.13  Royer in   463.78  f_R    17737  locked true  beat 0.003  k23 0.433  err false
+    x 300       P_out   365.724 W  HV in    15.48  Royer in   450.15  f_R    17950  locked true  beat 0.001  k23 0.433  err false
+    x 315       P_out   346.379 W  HV in    18.14  Royer in   434.68  f_R    18092  locked true  beat 0.004  k23 0.433  err false
+    x 330       P_out   324.251 W  HV in    23.35  Royer in   420.28  f_R    18166  locked true  beat 0.006  k23 0.433  err false
+    x 345       P_out   306.122 W  HV in    31.21  Royer in   407.84  f_R    18182  locked true  beat 0.004  k23 0.433  err false
+  load (RL / RL,best):
+    x 0.1       P_out    58.413 W  HV in    40.06  Royer in   164.18  f_R    21130  locked true  beat 0.106  k23 0.433  err false
+    x 0.1334    P_out    76.743 W  HV in    37.31  Royer in   182.29  f_R    21082  locked true  beat 0.058  k23 0.433  err false
+    x 0.1778    P_out   115.498 W  HV in    41.98  Royer in   244.02  f_R    14767  locked true  beat 0.251  k23 0.433  err false
+    x 0.2371    P_out   151.041 W  HV in    38.17  Royer in   277.50  f_R    14784  locked true  beat 0.143  k23 0.433  err false
+    x 0.3162    P_out   196.841 W  HV in    34.31  Royer in   323.12  f_R    14908  locked true  beat 0.038  k23 0.433  err false
+    x 0.4217    P_out   257.996 W  HV in    28.95  Royer in   380.35  f_R    15096  locked true  beat 0.013  k23 0.433  err false
+    x 0.5623    P_out   324.990 W  HV in    20.65  Royer in   451.33  f_R    15470  locked true  beat 0.004  k23 0.433  err false
+    x 0.7499    P_out   407.671 W  HV in    10.89  Royer in   533.63  f_R    16431  locked true  beat 0.001  k23 0.433  err false
+    x 1         P_out   374.587 W  HV in    15.25  Royer in   462.13  f_R    17773  locked true  beat 0.001  k23 0.433  err false
+    x 1.334     P_out   311.871 W  HV in    26.71  Royer in   371.31  f_R    17769  locked true  beat 0.002  k23 0.433  err false
+    x 1.778     P_out   253.949 W  HV in    36.34  Royer in   296.52  f_R    17762  locked true  beat 0.002  k23 0.433  err false
+    x 2.371     P_out   203.077 W  HV in    44.25  Royer in   236.10  f_R    17759  locked true  beat 0.002  k23 0.433  err false
+    x 3.162     P_out   160.016 W  HV in    50.63  Royer in   188.13  f_R    17757  locked true  beat 0.001  k23 0.433  err false
+    x 4.217     P_out   124.640 W  HV in    55.66  Royer in   150.50  f_R    17754  locked true  beat 0.004  k23 0.433  err false
+    x 5.623     P_out    96.181 W  HV in    59.61  Royer in   121.19  f_R    17752  locked true  beat 0.011  k23 0.433  err false
+    x 7.499     P_out    73.715 W  HV in    62.64  Royer in    98.41  f_R    17751  locked true  beat 0.029  k23 0.433  err false
+    x 10        P_out    56.194 W  HV in    65.00  Royer in    80.71  f_R    17750  locked true  beat 0.059  k23 0.433  err false
+  c3 (C3 / C3,best):
+    x 0.5       P_out    62.371 W  HV in    62.67  Royer in   102.31  f_R    16789  locked true  beat 0.030  k23 0.433  err false
+    x 0.5453    P_out    79.523 W  HV in    59.86  Royer in   121.12  f_R    16689  locked true  beat 0.013  k23 0.433  err false
+    x 0.5946    P_out   100.311 W  HV in    55.99  Royer in   145.66  f_R    16587  locked true  beat 0.009  k23 0.433  err false
+    x 0.6484    P_out   131.387 W  HV in    53.83  Royer in   177.28  f_R    16488  locked true  beat 0.003  k23 0.433  err false
+    x 0.7071    P_out   162.059 W  HV in    46.72  Royer in   216.81  f_R    16404  locked true  beat 0.004  k23 0.433  err false
+    x 0.7711    P_out   208.074 W  HV in    40.77  Royer in   267.87  f_R    16356  locked true  beat 0.006  k23 0.433  err false
+    x 0.8409    P_out   261.118 W  HV in    33.15  Royer in   332.02  f_R    16391  locked true  beat 0.004  k23 0.433  err false
+    x 0.917     P_out   328.428 W  HV in    24.08  Royer in   411.67  f_R    16645  locked true  beat 0.004  k23 0.433  err false
+    x 1         P_out   374.587 W  HV in    15.25  Royer in   462.13  f_R    17773  locked true  beat 0.001  k23 0.433  err false
+    x 1.091     P_out   319.676 W  HV in    21.14  Royer in   384.47  f_R    18717  locked true  beat 0.004  k23 0.433  err false
+    x 1.189     P_out   270.961 W  HV in    27.80  Royer in   325.28  f_R    18999  locked true  beat 0.005  k23 0.433  err false
+    x 1.297     P_out   236.855 W  HV in    32.90  Royer in   282.93  f_R    19107  locked true  beat 0.002  k23 0.433  err false
+    x 1.414     P_out   209.700 W  HV in    37.30  Royer in   251.11  f_R    19146  locked true  beat 0.006  k23 0.433  err false
+    x 1.542     P_out   188.027 W  HV in    40.79  Royer in   226.43  f_R    19153  locked true  beat 0.005  k23 0.433  err false
+    x 1.682     P_out   170.941 W  HV in    43.54  Royer in   206.73  f_R    19144  locked true  beat 0.004  k23 0.433  err false
+    x 1.834     P_out   156.962 W  HV in    45.75  Royer in   190.75  f_R    19127  locked true  beat 0.003  k23 0.433  err false
+    x 2         P_out   145.233 W  HV in    47.55  Royer in   177.66  f_R    19106  locked true  beat 0.003  k23 0.433  err false
+  gap (mm):
+    x 1         P_out   323.852 W  HV in    20.85  Royer in   404.69  f_R    23400  locked true  beat 0.006  k23 0.517  err false
+    x 2.727     P_out   333.528 W  HV in    19.43  Royer in   412.84  f_R    21926  locked true  beat 0.008  k23 0.490  err false
+    x 4.455     P_out   346.318 W  HV in    16.89  Royer in   431.31  f_R    20504  locked true  beat 0.004  k23 0.467  err false
+    x 6.182     P_out   376.222 W  HV in    14.17  Royer in   458.38  f_R    18948  locked true  beat 0.005  k23 0.445  err false
+    x 7.909     P_out   363.301 W  HV in    18.56  Royer in   440.96  f_R    17131  locked true  beat 0.004  k23 0.426  err false
+    x 9.636     P_out   294.870 W  HV in    28.53  Royer in   357.04  f_R    16099  locked true  beat 0.002  k23 0.408  err false
+    x 11.36     P_out   229.697 W  HV in    36.94  Royer in   285.35  f_R    15457  locked true  beat 0.004  k23 0.392  err false
+    x 13.09     P_out   186.109 W  HV in    43.68  Royer in   229.83  f_R    14955  locked true  beat 0.003  k23 0.377  err false
+    x 14.82     P_out   151.457 W  HV in    50.17  Royer in   187.24  f_R    14524  locked true  beat 0.001  k23 0.363  err false
+    x 16.55     P_out   119.207 W  HV in    53.23  Royer in   153.40  f_R    14140  locked true  beat 0.004  k23 0.350  err false
+    x 18.27     P_out    96.876 W  HV in    57.28  Royer in   127.54  f_R    13787  locked true  beat 0.005  k23 0.337  err false
+    x 20        P_out    77.087 W  HV in    60.51  Royer in   106.67  f_R    13459  locked true  beat 0.009  k23 0.326  err false
+
+(wave.csv, startup.csv and best.cir were then written by -waves; see check_output.txt)
