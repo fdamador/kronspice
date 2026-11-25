@@ -110,11 +110,11 @@ func (c *Coil) BuildWithPickup(src circuit.Element, f1 float64, pk Pickup) (*cir
 		for t := 0; t < g.N(); t++ {
 			p := c.Pos[t]
 			for i := 0; i < PickupTurns; i++ {
-				ms[sectionOf(t, g.N())] += em.MutualCircles(PickupRadius, g.R[p], g.Z[p]-pk.z(i))
+				ms[sectionOf(t, g.N())] += c.Sign[t] * em.MutualCircles(PickupRadius, g.R[p], g.Z[p]-pk.z(i))
 			}
 		}
 		for s, m := range ms {
-			b.Mutual(fmt.Sprintf("KU%d", s), "LPU", "L"+strconv.Itoa(s), m/math.Sqrt(lpu*c.L[s][s]))
+			b.Mutual(fmt.Sprintf("KU%d", s), "LPU", "L"+strconv.Itoa(s), c.SectionSign(s)*m/math.Sqrt(lpu*c.L[s][s]))
 		}
 		mp := 0.0
 		for i := 0; i < PickupTurns; i++ {
@@ -178,7 +178,7 @@ func (c *Coil) PulsePickup(f1, rate float64, cycles int, pk Pickup) (PickupRun, 
 	}
 	r := PickupRun{Pickup: pk, Rate: rate}
 	il, _ := w.ElementCurrent("RLOAD")
-	top, _ := w.NodeVoltage("n" + strconv.Itoa(NumSections()))
+	top, _ := w.NodeVoltage("n" + strconv.Itoa(c.Top))
 	base, _ := w.NodeVoltage("n0")
 	var pl, ps, prs []float64
 	for i, n := range w.ElementNames {
