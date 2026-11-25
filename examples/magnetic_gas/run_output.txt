@@ -1,0 +1,92 @@
+500 psi = 3.447 MPa = 34.02 atm = 25857 Torr (taken as absolute pressure; 500 psig would be 35.0 atm)
+
+Part 1 — the gases
+  Ar     argon            Paschen minimum 137 V at 0.90 Torr·cm; ionization 15.76 eV; 0 unpaired e⁻ neutral, 1 in Ar⁺
+  H₂     hydrogen         Paschen minimum 273 V at 1.15 Torr·cm; ionization 15.43 eV; 0 unpaired e⁻ neutral, 1 in H₂⁺
+  O₂     oxygen           Paschen minimum 450 V at 0.70 Torr·cm; ionization 12.07 eV; 2 unpaired e⁻ neutral, 1 in O₂⁺
+  HHO    HHO (2 H₂ + O₂)  Paschen minimum 332 V at 1.00 Torr·cm; ionization 12.07 eV; 2 unpaired e⁻ neutral, 1 in O₂⁺
+  HHO is 2 H₂ : 1 O₂. Its Paschen numbers are mole-weighted from H₂ and O₂ (an ESTIMATE: no measured curve found).
+  HHO is fuel and oxidizer together: any spark in it ignites it (Part 4 gives the energy it holds).
+
+Part 2 — breakdown voltage (uniform field; Townsend through the measured Paschen minimum)
+  gap             Ar 1 atm      H₂ 1 atm      O₂ 1 atm HHO (est.) 1 atm      Ar 500 psi      H₂ 500 psi      O₂ 500 psi HHO (est.) 500 psi
+  0.05 mm            237 V         411 V         908 V         540 V          3.3 kV         5.36 kV         13.4 kV         7.32 kV
+  0.10 mm            369 V         625 V       1.44 kV         833 V         5.91 kV         9.57 kV           24 kV         13.1 kV
+  0.20 mm            605 V       1.01 kV        2.4 kV       1.36 kV         10.7 kV         17.3 kV         43.7 kV         23.7 kV
+  0.50 mm          1.22 kV       2.01 kV       4.89 kV       2.72 kV         23.8 kV         38.2 kV         97.5 kV         52.6 kV
+  1.00 mm          2.13 kV       3.48 kV       8.59 kV       4.73 kV         43.9 kV         70.4 kV          180 kV         96.9 kV
+  check, air 1 cm at 1 atm: 53.4 kV by this rule against about 30 kV measured: it reads 1.78× high at large pd.
+  So read the 500 psi column as an upper bound; above about 10 bar measured gaps also fall below Paschen's law.
+  cross-check Ar, 0.2 mm at 500 psi: 10.7 kV (this rule) vs 12.9 kV (Raizer A = 12, B = 180, γ = 0.01)
+  cross-check H₂, 0.2 mm at 500 psi: 17.3 kV (this rule) vs 10.6 kV (Raizer A = 5, B = 130, γ = 0.01)
+
+Part 3 — magnetism (SI volume susceptibility χ; + is pulled into a field, − pushed out)
+  gas               χ 1 atm    χ 500 psi pull/weight 1 atm pull/weight 500 psi
+  Ar              -1.02e-08    -3.48e-07            -0.05            -0.05
+  H₂              -2.08e-09    -7.09e-08           -0.202           -0.202
+  O₂                1.8e-06     6.13e-05               11               11
+  HHO (est.)       5.99e-07     2.04e-05             9.74             9.74
+  (pull/weight: magnetic force over the gas's own weight in a 100 T²/m gradient, a strong lab magnet; ratio is independent of pressure)
+  Removing one electron, sealed 500 psi fill, at 1 eV (11,605 K) — ions + free electrons against the neutral gas:
+  gas          ion      ionized    χ neutral       χ ions  χ electrons      χ total
+  Ar           Ar⁺           1%    -3.45e-07     1.28e-08     3.83e-09    -3.28e-07
+  Ar           Ar⁺         100%           -0     1.28e-06     3.83e-07     1.66e-06
+  H₂           H₂⁺           1%    -7.02e-08     5.75e-09     3.83e-09    -6.06e-08
+  H₂           H₂⁺         100%           -0     5.75e-07     3.83e-07     9.58e-07
+  O₂           O₂⁺           1%     1.53e-06     5.75e-09     3.83e-09     1.54e-06
+  O₂           O₂⁺         100%            0     5.75e-07     3.83e-07     9.58e-07
+  HHO (est.)   O₂⁺           1%      5.1e-07     5.75e-09     3.83e-09     5.19e-07
+  HHO (est.)   O₂⁺         100%            0     5.75e-07     3.83e-07     9.58e-07
+  argon at room temperature, fully ionized (an upper bound): χ -3.48e-07 → 6.57e-05, ×189 — argon does turn paramagnetic.
+  oxygen goes the other way: O₂ has 2 unpaired electrons, O₂⁺ has 1, so χ 6.13e-05 → 3.79e-05 at room temperature.
+
+Part 4 — compression
+  B =     1 T: magnetic pressure 398 kPa = 3.927 atm = 57.71 psi
+  B =     3 T: magnetic pressure 3.58 MPa = 35.34 atm = 519.4 psi
+  B =    10 T: magnetic pressure 39.8 MPa = 392.7 atm = 5771 psi
+  B =    30 T: magnetic pressure 358 MPa = 3534 atm = 5.194e+04 psi
+  B =   100 T: magnetic pressure 3.98 GPa = 3.927e+04 atm = 5.771e+05 psi
+  field to hold the 500 psi fill at room temperature (β = 1): 2.94 T
+  same fill heated to 1 eV,   1% ionized: 138 MPa (1360 atm), field to hold it 18.6 T
+  same fill heated to 1 eV, 100% ionized: 273 MPa (2694 atm), field to hold it 26.2 T
+  Fast one-stroke compression from 1 atm, 20 °C, to 500 psi heats the gas (adiabatic):
+  Ar           γ 1.667 → 1202 K ( 929 °C)
+  H₂           γ 1.410 →  818 K ( 544 °C)
+  O₂           γ 1.400 →  803 K ( 530 °C)
+  HHO (est.)   γ 1.400 →  803 K ( 530 °C)  ← near hydrogen's auto-ignition (about 560–585 °C, declared): compress HHO slowly and cooled, or not at all
+  energy to singly ionize all of 1 cm³ of Ar at 500 psi: 2.15 kJ
+  energy to singly ionize all of 1 cm³ of H₂ at 500 psi: 2.11 kJ
+  energy to singly ionize all of 1 cm³ of O₂ at 500 psi: 1.65 kJ
+  energy to singly ionize all of 1 cm³ of HHO (est.) at 500 psi: 1.65 kJ
+  chemical energy in 1 cm³ of HHO at 500 psi (burned to vapour): 228 J — a spark ignites it; detonation multiplies the fill pressure many times over (not computed here)
+
+Part 5 — Marx generator: 4 stages × 10 nF, 0.2 mm gaps at 500 psi, charged to 90 % of breakdown, 1 µH, 50 Ω load (kronspice)
+  gas           breakdown  charge to  stage min  output pk    × Vc      rise     stored    to load    in arcs books ch. books fire
+  Ar              10.7 kV    9.63 kV    9.63 kV    29.5 kV    3.06     25 ns     1.86 J     1.78 J    71.4 mJ  -1.2e-04  -8.7e-05
+  H₂              17.3 kV    15.5 kV    15.5 kV    47.6 kV    3.06     25 ns     4.83 J     4.65 J     186 mJ  -1.2e-04  -8.7e-05
+  O₂              43.7 kV    39.3 kV    39.3 kV     120 kV    3.06     25 ns       31 J     29.8 J     1.19 J  -1.2e-04  -8.7e-05
+  HHO (est.)      23.7 kV    21.3 kV    21.3 kV    65.3 kV    3.06     25 ns     9.09 J     8.74 J     350 mJ  -1.2e-04  -8.7e-05
+  (books: the ledger's integration mismatch, relative, charging and firing; point residuals are 0 to round-off.)
+  The peak is 3.06·Vc, not 4·Vc: the erected bank (C/4 = 2.5 nF) drains into the load in RC = 130 ns while the 1 µH loop holds the
+  rise back (L/R = 20 ns); with no loop inductance it would reach 4·Vc·50/52 = 3.85·Vc. Charging through Rs heats it by half of what
+  the supply gives, as for any RC charge. Oxygen holds the most, but sparking pure O₂ at 500 psi burns electrode metal: an oxygen
+  fire hazard. HHO's row is a shot into fuel and oxidizer: the gap detonates the fill (Part 4).
+  argon: supply gave 3.71 J while charging, 1.86 J went to heat, 1.86 J stored; firing: 1.78 J to the load + 71.4 mJ in the arcs, integration mismatch -8.7e-05 of the stored energy
+
+Part 6 — ECE2 (H48, hypothetical) beside the standard prediction, argon Marx
+  standard (Maxwell)               output peak 29.5 kV (+0 %), stored 1.86 J, heat 1.86 J, model-supplied 0 J, books -8.7e-05
+  ECE2 torsion, ω₀ = 8.339e-8 /m   output peak 29.5 kV (+7.05e-05 %), stored 1.86 J, heat 1.86 J, model-supplied 1.78 µJ, books -8.7e-05
+  ECE2 scalar, κ = 0.05            output peak 32.8 kV (+11.1 %), stored 1.86 J, heat 1.86 J, model-supplied -51.2 fJ, books -8.7e-05
+  Torsion: a series resistance −2cω₀L = −50 µΩ in the 1 µH loop, a 7e-7 change. Scalar: every terminal reads 1/(1 − 2κ) = 1.111× the
+  body voltage, so the probe sees 11 % more for the same stored charge, energy and heat; it delivers no energy (model-supplied ≈ 0).
+  ECE2 power is booked as model-supplied, never inflow. A probe and a calorimeter on one bench shot, against the standard row, decide.
+
+Part 7 — plasma varactor charge pump: 100 V in, 10 nF gap, plasma fills 2/3 of it (C ×3), 10 kHz, 100 nF into 1 MΩ
+  argon: ideal r·Vin 300 V, simulated 295 V after 200 cycles
+  power over the last 10 %: from the 100 V supply 29.7 mW, through the varactor's port (paid by the plasma supply) 60.9 mW, into the load 86.9 mW
+  ledger worst residual 0.0e+00, integration mismatch -1.4e-03 of the energy in
+  What each gas's 1 mm varactor gap holds at 500 psi with the plasma off (the pump's ceiling), and what pressure alone would do:
+  Ar           holds 43.9 kV; compressing the neutral gas 1 atm → 500 psi raises C only ×1.0171
+  H₂           holds 70.4 kV; compressing the neutral gas 1 atm → 500 psi raises C only ×1.0084
+  O₂           holds 180 kV; compressing the neutral gas 1 atm → 500 psi raises C only ×1.0163
+  HHO (est.)   holds 96.9 kV; compressing the neutral gas 1 atm → 500 psi raises C only ×1.0110

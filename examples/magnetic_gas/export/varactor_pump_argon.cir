@@ -1,0 +1,10 @@
+gas-gap varactor charge pump, Ar at 500 psi, ratio 3
+VIN in 0 DC 100
+D1 in v DSI
+CV v 0 1e-08 SCALE=PULSE(3 1 4e-05 1e-05 1e-05 4e-05 0.0001) EXT=electric-field
+D2 v out DSI
+COUT out 0 1e-07
+RLOAD out 0 1e+06
+.model DSI D(IS=1e-14 N=1 RS=0.1)
+.tran 5e-08 0.02
+.end
