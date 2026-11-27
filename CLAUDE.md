@@ -445,6 +445,8 @@ kronspice/
 │   └── base.go                 # device.Base embeds this: all channels present, default "not modeled"
 ├── circuit/                    # in-memory circuit model (nodes, elements, models)
 │   ├── builder.go              # programmatic API used by the GA (no text parsing)
+│   ├── royer.go                # Royer stage as a composite of the U core, two NPNs, base resistors, start resistor and base-return diode; RoyerFrequency (§3j)
+│   ├── magamp.go               # half-wave self-saturating magnetic amplifier as a composite: U core (gate, control, feedback windings), rectifier, filter C (§3j)
 │   └── ece.go                  # hypothetical ECE / ECE2 spin-connection terms on R, L, C, K (.ece; H48): forms, per-element ω₀, κ
 ├── device/                     # one file per device family
 │   ├── device.go               # Device interface, stamping context
@@ -455,8 +457,6 @@ kronspice/
 │   ├── switch.go               # S, W
 │   ├── arc.go                  # A element: arc / spark gap, Mayr, Cassie, Habedank (series) laws, breakdown at VBD; exact constant-current step, thermal port (§3g)
 │   ├── core.go                 # U element: Jiles–Atherton saturable core with N windings; pinning loss μ0k(1−c)|dMirr| on the thermal port = loop area (§3j)
-│   ├── royer.go                # Royer self-oscillating converter stage (§3j)
-│   ├── magamp.go               # self-saturating magnetic amplifier on the core model (§3j)
 │   ├── diode.go                # D (SPICE3 level-1 diode)
 │   ├── behavioral.go           # B: PWL nonlinear elements — N-type i=f(v), S-type v=g(i), controlled sources
 │   ├── ece.go                  # ECE / ECE2 terms in the R, L, C, K stamps: body voltage α_a·φ_a − α_b·φ_b, torsion s·cω₀L, mutual s·cω₀M; power as model-supplied
@@ -2686,11 +2686,17 @@ one.
 
 **Models needed.** `device/core.go`: saturable magnetic core with
 hysteresis (Jiles–Atherton), required for the Royer transformer to saturate
-and set the frequency. `device/royer.go`: the Royer stage as a composite
-(two switches, centre-tapped saturable transformer, feedback winding).
-`device/magamp.go`: self-saturating magnetic amplifier (half- and
-full-wave) built on `device/core.go`, with control winding, load windings,
-series rectifiers and optional feedback winding. `fluid/mist.go`: a
+and set the frequency. `circuit/royer.go`: the Royer stage as a composite
+of ordinary elements (two switches, centre-tapped saturable transformer,
+feedback winding) built by `Builder.Royer`, so every loss stays on its own
+ledger row. `circuit/magamp.go`: self-saturating magnetic amplifier
+(half-wave so far) built by `Builder.MagAmp` on `device/core.go`, with
+control winding, load winding, series rectifier, optional filter capacitor
+and feedback winding. As implemented: the Royer stage switches at
+B = V/(4·N·Ae·f) between 0.9 and 1.0 of μ0·Ms, rising with the supply;
+the magnetic amplifier's output rises monotonically with control current,
+and 20 feedback turns raise its transfer slope 4.8× (`analysis/royer_test.go`,
+`analysis/magamp_test.go`). `fluid/mist.go`: a
 two-phase gap medium (air or other gas plus water droplets) with droplet
 size distribution, liquid water content, droplet conductivity (H₂O or D₂O,
 from `fluid/media.go`) and evaporation, setting the arc model's (§3g)

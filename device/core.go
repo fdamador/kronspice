@@ -63,6 +63,7 @@ type Core struct {
 
 	// accepted state
 	h0, m0, mirr0, chi0 float64
+	dir0                float64   // sweep direction of the accepted state (±1)
 	v0                  []float64 // accepted winding voltages (trapezoidal history)
 	wAcc, spAcc         float64   // stored energy and its rate at the accepted point
 	lossAcc             float64   // heat rate over the accepted step
@@ -141,13 +142,28 @@ func (c *Core) deriv(h, m, mirr, delta float64) (dm, dmirr, chi float64) {
 	return chiE / den, dmirrE / den, chiE / den
 }
 
+// direction is the sweep direction of a step dh. A step smaller than
+// a·1e-3 keeps the accepted direction: the irreversible susceptibility
+// switches on and off with the direction (Lederer et al. 1999), and Newton
+// iterates jittering about the accepted H would otherwise flip the
+// Jacobian between the two slopes and fail to converge. A reversal that
+// small changes M by less than χ·a·1e-3, below the solver tolerances.
+func (c *Core) direction(dh float64) float64 {
+	switch {
+	case dh > 1e-3*c.p.A:
+		return 1
+	case dh < -1e-3*c.p.A:
+		return -1
+	case c.dir0 == 0:
+		return 1
+	}
+	return c.dir0
+}
+
 // integrate follows the Jiles–Atherton equations from (h0, m0, mirr0) to h1.
 func (c *Core) integrate(h0, m0, mirr0, h1 float64) (m, mirr, chi float64) {
 	dh := h1 - h0
-	delta := 1.0
-	if dh < 0 {
-		delta = -1
-	}
+	delta := c.direction(dh)
 	if dh == 0 {
 		_, _, chi = c.deriv(h0, m0, mirr0, delta)
 		return m0, mirr0, chi
@@ -283,6 +299,7 @@ func (c *Core) Accept(x []float64, _ float64, mode Mode) {
 	c.lossAcc = l
 	h := c.field(x)
 	c.m0, c.mirr0, c.chi0 = c.integrate(c.h0, c.m0, c.mirr0, h)
+	c.dir0 = c.direction(h - c.h0)
 	c.h0 = h
 	for k := range c.p.Turns {
 		c.v0[k] = at(x, c.w[k][0]) - at(x, c.w[k][1])
