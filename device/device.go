@@ -362,6 +362,12 @@ func FromCircuit(c *circuit.Circuit) ([]Device, error) {
 				return nil, fmt.Errorf("%w: %s has no model", ErrUnsupported, e.Name)
 			}
 			d = NewDiode(e, m)
+		case circuit.Switch, circuit.CurrentSwitch:
+			m, ok := c.ModelFor(e)
+			if !ok {
+				return nil, fmt.Errorf("%w: %s has no model", ErrUnsupported, e.Name)
+			}
+			d = NewSwitch(e, m)
 		case circuit.Resistor:
 			r := NewResistor(e)
 			if t := c.ECEFor(e); t.On {
@@ -388,6 +394,10 @@ func FromCircuit(c *circuit.Circuit) ([]Device, error) {
 			d = NewGyrator(e)
 		case circuit.BearingMotor:
 			d = NewBearing(e)
+		case circuit.Arc:
+			d = NewArc(e)
+		case circuit.Core:
+			d = NewCore(e)
 		case circuit.Machine:
 			spec, err := c.MachineFor(e)
 			if err != nil {

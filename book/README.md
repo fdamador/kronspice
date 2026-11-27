@@ -23,7 +23,7 @@ added, it gets a row in `examples/README.md` and a place in a chapter.
 | # | Chapter | Examples | Status |
 |---|---|---|---|
 | 1 | [Circuits and the ledger](01-circuits-and-the-ledger.md) | rc_lowpass_values, negative_resistance_gain, rectifier_filter | written |
-| 2 | [Evolution](02-evolution.md) | amplifier_gain, filter_topology, mos_amplifier_pareto, torn_ga | written |
+| 2 | [Evolution](02-evolution.md) | amplifier_gain, filter_topology, amplifier_topology, mos_amplifier_pareto, torn_ga | written |
 | 3 | [Kron's machines](03-krons-machines.md) | kron_machine, parametric_pump, parametric_lcr, homopolar, homopolar_bearing, bearing_motor, kron_nmr, hoffmann_motor, einstein_teleparallel, kaluza_kron | written |
 | 4 | [Power and polyphase](04-power-and-polyphase.md) | power_filter | written |
 | 5 | [Fields from Maxwell](05-fields-from-maxwell.md) | pcb_layout, rotating_efield, rate_of_change (and `em/scalar`: H47, H48) | written |

@@ -212,6 +212,54 @@ series arm or as a series-resonant shunt. The parsimony pressure needs
 time: with an early stop at "spec met", seed 1 had 15 parts; run on,
 it pared them to four.
 
+Koza's own encoding is the other way to grow a circuit: the genome is a
+program that builds it (`evo/encode_develop.go`). The embryo gets a
+modifiable wire from `in` to `out` with a writing head on it; functions
+such as `(L value …)`, `(SERIES … … …)` and `(VIA0 … … …)`, a tap to
+ground, rewrite the component under the head and hand new heads to their
+subtrees, until `END` or `SAFE_CUT`. Run on the same mask
+(`config_developmental.json`), all eight seeds meet it again, in four to
+six parts. Only two find the elliptic trap; the rest grow fourth-order
+L–C ladders, the other minimal answer, which SERIES and VIA build more
+readily than a trap.
+
+The same two encodings take sources, diodes and transistors as parts.
+Given a 12 V rail, a source and a load, and asked for 20 dB at 1 kHz
+([amplifier_topology](../examples/amplifier_topology)), neither found an
+amplifier at first: a transistor dropped in at random is nearly always cut
+off or saturated and amplifies no better than a wire, so nothing guides the
+search toward one. An objective that rewards a transistor in its active
+region supplies the gradient — once its region was drawn tightly enough
+that a transistor wired as a diode across the supply no longer counted,
+which is what evolution tried first. The direct encoding then grows a
+common-emitter stage with collector feedback bias (six parts). The
+developmental encoding needed one more idea: MAP-Elites, which keeps the
+best design in each cell of a grid of descriptors (here four: transistor
+count, gain error, bias error and program size), so that a design poor in
+itself but the first of its kind survives to be built on. It grew four
+parts: a common-emitter stage into an emitter follower, gain set by a
+single feedback resistor.
+
+A third genome is Kron's own. He obtained a circuit from its primitive
+network, every branch alone and unconnected, by a change of reference
+frame that joins their terminals; the connection tensor that does it can
+itself be the genome. The library of parts is fixed (four coils, four
+capacitors, two resistors, say), and evolution chooses only how their
+terminals meet, a part being allowed to stand open, kept but unconnected.
+Its mutations are Kron's transformations: join two junctions, tear one in
+two, open or close a branch. Because every genome holds the same parts in
+the same places, two parents can be crossed part by part, which a list of
+unrelated parts does not allow. It grows the filter on all eight seeds
+and, given MAP-Elites with the circuit's number of independent loops as
+one of its axes, the amplifier on two of three.
+
+Allowed the hypothetical ECE2 coil of chapter 10, evolution grows a
+different amplifier at once: one coil and one resistor, no transistor and
+no use of the supply rail, every watt of its gain booked as model-supplied
+by the scalar term. It is the clearest picture yet of what that term would
+be if it were physical, an amplifier needing no power source, and the
+reason the ledger keeps its column apart.
+
 ## 2.5 More than one objective
 
 The third example asks for three things that pull against each other:
@@ -307,6 +355,7 @@ fixed part of a problem is large and its factorization fills in.
 go run ./cmd/kronspice examples/amplifier_gain/circuit.cir
 go run ./cmd/evolve -config examples/amplifier_gain/config.json          # ≈ 16 s
 go run ./cmd/evolve -config examples/filter_topology/config.json         # ≈ 10 s to the four-part design
+go run ./cmd/evolve -config examples/amplifier_topology/config.json      # ≈ 50 s: a 20 dB amplifier from an empty embryo
 go run ./cmd/evolve -config examples/mos_amplifier_pareto/config.json    # ≈ 3 s, writes front.csv and front/
 go run ./examples/torn_ga                                                # ≈ 30 s, three solvers, same best
 go run ./cmd/kronspice -json runs/<run>/best.cir                         # re-simulate any result
@@ -324,6 +373,8 @@ opens in ngspice, LTspice and QSpice as it is.
 - J. R. Koza, F. H. Bennett III, D. Andre, M. A. Keane, *Genetic
   Programming III: Darwinian Invention and Problem Solving*, Morgan
   Kaufmann, 1999, ch. 25.
+- J.-B. Mouret, J. Clune, "Illuminating search spaces by mapping elites,"
+  arXiv:1504.04909, 2015 (MAP-Elites).
 - L. J. Eshelman, J. D. Schaffer, "Real-coded genetic algorithms and
   interval-schemata," *Foundations of Genetic Algorithms* 2, 1993.
 - H. K. Gummel, H. C. Poon, "An integral charge control model of bipolar

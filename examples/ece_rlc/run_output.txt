@@ -16,3 +16,14 @@ Transient 0–0.3 s, 1 V sine at 173 Hz (trapezoidal, 20 µs steps); energies [J
   ECE2 torsion        0.26046    0.00000         0.48095    +0.24048       +2.00e-02   2.4e-06
   ECE scalar          0.11535    0.00126         0.11018    +0.00004       +3.94e-03   4.7e-07
   ECE2 scalar         0.06758    0.00578         0.05955    -0.00021       +2.04e-03   2.4e-07
+
+UFT 456 conductivities on the ECE2 torsion case: k0 = 1.9706e-08 1/m (shunt 1 mS across C), kl0 = 4.1696e-08 1/m (series -0.25 Ω in L)
+AC sweep as above (closed form: exact series impedance); transient as above
+  case                     f_r (Hz)  closed form   Q        closed form  peak |I| (A)  vs twin   source (W)  heat (W)  model-supplied (W)  residual
+  ECE2 torsion + k0         173.048   173.043     17.5892  17.5888      1.6178        1e-15    0.8089      1.3087    +0.4998             0e+00
+  ECE2 torsion + kl0        172.993   173.000     43.4769  43.4796      4.0000        4e-16    2.0000      7.9999    +5.9999             0e+00
+  ECE2 torsion + k0 + kl0   173.020   173.022     29.5286  29.5291      2.7164        2e-15    1.3581      3.6894    +2.3313             0e+00
+  case                     source in  back to source  heat       model-supplied  Δstored     mismatch
+  ECE2 torsion + k0         0.21685    0.00000         0.32964    +0.12601       +1.32e-02   1.5e-06
+  ECE2 torsion + kl0        0.44460    0.00000         1.47319    +1.10489       +7.63e-02   9.0e-06
+  ECE2 torsion + k0 + kl0   0.33456    0.00000         0.80935    +0.51178       +3.70e-02   4.3e-06

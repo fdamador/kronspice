@@ -56,6 +56,11 @@ type Options struct {
 	// Analysis holds the base options for every simulation (tolerances,
 	// fallbacks); its Context is set per evaluation.
 	Analysis analysis.Options
+	// LocalSearch, when set, improves the best individual by multi-part
+	// moves on the value grid (localsearch.go). Weighted-sum runs only.
+	LocalSearch *LocalSearch
+	// MapElites holds the descriptors of the MAPElites algorithm.
+	MapElites *MapElites
 }
 
 func (o *Options) defaults(genes int) error {
@@ -99,7 +104,7 @@ func (o *Options) defaults(genes int) error {
 		return fmt.Errorf("%w: generations %d", ErrBadOptions, o.Generations)
 	case o.Elite < 0 || o.Elite >= o.Population:
 		return fmt.Errorf("%w: elite %d", ErrBadOptions, o.Elite)
-	case o.Algorithm > NSGA2:
+	case o.Algorithm > MAPElites:
 		return fmt.Errorf("%w: algorithm %d", ErrBadOptions, o.Algorithm)
 	case o.Tournament < 1:
 		return fmt.Errorf("%w: tournament %d", ErrBadOptions, o.Tournament)
@@ -205,7 +210,7 @@ type GenStats struct {
 	Best       float64 `json:"best"`
 	Mean       float64 `json:"mean"`
 	Worst      float64 `json:"worst"`
-	Diversity  float64 `json:"diversity"` // decades (value genomes) or parts (topology genomes)
+	Diversity  float64 `json:"diversity"` // decades (value genomes), parts (direct topology) or program ops (developmental)
 	Failed     int     `json:"failed"`
 	// TimedOut counts candidates penalized for exceeding Options.Timeout;
 	// non-zero means the generation's result depends on machine speed.
@@ -215,6 +220,8 @@ type GenStats struct {
 	BestIndex    int     `json:"best_index"`
 	// FrontSize is the number of non-dominated feasible candidates (NSGA2).
 	FrontSize int `json:"front_size,omitempty"`
+	// Cells is the number of occupied archive cells (MAPElites).
+	Cells int `json:"cells,omitempty"`
 }
 
 // State is the full state after a generation has been evaluated; it is what
@@ -291,11 +298,27 @@ func Run(ctx context.Context, p Problem, opt Options, resume *State, observe Obs
 			return nil, fmt.Errorf("%w: NSGA-II needs an objective with a positive weight that is not a constraint", ErrBadOptions)
 		}
 	}
+	if opt.Algorithm == MAPElites {
+		if err := opt.MapElites.validate(len(p.Objectives)); err != nil {
+			return nil, err
+		}
+	}
+	var ls *LocalSearch
+	if opt.LocalSearch != nil {
+		if opt.Algorithm != WeightedSum {
+			return nil, fmt.Errorf("%w: local search is for weighted-sum runs", ErrBadOptions)
+		}
+		cp := *opt.LocalSearch
+		if err := cp.defaults(); err != nil {
+			return nil, err
+		}
+		ls = &cp
+	}
 	ev := &evaluator{p: p, opt: opt}
 
 	var st *State
 	if resume != nil {
-		if resume.Seed != opt.Seed || len(resume.Population) != opt.Population {
+		if resume.Seed != opt.Seed || (opt.Algorithm != MAPElites && len(resume.Population) != opt.Population) {
 			return nil, fmt.Errorf("%w: checkpoint seed or population size differs from the options", ErrBadOptions)
 		}
 		for _, ind := range resume.Population {
@@ -323,6 +346,9 @@ func Run(ctx context.Context, p Problem, opt Options, resume *State, observe Obs
 		if opt.Algorithm == NSGA2 {
 			st.Population = nsgaSurvivors(st.Population, p.Objectives, opt.Population)
 		}
+		if opt.Algorithm == MAPElites {
+			st.Population = mapStep(p, opt.MapElites, nil, st.Population)
+		}
 		st.Evaluations = len(genomes)
 		if err := st.finish(opt, observe); err != nil || st.Done {
 			return st, err
@@ -334,6 +360,18 @@ func Run(ctx context.Context, p Problem, opt Options, resume *State, observe Obs
 		}
 		next := st.Generation + 1
 		r := rngFor(opt.Seed, uint64(next))
+		if opt.Algorithm == MAPElites {
+			// Parents uniformly from the occupied cells (Mouret & Clune, Alg. 1).
+			pick := func() int { return r.IntN(len(st.Population)) }
+			pop := ev.evaluate(ctx, breed(r, pick, st.Population, opt.Population, p, opt))
+			st.Population = mapStep(p, opt.MapElites, st.Population, pop)
+			st.Generation = next
+			st.Evaluations += len(pop)
+			if err := st.finish(opt, observe); err != nil || st.Done {
+				return st, err
+			}
+			continue
+		}
 		if opt.Algorithm == NSGA2 {
 			pick := func() int { return crowdedTournament(r, st.Population, opt.Tournament) }
 			pop := ev.evaluate(ctx, breed(r, pick, st.Population, opt.Population, p, opt))
@@ -358,6 +396,9 @@ func Run(ctx context.Context, p Problem, opt Options, resume *State, observe Obs
 		st.Population = append(elite, pop...)
 		st.Generation = next
 		st.Evaluations += len(pop)
+		if ls != nil && ls.due(next, opt.Generations-1) {
+			st.Evaluations += ev.localSearch(ctx, st.Population, *ls)
+		}
 		if err := st.finish(opt, observe); err != nil || st.Done {
 			return st, err
 		}
@@ -396,6 +437,13 @@ func (st *State) finish(opt Options, observe Observer) error {
 	if opt.Algorithm == NSGA2 {
 		st.Front = ParetoFront(st.Population)
 		gs.FrontSize = len(st.Front)
+	}
+	if opt.Algorithm == MAPElites {
+		for _, ind := range st.Population {
+			if ind.Failure == "" {
+				gs.Cells++
+			}
+		}
 	}
 	if len(st.History) == 0 || best.Fitness < st.Best.Fitness {
 		st.Best = best

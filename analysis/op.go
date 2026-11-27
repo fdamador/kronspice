@@ -130,6 +130,7 @@ type Sim struct {
 	c        *circuit.Circuit
 	devs     []device.Device
 	reactive []int // indices of devices implementing device.Reactive
+	limiters []device.StepLimiter
 	nonlin   []device.Nonlinear
 	supply   []int     // indices of devices implementing device.ModelSupplier
 	isV      []bool    // unknown is a voltage (vntol) or a current (abstol)
@@ -170,6 +171,9 @@ func newSim(c *circuit.Circuit, step, stop float64) (*Sim, error) {
 		}
 		if _, ok := d.(device.Reactive); ok {
 			s.reactive = append(s.reactive, i)
+		}
+		if sl, ok := d.(device.StepLimiter); ok {
+			s.limiters = append(s.limiters, sl)
 		}
 		if _, ok := d.(device.ModelSupplier); ok {
 			s.supply = append(s.supply, i)

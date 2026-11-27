@@ -181,6 +181,11 @@ func (c *Circuit) WriteNetlist(w io.Writer, control ...string) error {
 		if e.Kind == MOSFET {
 			line = []string{e.Name, n1, c.NodeNames[e.Extra[0]], n2, c.NodeNames[e.Extra[1]]}
 		}
+		if e.Kind == Core {
+			for _, n := range e.Extra {
+				line = append(line, c.NodeNames[n])
+			}
+		}
 		if e.Kind == Machine {
 			for _, n := range e.Extra {
 				line = append(line, c.NodeNames[n])
@@ -260,8 +265,30 @@ func (c *Circuit) WriteNetlist(w io.Writer, control ...string) error {
 			line = append(line, eceParams(e)...)
 		case CCCS, CCVS:
 			line = append(line, e.CtrlSource, num(e.Value))
+		case Switch, CurrentSwitch:
+			if e.Kind == Switch {
+				line = append(line, c.NodeNames[e.CtrlNodes[0]], c.NodeNames[e.CtrlNodes[1]])
+			} else {
+				line = append(line, e.CtrlSource)
+			}
+			line = append(line, e.Model)
+			if e.HasIC {
+				line = append(line, map[bool]string{true: "ON", false: "OFF"}[e.IC == 1])
+			}
 		case MOSFET:
 			line = append(line, e.Model)
+			keys := make([]string, 0, len(e.Params))
+			for k := range e.Params {
+				keys = append(keys, k)
+			}
+			sort.Strings(keys)
+			for _, k := range keys {
+				line = append(line, strings.ToUpper(k)+"="+num(e.Params[k]))
+			}
+		case Arc, Core:
+			if e.Kind == Arc {
+				line = append(line, strings.ToUpper(e.Model))
+			}
 			keys := make([]string, 0, len(e.Params))
 			for k := range e.Params {
 				keys = append(keys, k)

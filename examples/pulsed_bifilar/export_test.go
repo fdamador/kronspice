@@ -10,7 +10,7 @@ import (
 	"github.com/fdamador/kronspice/internal/export"
 )
 
-// The four coils with their primaries, driven by an AC source, swept
+// The five coils with their primaries, driven by an AC source, swept
 // around their resonances. Netlist, KiCad schematic and results sheet go
 // to export/ (KRONSPICE_EXPORT=1).
 func TestExport(t *testing.T) {
@@ -25,6 +25,7 @@ func TestExport(t *testing.T) {
 		item("pulsed_bifilar_coil", func() *Coil { return NewCoil(Solenoid(), true) }, ".ac dec 50 10k 1meg"),
 		item("pulsed_conical_bifilar_coil", func() *Coil { return NewCoil(Cone(), true) }, ".ac dec 50 1k 10meg"),
 		item("pulsed_flat_bifilar_coil", func() *Coil { return NewCoil(Flat(), true) }, ".ac dec 50 1k 10meg"),
+		item("pulsed_counter_bifilar_coil", func() *Coil { return NewCounterCoil(Solenoid()) }, ".ac dec 50 100k 4meg"),
 		export.Item{Name: "pulsed_ordinary_coil_tuned_pickup", Build: func() (*circuit.Circuit, error) {
 			c := NewCoil(Solenoid(), false)
 			const f1 = 1.1666e6 // the coil's first resonance (Resonance)

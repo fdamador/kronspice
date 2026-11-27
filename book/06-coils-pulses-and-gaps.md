@@ -14,7 +14,8 @@ examples are [bial_bifilar](../examples/bial_bifilar), the project's
 first experiment, [pulsed_bifilar](../examples/pulsed_bifilar),
 [water_lamp](../examples/water_lamp), and the two spark-gap diode
 studies [sparkgap_diode](../examples/sparkgap_diode) and
-[sparkgap_diodebridge](../examples/sparkgap_diodebridge).
+[sparkgap_diodebridge](../examples/sparkgap_diodebridge); gaps filled
+with gas under pressure are [magnetic_gas](../examples/magnetic_gas).
 
 ## 6.1 Tesla's comparison, and what a coil really does
 
@@ -379,7 +380,91 @@ ratio. The run also sets the helix's transverse and axial field parts
 beside Evans' B Cyclic theorem, with the bench measurement that tells them
 apart.
 
-## 6.7 What to keep
+## 6.7 Three coils, two drives
+
+[three_coil_sync](../examples/three_coil_sync) puts two drives on one
+resonant coil. Coil 1, an air-core step-up transformer, is wired to the
+top of coil 3. Coil 2, the bifilar tank of a ZVS Royer oscillator, is
+wound over coil 3. Coil 3 is a series RLC loop feeding a load. Every
+inductance comes from the winding geometry, turn by turn, and the genetic
+algorithm evolves the coils, the spacing, the capacitors, the load and
+the HV drive for the most power in the load within the parts' ratings.
+
+Coil 3 carries one current, so the two drives add as currents, not as
+powers. In phase, the load can get more than the two give alone, up to
+(√P₁ + √P₂)², and both supplies deliver more for it. Out of phase they
+fight: in the hand-picked start, both on gave less than the HV coil
+alone. Two searches were run:
+
+- **Synchronized:** the HV amplifier is clocked from the Royer, and the GA
+  sets the phase. Result: 375 W, steady, η 0.79.
+- **Free-running:** an independent HV generator. Result: 577 W, η 0.68, but
+  beating at about 2 kHz because the Royer is not locked to the generator.
+  The Royer would lock about 2 % higher in frequency, at an HV power past
+  the generator's rating.
+
+Neither search kept coil 1 as a high-voltage coil. A resonant loop of a few
+tens of ohms wants current, so evolution traded voltage for current. The
+ledger closes in every run.
+
+Feeding the load's energy back does not change that. With a transformer
+and rectifier returning it to the 24 V rail, 95 % of the 383 W through
+the load comes back, and the supplies deliver 125 W, which is exactly the
+losses. Nothing is kept, so the net input falls but the efficiency does
+not rise: recycling lowers the bill to the losses and never below them.
+
+## 6.8 Gas gaps under pressure
+
+[magnetic_gas](../examples/magnetic_gas) asks whether a gas can be made
+magnetic by tearing an electron off it, compressed to 500 psi, and sparked
+into pulses. Argon is the main case, with hydrogen, oxygen and oxyhydrogen
+(HHO, 2 H₂ : 1 O₂) beside it. Gas discharges are outside the engine, so
+the gas enters the circuits as CLAUDE.md §1 allows: as a cited breakdown
+threshold, and as a declared time-varying capacitance.
+
+**Sparking.** Each gas's breakdown follows Townsend's criterion, written
+through its measured Paschen minimum. At a 0.2 mm gap and 500 psi argon
+breaks down at 10.7 kV and oxygen at 43.7 kV; argon is the easiest to
+spark. At these pressures the rule is an upper bound: on air at 1 cm it is
+1.78× too high, and measured gaps fall below Paschen's law above about
+10 bar. No Paschen curve has been measured for HHO, so its numbers are
+mixed from H₂ and O₂ and labelled as an estimate.
+
+**Magnetism.** Removing an electron does make argon paramagnetic: Ar⁺ has
+one hole in its 3p shell. But only a fully ionized fill turns over (χ from
+−3.5×10⁻⁷ to +6.6×10⁻⁵ cold, +1.7×10⁻⁶ at 1 eV); at 1 % ionization the gas
+stays diamagnetic. Oxygen goes the other way, since O₂ already has two
+unpaired electrons and O₂⁺ has one. A plasma held by a field acts as a
+diamagnet as a whole, and holding even the cold 500 psi fill takes 2.94 T
+(18.6–26.2 T once heated to 1 eV). Fast compression heats HHO close to
+hydrogen's auto-ignition, and 1 cm³ of HHO at 500 psi holds 228 J of
+chemical energy, far more than any spark in the example. The README's
+safety notes go with every bench plan.
+
+**Pulses.** A four-stage Marx generator charges its stages to 90 % of the
+gap's breakdown, then erects them into 50 Ω. kronspice has no switch
+element yet, so each shot runs in two phases, charge and fire, with `IC=`
+values carrying the state across. Every gas gives 3.06 times its charging
+voltage with a 25 ns rise (29.5 kV for argon): the gas sets only the
+voltage, and the pulse shape is the circuit's. The ledger closes in both
+phases.
+
+**ECE2 beside it.** The argon Marx also runs with the ECE2 torsion and
+scalar terms (H48). Torsion adds −50 µΩ to the loop, too small to see. The
+scalar term makes every terminal read 11 % more voltage for the same
+stored charge, energy and heat; that power is booked as model-supplied.
+One shot with a calibrated probe and a calorimeter, read against the
+standard row, would decide between them.
+
+**A plasma varactor.** A gas gap is a capacitor, and a plasma column lit
+by a separate supply fills part of it, tripling C when it fills two thirds.
+Pumped at 10 kHz, the varactor raises 100 V to 295 V of an ideal 300 V.
+Two thirds of the load's power comes through the varactor's
+electric-field port, from whatever lights and quenches the plasma. Raising
+the pressure barely tunes the gap (C rises less than 2 % from 1 atm to
+500 psi); the plasma does the tuning.
+
+## 6.9 What to keep
 
 - Tesla's 250,000× is an idealized ratio of turn-to-turn energies,
   reproduced exactly and never reported as a coil's energy gain.
@@ -396,6 +481,9 @@ apart.
   and extrapolations beyond the measured range are labelled as such.
 - Every design is checked against insulation at its peak turn voltage,
   and a result past that limit is flagged, not celebrated.
+- A gas under pressure sets a gap's breakdown voltage, not the pulse it
+  makes; ionizing it changes its magnetism only when most of it is
+  ionized, and a varactor's extra voltage is paid for at its port.
 
 ## Run it yourself
 
@@ -409,6 +497,8 @@ go run ./cmd/kronspice examples/sparkgap_diode/export/water_cell_bridge.cir
 go run ./examples/sparkgap_diode
 go run ./examples/sparkgap_diodebridge
 go run ./examples/b3_transformer
+go run ./examples/three_coil_sync -quick                # the full GA runs take ~25 min each
+go run ./examples/magnetic_gas                          # a few seconds
 ```
 
 ## Sources
@@ -437,4 +527,9 @@ go run ./examples/b3_transformer
   thesis, HBNI/BARC, 2016.
 - *Encyclopaedia Britannica*, 11th ed., 1911, vol. 27, "Transformers";
   H. Greinacher, *Z. Phys.* 4, 195, 1921; IEC 61000-4-5.
+- M. S. Naidu, V. Kamaraju, *High Voltage Engineering*, p. 27 (Paschen
+  minima); C. Kittel, *Introduction to Solid State Physics*, 8th ed.,
+  ch. 14; F. F. Chen, *Introduction to Plasma Physics*, 3rd ed., §3.5;
+  H. Bluhm, *Pulsed Power Systems*, 2006, §4.1; E. Marx, 1923; NIST
+  Chemistry WebBook.
 - [doc/experiments/bial_bifilar_run2.md](../doc/experiments/bial_bifilar_run2.md).

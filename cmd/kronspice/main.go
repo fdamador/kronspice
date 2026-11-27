@@ -30,6 +30,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/fdamador/kronspice/analysis"
@@ -53,6 +54,9 @@ type options struct {
 	smithPlus, smithMinus string
 	z0                    float64
 	smithSVG, smithCSV    string
+	// dir is the directory .include paths resolve against: the netlist
+	// file's, or the working directory for standard input.
+	dir string
 }
 
 func main() {
@@ -84,6 +88,7 @@ func main() {
 		os.Exit(2)
 	}
 	in := io.Reader(os.Stdin)
+	dir := "."
 	if path := flag.Arg(0); path != "" && path != "-" {
 		f, err := os.Open(path)
 		if err != nil {
@@ -92,8 +97,9 @@ func main() {
 		}
 		defer f.Close()
 		in = f
+		dir = filepath.Dir(path)
 	}
-	opt := options{csvPath: *out, allChannels: *all, json: *jsonOut, backend: be, z0: *z0, smithSVG: *smithSVG, smithCSV: *smithCSV}
+	opt := options{dir: dir, csvPath: *out, allChannels: *all, json: *jsonOut, backend: be, z0: *z0, smithSVG: *smithSVG, smithCSV: *smithCSV}
 	if *smith != "" {
 		parts := strings.Split(*smith, ",")
 		if len(parts) > 2 || strings.TrimSpace(parts[0]) == "" {
@@ -135,7 +141,7 @@ func run(in io.Reader, w io.Writer, opt options) error {
 }
 
 func simulate(in io.Reader, w io.Writer, opt options, doc *output.Document) error {
-	deck, err := netlist.Parse(in)
+	deck, err := netlist.ParseWith(in, netlist.FileOptions(opt.dir))
 	if err != nil {
 		return err
 	}

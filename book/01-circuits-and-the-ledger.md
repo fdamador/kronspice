@@ -291,6 +291,26 @@ a gene like any part value: the diode's RS evolved alongside C1 and R1,
 and the engine re-parses the written netlist, so the result opens
 unchanged in ngspice, LTspice and QSpice.
 
+## 1.5a Subcircuits, parameters and a switch
+
+Real netlists are rarely flat. The parser expands `.include` files,
+evaluates `.param` expressions (`{2*rc}`, `'5*gain'`, with SPICE
+suffixes and functions such as `sqrt` and `pwr`), and replaces each `X`
+instance of a `.subckt` by its elements under ngspice's names: `R1` inside
+`XA` becomes `R.XA.R1`, an internal node `n` becomes `xa.n`, and a local
+`.model` becomes `xa.name`. Instance parameters (`XB … relax r={2*rc}`)
+override the subcircuit's `params:` defaults.
+
+[switch_relaxation](../examples/switch_relaxation) builds two relaxation
+oscillators from one such subcircuit. Each has an `S` switch across its
+capacitor that turns on at VT + VH and off at VT − VH. Inside a transient
+step the switch keeps its state, so each step is a linear solve. When the
+control crosses a threshold during a step, the step is repeated so that it
+ends just after the crossing, and integration restarts with backward Euler,
+as it does after a source edge. The periods then match the exact
+piecewise-exponential values to 1e-4 and do not drift by a step per cycle.
+The ledger books every joule to the 5 V source.
+
 ## 1.6 What to keep
 
 - A netlist in, and node voltages, element currents and a ledger out,

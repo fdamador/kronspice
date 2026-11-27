@@ -1,0 +1,8 @@
+Amplifier grown from an embryo: 12 V rail, 1 kohm source, 10 kohm load
+VCC vcc 0 DC 12
+VIN vs 0 DC 0 AC 1
+RS vs in 1k
+RL out 0 10k
+.model Q2N3904 NPN(IS=6.734f XTI=3 EG=1.11 VAF=74.03 BF=416.4 NE=1.259 ISE=6.734f IKF=66.78m XTB=1.5 BR=0.7371 NC=2 ISC=0 IKR=0 RC=1 CJC=3.638p MJC=0.3085 VJC=0.75 FC=0.5 CJE=4.493p MJE=0.2593 VJE=0.75 TR=239.5n TF=301.2p ITF=0.4 VTF=4 XTF=2 RB=10)
+.ac dec 10 10 1meg
+.end

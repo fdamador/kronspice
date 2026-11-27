@@ -135,13 +135,14 @@ func NewJacobianTearing(c *circuit.Circuit, t Tearing) (*JacobianTearing, error)
 
 // tearTerminals returns the non-ground terminals of an element whose
 // Jacobian coupling may be torn: any element whose stamps couple node
-// voltages only — resistors, capacitors, diodes, transistors, VCCS (G) and
-// voltage-controlled B elements. Elements with a branch-current unknown
-// (voltage sources, inductors, E, F, H, current-controlled B) are refused:
-// their coupling runs through that unknown, which the cut does not name.
+// voltages only — resistors, capacitors, diodes, transistors, VCCS (G),
+// S switches and voltage-controlled B elements. Elements with a
+// branch-current unknown (voltage sources, inductors, E, F, H, W switches,
+// current-controlled B) are refused: their coupling runs through that
+// unknown, which the cut does not name.
 func tearTerminals(e *circuit.Element) ([]int, error) {
 	switch e.Kind {
-	case circuit.VoltageSource, circuit.Inductor, circuit.NonlinearInductor, circuit.VCVS, circuit.CCCS, circuit.CCVS, circuit.Mutual:
+	case circuit.VoltageSource, circuit.Inductor, circuit.NonlinearInductor, circuit.VCVS, circuit.CCCS, circuit.CCVS, circuit.Mutual, circuit.CurrentSwitch:
 		return nil, fmt.Errorf("%w: tearing %s: its coupling runs through a branch-current unknown; tear a neighbouring element", ErrUnsupported, e.Name)
 	}
 	var out []int
@@ -161,7 +162,7 @@ func tearTerminals(e *circuit.Element) ([]int, error) {
 	for _, n := range e.Extra {
 		add(n)
 	}
-	if e.Kind == circuit.VCCS {
+	if e.Kind == circuit.VCCS || e.Kind == circuit.Switch {
 		add(e.CtrlNodes[0])
 		add(e.CtrlNodes[1])
 	}
