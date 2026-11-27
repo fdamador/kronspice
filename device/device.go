@@ -388,6 +388,10 @@ func FromCircuit(c *circuit.Circuit) ([]Device, error) {
 			d = NewGyrator(e)
 		case circuit.BearingMotor:
 			d = NewBearing(e)
+		case circuit.Arc:
+			d = NewArc(e)
+		case circuit.Core:
+			d = NewCore(e)
 		case circuit.Machine:
 			spec, err := c.MachineFor(e)
 			if err != nil {

@@ -516,6 +516,38 @@ func parseElement(text string, line int) (ElementLine, error) {
 			}
 			el.Params[k] = pv
 		}
+	case 'A':
+		// Aname n+ n- MAYR|CASSIE|HABEDANK name=value …   (dynamic arc or
+		// spark gap, kronspice extension; see circuit.Arc)
+		if len(f) < 4 {
+			return el, fmt.Errorf("%w: line %d: A element needs: name n+ n- MAYR|CASSIE|HABEDANK params", ErrSyntax, line)
+		}
+		el.Nodes = []string{strings.ToLower(f[1]), strings.ToLower(f[2])}
+		el.Model = strings.ToLower(f[3])
+		p, err := parseNamedParams(f[4:], line, "arc")
+		if err != nil {
+			return el, err
+		}
+		el.Params = p
+	case 'U':
+		// Uname w1+ w1- [w2+ w2- …] MS=.. A=.. K=.. [C=..] [ALPHA=..] AREA=.. LEN=.. N1=.. …
+		// (Jiles–Atherton saturable core with windings, kronspice extension;
+		// see circuit.Core)
+		k := 1
+		for k < len(f) && !(k+1 < len(f) && f[k+1] == "=") {
+			k++
+		}
+		if k < 3 || (k-1)%2 != 0 {
+			return el, fmt.Errorf("%w: line %d: U element needs: name w1+ w1- [w2+ w2- …] params", ErrSyntax, line)
+		}
+		for _, n := range f[1:k] {
+			el.Nodes = append(el.Nodes, strings.ToLower(n))
+		}
+		p, err := parseNamedParams(f[k:], line, "core")
+		if err != nil {
+			return el, err
+		}
+		el.Params = p
 	case 'N':
 		// Nname w1+ w1- [w2+ w2- …] m+ m- model   (machine: windings with
 		// θ-dependent inductances and a mechanical port, kronspice extension)
@@ -913,4 +945,28 @@ func upper(b byte) byte {
 		return b - 'a' + 'A'
 	}
 	return b
+}
+
+// parseNamedParams reads name = value triples (as tokenize leaves them)
+// into a map of lower-cased names.
+func parseNamedParams(rest []string, line int, what string) (map[string]float64, error) {
+	if len(rest)%3 != 0 {
+		return nil, fmt.Errorf("%w: line %d: %s parameters must be name=value", ErrSyntax, line, what)
+	}
+	p := make(map[string]float64, len(rest)/3)
+	for i := 0; i < len(rest); i += 3 {
+		if rest[i+1] != "=" {
+			return nil, fmt.Errorf("%w: line %d: %s parameter %q needs =value", ErrSyntax, line, what, rest[i])
+		}
+		v, err := ParseValue(rest[i+2])
+		if err != nil {
+			return nil, fmt.Errorf("line %d: %s: %w", line, rest[i], err)
+		}
+		k := strings.ToLower(rest[i])
+		if _, dup := p[k]; dup {
+			return nil, fmt.Errorf("%w: line %d: %s given twice", ErrSyntax, line, rest[i])
+		}
+		p[k] = v
+	}
+	return p, nil
 }

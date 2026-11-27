@@ -57,6 +57,8 @@ func allDevices() []Device {
 			Scale: circuit.Waveform{Kind: circuit.WaveExp, Args: []float64{1, 2}}}),
 		NewBearing(circuit.Element{Name: "P1", Kind: circuit.BearingMotor, Nodes: [2]int{1, 0}, Extra: []int{2, 0}, Value: 1e-3,
 			Params: map[string]float64{"kappa": 1e-6, "w0": 10}}),
+		NewArc(testArcElement()),
+		NewCore(testCoreElement()),
 	}
 }
 

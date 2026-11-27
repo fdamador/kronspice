@@ -453,8 +453,8 @@ kronspice/
 │   ├── environment.go          # environment-driven sources: photovoltaic cell, thermoelectric (later)
 │   ├── controlled.go           # E, F, G, H
 │   ├── switch.go               # S, W
-│   ├── arc.go                  # arc / spark-gap models: Cassie, Mayr, combined (§3g)
-│   ├── core.go                 # saturable magnetic core with hysteresis (Jiles–Atherton) (§3j)
+│   ├── arc.go                  # A element: arc / spark gap, Mayr, Cassie, Habedank (series) laws, breakdown at VBD; exact constant-current step, thermal port (§3g)
+│   ├── core.go                 # U element: Jiles–Atherton saturable core with N windings; pinning loss μ0k(1−c)|dMirr| on the thermal port = loop area (§3j)
 │   ├── royer.go                # Royer self-oscillating converter stage (§3j)
 │   ├── magamp.go               # self-saturating magnetic amplifier on the core model (§3j)
 │   ├── diode.go                # D (SPICE3 level-1 diode)

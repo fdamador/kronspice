@@ -133,6 +133,10 @@ func (k Kind) String() string {
 		return "machine"
 	case BearingMotor:
 		return "bearing motor"
+	case Arc:
+		return "arc"
+	case Core:
+		return "magnetic core"
 	case NonlinearCapacitor:
 		return "nonlinear capacitor"
 	case NonlinearInductor:
@@ -404,7 +408,7 @@ func (c *Circuit) validateElements() error {
 				groundUsed = true
 			}
 		}
-		if (e.Kind == BJT || e.Kind == MOSFET || e.Kind == Gyrator || e.Kind == Machine || e.Kind == BearingMotor) != (len(e.Extra) > 0) {
+		if (e.Kind == BJT || e.Kind == MOSFET || e.Kind == Gyrator || e.Kind == Machine || e.Kind == BearingMotor) != (len(e.Extra) > 0) && e.Kind != Core {
 			return fmt.Errorf("%w: %s has %d extra terminals", ErrBadValue, e.Name, len(e.Extra))
 		}
 		if e.Nodes[0] == e.Nodes[1] && e.Kind != BJT && e.Kind != MOSFET && e.Kind != Mutual && e.Kind != Machine {
@@ -465,6 +469,14 @@ func (c *Circuit) validateElements() error {
 			}
 		case BearingMotor:
 			if err := validateBearing(e); err != nil {
+				return err
+			}
+		case Arc:
+			if err := validateArc(e); err != nil {
+				return err
+			}
+		case Core:
+			if err := validateCore(e); err != nil {
 				return err
 			}
 		case BJT:
@@ -585,7 +597,7 @@ func (c *Circuit) validateDomains() error {
 				}
 			}
 			continue
-		case Diode, BJT, MOSFET, Behavioral:
+		case Diode, BJT, MOSFET, Behavioral, Arc, Core:
 			for _, n := range append(e.Nodes[:], e.Extra...) {
 				if c.NodeDomain(n) != exchange.Electrical {
 					return fmt.Errorf("%w: %s is electrical, node %s is %v", ErrBadValue, e.Name, c.NodeNames[n], c.NodeDomain(n))
@@ -708,6 +720,15 @@ func (c *Circuit) checkPaths(capIsPath bool) error {
 		if e.Kind == BearingMotor {
 			if a, b := find(e.Nodes[0]), find(e.Nodes[1]); a != b {
 				parent[a] = b
+			}
+			continue
+		}
+		// A core's windings are shorts at DC.
+		if e.Kind == Core {
+			for _, p := range CoreWindings(e) {
+				if a, b := find(p[0]), find(p[1]); a != b {
+					parent[a] = b
+				}
 			}
 			continue
 		}

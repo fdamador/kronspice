@@ -334,7 +334,7 @@ func FromDeck(d *netlist.Deck) (*Circuit, error) {
 		}
 	}
 	for _, e := range d.Elements {
-		if len(e.Nodes) != 2 && !(e.Kind == 'Q' && (len(e.Nodes) == 3 || len(e.Nodes) == 4)) && !((e.Kind == 'M' || e.Kind == 'Y' || e.Kind == 'P') && len(e.Nodes) == 4) && !(e.Kind == 'K' && len(e.Nodes) == 0) && !(e.Kind == 'N' && len(e.Nodes) >= 4 && len(e.Nodes)%2 == 0) {
+		if len(e.Nodes) != 2 && !(e.Kind == 'Q' && (len(e.Nodes) == 3 || len(e.Nodes) == 4)) && !((e.Kind == 'M' || e.Kind == 'Y' || e.Kind == 'P') && len(e.Nodes) == 4) && !(e.Kind == 'K' && len(e.Nodes) == 0) && !(e.Kind == 'N' && len(e.Nodes) >= 4 && len(e.Nodes)%2 == 0) && !(e.Kind == 'U' && len(e.Nodes) >= 2 && len(e.Nodes)%2 == 0) {
 			return nil, fmt.Errorf("%w: %s on line %d", ErrBadValue, e.Name, e.Line)
 		}
 		el := Element{
@@ -422,6 +422,15 @@ func FromDeck(d *netlist.Deck) (*Circuit, error) {
 				}
 			}
 			b.AddMulti(el, e.Nodes[0], e.Nodes[1], e.Nodes[2], e.Nodes[3])
+			continue
+		case 'A', 'U':
+			el.Kind = Kind(e.Kind)
+			el.Model = e.Model
+			el.Params = make(map[string]float64, len(e.Params))
+			for k, v := range e.Params {
+				el.Params[k] = v
+			}
+			b.AddMulti(el, e.Nodes[0], e.Nodes[1], e.Nodes[2:]...)
 			continue
 		case 'N':
 			el.Kind = Machine
