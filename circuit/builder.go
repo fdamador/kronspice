@@ -386,6 +386,18 @@ func FromDeck(d *netlist.Deck) (*Circuit, error) {
 			el.Kind = CurrentSource
 		case 'D':
 			el.Kind = Diode
+		case 'S', 'W':
+			el.Kind = map[byte]Kind{'S': Switch, 'W': CurrentSwitch}[e.Kind]
+			el.CtrlSource = e.CtrlSource
+			if len(e.CtrlNodes) == 2 {
+				el.CtrlNodes = [2]int{b.Node(e.CtrlNodes[0]), b.Node(e.CtrlNodes[1])}
+			}
+			if e.Init != "" {
+				el.HasIC = true
+				if e.Init == "on" {
+					el.IC = 1
+				}
+			}
 		case 'B':
 			el.Kind = Behavioral
 			el.BOut, el.BCtrl, el.CtrlSource = e.BOut, e.BCtrl, e.CtrlSource

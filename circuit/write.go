@@ -265,6 +265,16 @@ func (c *Circuit) WriteNetlist(w io.Writer, control ...string) error {
 			line = append(line, eceParams(e)...)
 		case CCCS, CCVS:
 			line = append(line, e.CtrlSource, num(e.Value))
+		case Switch, CurrentSwitch:
+			if e.Kind == Switch {
+				line = append(line, c.NodeNames[e.CtrlNodes[0]], c.NodeNames[e.CtrlNodes[1]])
+			} else {
+				line = append(line, e.CtrlSource)
+			}
+			line = append(line, e.Model)
+			if e.HasIC {
+				line = append(line, map[bool]string{true: "ON", false: "OFF"}[e.IC == 1])
+			}
 		case MOSFET:
 			line = append(line, e.Model)
 			keys := make([]string, 0, len(e.Params))

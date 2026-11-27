@@ -438,6 +438,8 @@ kronspice/
 ├── kicad/                      # SPICE netlist → .kicad_sch: drawn wires to one rail per net (≤ 1000 elements) or net labels; Read checks connectivity from geometry
 ├── report/                     # results sheet: MNA vs Kron torn solution, links (torn branches) with current and voltage, power invariance
 ├── netlist/                    # SPICE netlist lexer, parser, .subckt expansion, .param
+│   ├── preprocess.go           # .include/.inc, .param (lazy, scoped, cycle-checked), .subckt/.ends with params:, X expansion (ngspice names R.X1.R1, x1.node), .global; ParseFile
+│   ├── expr.go                 # {expr} / 'expr' evaluator: + − * / % ^ **, comparisons, && || !, c ? a : b, pi, sqrt … pwr
 │   └── units.go                # engineering suffixes: f p n u m k meg g t, mil
 ├── exchange/                   # external energy channels + ports carried by EVERY element (§3.1)
 │   ├── channel.go              # channel registry: light, thermal, magnetic, …, neutrino, reserved slots
@@ -454,7 +456,7 @@ kronspice/
 │   ├── source.go               # V, I; DC, PULSE, SIN, PWL, EXP, AC
 │   ├── environment.go          # environment-driven sources: photovoltaic cell, thermoelectric (later)
 │   ├── controlled.go           # E, F, G, H
-│   ├── switch.go               # S, W
+│   ├── switch.go               # S, W: hysteretic (VT ± VH) or smooth (VH < 0) switches; state held over a transient step, crossings located by StepLimiter
 │   ├── arc.go                  # A element: arc / spark gap, Mayr, Cassie, Habedank (series) laws, breakdown at VBD; exact constant-current step, thermal port (§3g)
 │   ├── core.go                 # U element: Jiles–Atherton saturable core with N windings; pinning loss μ0k(1−c)|dMirr| on the thermal port = loop area (§3j)
 │   ├── diode.go                # D (SPICE3 level-1 diode)

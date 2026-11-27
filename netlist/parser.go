@@ -3,11 +3,13 @@
 
 // Package netlist reads SPICE netlists.
 //
-// Supported so far: the title line, comments (* and ;), continuation lines
-// (+), R, C and L elements (C and L with IC=), independent V and I sources
-// with DC, AC and PULSE/SIN/EXP/PWL specifications, and the .op, .tran,
-// .title and .end control lines. Unsupported elements and dot commands are
-// reported as errors with their line number rather than silently ignored.
+// Supported: the title line, comments (* and ;), continuation lines (+),
+// the elements documented at parseElement, the analyses .op, .tran, .ac
+// and .dc, .model, .title, .end, the kronspice extensions .domain and .ece,
+// and the preprocessing directives .include, .param (with {expression}
+// substitution), .global and .subckt/.ends with X instances
+// (preprocess.go). Unsupported elements and dot commands are reported as
+// errors with their line number rather than silently ignored.
 package netlist
 
 import (
@@ -58,7 +60,10 @@ type ElementLine struct {
 	ScaleKind string
 	ScaleArgs []float64
 
-	Model string  // model name for semiconductor elements (lower-cased)
+	// Init is a switch's initial state, "on" or "off" ("" when not given).
+	Init string
+
+	Model string  // model name for semiconductor and switch elements (lower-cased)
 	Area  float64 // area factor (diodes, BJTs); 0 means the default of 1
 	// Nodes are in SPICE order: two for most elements; c b e [s] for Q.
 	// E and G use CtrlNodes, F and H CtrlSource; Value is their gain.
@@ -123,6 +128,8 @@ type Deck struct {
 	// (kronspice extension): hypothetical spin-connection terms on R, L,
 	// C and K elements (circuit.ECESpec). Nil when absent.
 	ECE *ECECard
+	// Params are the global .param values, evaluated (nil when none).
+	Params map[string]float64
 }
 
 // ECECard is one .ece line.
@@ -136,11 +143,21 @@ type ECECard struct {
 type logicalLine struct {
 	text string
 	line int
+	file string // the .include file the line came from ("" for the main netlist)
 }
 
 // Parse reads a netlist. The first line is always the title, as in SPICE.
-func Parse(r io.Reader) (*Deck, error) {
-	lines, err := readLogical(r)
+// .include lines are refused, because a bare reader has no directory to
+// resolve them against; use ParseFile or ParseWith for those.
+func Parse(r io.Reader) (*Deck, error) { return ParseWith(r, Options{}) }
+
+// ParseWith reads a netlist with the given options. After the lines are
+// read, .include files are inserted, .param, .global and .subckt
+// definitions are collected, {expressions} are substituted and X
+// instances are expanded into flat element lines (preprocess.go); the
+// element and control lines are then parsed one by one.
+func ParseWith(r io.Reader, o Options) (*Deck, error) {
+	lines, err := readLogical(r, true, "")
 	if err != nil {
 		return nil, err
 	}
@@ -149,28 +166,14 @@ func Parse(r io.Reader) (*Deck, error) {
 		return d, nil
 	}
 	d.Title = strings.TrimSpace(lines[0].text)
-	for _, ll := range lines[1:] {
-		text := stripComment(ll.text)
-		fields := strings.Fields(text)
-		if len(fields) == 0 {
-			continue
-		}
-		head := strings.ToLower(fields[0])
-		if strings.HasPrefix(head, ".") {
-			done, err := d.control(head, fields, ll)
-			if err != nil {
-				return nil, err
-			}
-			if done {
-				break
-			}
-			continue
-		}
-		el, err := parseElement(text, ll.line)
-		if err != nil {
-			return nil, err
-		}
-		d.Elements = append(d.Elements, el)
+	total := len(lines)
+	body, err := o.expandIncludes(lines[1:], o.Dir, 0, nil, &total)
+	if err != nil {
+		return nil, err
+	}
+	x := newExpander(d)
+	if err := x.run(body); err != nil {
+		return nil, err
 	}
 	return d, nil
 }
@@ -182,6 +185,9 @@ func (d *Deck) control(head string, fields []string, ll logicalLine) (end bool, 
 	switch head {
 	case ".end":
 		return true, nil
+	case ".print", ".plot", ".probe", ".save":
+		// Output selection for ngspice's own listing: every node voltage
+		// and element current is always in the result, so nothing to do.
 	case ".op":
 		d.Analyses = append(d.Analyses, Analysis{Kind: "op", Line: ll.line})
 	case ".tran":
@@ -471,6 +477,28 @@ func parseElement(text string, line int) (ElementLine, error) {
 			return el, fmt.Errorf("line %d: gain: %w", line, err)
 		}
 		el.Value = v
+	case 'S', 'W':
+		// Sname n+ n- nc+ nc- model [ON|OFF]   (voltage-controlled switch)
+		// Wname n+ n- vname model [ON|OFF]     (current-controlled switch)
+		// (ngspice manual, "Switches").
+		t := f[1:]
+		if n := len(t); n > 0 && (strings.EqualFold(t[n-1], "on") || strings.EqualFold(t[n-1], "off")) {
+			el.Init = strings.ToLower(t[n-1])
+			t = t[:n-1]
+		}
+		if kind == 'S' && len(t) != 5 {
+			return el, fmt.Errorf("%w: line %d: S switch needs: Sname n+ n- nc+ nc- model [ON|OFF]", ErrSyntax, line)
+		}
+		if kind == 'W' && len(t) != 4 {
+			return el, fmt.Errorf("%w: line %d: W switch needs: Wname n+ n- vname model [ON|OFF]", ErrSyntax, line)
+		}
+		el.Nodes = []string{strings.ToLower(t[0]), strings.ToLower(t[1])}
+		if kind == 'S' {
+			el.CtrlNodes = []string{strings.ToLower(t[2]), strings.ToLower(t[3])}
+		} else {
+			el.CtrlSource = strings.ToLower(t[2])
+		}
+		el.Model = strings.ToLower(t[len(t)-1])
 	case 'Y':
 		// Yname p1+ p1- p2+ p2- g   (ideal gyrator / transducer, kronspice
 		// extension): i1 = g·V2, i2 = −g·V1.
@@ -905,32 +933,50 @@ func parseSourceSpec(el *ElementLine, f []string, line int) error {
 	return nil
 }
 
-func readLogical(r io.Reader) ([]logicalLine, error) {
+// readLogical splits r into logical lines (continuations joined, full-line
+// comments dropped). With title set the first physical line is the title
+// and never a comment or a continuation target, as in SPICE; an included
+// file has no title line.
+func readLogical(r io.Reader, title bool, file string) ([]logicalLine, error) {
 	sc := bufio.NewScanner(r)
 	sc.Buffer(make([]byte, 0, 64*1024), maxLineLength)
 	var out []logicalLine
 	n := 0
+	first := 0 // logical lines a continuation may not join
+	if title {
+		first = 1
+	}
 	for sc.Scan() {
 		n++
 		text := strings.TrimRight(sc.Text(), "\r")
 		trimmed := strings.TrimLeft(text, " \t")
-		if n > 1 && strings.HasPrefix(trimmed, "+") && len(out) > 1 {
+		if (n > 1 || !title) && strings.HasPrefix(trimmed, "+") && len(out) > first {
 			last := &out[len(out)-1]
 			if len(last.text)+len(trimmed) > maxLineLength {
-				return nil, fmt.Errorf("%w: line %d: logical line too long", ErrSyntax, n)
+				return nil, fmt.Errorf("%w: %sline %d: logical line too long", ErrSyntax, filePrefix(file), n)
 			}
 			last.text += " " + trimmed[1:]
 			continue
 		}
-		if n > 1 && strings.HasPrefix(trimmed, "*") {
+		if (n > 1 || !title) && strings.HasPrefix(trimmed, "*") {
 			continue // full-line comment
 		}
-		out = append(out, logicalLine{text: text, line: n})
+		out = append(out, logicalLine{text: text, line: n, file: file})
+		if len(out) > MaxLines {
+			return nil, fmt.Errorf("%w: more than %d lines", ErrSyntax, MaxLines)
+		}
 	}
 	if err := sc.Err(); err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrSyntax, err)
+		return nil, fmt.Errorf("%w: %s%v", ErrSyntax, filePrefix(file), err)
 	}
 	return out, nil
+}
+
+func filePrefix(file string) string {
+	if file == "" {
+		return ""
+	}
+	return file + ": "
 }
 
 func stripComment(s string) string {

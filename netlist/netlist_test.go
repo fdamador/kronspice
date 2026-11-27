@@ -155,6 +155,8 @@ func FuzzParse(f *testing.F) {
 	f.Add("t\n+ continuation first\nR1 a b 1meg ; c\n")
 	f.Add("")
 	f.Add("t\nC1 a 0 Q=pwl(-1 -1u 0 0 1 1u) SCALE=SIN(1 0.2 1k) EXT=thermal IC=0\nL1 a 0 FLUX=pwl(0 0 1 1m) SCALE=pwl(0 1 1m 2)\n")
+	f.Add("t\n.param a={2*b} b=1k\n.subckt s p q params: r=1\nR1 p q {r*a}\n.ends\nX1 1 0 s r=2\n")
+	f.Add("t\n.subckt e a\nX1 a e2\nX2 a e2\n.ends\n.subckt e2 a\nX1 a e3\nX2 a e3\n.ends\n.subckt e3 a\n.ends\nX1 n e\n")
 	f.Fuzz(func(t *testing.T, src string) {
 		d, err := ParseString(src)
 		if err != nil {

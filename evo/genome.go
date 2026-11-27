@@ -158,7 +158,7 @@ func (g Gene) Validate(t *circuit.Circuit) error {
 		if g.Sign != Positive && k != circuit.Resistor && k != circuit.VoltageSource && k != circuit.CurrentSource {
 			return fmt.Errorf("%w: %s: a %s value must be positive", ErrBadGene, g.Label(), k)
 		}
-		if k == circuit.Diode || k == circuit.BJT || k == circuit.MOSFET {
+		if k == circuit.Diode || k == circuit.BJT || k == circuit.MOSFET || k == circuit.Switch || k == circuit.CurrentSwitch {
 			return fmt.Errorf("%w: %s: evolve a %s through its model or instance parameters", ErrBadGene, g.Label(), k)
 		}
 		return nil

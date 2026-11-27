@@ -1,0 +1,15 @@
+Pulse-driven S and W switches charging and loading
+V1 ctl 0 PULSE(0 2 1m 1u 1u 2m 4m)
+V2 vdd 0 DC 5
+R1 vdd a 1k
+S1 a c ctl 0 swv
+C1 c 0 1u
+R2 c 0 10k
+RS ctl s 1k
+VS s 0 DC 0
+W1 vdd b VS swi
+RB b 0 1k
+.model swv SW(VT=1 VH=0.2 RON=1 ROFF=1e6)
+.model swi CSW(IT=1m IH=0.1m RON=10 ROFF=1e6)
+.tran 10u 10m
+.end

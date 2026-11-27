@@ -1,0 +1,13 @@
+Relaxation oscillator: capacitor discharged by a hysteretic switch
+* ngspice-twin: skip (ngspice changes a switch's state at the first time
+* point past the threshold, one step late at every crossing; at tmax = 1 us
+* its period is 4.511 ms against the exact 4.5086 ms, so the drift exceeds
+* the golden tolerance after a few cycles. kronspice locates each crossing
+* (device.Switch.LimitStep); the exact reference is testdata/golden.)
+V1 vcc 0 DC 5
+R1 vcc c 10k
+C1 c 0 1u IC=0
+S1 c 0 c 0 swh
+.model swh SW(VT=2.5 VH=0.5 RON=1k ROFF=1e12)
+.tran 10u 30m uic
+.end

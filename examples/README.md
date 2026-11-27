@@ -29,6 +29,12 @@ the rest through `go run ./examples/<name>`, and all have
 | [power_filter](power_filter) | Harmonic filters for a six-pulse rectifier, scored by geometric-algebra power (IEEE 1459 twin); PF 0.903 to 0.957 (M9f). | §3b, M9f | run |
 | [pcb_layout](pcb_layout) | Microstrip pair whose L, C and K come from `em/extract` field solves; evolved for 50 Ω and low crosstalk (M9i). | §3c, M9i | run |
 
+## Netlist features
+
+| Example | Scope | CLAUDE.md | Run |
+|---|---|---|---|
+| [switch_relaxation](switch_relaxation) | Two relaxation oscillators from one `.subckt` with `params:`, `.param` expressions and a hysteretic S switch; periods against the exact value. | §2 netlist, device/switch.go | run |
+
 ## Kron's tensor analysis and machines
 
 | Example | Scope | CLAUDE.md | Run |
