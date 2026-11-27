@@ -1,0 +1,9 @@
+RC low-pass from .param expressions, fc = 1 kHz
+* pi is defined here because ngspice has no built-in pi in .param
+.param fc=1k r=1k cap={1/(2*pi*fc*r)}
+.param pi=3.141592653589793
+V1 in 0 AC 1
+R1 in out {r}
+C1 out 0 'cap'
+.ac dec 10 10 100k
+.end

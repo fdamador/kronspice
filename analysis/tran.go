@@ -183,6 +183,11 @@ func (s *Sim) tran(spec TranSpec, opt TranOptions) (*output.Waveforms, error) {
 				proposal = p
 			}
 		}
+		for _, sl := range s.limiters {
+			if p := sl.LimitStep(s.x, &tc); p < proposal {
+				proposal = p
+			}
+		}
 		if proposal < 0.9*h {
 			h = math.Max(proposal, h/8)
 			if err := reject(h); err != nil {
@@ -206,6 +211,11 @@ func (s *Sim) tran(spec TranSpec, opt TranOptions) (*output.Waveforms, error) {
 		next := math.Min(proposal, 2*h)
 		next = math.Min(next, maxStep)
 		order = opt.Method
+		for _, sl := range s.limiters {
+			if sl.Restart() {
+				hitBreak = true // a switch changed state: restart like a corner
+			}
+		}
 		if hitBreak {
 			// Restart with backward Euler and a small step after a corner.
 			order = device.BackwardEuler

@@ -116,7 +116,7 @@ def build(out):
         "77.9 V (cone), 127.0 V (spiral). Every bifilar winding has half its coil voltage between neighbouring turns, "
         "as the patent says.")
     r.figure(os.path.join(HERE, "pulse_sweep.png"),
-             "Figure 1. Voltage between the coil's ends against pulse rate ÷ f<sub>1</sub> (log scale), for the four coils. "
+             "Figure 1. Voltage between the coil's ends against pulse rate ÷ f<sub>1</sub> (log scale), for the four coils and the three other bifilar wirings (see pulsed_bifilar_current_report.pdf). "
              "Peaks appear only at f<sub>1</sub>/3, f<sub>1</sub>/2 and f<sub>1</sub>, where one harmonic of the one-sign "
              "train lands on the resonance.", 0.9)
     r.figure(os.path.join(HERE, "ring_up.png"),

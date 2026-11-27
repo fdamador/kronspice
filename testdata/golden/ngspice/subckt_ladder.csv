@@ -1,0 +1,6 @@
+# reference: ngspice-42 operating point of testdata/netlists/subckt_ladder.cir (internal/golden/ref/ngspice_all.sh)
+name,value
+v(in),1.000000000000000e+01
+v(a),2.557077625570776e+00
+v(b),7.305936073059359e-01
+i(v1),-4.97716894977169e-03

@@ -1,0 +1,13 @@
+Voltage- and current-controlled switches with hysteresis, DC sweep
+V1 in 0 DC 0
+RC in sense 1k
+VS sense 0 DC 0
+V2 dd 0 DC 5
+R1 dd out1 1k
+S1 out1 0 in 0 sw1
+R2 dd out2 1k
+W1 out2 0 VS csw1
+.model sw1 SW(VT=1 VH=0.1 RON=10 ROFF=1meg)
+.model csw1 CSW(IT=1.5m IH=0.2m RON=10 ROFF=1meg)
+.dc V1 0 3 0.25
+.end

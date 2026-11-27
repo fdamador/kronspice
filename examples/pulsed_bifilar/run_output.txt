@@ -1,72 +1,138 @@
-Four coils of 0.5 mm copper, each about 125.7 m of wire, driven through a 5-turn primary by one-sign 100 V pulses
+Seven coils of 0.5 mm copper, each about 125.7 m of wire, driven through a 5-turn primary by one-sign 100 V pulses
 
 == ordinary cylindrical solenoid winding ==
    400 turns, radius 5.0 to 5.0 cm, height 27.9 cm, wire 125.7 m; grounded can of twice its radius
    inductance 4.853 mH (Nagaoka sheet formula 4.873 mH); capacitance between all neighbouring turns 12.1 nF
    first resonance f1 = 1.167e+06 Hz (wire = 0.489 wavelengths in free space), AC gain at top ×338.6, Q ≈ 210
+   mutual inductance to the primary 28.14 µH
    one-sign pulses: 100 V, 50 Ω, width 8.57e-08 s, 354 cycles of f1 each run
-      rate/f1    rate [Hz]  coil ends [V] adjacent turns [V]       in [J]     heat [J]   stored [J]
-        0.333    3.889e+05         2631.5               12.9    0.0008019    0.0007868    1.476e-05
-        0.500    5.833e+05         3868.1               20.7     0.001152     0.001117    3.437e-05
-        0.900     1.05e+06          454.8                9.8     0.002029     0.002022    2.627e-06
-        0.970    1.132e+06          892.8                7.4     0.002422     0.002408     2.28e-06
-        1.000    1.167e+06         7426.4               37.9     0.002352     0.002204    0.0001317
-        1.030    1.202e+06          657.4               13.3      0.00278     0.002764    6.969e-06
-        1.100    1.283e+06          213.9               17.6     0.003601     0.003579    1.259e-05
-        1.500     1.75e+06          479.5               20.2     0.002758     0.002729    1.439e-05
-        2.000    2.333e+06          356.4                8.8     0.005284     0.005282     2.14e-06
+      rate/f1    rate [Hz]  coil ends [V] adjacent turns [V]     wire [A]  primary [A]       in [W]     heat [W]       in [J]     heat [J]   stored [J]
+        0.333    3.889e+05         2631.5               12.9       0.1672        1.024        2.643        2.593    0.0008019    0.0007868    1.476e-05
+        0.500    5.833e+05         3868.1               20.7       0.2395       0.9735        3.797         3.68     0.001152     0.001117    3.437e-05
+        0.900     1.05e+06          454.8                9.8       0.1956        1.064        6.685        6.662     0.002029     0.002022    2.627e-06
+        0.970    1.132e+06          892.8                7.4       0.1049        1.178        7.983        7.934     0.002422     0.002408     2.28e-06
+        1.000    1.167e+06         7426.4               37.9       0.4532        0.903         7.75        7.262     0.002352     0.002204    0.0001317
+        1.030    1.202e+06          657.4               13.3        0.291        1.184         9.16         9.11      0.00278     0.002764    6.969e-06
+        1.100    1.283e+06          213.9               17.6       0.2835        1.359        11.87         11.8     0.003601     0.003579    1.259e-05
+        1.500     1.75e+06          479.5               20.2       0.2485        0.837         9.09        8.994     0.002758     0.002729    1.439e-05
+        2.000    2.333e+06          356.4                8.8       0.1085        1.184        17.41        17.41     0.005284     0.005282     2.14e-06
    ledger at f1: in 0.0023518 J = heat 0.0022037 J + stored 0.00013172 J (+ time-stepping error 1.6e-05 J)
 
 == Tesla bifilar cylindrical solenoid winding ==
    400 turns, radius 5.0 to 5.0 cm, height 27.9 cm, wire 125.7 m; grounded can of twice its radius
    inductance 4.853 mH (Nagaoka sheet formula 4.873 mH); capacitance between all neighbouring turns 12.1 nF
    first resonance f1 = 4.161e+04 Hz (wire = 0.017 wavelengths in free space), AC gain at top ×12.1, Q ≈ 83
+   mutual inductance to the primary 28.14 µH
    one-sign pulses: 100 V, 50 Ω, width 2.4e-06 s, 151 cycles of f1 each run
-      rate/f1    rate [Hz]  coil ends [V] adjacent turns [V]       in [J]     heat [J]   stored [J]
-        0.333    1.387e+04           97.4               48.9      0.02722       0.0272    1.379e-05
-        0.500    2.081e+04          143.4               72.0      0.04046      0.04043    2.989e-05
-        0.900    3.745e+04           15.9                8.1      0.07291      0.07291    3.595e-07
-        0.970    4.036e+04           54.9               27.7      0.07874      0.07874    4.521e-06
-        1.000    4.161e+04          281.6              141.3      0.07982      0.07971    0.0001151
-        1.030    4.286e+04           58.5               29.5      0.08359      0.08358    5.039e-06
-        1.100    4.577e+04           19.5                9.9      0.08935      0.08934    1.209e-05
-        1.500    6.242e+04            6.6                4.0       0.1217       0.1217    5.996e-08
-        2.000    8.322e+04            5.1                3.4       0.1619       0.1619    4.288e-08
+      rate/f1    rate [Hz]  coil ends [V] adjacent turns [V]     wire [A]  primary [A]       in [W]     heat [W]       in [J]     heat [J]   stored [J]
+        0.333    1.387e+04           97.4               48.9       0.1505        1.994          7.5        7.496      0.02722       0.0272    1.379e-05
+        0.500    2.081e+04          143.4               72.0       0.2198        1.989        11.15        11.14      0.04046      0.04043    2.989e-05
+        0.900    3.745e+04           15.9                8.1      0.03161        2.004        20.09        20.09      0.07291      0.07291    3.595e-07
+        0.970    4.036e+04           54.9               27.7      0.08522        2.004         21.7         21.7      0.07874      0.07874    4.521e-06
+        1.000    4.161e+04          281.6              141.3       0.4285        1.973           22        21.96      0.07982      0.07971    0.0001151
+        1.030    4.286e+04           58.5               29.5       0.1127        2.002        23.03        23.03      0.08359      0.08358    5.039e-06
+        1.100    4.577e+04           19.5                9.9       0.0544        2.004        24.62        24.62      0.08935      0.08934    1.209e-05
+        1.500    6.242e+04            6.6                4.0       0.0331        2.006        33.54        33.54       0.1217       0.1217    5.996e-08
+        2.000    8.322e+04            5.1                3.4      0.02625        2.004        44.62        44.62       0.1619       0.1619    4.288e-08
    ledger at f1: in 0.079822 J = heat 0.079705 J + stored 0.0001151 J (+ time-stepping error 1.2e-06 J)
 
 == Tesla bifilar conical (45°) winding ==
    248 turns, radius 2.0 to 14.2 cm, height 12.2 cm, wire 126.4 m; grounded plane 5 cm below the base
    inductance 6.542 mH; capacitance between all neighbouring turns 12.1 nF
    first resonance f1 = 3.581e+04 Hz (wire = 0.015 wavelengths in free space), AC gain at top ×6.6, Q ≈ 96
+   mutual inductance to the primary 15.43 µH
    one-sign pulses: 100 V, 50 Ω, width 2.79e-06 s, 172 cycles of f1 each run
-      rate/f1    rate [Hz]  coil ends [V] adjacent turns [V]       in [J]     heat [J]   stored [J]
-        0.333    1.194e+04           53.4               26.9       0.0366      0.03659    4.129e-06
-        0.500     1.79e+04           78.6               39.6      0.05423      0.05423    8.416e-06
-        0.900    3.223e+04            7.9                4.1       0.0979       0.0979    8.235e-08
-        0.970    3.473e+04           26.5               13.6       0.1055       0.1055    9.899e-07
-        1.000    3.581e+04          154.6               77.9       0.1083       0.1083     3.48e-05
-        1.030    3.688e+04           28.4               14.4       0.1124       0.1124    1.162e-06
-        1.100    3.939e+04            9.9                5.1         0.12         0.12    1.286e-07
-        1.500    5.371e+04            3.9                2.2        0.163        0.163    1.339e-08
-        2.000    7.162e+04            3.1                1.8       0.2173       0.2173    1.031e-08
+      rate/f1    rate [Hz]  coil ends [V] adjacent turns [V]     wire [A]  primary [A]       in [W]     heat [W]       in [J]     heat [J]   stored [J]
+        0.333    1.194e+04           53.4               26.9      0.07463            2        7.619        7.618       0.0366      0.03659    4.129e-06
+        0.500     1.79e+04           78.6               39.6       0.1084        1.999        11.29        11.29      0.05423      0.05423    8.416e-06
+        0.900    3.223e+04            7.9                4.1      0.02147        2.002        20.38        20.38       0.0979       0.0979    8.235e-08
+        0.970    3.473e+04           26.5               13.6      0.04237        2.003        21.96        21.96       0.1055       0.1055    9.899e-07
+        1.000    3.581e+04          154.6               77.9         0.21        1.996        22.55        22.54       0.1083       0.1083     3.48e-05
+        1.030    3.688e+04           28.4               14.4      0.04834        2.002         23.4         23.4       0.1124       0.1124    1.162e-06
+        1.100    3.939e+04            9.9                5.1       0.0252        2.002        24.98        24.98         0.12         0.12    1.286e-07
+        1.500    5.371e+04            3.9                2.2      0.01762        2.002        33.93        33.92        0.163        0.163    1.339e-08
+        2.000    7.162e+04            3.1                1.8       0.0183        2.002        45.23        45.23       0.2173       0.2173    1.031e-08
    ledger at f1: in 0.1083 J = heat 0.10827 J + stored 3.4799e-05 J (+ time-stepping error 1.4e-07 J)
 
 == Tesla bifilar flat spiral winding ==
    214 turns, radius 2.0 to 16.9 cm, height 0.0 cm, wire 127.1 m; grounded plane 5 cm below
    inductance 6.842 mH; capacitance between all neighbouring turns 12.2 nF
    first resonance f1 = 3.493e+04 Hz (wire = 0.015 wavelengths in free space), AC gain at top ×10.8, Q ≈ 94
+   mutual inductance to the primary 26.18 µH
    one-sign pulses: 100 V, 50 Ω, width 2.86e-06 s, 169 cycles of f1 each run
-      rate/f1    rate [Hz]  coil ends [V] adjacent turns [V]       in [J]     heat [J]   stored [J]
-        0.333    1.164e+04           86.8               43.6      0.03681       0.0368    1.102e-05
-        0.500    1.747e+04          127.9               64.4      0.05481      0.05479    2.404e-05
-        0.900    3.144e+04           12.8                6.6      0.09898      0.09897    4.732e-06
-        0.970    3.389e+04           43.6               22.1       0.1062       0.1062    2.713e-06
-        1.000    3.493e+04          252.1              127.0       0.1085       0.1084    9.298e-05
-        1.030    3.598e+04           46.3               23.5       0.1129       0.1129    7.442e-06
-        1.100    3.843e+04           15.5                8.1       0.1204       0.1204    3.325e-07
-        1.500     5.24e+04            5.7                3.2       0.1645       0.1645    3.916e-08
-        2.000    6.987e+04            4.7                2.7       0.2189       0.2189    2.735e-08
+      rate/f1    rate [Hz]  coil ends [V] adjacent turns [V]     wire [A]  primary [A]       in [W]     heat [W]       in [J]     heat [J]   stored [J]
+        0.333    1.164e+04           86.8               43.6       0.1174        1.999        7.609        7.606      0.03681       0.0368    1.102e-05
+        0.500    1.747e+04          127.9               64.4       0.1716        1.997        11.33        11.33      0.05481      0.05479    2.404e-05
+        0.900    3.144e+04           12.8                6.6      0.02954        2.006        20.46        20.46      0.09898      0.09897    4.732e-06
+        0.970    3.389e+04           43.6               22.1      0.06441        2.006        21.94        21.94       0.1062       0.1062    2.713e-06
+        1.000    3.493e+04          252.1              127.0       0.3358        1.988        22.44        22.42       0.1085       0.1084    9.298e-05
+        1.030    3.598e+04           46.3               23.5      0.08298        2.005        23.35        23.34       0.1129       0.1129    7.442e-06
+        1.100    3.843e+04           15.5                8.1      0.04387        2.005         24.9         24.9       0.1204       0.1204    3.325e-07
+        1.500     5.24e+04            5.7                3.2      0.02965        2.005           34           34       0.1645       0.1645    3.916e-08
+        2.000    6.987e+04            4.7                2.7      0.02538        2.006        45.24        45.24       0.2189       0.2189    2.735e-08
    ledger at f1: in 0.10853 J = heat 0.10844 J + stored 9.2976e-05 J (+ time-stepping error 9.9e-08 J)
+
+== opposite-current bifilar cylindrical solenoid winding ==
+   400 turns, radius 5.0 to 5.0 cm, height 27.9 cm, wire 125.7 m; grounded can of twice its radius
+   inductance 14.7 µH; capacitance between all neighbouring turns 12.1 nF
+   no resonance with gain above 2 from 1 kHz to the sections' λ/10 limit (4.77e+06 Hz): the strands' fields cancel
+   strongest peak f1 = 5.93e+05 Hz (wire = 0.249 wavelengths in free space), AC gain at the terminals ×0.559, Q ≈ 71
+   mutual inductance to the primary 0.2694 µH
+   one-sign pulses: 100 V, 50 Ω, width 1.69e-07 s, 132 cycles of f1 each run
+      rate/f1    rate [Hz]  coil ends [V] adjacent turns [V]     wire [A]  primary [A]       in [W]     heat [W]       in [J]     heat [J]   stored [J]
+        0.333    1.977e+05            5.1                5.9       0.2105        1.586        4.276        4.233     0.000952    0.0009423    9.411e-06
+        0.500    2.965e+05            7.4                8.1       0.2947        1.532         6.16        6.068     0.001371     0.001351    1.938e-05
+        0.900    5.337e+05            3.8                4.8       0.1539         1.72        12.78        12.75     0.002846     0.002839    6.226e-06
+        0.970    5.752e+05            4.9                4.8       0.1418        1.669         12.8        12.77      0.00285     0.002843     5.89e-06
+        1.000     5.93e+05           13.9               15.0       0.5136         1.39        11.35        10.98     0.002526     0.002445    7.541e-05
+        1.030    6.107e+05            5.4                6.2       0.1485        1.717        14.57        14.55     0.003244     0.003239    5.029e-06
+        1.100    6.522e+05            4.1                4.3       0.1617        1.664        14.49        14.45     0.003226     0.003217    7.295e-06
+        1.500    8.894e+05            2.0                4.8       0.2644        1.669        19.85        19.79     0.004419     0.004406    1.173e-05
+        2.000    1.186e+06            2.0                2.7       0.1199        1.715        28.02        28.02     0.006238     0.006237    3.314e-07
+   ledger at f1: in 0.0025258 J = heat 0.0024449 J + stored 7.5414e-05 J (+ time-stepping error 6.1e-07 J)
+
+== parallel bifilar (same direction) cylindrical solenoid winding ==
+   400 turns, radius 5.0 to 5.0 cm, height 27.9 cm, wire 125.7 m; grounded can of twice its radius
+   inductance 1.213 mH; capacitance between all neighbouring turns 12.1 nF
+   first resonance f1 = 1.995e+06 Hz (wire = 0.836 wavelengths in free space), AC gain at top ×233.3, Q ≈ 238
+   mutual inductance to the primary 14.07 µH at the terminals; 0.2694 µH round the loop up one strand and down the other
+   one-sign pulses: 100 V, 50 Ω, width 5.01e-08 s, 398 cycles of f1 each run
+      rate/f1    rate [Hz]  coil ends [V] adjacent turns [V]     wire [A]  primary [A]       in [W]     heat [W]       in [J]     heat [J]   stored [J]
+        0.333    6.649e+05         1861.5               10.7       0.1787       0.8184        2.044        1.997    0.0004079    0.0003985    9.298e-06
+        0.500    9.974e+05         2664.9               15.3       0.2532       0.9377        3.587         3.48    0.0007157    0.0006944    2.054e-05
+        0.900    1.795e+06          259.8                8.8       0.1416       0.8528        5.046        5.015     0.001007     0.001001    1.178e-06
+        0.970    1.935e+06          444.0                6.5       0.1277       0.7561        4.747        4.732    0.0009471    0.0009442    1.291e-06
+        1.000    1.995e+06         4917.9               26.8       0.4051        1.034        8.514        8.128     0.001699     0.001622    7.301e-05
+        1.030    2.055e+06          397.9                6.7       0.1306       0.8467        5.931        5.928     0.001183     0.001183    7.954e-07
+        1.100    2.194e+06          207.6               10.3       0.2412       0.7176        5.832        5.826     0.001164     0.001162    6.973e-07
+        1.500    2.992e+06           77.7                7.8       0.1191       0.8186        8.893        8.884     0.001774     0.001773    6.751e-07
+        2.000     3.99e+06           53.6               12.8        0.272        1.104        16.93        16.88     0.003378     0.003369    8.273e-06
+   ledger at f1: in 0.0016988 J = heat 0.0016218 J + stored 7.3012e-05 J (+ time-stepping error 4e-06 J)
+
+== parallel bifilar (opposite currents) cylindrical solenoid winding ==
+   400 turns, radius 5.0 to 5.0 cm, height 27.9 cm, wire 125.7 m; grounded can of twice its radius
+   inductance 3.674 µH; capacitance between all neighbouring turns 12.1 nF
+   no resonance with gain above 2 from 1 kHz to the sections' λ/10 limit (4.77e+06 Hz): the strands' fields cancel
+   strongest peak f1 = 5.281e+05 Hz (wire = 0.221 wavelengths in free space), AC gain at the terminals ×0.105, Q ≈ 148
+   mutual inductance to the primary 0.1347 µH at the terminals; 28.14 µH round the loop up one strand and down the other
+   one-sign pulses: 100 V, 50 Ω, width 1.89e-07 s, 255 cycles of f1 each run
+      rate/f1    rate [Hz]  coil ends [V] adjacent turns [V]     wire [A]  primary [A]       in [W]     heat [W]       in [J]     heat [J]   stored [J]
+        0.333     1.76e+05            1.6               80.8       0.1816        1.689        4.641        4.615     0.002241     0.002228    1.361e-05
+        0.500    2.641e+05            2.2              110.3       0.2989        1.626        6.645        6.572     0.003209     0.003173    3.609e-05
+        0.900    4.753e+05            1.1               13.5       0.1056        1.758        13.07        13.06     0.006309     0.006308    3.858e-07
+        0.970    5.123e+05            1.3               26.0      0.07348        1.747        13.89        13.88     0.006707     0.006704    1.824e-06
+        1.000    5.281e+05            2.6              209.2       0.4969        1.548        12.85        12.59     0.006204     0.006079    0.0001248
+        1.030    5.439e+05            1.0               25.7       0.1592        1.764         15.1         15.1     0.007293     0.007293    1.952e-06
+        1.100    5.809e+05            1.2               10.3       0.1133        1.758        15.98        15.98     0.007716     0.007716    3.436e-07
+        1.500    7.922e+05            1.8               50.0       0.1718        1.727        20.93        20.91       0.0101      0.01009    7.858e-06
+        2.000    1.056e+06            1.3               12.7        0.106        1.761        29.09        29.09      0.01405      0.01405    2.489e-07
+   ledger at f1: in 0.0062042 J = heat 0.0060793 J + stored 0.00012477 J (+ time-stepping error -2.6e-06 J)
 
 Pulses build each coil up only in step with its resonance (rate f1, or f1/2, f1/3: one of the train's
 frequencies r, 2r, 3r … lands on f1); at 0.9, 1.1, 1.5 or 2 × f1 none does. Every joule came from the pulse source.
+V–I sweep per volt of drive (1 kHz to the λ/10 limit), at each coil's peak:
+   ordinary cylindrical solenoid                            f 1.168e+06 Hz: coil ends 296.9 V, wire 0.01224 A, V/I 2.427e+04 Ω, ω·L = sqrt(L/C) 3.562e+04 Ω
+   Tesla bifilar cylindrical solenoid                       f 4.169e+04 Hz: coil ends 6.422 V, wire 0.009642 A, V/I 666.1 Ω, ω·L = sqrt(L/C) 1271 Ω
+   opposite-current bifilar cylindrical solenoid            f 5.922e+05 Hz: coil ends 0.422 V, wire 0.01881 A, V/I 22.43 Ω, ω·L = sqrt(L/C) 54.69 Ω
+   parallel bifilar (same direction) cylindrical solenoid   f 1.995e+06 Hz: coil ends 240.8 V, wire 0.01468 A, V/I 1.64e+04 Ω, ω·L = sqrt(L/C) 1.521e+04 Ω
+   parallel bifilar (opposite currents) cylindrical solenoid f 5.278e+05 Hz: coil ends 0.08916 V, wire 0.01769 A, V/I 5.039 Ω, ω·L = sqrt(L/C) 12.19 Ω

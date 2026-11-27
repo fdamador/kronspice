@@ -1,0 +1,6 @@
+# reference: exact rational nodal analysis of the flattened ladder (independent of the Go solver)
+name,value
+v(in),10.0
+v(a),2.557077625570776
+v(b),0.730593607305936
+i(v1),-0.00497716894977169

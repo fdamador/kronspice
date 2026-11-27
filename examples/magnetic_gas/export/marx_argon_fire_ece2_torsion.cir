@@ -1,0 +1,20 @@
+Marx generator erected, 4 stages, Ar gaps
+.ece form=ece2 w0=8.33910238e-08
+C1 h1 0 1e-08 IC=9634.54
+RH1 h1 h2 100000
+RL1 0 l2 100000
+RG1 h1 l2 0.5
+C2 h2 l2 1e-08 IC=9634.54
+RH2 h2 h3 100000
+RL2 l2 l3 100000
+RG2 h2 l3 0.5
+C3 h3 l3 1e-08 IC=9634.54
+RH3 h3 h4 100000
+RL3 l3 l4 100000
+RG3 h3 l4 0.5
+C4 h4 l4 1e-08 IC=9634.54
+RG4 h4 x 0.5
+LS x out 1e-06
+RLOAD out 0 50
+.tran 1n 1.3e-06 UIC
+.end

@@ -248,15 +248,43 @@ func CompareTableAtSim(simTime []float64, get func(name string) ([]float64, bool
 			if ts < t0 || ts > t1 {
 				continue
 			}
-			if d := math.Abs(y[k] - output.Interp(want.Time, ref, ts)); d > worst {
+			d := math.Abs(y[k] - output.Interp(want.Time, ref, ts))
+			if d > tol {
+				d = math.Min(d, bracketDistance(want.Time, ref, ts, y[k]))
+			}
+			if d > worst {
 				worst, at = d, ts
 			}
 		}
 		if worst > tol {
-			msgs = append(msgs, fmt.Sprintf("%s: max error %.3g at t = %.4g s (tolerance %.3g)", name, worst, at, tol))
+			msgs = append(msgs, fmt.Sprintf("%s: max error %.3g at t = %.6g s (tolerance %.3g)", name, worst, at, tol))
 		}
 	}
 	return msgs
+}
+
+// bracketDistance is how far v lies outside the range of the two reference
+// samples that bracket ts. Where the reference jumps between neighbouring
+// samples (a switch changing state), it does not say where inside that
+// interval the jump is, so a simulated value anywhere between the two
+// samples is as consistent with it as the straight line drawn between
+// them (switch_rc_tran.cir: ngspice places the turn-on between samples
+// 53 ns apart, the simulator 3 ns before its later one). On a smooth
+// waveform the bracket is the interpolation to within the reference's
+// spacing, so the check is only relaxed at discontinuities.
+func bracketDistance(ts, ref []float64, t, v float64) float64 {
+	i := sort.SearchFloat64s(ts, t)
+	if i == 0 || i >= len(ts) {
+		return math.Inf(1)
+	}
+	lo, hi := math.Min(ref[i-1], ref[i]), math.Max(ref[i-1], ref[i])
+	switch {
+	case v < lo:
+		return lo - v
+	case v > hi:
+		return v - hi
+	}
+	return 0
 }
 
 // AC tolerances: the AC solution is exact at each frequency (no time-stepping

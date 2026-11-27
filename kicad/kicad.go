@@ -98,6 +98,27 @@ func Split(src string) (*Parsed, error) {
 		}
 		f := strings.Fields(t)
 		name := f[0]
+		if upper(name[0]) == 'X' {
+			// Subcircuit instance: a box with one pin per port; the
+			// subcircuit name and parameters are its value. The parsed
+			// deck holds only the expanded elements (R.X1.R1, …), and the
+			// .subckt block is kept as a directive.
+			var w, rest []string
+			for _, v := range f[1:] {
+				switch {
+				case strings.EqualFold(v, "params:"), strings.Contains(v, "="), len(rest) > 0:
+					rest = append(rest, v)
+				default:
+					w = append(w, v)
+				}
+			}
+			if len(w) < 2 {
+				return nil, fmt.Errorf("%w: %s needs nodes and a subcircuit name", ErrNetlist, name)
+			}
+			model := append([]string{w[len(w)-1]}, rest...)
+			p.Elements = append(p.Elements, Element{Name: name, Kind: 'X', Nodes: w[:len(w)-1], Model: strings.Join(model, " ")})
+			continue
+		}
 		nd, ok := nodes[strings.ToLower(name)]
 		if !ok {
 			return nil, fmt.Errorf("%w: element %s not in the parsed deck", ErrNetlist, name)

@@ -580,7 +580,13 @@ supplies 1.00 W while the source gives 1.00 W and the resistor heats
 2.00 W. The scalar term is set to κ = 0.05 on the capacitor's top
 terminal. It moves the resonance to 168.84 Hz (ECE) or 182.37 Hz (ECE2),
 as the closed form predicts, and it supplies almost no power on average.
-In transient the books close to a few 10⁻⁶ J for every case. The
+In transient the books close to a few 10⁻⁶ J for every case. Three more
+runs add UFT 456's conductivities to the ECE2 torsion case. kl0 is set
+to −0.25 Ω in the coil: the loop falls to 0.25 Ω, the peak current is
+4.00 A, and the terms supply 6.0 W of the resistor's 8.0 W. k0 is set to
+a 1 mS leak across the capacitor: it acts as about 0.118 Ω in series, and
+its loss is booked in the same model-supplied column. With both, the
+peak is 2.72 A and the net model-supplied power 2.33 W. The
 netlists are in `examples/ece_rlc/export/`.
 
 What this shows is the size of a claim, not a source of energy. Any ω₀

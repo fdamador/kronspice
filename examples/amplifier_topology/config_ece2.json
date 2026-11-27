@@ -1,0 +1,59 @@
+{
+  "name": "amplifier_topology_ece2",
+  "netlist": "embryo_ece2.cir",
+  "topology": {
+    "terminals": [
+      "in",
+      "out",
+      "vcc"
+    ],
+    "internal_nodes": 6,
+    "max_parts": 14,
+    "init_parts": 4,
+    "parts": [
+      {
+        "kind": "R",
+        "min": 10,
+        "max": 1000000.0,
+        "series": "E24"
+      },
+      {
+        "kind": "C",
+        "min": 1e-09,
+        "max": 0.0001,
+        "series": "E12"
+      },
+      {
+        "kind": "L",
+        "min": 1e-06,
+        "max": 1.0,
+        "series": "E12",
+        "kappa_a": 0.75
+      },
+      {
+        "kind": "Q",
+        "min": 1,
+        "max": 1,
+        "model": "Q2N3904"
+      }
+    ]
+  },
+  "objectives": [
+    {
+      "kind": "gain_at",
+      "node": "out",
+      "freq_hz": 1000,
+      "target_db": 20
+    },
+    {
+      "kind": "parts",
+      "weight": 0.002
+    }
+  ],
+  "ga": {
+    "population": 1000,
+    "generations": 200,
+    "seed": 2,
+    "timeout_ms": 2000
+  }
+}

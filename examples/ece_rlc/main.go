@@ -18,6 +18,13 @@
 // f_r = f0/√(1 + s·κ), and against a twin built from ordinary elements.
 // The ledger is checked in AC and in a 0.3 s transient. Power the terms
 // deliver or absorb is booked as model-supplied, never as inflow.
+//
+// UFTCases add UFT 456's two conductivities (Eckardt & Goel 2024) to the
+// ECE2 torsion case: k0 puts a shunt 2c·κ₀·C across the capacitor (here
+// 1 mS) and kl0 a series −2c·κ_Λ0·L in the coil (here −0.25 Ω, gain).
+// Their closed form is the exact series impedance
+// Z = R + r + jωL + 1/(G + jωC), whose |1/Z| peak and −3 dB points are
+// found on a 0.1 mHz grid.
 package main
 
 import (
@@ -44,6 +51,10 @@ const (
 	W0 = 0.25 / (c0 * L)
 	// Kappa is the scalar term on the capacitor's top terminal.
 	Kappa = 0.05
+	// K0 is UFT 456's κ₀: shunt 2c·K0·C = 1 mS across the capacitor.
+	K0 = 1e-3 / (2 * c0 * C)
+	// KL0 is UFT 456's κ_Λ0: series −2c·KL0·L = −0.25 Ω in the coil.
+	KL0 = 0.25 / (2 * c0 * L)
 )
 
 // F0 is the plain circuit's resonance [Hz].
@@ -56,6 +67,8 @@ type Case struct {
 	S      float64 // 0 (plain), +1 (ECE), −2 (ECE2)
 	W0     float64 // torsion [1/m]
 	KappaA float64 // scalar term on the capacitor's top terminal
+	K0     float64 // UFT 456 κ₀: shunt 2cκ₀C across the capacitor [1/m]
+	KL0    float64 // UFT 456 κ_Λ0: series −2cκ_Λ0L in the coil [1/m]
 }
 
 // Cases are the runs, in print order.
@@ -67,12 +80,32 @@ var Cases = []Case{
 	{Name: "ECE2 scalar", Form: "ece2", S: -2, KappaA: Kappa},
 }
 
+// UFTCases add UFT 456's conductivities to the ECE2 torsion case.
+var UFTCases = []Case{
+	{Name: "ECE2 torsion + k0", Form: "ece2", S: -2, W0: W0, K0: K0},
+	{Name: "ECE2 torsion + kl0", Form: "ece2", S: -2, W0: W0, KL0: KL0},
+	{Name: "ECE2 torsion + k0 + kl0", Form: "ece2", S: -2, W0: W0, K0: K0, KL0: KL0},
+}
+
+// shunt is the capacitor's k0 conductance 2c·κ₀·C [S].
+func (k Case) shunt() float64 { return 2 * c0 * k.K0 * C }
+
+// series is the coil's torsion plus kl0 resistance s·c·ω₀·L − 2c·κ_Λ0·L [Ω].
+func (k Case) series() float64 { return k.S*c0*k.W0*L - 2*c0*k.KL0*L }
+
 // Netlist is a case's kronspice netlist.
 func (k Case) Netlist() string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "series RLC, %s\n", k.Name)
 	if k.Form != "" {
-		fmt.Fprintf(&b, ".ece form=%s w0=%.17g\n", k.Form, k.W0)
+		fmt.Fprintf(&b, ".ece form=%s w0=%.17g", k.Form, k.W0)
+		if k.K0 != 0 {
+			fmt.Fprintf(&b, " k0=%.17g", k.K0)
+		}
+		if k.KL0 != 0 {
+			fmt.Fprintf(&b, " kl0=%.17g", k.KL0)
+		}
+		b.WriteString("\n")
 	}
 	b.WriteString("V1 in 0 DC 0 AC 1 SIN(0 1 173)\nR1 in a 1\nL1 a b 10m\n")
 	if k.KappaA != 0 {
@@ -84,11 +117,12 @@ func (k Case) Netlist() string {
 	return b.String()
 }
 
-// Twin is the same case from ordinary elements: the torsion as a series
-// resistor (negative in ECE2), the scalar term as a voltage-controlled
-// source (E) in the capacitor's lead.
+// Twin is the same case from ordinary elements: the torsion and kl0 as a
+// series resistor (negative in ECE2), the scalar term as a
+// voltage-controlled source (E) in the capacitor's lead, k0 as a resistor
+// across the capacitor.
 func (k Case) Twin() string {
-	rt := k.S * c0 * k.W0 * L
+	rt := k.series()
 	var b strings.Builder
 	fmt.Fprintf(&b, "series RLC twin, %s\nV1 in 0 DC 0 AC 1 SIN(0 1 173)\nR1 in a %.17g\nL1 a b 10m\n", k.Name, R+rt)
 	if k.KappaA != 0 {
@@ -97,8 +131,28 @@ func (k Case) Twin() string {
 	} else {
 		b.WriteString("C1 b 0 84.6346u\n")
 	}
+	if g := k.shunt(); g != 0 {
+		fmt.Fprintf(&b, "RG b 0 %.17g\n", 1/g)
+	}
 	b.WriteString(".end\n")
 	return b.String()
+}
+
+// exact returns the resonance [Hz] and Q of |1/Z| for the series impedance
+// Z = R + series + jωL + 1/(G + jωC(1 + sκ)), from a 0.1 mHz grid over the
+// sweep's band.
+func (k Case) exact() (fr, q float64) {
+	ce := C * (1 + k.S*k.KappaA)
+	n := int((230-120)/1e-4) + 1
+	f, m := make([]float64, n), make([]float64, n)
+	for j := range f {
+		f[j] = 120 + float64(j)*1e-4
+		w := 2 * math.Pi * f[j]
+		z := complex(R+k.series(), w*L) + 1/complex(k.shunt(), w*ce)
+		m[j] = 1 / cmplx.Abs(z)
+	}
+	fr, q, _ = peak(f, m)
+	return fr, q
 }
 
 // Result is one case's numbers.
@@ -147,6 +201,9 @@ func Run(k Case) (Result, error) {
 		if k.KappaA != 0 {
 			// The scalar term scales the capacitance: C(1 + sκ), so Q = ω_rL/R.
 			res.QWant = 2 * math.Pi * res.FWant * L / R
+		}
+		if k.K0 != 0 || k.KL0 != 0 {
+			res.FWant, res.QWant = k.exact()
 		}
 	}
 	f, i, r, err := sweep(k.Netlist())
@@ -234,5 +291,25 @@ func main() {
 	fmt.Println("  case               source in  back to source  heat       model-supplied  Δstored     mismatch")
 	for _, r := range rs {
 		fmt.Printf("  %-17s  %8.5f   %8.5f        %8.5f   %+9.5f       %+.2e   %.1e\n", r.Name, r.EIn, r.EOut, r.EHeat, r.EModel, r.EStored, r.Mismatch)
+	}
+
+	fmt.Printf("\nUFT 456 conductivities on the ECE2 torsion case: k0 = %.4e 1/m (shunt %.3g mS across C), kl0 = %.4e 1/m (series %+.3g Ω in L)\n",
+		K0, 2*c0*K0*C*1e3, KL0, -2*c0*KL0*L)
+	fmt.Println("AC sweep as above (closed form: exact series impedance); transient as above")
+	fmt.Println("  case                     f_r (Hz)  closed form   Q        closed form  peak |I| (A)  vs twin   source (W)  heat (W)  model-supplied (W)  residual")
+	var us []Result
+	for _, k := range UFTCases {
+		r, err := Run(k)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		us = append(us, r)
+		fmt.Printf("  %-23s  %8.3f  %8.3f     %7.4f  %7.4f      %.4f        %.0e    %.4f      %.4f    %+.4f             %.0e\n",
+			r.Name, r.FPeak, r.FWant, r.Q, r.QWant, r.IPeak, r.TwinDiff, r.PSource, r.PHeat, r.PModel, r.ACResidual)
+	}
+	fmt.Println("  case                     source in  back to source  heat       model-supplied  Δstored     mismatch")
+	for _, r := range us {
+		fmt.Printf("  %-23s  %8.5f   %8.5f        %8.5f   %+9.5f       %+.2e   %.1e\n", r.Name, r.EIn, r.EOut, r.EHeat, r.EModel, r.EStored, r.Mismatch)
 	}
 }

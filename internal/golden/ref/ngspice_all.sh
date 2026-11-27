@@ -20,7 +20,8 @@
 # kronspice "+ terminal" current and are left out (logged).
 #
 # Netlists that already have an ngspice-syntax twin in
-# internal/golden/ref/ngspice/ (ngspice_ref.sh) are skipped, and a netlist
+# internal/golden/ref/ngspice/ (ngspice_ref.sh), or carry a
+# "* ngspice-twin: skip (reason)" comment, are skipped, and a netlist
 # ngspice rejects is logged and skipped, so one failure never blocks the
 # rest. Run from the repository root in the tools container:
 #   docker run --rm -v "$PWD":/src kronspice-tools sh internal/golden/ref/ngspice_all.sh
@@ -38,6 +39,8 @@ for net in testdata/netlists/*.cir; do
 	gold=testdata/golden/$name.csv
 	[ -f "$gold" ] || { echo "$name: no golden file, skipped"; continue; }
 	[ -f "internal/golden/ref/ngspice/$name.cir" ] && { echo "$name: has an ngspice twin (ngspice_ref.sh), skipped"; continue; }
+	# A netlist can opt out with a "* ngspice-twin: skip (reason)" comment.
+	grep -qi '^\*[[:space:]]*ngspice-twin:[[:space:]]*skip' "$net" && { echo "$name: marked ngspice-twin: skip"; continue; }
 	header=$(grep -v '^#' "$gold" | head -n 1 | tr -d '\r')
 	kind=table
 	if [ "$header" = "name,value" ]; then

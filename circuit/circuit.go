@@ -86,6 +86,15 @@ const (
 	// λ(i, t) = s(t)·Λ(i), with Curve i1, λ1, i2, λ2, … (or Value·i) and
 	// Scale as for NonlinearCapacitor. Written "L … FLUX=pwl(…) SCALE=…".
 	NonlinearInductor Kind = 'l'
+	// Switch is a voltage-controlled switch (SPICE S): a resistance RON or
+	// ROFF between Nodes, set by the voltage between CtrlNodes against the
+	// threshold VT and hysteresis VH of its "sw" model. HasIC with IC = 1
+	// (ON) or 0 (OFF) gives the initial state.
+	Switch Kind = 'S'
+	// CurrentSwitch is a current-controlled switch (SPICE W), set by the
+	// current of the voltage source CtrlSource against IT and IH of its
+	// "csw" model.
+	CurrentSwitch Kind = 'W'
 )
 
 // IsControlled reports whether k is a linear controlled source.
@@ -133,10 +142,18 @@ func (k Kind) String() string {
 		return "machine"
 	case BearingMotor:
 		return "bearing motor"
+	case Arc:
+		return "arc"
+	case Core:
+		return "magnetic core"
 	case NonlinearCapacitor:
 		return "nonlinear capacitor"
 	case NonlinearInductor:
 		return "nonlinear inductor"
+	case Switch:
+		return "switch"
+	case CurrentSwitch:
+		return "current switch"
 	default:
 		return fmt.Sprintf("kind(%c)", byte(k))
 	}
@@ -290,7 +307,7 @@ func (c *Circuit) SelfControlled(e Element) bool {
 				n++
 			}
 		}
-		if (x.Kind == Behavioral && x.BCtrl == 'V') || x.Kind.VoltageControlled() {
+		if (x.Kind == Behavioral && x.BCtrl == 'V') || x.Kind.VoltageControlled() || x.Kind == Switch {
 			for _, v := range x.CtrlNodes {
 				if v == shared && x.Name != e.Name {
 					n += 10 // sensed elsewhere: not a private series node
@@ -404,7 +421,7 @@ func (c *Circuit) validateElements() error {
 				groundUsed = true
 			}
 		}
-		if (e.Kind == BJT || e.Kind == MOSFET || e.Kind == Gyrator || e.Kind == Machine || e.Kind == BearingMotor) != (len(e.Extra) > 0) {
+		if (e.Kind == BJT || e.Kind == MOSFET || e.Kind == Gyrator || e.Kind == Machine || e.Kind == BearingMotor) != (len(e.Extra) > 0) && e.Kind != Core {
 			return fmt.Errorf("%w: %s has %d extra terminals", ErrBadValue, e.Name, len(e.Extra))
 		}
 		if e.Nodes[0] == e.Nodes[1] && e.Kind != BJT && e.Kind != MOSFET && e.Kind != Mutual && e.Kind != Machine {
@@ -467,6 +484,14 @@ func (c *Circuit) validateElements() error {
 			if err := validateBearing(e); err != nil {
 				return err
 			}
+		case Arc:
+			if err := validateArc(e); err != nil {
+				return err
+			}
+		case Core:
+			if err := validateCore(e); err != nil {
+				return err
+			}
 		case BJT:
 			m, ok := c.ModelFor(e)
 			if !ok {
@@ -498,6 +523,10 @@ func (c *Circuit) validateElements() error {
 				return fmt.Errorf("%w: %s: LEVEL must be 1, 2 or 3", ErrBadModel, e.Model)
 			}
 			if err := validateMOSInstance(e); err != nil {
+				return err
+			}
+		case Switch, CurrentSwitch:
+			if err := c.validateSwitch(e); err != nil {
 				return err
 			}
 		case Diode:
@@ -585,8 +614,8 @@ func (c *Circuit) validateDomains() error {
 				}
 			}
 			continue
-		case Diode, BJT, MOSFET, Behavioral:
-			for _, n := range append(e.Nodes[:], e.Extra...) {
+		case Diode, BJT, MOSFET, Behavioral, Arc, Core, Switch, CurrentSwitch:
+			for _, n := range append(append(e.Nodes[:], e.Extra...), c.switchCtrl(e)...) {
 				if c.NodeDomain(n) != exchange.Electrical {
 					return fmt.Errorf("%w: %s is electrical, node %s is %v", ErrBadValue, e.Name, c.NodeNames[n], c.NodeDomain(n))
 				}
@@ -708,6 +737,15 @@ func (c *Circuit) checkPaths(capIsPath bool) error {
 		if e.Kind == BearingMotor {
 			if a, b := find(e.Nodes[0]), find(e.Nodes[1]); a != b {
 				parent[a] = b
+			}
+			continue
+		}
+		// A core's windings are shorts at DC.
+		if e.Kind == Core {
+			for _, p := range CoreWindings(e) {
+				if a, b := find(p[0]), find(p[1]); a != b {
+					parent[a] = b
+				}
 			}
 			continue
 		}

@@ -43,7 +43,13 @@ func TestGoldenLedgers(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if c.Validate() == nil {
+		// A deck whose transient starts from initial conditions (UIC) need
+		// not have an operating point: a relaxation oscillator has none.
+		uic := false
+		for _, a := range d.Analyses {
+			uic = uic || (a.Kind == "tran" && a.UIC)
+		}
+		if c.Validate() == nil && !uic {
 			r, err := OP(c, Options{})
 			if err != nil {
 				t.Fatalf("%s: %v", name, err)

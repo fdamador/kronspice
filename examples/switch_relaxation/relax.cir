@@ -1,0 +1,16 @@
+Two relaxation oscillators built from one parameterized subcircuit
+* Each cell charges C through R until the hysteretic switch S1 turns on at
+* VT + VH, discharges through RON until it turns off at VT - VH, and repeats.
+* XB doubles R and the hysteresis window of XA through instance parameters.
+.param vcc=5 rc=10k cc=1u
+.subckt relax top out params: r={rc} c={cc} vt=2.5 vh=0.5
+R1 top out {r}
+C1 out 0 {c} IC=0
+S1 out 0 out 0 swh
+.model swh SW(VT={vt} VH={vh} RON=1k ROFF=1e12)
+.ends relax
+V1 vcc 0 DC {vcc}
+XA vcc a relax
+XB vcc b relax r={2*rc} vh=1
+.tran 10u 80m uic
+.end

@@ -1,0 +1,16 @@
+Resistor ladder built from parameterized subcircuits
+.param r0=1k
+.subckt section in out params: rs={r0} rp={2*rs}
+R1 in out {rs}
+R2 out 0 {rp}
+.ends section
+.subckt two in out params: r=1k
+X1 in mid section rs={r}
+X2 mid out section rs={r} rp={4*r}
+.ends two
+V1 in 0 DC 10
+XA in a two
+XB a b section
+RL b 0 {r0/2}
+.op
+.end

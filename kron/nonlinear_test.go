@@ -13,6 +13,7 @@ import (
 	"github.com/fdamador/kronspice/analysis"
 	"github.com/fdamador/kronspice/circuit"
 	"github.com/fdamador/kronspice/exchange"
+	"github.com/fdamador/kronspice/netlist"
 )
 
 // Every golden circuit — linear and nonlinear — solved in Kron's node-pair
@@ -25,6 +26,9 @@ func TestNonlinearKronTwin(t *testing.T) {
 	for _, f := range files {
 		name := strings.TrimSuffix(filepath.Base(f), ".cir")
 		c, d := load(t, f)
+		if uicOnly(d) {
+			continue // no DC operating point (a relaxation oscillator); its .tran starts from UIC
+		}
 		if _, err := Build(c); err != nil {
 			nonlinear++
 		}
@@ -157,4 +161,18 @@ func TestNonlinearKronMachine(t *testing.T) {
 	if w := k.NodeVoltages[c.NodeIndex("w")]; math.Abs(w-4*T) > 1e-9*math.Abs(4*T) {
 		t.Errorf("ω = %g, want %g", w, 4*T)
 	}
+}
+
+// uicOnly reports whether the deck's only analysis is a .tran with UIC: such
+// a circuit need not have a DC operating point.
+func uicOnly(d *netlist.Deck) bool {
+	if len(d.Analyses) == 0 {
+		return false
+	}
+	for _, a := range d.Analyses {
+		if a.Kind != "tran" || !a.UIC {
+			return false
+		}
+	}
+	return true
 }
